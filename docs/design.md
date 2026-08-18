@@ -17,9 +17,9 @@ tags: [robotwin, vla, benchmark]
 
 **只复刻基准本身**：在 RoboTwin 2.0 上实现 5 个任务集（场景随机化、干扰物、指令模板、成功判定），产出可评测任意 policy 的 harness。**不训练模型**，不绑定具体 VLA。
 
-- 代码仓库：本仓库（独立 git repo）
-- 设计笔记原件：Obsidian 笔记库 `工作/1-Projects/RoboTwin-IF 复刻.md`（本文件是同步副本，供代码引用）
-- 运行环境：远程 Linux GPU 机器，用户自己 SSH 手动执行/验证
+- 代码仓库：`C:\Users\xichen6\Documents\repos\robotwin-if`（独立 git repo，不放笔记库）
+- 本文档及后续设计笔记：留在 Obsidian 笔记库 `工作/1-Projects/` 下，同步副本已放入代码仓库 `docs/design.md` 供代码引用（此文件是原件，改动后需要手动同步一份到仓库）
+- 运行环境（Linux/WSL2 + GPU）：**暂不确定，本阶段只做方案设计，不在本机跑仿真**
 
 ## RoboTwin-IF 是什么（论文原始设计）
 
@@ -49,10 +49,10 @@ RoboTwin 2.0 官方 50 个任务里已有高度相关的原生任务，RoboTwin-
 RoboTwin 2.0 **本身就自带**一套 MLLM 驱动的指令/物体描述生成管线，不需要我们自己发明：
 
 - 每个任务的语言模板库：**60个模板 + 每个物体15条描述**，随机组合实例化
-- 每次生成 12 条指令，自动切分为 **10条 seen / 2条 unseen**
+- 每次离线生成 12 条指令，切分为 **10条 seen / 2条 unseen**，**存成静态文件** `description/task_instruction/{task_name}.json`（⚠️ 更正：不是运行时动态切分，是提前用MLLM生成好、以json形式存在，运行时直接读取——见 [[01-环境搭建]] 里对 `collect_data.py` 源码的调研）
 - 这套机制来自 RoboTwin 2.0 的 "Description Gen (Object & Task)" 模块
 
-**结论**：RoboTwin-IF 很可能不是重新发明 seen/unseen 机制，而是直接复用 RoboTwin 2.0 原生的这套 description-gen 管线，只是在 5 个新/改造任务上接入它。这意味着我们复刻的重点是**任务场景本身**（干扰物摆放、成功判定），语言模板生成可以直接吃 RoboTwin 2.0 现成的工具链。
+**结论**：RoboTwin-IF 很可能不是重新发明 seen/unseen 机制，而是直接复用 RoboTwin 2.0 原生的这套 description-gen 管线，只是在 5 个新/改造任务上接入它。这意味着我们复刻的重点是**任务场景本身**（干扰物摆放、成功判定），语言模板生成可以直接吃 RoboTwin 2.0 现成的工具链——但要新增一份 `{task_name}.json`。
 
 ### Task API 要点（供后续实现参考）
 
@@ -67,7 +67,11 @@ RoboTwin 2.0 **本身就自带**一套 MLLM 驱动的指令/物体描述生成�
 
 - RoboTwin-Platform/RoboTwin 作为 git submodule（锁定版本）纳入 `robotwin-if` 仓库，不修改其源码
 - 5个任务集的代码、指令配置、评测逻辑全部维护在 `robotwin-if` 自己的目录下
-- 调研确认：RoboTwin 2.0 的任务发现机制是按 `envs/` 目录下的模块名对应 `task_name`（`collect_data.sh ${task_name} ${task_config} ${gpu_id}` 这种调用方式），所以新任务文件必须能被解析到它的 `envs/` 路径——用一个薄的安装/桥接脚本（symlink 或构建期复制）把我们维护的任务文件接入 submodule 的 `envs/` 目录，而不是把代码物理写进 fork 里
+- 调研确认（详见 [[01-环境搭建]]）：桥接点其实有 **3 处**，都按 `task_name` 命名对齐，不是只有 `envs/`：
+  1. `envs/{task_name}.py`，内部 `class {task_name}(Base_Task)` — 类名必须和文件名/task_name完全一致
+  2. `description/task_instruction/{task_name}.json` — 静态指令模板文件（seen/unseen 数组提前生成好存在这里，不是运行时切分）
+  3. 新物体需要 `description/objects_description/{obj_id}_{name}/` 下的描述文件（复用现有120个物体的话可以跳过）
+  用薄的安装/桥接脚本（symlink 或构建期复制）把 `robotwin-if` 维护的文件接入 submodule 对应的这几个目录，而不是把代码物理写进 fork 里
 - 好处：跟上游升级容易、改动边界清晰（diff 全在 robotwin-if）、避免维护一份长期漂移的 fork
 - 风险：桥接脚本本身需要在真正连上仿真环境后验证可行——留到环境确定之后的实现阶段验证
 
@@ -87,21 +91,21 @@ RoboTwin 2.0 **本身就自带**一套 MLLM 驱动的指令/物体描述生成�
 
 ## 时间评估（分阶段，人天，1人全职）
 
-| 阶段 | 内容 | 预估人天 | 备注 |
-|---|---|---|---|
-| 1. 环境搭建+跑通基线 | 远程机器有现成安装脚本可以直接装 RoboTwin，再验证桥接机制 | **1 – 1.5** | 因为有安装脚本，风险下调（原估2-3天） |
-| 2. 复用型任务(2个) | Operate-Stapler、Operate-Tabletop，魔改自现有 press_stapler/click_bell/move_stapler_pad | 2 – 3 | 中等风险 |
-| 3. 新建型任务(2个) | Pick-Diverse-Object、Place-Relative，无原生对应，成功判定要自己设计 | 3 – 4 | **较高风险**：论文未公开判定细节，需自行设计+反复试错（用户已确认这是主要不确定项） |
-| 4. 最复杂任务(1个) | Operate-Mic-Drawer，双臂多步+抽屉资产 **未知是否已有现成资产** | 2.5 – 4（若需自建/改URDF资产，+1-2天） | **未知项**：抽屉资产是否现成，待第1轮环境搭建后实地确认 |
-| 5. 指令模板接入 | 接入原生 description-gen 管线 | 1 – 1.5 | 低风险 |
-| 6. 合并评测集成 | 维护 all_tasks_plus_if.yml，验证合并评测跑通 | 0.5 – 1 | 低风险 |
-| 7. 联调/回归/文档 | 完整跑一遍+修bug+文档 | 1.5 – 2 | 常规缓冲 |
+| 阶段 | 笔记 | 内容 | 预估人天 | 备注 |
+|---|---|---|---|---|
+| 1. 环境搭建+跑通基线 | [[01-环境搭建]] | 远程机器有现成安装脚本可以直接装 RoboTwin，再验证桥接机制 | **1 – 1.5** | 因为有安装脚本，风险下调（原估2-3天） |
+| 2. 复用型任务(2个) | [[02-Operate-Stapler]]、[[03-Operate-Tabletop]] | 魔改自现有 press_stapler/click_bell/move_stapler_pad | 2 – 3 | 中等风险 |
+| 3. 新建型任务(2个) | [[04-Pick-Diverse-Object]]、[[05-Place-Relative]] | 无原生对应，成功判定要自己设计 | 3 – 4 | **较高风险**：论文未公开判定细节，需自行设计+反复试错（用户已确认这是主要不确定项） |
+| 4. 最复杂任务(1个) | [[06-Operate-Mic-Drawer]] | 双臂多步+抽屉资产 **未知是否已有现成资产** | 2.5 – 4（若需自建/改URDF资产，+1-2天） | **未知项**：抽屉资产是否现成，待第1轮环境搭建后实地确认 |
+| 5. 指令模板接入 | [[07-指令模板接入]] | 接入原生 description-gen 管线 | 1 – 1.5 | 低风险 |
+| 6. 合并评测集成 | [[08-合并评测集成]] | 维护 all_tasks_plus_if.yml，验证合并评测跑通 | 0.5 – 1 | 低风险 |
+| 7. 联调/回归/文档 | （不单独建笔记，最后回到主文档记录） | 完整跑一遍+修bug+文档 | 1.5 – 2 | 常规缓冲 |
 
 **总计：约 11.5 – 17 人天（~2.5 – 3.5 周）**。最大不确定性来自阶段3/4的成功判定设计（论文未公开细节，需自行摸索）和阶段4的抽屉资产可用性（需环境搭建后现场确认）。
 
 ## RoboTwin 2.0 submodule 版本锁定
 
-**选定 commit：`0aeea2d669c0f8516f4d5785f0aa33ba812c14b4`**（2026-04-19，"Update curobo git clone to version v0.7.8"），比当前上游 HEAD 落后约43个commit(~4个月)。已作为 git submodule 加入本仓库 `third_party/robotwin`。
+**选定 commit：`0aeea2d669c0f8516f4d5785f0aa33ba812c14b4`**（2026-04-19，"Update curobo git clone to version v0.7.8"），比当前上游 HEAD 落后约43个commit(~4个月)。
 
 来源：用户提供了一份现成的 CogACT 项目 `third_party/robotwin` 环境搭建脚本，该脚本已经把整套依赖/patch 针对这个具体 commit 调通过。直接复用理由：
 
