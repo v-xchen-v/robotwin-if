@@ -12,7 +12,7 @@
 
 范围仅限复刻基准本身（场景/干扰物/指令模板/成功判定），不训练模型。
 
-设计文档见 Obsidian 笔记库 `工作/1-Projects/RoboTwin-IF 复刻.md`（未纳入本仓库）。
+设计文档：[docs/design.md](docs/design.md)（原件维护在 Obsidian 笔记库 `工作/1-Projects/RoboTwin-IF 复刻.md`，此为同步副本）。
 
 ## Status
 
