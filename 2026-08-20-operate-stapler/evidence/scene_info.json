@@ -1,0 +1,34 @@
+{
+    "episode_0": {
+        "cluttered_table_info": [],
+        "texture_info": {
+            "wall_texture": null,
+            "table_texture": null
+        },
+        "info": {
+            "{A}": "048_stapler/base1",
+            "{a}": "left"
+        },
+        "mode": "press",
+        "distractors": [
+            "021_cup/base0",
+            "081_playingcards/base1"
+        ]
+    },
+    "episode_1": {
+        "cluttered_table_info": [],
+        "texture_info": {
+            "wall_texture": null,
+            "table_texture": null
+        },
+        "info": {
+            "{A}": "048_stapler/base0",
+            "{B}": "Magenta",
+            "{a}": "right"
+        },
+        "mode": "move",
+        "distractors": [
+            "095_glue/base0"
+        ]
+    }
+}
