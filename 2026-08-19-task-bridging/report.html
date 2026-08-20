@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>任务桥接 (task bridging) — 实现报告</title>
+<style>
+  :root{
+    --bg:#f6f7f9; --card:#ffffff; --ink:#1c2330; --muted:#5b6675; --line:#e3e7ee;
+    --new:#1a9e6f; --new-bg:#e6f7f0; --box:#64748b; --box-bg:#eef1f5;
+    --accent:#2563eb; --accent-bg:#eaf1ff; --warn:#b45309; --warn-bg:#fdf3e4;
+    --ok:#137a4b; --code:#0f172a; --code-bg:#f1f4f8;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;
+    line-height:1.65;font-size:15.5px}
+  .wrap{max-width:960px;margin:0 auto;padding:0 20px 80px}
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline}
+  code,kbd{font-family:"SF Mono",ui-monospace,"JetBrains Mono",Menlo,Consolas,monospace;
+    font-size:.86em;background:var(--code-bg);padding:1.5px 5px;border-radius:4px;color:#334155}
+  pre{background:var(--code);color:#e2e8f0;padding:16px 18px;border-radius:10px;overflow-x:auto;
+    font-family:"SF Mono",ui-monospace,Menlo,Consolas,monospace;font-size:13px;line-height:1.55}
+  pre code{background:none;color:inherit;padding:0}
+  h2{font-size:22px;margin:0 0 4px;letter-spacing:-.01em}
+  h3{font-size:16.5px;margin:22px 0 8px}
+  section{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:26px 30px;margin:20px 0;box-shadow:0 1px 2px rgba(16,24,40,.04)}
+  .sec-tag{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:14px}
+  table{width:100%;border-collapse:collapse;margin:12px 0;font-size:14px}
+  th,td{text-align:left;padding:9px 11px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{background:#fafbfc;font-weight:600;font-size:13px;color:var(--muted)}
+  tr:last-child td{border-bottom:none}
+  .badge{display:inline-block;padding:3px 10px;border-radius:999px;font-size:12.5px;font-weight:600}
+  .b-ok{background:var(--new-bg);color:var(--ok)}
+  .b-warn{background:var(--warn-bg);color:var(--warn)}
+  .b-box{background:var(--box-bg);color:var(--box)}
+  ul{padding-left:20px;margin:8px 0}
+  li{margin:5px 0}
+  .muted{color:var(--muted)}
+  /* hero */
+  .hero{background:linear-gradient(135deg,#0f2f27 0%,#15423a 60%,#1a5c4a 100%);color:#eafff6;
+    border-radius:16px;padding:38px 34px;margin:26px 0 8px}
+  .hero h1{margin:0 0 8px;font-size:29px;letter-spacing:-.02em}
+  .hero .lead{font-size:16px;color:#bfe9d8;margin:0 0 18px;max-width:640px}
+  .hero .meta{display:flex;flex-wrap:wrap;gap:8px 18px;font-size:13px;color:#a9dcc9;
+    border-top:1px solid rgba(255,255,255,.12);padding-top:16px;margin-top:4px}
+  .hero .meta b{color:#eafff6;font-weight:600}
+  .hero-badges{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:6px}
+  .hero-badges .badge{background:rgba(255,255,255,.14);color:#eafff6}
+  .hero-badges .green{background:#1fae7a;color:#04231a}
+  /* tldr */
+  .tldr{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .tldr .cell{background:#fafbfc;border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+  .tldr .cell h4{margin:0 0 4px;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+  .tldr .cell p{margin:0;font-size:14.5px}
+  @media(max-width:640px){.tldr{grid-template-columns:1fr}}
+  /* diagram */
+  .diagram{margin:16px 0;padding:20px;background:#fafbfc;border:1px solid var(--line);border-radius:12px}
+  .row{display:flex;align-items:stretch;gap:14px;flex-wrap:wrap;justify-content:center}
+  .node{border-radius:10px;padding:12px 14px;font-size:13px;min-width:150px;flex:1;max-width:280px}
+  .node .t{font-weight:700;font-size:12.5px;margin-bottom:3px}
+  .node .s{font-size:11.5px;line-height:1.4}
+  .n-ours{background:var(--new-bg);border:1.5px solid var(--new)}
+  .n-ours .t{color:var(--new)}
+  .n-link{background:#fff7e6;border:1.5px dashed #e0a83a}
+  .n-link .t{color:#b4791a}
+  .n-up{background:#eef4ff;border:1px solid #b9cdf5}
+  .n-up .t{color:var(--accent)}
+  .n-box{background:var(--box-bg);border:1.5px dashed var(--box)}
+  .n-box .t{color:var(--box)}
+  .n-out{background:#f0fdf4;border:1px solid #86d8a8}
+  .n-out .t{color:var(--ok)}
+  .arrow{text-align:center;color:var(--muted);font-size:12px;margin:8px 0;font-weight:600}
+  .arrow span{background:#fff;border:1px solid var(--line);border-radius:6px;padding:2px 10px}
+  .legend{display:flex;flex-wrap:wrap;gap:14px;margin-top:14px;font-size:12px;color:var(--muted)}
+  .legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+  /* evidence */
+  .ev{display:grid;grid-template-columns:minmax(0,300px) 1fr;gap:22px;align-items:start}
+  @media(max-width:680px){.ev{grid-template-columns:1fr}}
+  video{width:100%;border-radius:10px;border:1px solid var(--line);background:#000}
+  .ev-cap{font-size:13px;color:var(--muted);margin-top:8px}
+  .chips{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+  .chip{background:var(--code-bg);border:1px solid var(--line);border-radius:6px;padding:4px 9px;font-size:12.5px;color:#475569}
+  .callout{border-left:3px solid var(--new);background:var(--new-bg);padding:10px 14px;border-radius:0 8px 8px 0;margin:12px 0;font-size:14px}
+  .callout.warn{border-color:#e0a83a;background:var(--warn-bg)}
+  .prove td:first-child{font-weight:600;white-space:nowrap}
+  .yes{color:var(--ok);font-weight:700}
+  .no{color:#b91c1c;font-weight:700}
+  .footnote{font-size:13px;color:var(--muted);margin-top:26px;text-align:center}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-badges">
+      <span class="badge green">✓ 桥接两点全通</span>
+      <span class="badge">feature-01 环境搭建</span>
+      <span class="badge">3/3 episode success</span>
+    </div>
+    <h1>任务桥接 (task bridging)</h1>
+    <p class="lead">不 fork、不改一行上游源码，用两条相对软链把 <code style="background:rgba(255,255,255,.15);color:#eafff6">robotwin-if/tasks/</code> 里我们维护的任务文件透明注入 RoboTwin 2.0，让它的 <code style="background:rgba(255,255,255,.15);color:#eafff6">task_name</code> 查找命中我们的实现。</p>
+    <div class="meta">
+      <span><b>Branch</b> xichen-setupenv</span>
+      <span><b>Commit</b> 9a6cec2</span>
+      <span><b>日期</b> 2026-08-19</span>
+      <span><b>核心文件</b> bridge_tasks.sh · tasks/ · setup_robotwin.sh</span>
+      <span><b>验证任务</b> smoke_click_bell</span>
+    </div>
+  </div>
+
+  <!-- TL;DR -->
+  <section>
+    <div class="sec-tag">TL;DR · 30 秒</div>
+    <div class="tldr">
+      <div class="cell"><h4>做了什么</h4><p>把任务文件（<code>.py</code> + 指令 <code>.json</code>）留在自己仓库的 <code>tasks/</code>，用 <code>bridge_tasks.sh</code> 以 <code>ln -srf</code> 软链进 submodule 的注入点。RoboTwin 靠 <code>task_name</code> 字符串查文件，查到的就是软链。</p></div>
+      <div class="cell"><h4>怎么验证的</h4><p>Step 1 <code>importlib</code> 导入（无仿真）证明 envs 点；Step 2 端到端跑 <code>collect_data.py smoke_click_bell</code> 采 3 个 episode，证明指令 json 点 + 完整链路。</p></div>
+      <div class="cell"><h4>结论</h4><p><span class="yes">3/3 episode 成功</span>，hdf5 / instructions / video 三类产物齐全，指令确实来自我们注入的模板（seen 100 / unseen 100）。桥接方案落地无误。</p></div>
+      <div class="cell"><h4>最大的坑</h4><p>不在桥接本身，而在<b>环境安装</b>：setup 脚本路径算错把 RoboTwin 装到仓库外；迁移时又踩到 curobo 和 embodiment 配置里<b>烧死的绝对路径</b>。</p></div>
+    </div>
+  </section>
+
+  <!-- 背景 -->
+  <section>
+    <div class="sec-tag">背景与目标</div>
+    <h2>为什么需要桥接</h2>
+    <p>本项目（<b>RoboTwin-IF 复刻</b>）要在 RoboTwin 2.0 上实现 5 个新/改造任务集，但决策是 <b>把 RoboTwin 作为 git submodule 引入、不 fork、不改上游源码</b>（好处：跟上游升级容易、改动边界清晰全在 robotwin-if、不维护长期漂移的 fork）。</p>
+    <p>矛盾点在于：RoboTwin 跑任务时<b>完全靠 <code>task_name</code> 字符串去 submodule 内部固定目录按约定名字找文件</b>，它从不知道 <code>robotwin-if</code> 的存在。于是需要一层桥接——让我们仓库里维护的任务文件，在运行时能被 RoboTwin「看见」。调研 <code>collect_data.py</code> 源码后确认按 <code>task_name</code> 对齐的注入点其实有 <b>3 处</b>（最初以为只有 <code>envs/</code> 一处）。</p>
+    <table>
+      <tr><th>#</th><th>注入点（submodule 内）</th><th>谁来读</th><th>命名规则</th></tr>
+      <tr><td>1</td><td><code>envs/{task_name}.py</code></td><td><code>collect_data.py:23</code> importlib + <code>:25</code> getattr</td><td>文件名 <b>和类名</b>都 == <code>task_name</code></td></tr>
+      <tr><td>2</td><td><code>description/task_instruction/{task_name}.json</code></td><td><code>generate_episode_instructions.py:133</code></td><td>文件名 == <code>task_name</code></td></tr>
+      <tr><td>3</td><td><code>description/objects_description/{obj}/</code></td><td>物体描述生成管线</td><td>仅<b>新物体</b>任务需要；本次未用</td></tr>
+    </table>
+  </section>
+
+  <!-- 架构 -->
+  <section>
+    <div class="sec-tag">架构 / 实现</div>
+    <h2>一层文件系统级透明注入</h2>
+    <p>桥接夹在「RoboTwin 的 <code>task_name</code> 查找」和「我们仓库的任务文件」之间。绿色 = 我们新增；黄色虚线 = 注入的软链；蓝色 = 上游读取方（未改）；灰色虚线 = 黑盒仿真引擎。</p>
+
+    <div class="diagram">
+      <div class="row">
+        <div class="node n-ours"><div class="t">tasks/envs/smoke_click_bell.py</div><div class="s">class smoke_click_bell(Base_Task)<br>逐字复制 click_bell，仅改类名</div></div>
+        <div class="node n-ours"><div class="t">tasks/task_instruction/…json</div><div class="s">seen / unseen 模板</div></div>
+        <div class="node n-ours"><div class="t">bridge_tasks.sh</div><div class="s">薄桥接脚本 · 幂等</div></div>
+      </div>
+      <div class="arrow"><span>ln -srf 相对软链 ↓ 指向</span></div>
+      <div class="row">
+        <div class="node n-link"><div class="t">envs/smoke_click_bell.py</div><div class="s">→ ../../../tasks/envs/…</div></div>
+        <div class="node n-link"><div class="t">…/task_instruction/…json</div><div class="s">→ ../../../../tasks/…</div></div>
+      </div>
+      <div class="arrow"><span>运行期：task_name 查找命中软链 ↓</span></div>
+      <div class="row">
+        <div class="node n-up"><div class="t">collect_data.py</div><div class="s">import_module(f"envs.{task_name}")<br>getattr(m, task_name) · 编排</div></div>
+        <div class="node n-box"><div class="t">SAPIEN + mplib + curobo</div><div class="s">【黑盒】仿真 / 运动规划 / 渲染</div></div>
+        <div class="node n-up"><div class="t">generate_episode_instructions.py</div><div class="s">读 task_instruction 展开指令</div></div>
+      </div>
+      <div class="arrow"><span>落盘 ↓</span></div>
+      <div class="row">
+        <div class="node n-out" style="max-width:520px"><div class="t">data/smoke_click_bell/demo_smoke/</div><div class="s">episode*.hdf5 &nbsp;+&nbsp; instructions/*.json &nbsp;+&nbsp; video/*.mp4</div></div>
+      </div>
+      <div class="legend">
+        <span><i style="background:var(--new-bg);border:1.5px solid var(--new)"></i>我们新增</span>
+        <span><i style="background:#fff7e6;border:1.5px dashed #e0a83a"></i>注入的软链</span>
+        <span><i style="background:#eef4ff;border:1px solid #b9cdf5"></i>上游读取方（未改）</span>
+        <span><i style="background:var(--box-bg);border:1.5px dashed var(--box)"></i>黑盒仿真</span>
+      </div>
+    </div>
+
+    <div class="callout"><b>方案成立的根本：</b>读取方 <code>collect_data.py</code> / <code>generate_episode_instructions.py</code> 对「文件是实体还是软链」<b>无感知</b>——桥接在文件系统层做透明注入，不需要上游有任何插件 / 注册机制，也就一行源码都不用改。</div>
+  </section>
+
+  <!-- 证据 -->
+  <section>
+    <div class="sec-tag">证据 · 眼见为实</div>
+    <h2>桥接进来的任务，端到端跑通</h2>
+    <div class="ev">
+      <div>
+        <video controls preload="metadata" src="evidence/smoke_click_bell_episode0.mp4"></video>
+        <div class="ev-cap"><code>evidence/smoke_click_bell_episode0.mp4</code> — <code>smoke_click_bell</code> episode 0 的渲染视频。</div>
+      </div>
+      <div>
+        <p><b>这段证明了什么：</b>一个<b>由我们软链注入</b>的任务（不在上游 <code>envs/</code> 原生列表里），完整走通了 SAPIEN 渲染 + mplib/curobo 运动规划 + 脚本化专家演示，并正常落盘视频——桥接点 1（代码发现）在真实仿真下有效。</p>
+        <div class="chips">
+          <span class="chip">simulate episode 0/1/2 success</span>
+          <span class="chip">failed 0 / 3 tries</span>
+          <span class="chip">check_success assert 通过</span>
+          <span class="chip">3 hdf5 · 3 instr · 3 mp4</span>
+        </div>
+        <h3>指令来自我们注入的模板</h3>
+        <p class="muted" style="margin:0 0 6px">节选 <code>evidence/smoke_click_bell_episode0_instructions.json</code>（seen 100 / unseen 100）：</p>
+<pre><code>seen  : "Click the white dome bell's top center using the left arm."
+        "Have the left arm click at the bell with black flat base's top center."
+unseen: "Click the lightweight bell with smooth surface's top center on the table."
+        "Use the left arm to press the medium-sized bell's top center."</code></pre>
+        <p style="font-size:13.5px">「bell / click / top center」的语义与 <code>smoke_click_bell.json</code> 模板一致 → 证明桥接点 2（指令 json）被读到并展开成功。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 决策 / 教训 -->
+  <section>
+    <div class="sec-tag">关键决策 / 教训</div>
+    <h2>真正有分岔、踩过坑的点</h2>
+
+    <h3>决策：装进仓库 submodule（方案 A），而非外部目录参数化（方案 B）</h3>
+    <p>安装脚本原本（为 CogACT 项目写的）把 RoboTwin 装到了仓库<b>外</b>。修法有两条路：<b>A</b> 改路径装进仓库 submodule；<b>B</b> 脚本加 <code>--robotwin_dir</code> 指向外部安装。选 <b>A</b>，因为仓库已正式声明并 pin 了 submodule，选 B 等于承认 submodule 是摆设；且后续桥接的 symlink 在仓库内做，相对路径稳定得多。代价是一次性迁移（16GB，同文件系统 <code>mv</code> 秒级）。</p>
+
+    <div class="callout warn"><b>教训 1 · setup 脚本路径假设不可移植。</b> 原脚本 <code>COGACT_ROOT=$(cd "$(dirname "$0")/../../.." && pwd)</code> 假设脚本在三层嵌套里，搬到本仓库（脚本在根目录）后往上 3 层算成了 <code>~/</code>，RoboTwin 装到仓库外、submodule 反而是空的。<b>修复：</b>以脚本所在目录为仓库根 + <code>git submodule update --init</code>。</div>
+
+    <div class="callout warn"><b>教训 2 · RoboTwin 装完不能随便挪目录——多处烧死绝对路径。</b> 迁移时踩到两处：① curobo 是 editable 安装，<code>.pth</code> 写死老 <code>envs/curobo/src</code> 路径；② <code>update_embodiment_config_path.py</code> 把 assets 绝对路径烧进了 <code>curobo_*.yml</code> 的 <code>urdf_path</code>/<code>collision_spheres</code>（移动后报 <code>'Robot' object has no attribute 'left_planner'</code>）。<b>修复：</b>改 <code>.pth</code> + 从模板重跑 embodiment 配置生成。<b>这两个坑在全新安装上不会出现</b>——它们是「先装好再挪窝」才触发的，全新安装绝对路径第一次就写对。</div>
+
+    <div class="callout"><b>心得 · symlink 用相对路径（<code>ln -srf</code>）。</b> 软链目标写成 <code>../../../tasks/…</code> 而非绝对路径，仓库整体换位置 / 换机器都不断——正好规避了「教训 2」那类绝对路径脆弱性。</div>
+  </section>
+
+  <!-- 现状与边界 -->
+  <section>
+    <div class="sec-tag">现状与边界</div>
+    <h2>验了什么，没验什么</h2>
+    <table class="prove">
+      <tr><th>维度</th><th>状态</th><th>依据</th></tr>
+      <tr><td>envs 桥接点（文件名+类名对齐）</td><td><span class="badge b-ok">已验证</span></td><td>importlib import + getattr，Base_Task 子类</td></tr>
+      <tr><td>task_instruction 桥接点</td><td><span class="badge b-ok">已验证</span></td><td>3/3 episode，指令产自注入模板</td></tr>
+      <tr><td>完整链路（仿真→落盘）</td><td><span class="badge b-ok">已验证</span></td><td>failed 0/3，三类产物齐全</td></tr>
+      <tr><td>objects_description 桥接点（#3）</td><td><span class="badge b-box">未涉及</span></td><td>smoke 复用现有物体，脚本预留 glob 空跑</td></tr>
+      <tr><td>评测侧桥接（eval_policy）</td><td><span class="badge b-box">未验证</span></td><td>同一 importlib 机制，留待 feature-08</td></tr>
+      <tr><td>seen/unseen 零重叠断言</td><td><span class="badge b-warn">未做</span></td><td>设计文档 Layer A，本次未断言</td></tr>
+    </table>
+
+    <h3>明确「不证明什么」</h3>
+    <ul>
+      <li><span class="no">不证明</span> <code>smoke_click_bell</code> 的任务判定逻辑正确——它逐字复制自 <code>click_bell</code>，<code>check_success</code> 本身未针对性验证；本次只验「桥接后能跑通且 success」。</li>
+      <li><span class="no">不证明</span> 其他 <code>task_config</code> / 多任务并发下的行为。</li>
+      <li><span class="no">不证明</span> policy 效果——这是脚本化数据采集，非训练 / 评测。</li>
+      <li><span class="no">不证明</span> 桥接点 3 与评测侧（虽机制同源，但未实跑）。</li>
+    </ul>
+  </section>
+
+  <!-- 复现 -->
+  <section>
+    <div class="sec-tag">怎么复现</div>
+    <h2>可复制的命令</h2>
+<pre><code># 0. 环境（一次性）：装进仓库 submodule
+bash setup_robotwin.sh
+conda activate RoboTwin
+
+# 1. 桥接：把 tasks/ 软链进 submodule 三个注入点（幂等）
+bash bridge_tasks.sh
+
+# 2. Step 1 — envs 桥接点（无仿真，秒级）
+cd third_party/robotwin
+python -c "import importlib; m=importlib.import_module('envs.smoke_click_bell'); \
+           print(getattr(m,'smoke_click_bell'))"
+
+# 3. Step 2 — 完整 smoke test（3 episode）
+#    demo_smoke.yml = demo_clean 改 episode_num:3（language_num:100 不变）
+CUDA_VISIBLE_DEVICES=0 python script/collect_data.py smoke_click_bell demo_smoke
+
+# 产物：data/smoke_click_bell/demo_smoke/{data,instructions,video}/</code></pre>
+    <p class="muted" style="font-size:13.5px">深读：本目录 <code>architecture.md</code>（黑盒流程图 + 调用链）· <code>task-bridging-impl-verify.md</code>（逐字段 key mapping + 数值 provenance + 边界）· 仓库 <code>docs/design.md</code>（复刻范围与决策）· <code>docs/features/01-环境搭建.md</code>（实现记录 + 踩坑）。</p>
+  </section>
+
+  <div class="footnote">RoboTwin-IF 复刻 · feature-01 · 生成于 2026-08 · 本报告 self-contained，视频随目录 <code>evidence/</code> 走</div>
+
+</div>
+</body>
+</html>
