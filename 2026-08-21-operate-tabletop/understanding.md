@@ -27,6 +27,7 @@ Feature: RoboTwin-IF 第 3 个复刻任务（复用型），对应 `docs/feature
 - **不用 MLLM description-gen**、不新增 `objects_description` 文件（复用现成）。
 - **不现在抽 task-04 共用的 pick-grounding helper**（inline now, refactor later）。
 - 指令措辞不手撰，全来自 native 池。
+- **本质是"三选一 target 选择"，动词搭车，非真·动词判别**：场景里每个物体只有一个 affordance（铃铛只能触/订书机只能按/物体只能拿），指令名了物体动作就定了。这跟 Operate-Stapler（同一订书机 + press/move 二选一，才是真·动词判别）不同。要测真·动词判别需给某物体加第二个 affordance——本任务范围内不做。
 
 ### 验收标准
 
@@ -51,6 +52,10 @@ Feature: RoboTwin-IF 第 3 个复刻任务（复用型），对应 `docs/feature
 5. **可拿物体 model_id 需过滤"有 objects_description"。**
    实现中发现：`{C}` 解析走 `replace_placeholders`，若物体缺 `objects_description/{name}/base{N}.json` 会 hard-exit。于是 `_valid_model_ids` 在 stable + 有 mesh 之外，再加"有 description json"的交集。
 
+6. **动词 overlap 复审：click 借来的 "press/push the bell top" 和 press 分支撞动词——有意保留。**
+   审指令池发现：click 33 条里 9 条用 press/push（因 native `click_bell.json` 就把"触碰铃铛顶"措辞成 "Press the bell's top center"），跟 press（订书机）分支起始动词 `press/push/use` 直接撞。分析后确认这是**两难而非 bug**：保留 overlap → 强迫 policy 靠物体名词 ground bell↔stapler（更硬的 grounding 测试）+ 忠于 native；清成 touch/tap → 语义干净但动词一独立，退化 policy 可只看动词就路由 click/press、绕过物体定位（反而给作弊捷径）。**决定（用户选）：保留 overlap = 现状，指令池不改。**
+   关键澄清（用户提问触发）：**mode 与 verb 完全解耦** —— `mode = seed%3` 在指令生成前就定死；`filter_instructions` 按占位符 `{A}/{B}/{C}`（非动词）路由，Layer-A `leak=0` 已证三池零串味；`check_success` 按 `self.mode`（seed 派生）分支、不读指令文本。所以动词 overlap 只让 policy 读到的**语言更难**，对 mode 选择/场景/判据/池路由**零影响**。
+
 （没有为了凑数编造——以上均是本次会话真实发生的调整。）
 
 ## 待确认
@@ -59,7 +64,17 @@ Feature: RoboTwin-IF 第 3 个复刻任务（复用型），对应 `docs/feature
 - [x] **pick 借用源 = `adjust_bottle`（单臂纯拿起）** —— 已穷举 `full_description` 确认是 RoboTwin 里唯一单臂纯拿起任务（`319bba0`）。
 - [x] **三向路由正确性** —— Layer-A 23/23 PASS（本机，无需仿真）。
 - [x] **判定正反例（含拿错物体）** —— Layer-B 7/7 PASS（`conda run -n RoboTwin ...`，2026-08-21，aloha-agilex）：C1/P1/K1 默认态 False、C2/P2/K2 正例 True、K3 拿错物体（目标 075_bread、抬起干扰物 081_playingcards）False。
-- [ ] **pick 的 0.02m lift 阈值是类推值（论文未确认）。** 实测正例稳定 True、拿错物体 False，当前够用；但若换具身（如 Piper/Franka）或换物体池，抬升幅度不同可能需要重标。靠更大规模 collection 的 oracle 成功率来验证是否偏严/偏松。
-- [ ] **场景恒定 across 三模式 是最 load-bearing 的假设**（IF 命门：看图不能反推指令）。当前实现三类物体每 episode 都在场、bell/stapler 恒 static、graspable 恒 dynamic。逻辑上成立，但"人眼看单帧图确实分不出模式"这点没有实拍验证；错了会让 policy 能靠场景布局作弊、benchmark 失去区分度。要靠 Layer-C（瞎猜 baseline 接近 chance、作弊 oracle 接近 100%）来验证，本轮未做。
-- [ ] **1 个可拿物体时 pick 分支没有"可拿型干扰物"**（只有 bell/stapler 当错动作干扰）。num∈{1,2} 随机，num=1 时 pick 的目标 grounding 退化到"场上唯一可拿物"。是否可接受取决于论文对"1-2 物体"的原意，无法从公开信息确认。
-- [ ] **物体池摆放拥挤度**：`_sample_pose` 用 min_sep=0.13 + 80 次重试在 ~0.5×0.25 桌面塞 3–4 个物体，偶发 `UnStableError`/放不下会靠 seed 重试跳过。大规模 collection 时若某些 seed 长期失败会拉低 oracle 采集率，需 collection 报告观察（`tools/report_operate_tabletop.py` 有 per-episode 物体数 + 分布统计）。
+- [x] **pick 的 0.02m lift 阈值是否偏严** —— 已由 90-eps collection 验证**不偏严**:pick oracle 成功率 28/30 = 93.3%（见下方 collection 证据）。仍需注意:换具身（Piper/Franka）或换物体池时抬升幅度不同，可能要重标；届时重跑 collection 看成功率即可。
+- [ ] **场景恒定 across 三模式 是最 load-bearing 的假设**（IF 命门：看图不能反推指令）。当前实现三类物体每 episode 都在场、bell/stapler 恒 static、graspable 恒 dynamic。**Layer-C 的 oracle 侧已验**（分布无偏 + 作弊 oracle 97.8%，见下）；但**瞎猜 baseline 接近 chance（≈1/3）**这半边需要真跑一个无视语言的 dummy policy 过 `eval_policy.sh`，比 collection 重。**决定（2026-08-21）：这半边延到 policy/eval 阶段、五个任务一起做，此处标记为 TODO，非本任务遗漏**（与 design.md「Layer-C 留到后面单独做」一致）。
+- [x] **1 个可拿物体时 pick 分支没有"可拿型干扰物"** —— collection 显示每 episode 物体数 `1:44 / 2:46`，约半数 episode 有 2 个可拿物（有品类干扰），设计符合预期；num=1 时退化为"场上唯一可拿物"是已知且可接受的（bell/stapler 仍是错动作干扰）。
+- [x] **物体池摆放拥挤度 / oracle 采集率** —— 90 eps 采集 tried 0..91（92 次）kept 90，**仅 2 次失败且都在 pick**，`UnStableError`/放不下没有拖垮采集率。物体频次 10-19 均匀，无缺席/垄断。
+- [ ] **可拿物池是窄子集，可扩（暂不扩）** —— 现用 9 个 = `put_object_cabinet` 场景清单去掉订书机。核实：资产库 125 物体里，满足"有 `contact_points_pose` 抓取点 + `stable` + 有 objects_description"的有 **60 个**，即 **51 个合格物体没用**（cup/mug/pencup/tissue-box/remotecontrol/notebook/book/can/glue…）。**当初保守的理由**：put_object_cabinet 那批是 RoboTwin 实测验证过可抓可举的；其余只满足数据条件，`grasp_actor` 抓取可靠性未验证（太大/太重/形状刁钻会拉低 pick 成功率）。**扩池前提**：① 排除任务保留物 `050_bell`(click目标)/`048_stapler`(press目标)/`018_microphone`(mic任务) 和过大件；② 扩后重跑 collection 验证 pick oracle 成功率不塌。**决定（2026-08-21，用户选）：先只记录、暂不扩**；物体多样性主要交给专门的 [[04-Pick-Diverse-Object]]，Tabletop 的 pick 是次要维度。
+
+## Collection 证据（2026-08-21，demo_clean，episode_num=90，aloha-agilex）
+
+数据目录 `third_party/robotwin/data/operate_tabletop/demo_clean`，报告 `python tools/report_operate_tabletop.py`：
+
+- **分布均匀性**：成功集 click=31 / press=31 / pick=28（total 90）。试过 seed 0..91，mode=seed%3 → 试过的三模式本就均匀（31/31/30）；成功集近均匀，pick 略少仅因 2 个失败。
+- **场景可操作性（oracle kept/tried）**：click **100%**(31/31)、press **100%**(31/31)、pick **93.3%**(28/30)、合计 **97.8%**(90/92)。均达/超 native 基线（click_bell 91-100%、press_stapler 59-100%）。
+- **物体分布**：每 episode 物体数 1:44 / 2:46；9 物体池频次 10-19，均匀。
+- **结论**：三分支专家均能稳定跑通，场景可操作、分布无偏，Layer-C 的 oracle 侧通过。

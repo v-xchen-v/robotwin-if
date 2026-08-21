@@ -1,0 +1,25 @@
+### Layer-B judgement test — captured 2026-08-21 from user's run on the RoboTwin box
+### command: conda run -n RoboTwin python tests/operate_tabletop/test_check_success.py
+### (positive cases C2/P2/K2 run the scripted expert; contact/lift-based, cannot be faked by set_pose)
+
+============= Config =============
+Messy Table: False
+Random Background: False
+Random Light: False
+Random Table Height: 0
+Random Head Camera Distance: 0
+Head Camera Config: D435, True
+Wrist Camera Config: D435, True
+Embodiment Config: aloha-agilex
+==================================
+Warp DeprecationWarning: (warp.torch.device_from_torch deprecation notice)
+[PASS] C1 click no-contact (default state): got=False expect=False
+[PASS] C2 click positive (ran expert): got=True expect=True  plan_success=True
+[PASS] P1 press no-contact (default state): got=False expect=False
+[PASS] P2 press positive (ran expert): got=True expect=True  plan_success=True
+[PASS] K1 pick not-picked (default state): got=False expect=False
+[PASS] K2 pick positive (ran expert): got=True expect=True  plan_success=True
+[PASS] K3 pick wrong-object (lifted a distractor) <-KEY: got=False expect=False  target=075_bread wrong=081_playingcards
+
+==== summary ====
+7/7 passed

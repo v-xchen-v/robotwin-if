@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Operate-Tabletop — RoboTwin-IF</title>
+<style>
+  :root{
+    --bg:#f6f7f9; --card:#ffffff; --ink:#1c2230; --muted:#5b6675; --line:#e3e7ee;
+    --accent:#3d5afe; --ok:#1f9d55; --warn:#b26a00;
+    --click:#2f6df6; --click-bg:#eaf1ff;
+    --press:#c07800; --press-bg:#fff4e0;
+    --pick:#1f9d55; --pick-bg:#e7f6ec;
+    --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.65;font-size:16px}
+  .wrap{max-width:920px;margin:0 auto;padding:0 20px 80px}
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline}
+  code,kbd{font-family:var(--mono);font-size:.9em}
+  h2{font-size:1.35rem;margin:2.4rem 0 .8rem;padding-top:.6rem;border-top:2px solid var(--line)}
+  h3{font-size:1.05rem;margin:1.4rem 0 .5rem}
+  p{margin:.6rem 0}
+  /* hero */
+  .hero{background:linear-gradient(135deg,#1c2230,#2b3550);color:#fff;border-radius:0 0 16px 16px;padding:38px 30px 30px;margin-bottom:8px}
+  .hero .kicker{font-size:.8rem;letter-spacing:.12em;text-transform:uppercase;color:#9fb0d0}
+  .hero h1{margin:.2rem 0 .5rem;font-size:2.1rem;line-height:1.15}
+  .hero p.lead{margin:0;color:#cdd6e8;font-size:1.05rem;max-width:70ch}
+  .badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+  .badge{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);color:#eaf0fb;
+         padding:5px 11px;border-radius:20px;font-size:.82rem;font-weight:600;white-space:nowrap}
+  .badge.ok{background:rgba(31,157,85,.22);border-color:rgba(31,157,85,.5)}
+  .meta{display:flex;flex-wrap:wrap;gap:6px 20px;margin-top:16px;font-size:.82rem;color:#aab6cf}
+  .meta b{color:#e6ecf7;font-weight:600}
+  /* cards / callouts */
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin:14px 0;
+        box-shadow:0 1px 2px rgba(20,30,50,.04)}
+  .tldr{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .tldr .cell{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:8px;padding:12px 14px}
+  .tldr .cell h4{margin:0 0 .3rem;font-size:.8rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+  .tldr .cell p{margin:0;font-size:.95rem}
+  @media(max-width:620px){.tldr{grid-template-columns:1fr}}
+  /* mode chips */
+  .chip{display:inline-block;padding:1px 8px;border-radius:6px;font-weight:700;font-size:.85em;font-family:var(--mono)}
+  .chip.click{color:var(--click);background:var(--click-bg)}
+  .chip.press{color:var(--press);background:var(--press-bg)}
+  .chip.pick{color:var(--pick);background:var(--pick-bg)}
+  /* tables */
+  table{border-collapse:collapse;width:100%;margin:12px 0;font-size:.92rem;overflow:hidden;border-radius:8px}
+  th,td{border:1px solid var(--line);padding:8px 11px;text-align:left;vertical-align:top}
+  th{background:#eef1f6;font-weight:600}
+  tbody tr:nth-child(even){background:#fafbfd}
+  .tbl-scroll{overflow-x:auto}
+  /* flow diagram */
+  .flow{display:flex;flex-wrap:wrap;align-items:stretch;gap:10px;margin:16px 0}
+  .flow .node{flex:1;min-width:150px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 14px;font-size:.88rem}
+  .flow .node b{display:block;font-size:.95rem;margin-bottom:3px}
+  .flow .node small{color:var(--muted)}
+  .arm{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:10px}
+  .arm .node.click{border-top:3px solid var(--click)}
+  .arm .node.press{border-top:3px solid var(--press)}
+  .arm .node.pick{border-top:3px solid var(--pick)}
+  @media(max-width:620px){.arm{grid-template-columns:1fr}}
+  /* evidence */
+  pre{background:#141a26;color:#dbe3f0;border-radius:10px;padding:14px 16px;overflow-x:auto;font-family:var(--mono);
+      font-size:.82rem;line-height:1.5;margin:10px 0}
+  pre .pass{color:#7ee2a8}
+  pre .num{color:#ffd479}
+  pre .key{color:#ff9d7a}
+  pre .dim{color:#8391a8}
+  .proves{border-left:4px solid var(--ok);background:#eef8f1;padding:8px 14px;border-radius:0 8px 8px 0;margin:6px 0 20px;font-size:.92rem}
+  .proves b{color:var(--ok)}
+  /* callout */
+  .note{border-left:4px solid var(--warn);background:#fff6e8;padding:10px 14px;border-radius:0 8px 8px 0;margin:12px 0;font-size:.93rem}
+  .note b{color:var(--warn)}
+  .status-ok{color:var(--ok);font-weight:700}
+  .status-todo{color:var(--warn);font-weight:700}
+  ul.tight{margin:.4rem 0;padding-left:1.3rem}
+  ul.tight li{margin:.25rem 0}
+  .lead-num{font-weight:700;color:var(--accent)}
+  /* video grid */
+  .vidgrid{display:flex;flex-direction:column;gap:14px;margin:16px 0}
+  .vrow{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media(max-width:620px){.vrow{grid-template-columns:1fr}}
+  .vcell{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px;overflow:hidden}
+  .vcell video{width:100%;border-radius:6px;display:block;background:#000}
+  .vlabel{font-size:.82rem;font-weight:600;color:var(--muted);margin-bottom:6px;display:flex;align-items:center;gap:6px}
+  .vmiss{display:flex;flex-direction:column;justify-content:center;align-items:center;height:150px;color:var(--muted);
+         background:repeating-linear-gradient(45deg,#f0f2f6,#f0f2f6 10px,#e9edf3 10px,#e9edf3 20px);border-radius:6px;text-align:center;font-size:.9rem;line-height:1.4}
+  /* object thumbnail grid */
+  .objgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(104px,1fr));gap:12px;margin:16px 0}
+  .objcard{background:#fbfcfe;border:1px solid var(--line);border-radius:10px;padding:8px 8px 6px;text-align:center}
+  .objcard img{width:100%;aspect-ratio:1/1;object-fit:contain;display:block}
+  .objcard .nm{font-size:.78rem;font-weight:600;color:var(--ink);margin-top:3px}
+  .objcard .id{font-family:var(--mono);font-size:.68rem;color:var(--muted)}
+  footer{margin-top:40px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:.85rem}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap" style="padding-bottom:0">
+    <div class="kicker">RoboTwin-IF 复刻 · Feature 03</div>
+    <h1>Operate-Tabletop</h1>
+    <p class="lead">同一恒定桌面场景（铃铛 + 订书机 + 1–2 可拿物体）下的<b>三选一「动词 + 目标」判别</b> —— 指令决定去 <span class="chip click">touch</span> 铃铛、<span class="chip press">press</span> 订书机、还是 <span class="chip pick">pick</span> 起被点名的那个物体。用来诊断 VLA policy 是否真按语言控制动作。</p>
+    <div class="badges">
+      <span class="badge ok">✓ Layer-A 路由 23/23</span>
+      <span class="badge ok">✓ Layer-B 判定 7/7</span>
+      <span class="badge ok">✓ Oracle 97.8% · 90 eps</span>
+      <span class="badge">分布 31/31/28</span>
+    </div>
+    <div class="meta">
+      <span><b>commit</b> 319bba0 (master)</span>
+      <span><b>日期</b> 2026-08-21</span>
+      <span><b>具身</b> aloha-agilex</span>
+      <span><b>核心文件</b> tasks/envs/operate_tabletop.py</span>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <h2 id="tldr">TL;DR</h2>
+  <div class="tldr">
+    <div class="cell"><h4>做了什么</h4><p>一个画面恒定的桌面场景，指令三选一激活不同 affordance。<code>mode = seed % 3</code> 派生，三个不同占位符 <code>{A}/{B}/{C}</code> 做三向指令路由。</p></div>
+    <div class="cell"><h4>怎么验证的</h4><p>Layer-A 路由（本机）+ Layer-B 判定正反例（仿真，真跑脚本专家）+ 90-eps oracle collection（可操作性 & 分布）。</p></div>
+    <div class="cell"><h4>结论</h4><p>三向路由与判定逻辑正确；三分支专家稳定跑通 <b>97.8%</b>；成功集分布无偏 <b>31/31/28</b>。IF 命门"拿错物体判 False"通过。</p></div>
+    <div class="cell"><h4>最大的坑</h4><p>初版把 <span class="chip click">click</span> 误解成"摇铃"且手写指令措辞 —— 实为"<b>touch 铃铛顶部</b>"，且措辞应<b>借用 native 原生池</b>，不该自撰。</p></div>
+  </div>
+
+  <h2 id="bg">背景与目标</h2>
+  <p>RoboTwin-IF（Instruction Following）诊断的是：VLA policy 是不是<b>真按语言指令选动作</b>，而不是退化成"看图做默认动作"（论文称 VLA→VA degradation）。核心机制是 seen/unseen 指令模板隔离 —— 训练与评测的语言分布零重叠。</p>
+  <p>Operate-Tabletop 是 5 个任务集里最难的一个：一个场景里摆着<b>三个都真实可交互的 affordance</b>（铃铛能触、订书机能按、物体能拿），指令只激活其中一个，且画面在三种模式下<b>静止时完全一致</b>。这就逼 policy 必须读懂语言 —— 光看图分不出该做哪件事。判别有两层：① 动词三选一（touch / press / pick）；② 在 pick 分支里还要选对<b>具体哪个</b>物体。</p>
+
+  <h2 id="target">复刻目标：论文原图（Figure 6）</h2>
+  <p>下图是论文 §6.2.1 / Figure 6 里 Operate-Tabletop 的原始定义 —— 这是我们复刻要对齐的目标。三行指令 = 三个 mode。</p>
+  <figure style="margin:16px 0">
+    <img src="evidence/paper-fig6-instruction-following-operate-tabletop.png" alt="论文 Figure 6 — Operate-Tabletop（Three-way verb-and-target discrimination）" style="width:100%;border:1px solid var(--line);border-radius:10px;display:block">
+    <figcaption style="color:var(--muted);font-size:.84rem;margin-top:8px">论文 Figure 6：Operate-Tabletop —— <em>Three-way verb-and-target discrimination</em>。① Touch the bell → Ring bell ② Push on the stapler → Press stapler ③ Collect the coffee box → Pick target object。</figcaption>
+  </figure>
+
+  <div class="tbl-scroll"><table>
+  <thead><tr><th>论文原图</th><th>我们的实现是否对上</th></tr></thead>
+  <tbody>
+    <tr><td>"<b>Touch</b> the bell with raised round top"</td><td><span class="chip click">click</span> ✓ 动词就是 touch —— 印证我们从 ring 纠正为 touch</td></tr>
+    <tr><td>"<b>Push on</b> the rectangular stapler with curved corners"</td><td><span class="chip press">press</span> ✓ push/press 订书机</td></tr>
+    <tr><td>"<b>Collect</b> the light brown coffee box"</td><td><span class="chip pick">pick</span> ✓ 拿起点名物；<code>113_coffee-box</code> 正在我们的可拿物池里</td></tr>
+    <tr><td>铃铛 + 订书机 + 物体 同场景</td><td>✓ 三物恒在场（我们的恒定场景设计）</td></tr>
+    <tr><td>物体用形状/颜色描述（"raised round top" / "light brown"）</td><td>≈ 我们靠 <code>objects_description</code> 解析其自然外观词；但未做同品类撞色消歧</td></tr>
+  </tbody></table></div>
+
+  <div class="note" style="border-left-color:#8a4fd0;background:#f3ecfb">
+    <b style="color:#8a4fd0">复刻性质声明。</b> RoboTwin-IF 原始代码<b>未开源</b>，我们无法对齐到实现细节 —— 成功判定阈值、场景随机化分布、干扰物规则等论文都没给。本实现是<b>基于论文公开描述 + Figure 6 + RoboTwin 原生同类任务能力的语义近似重建</b>：<b>不可能 100% 还原，只能尽量靠近</b>。凡论文未确认的判定/参数，均在代码与 notes 里显式标注"类推、非原文确认"。
+  </div>
+
+  <h2 id="impl">实现 / 架构</h2>
+  <p>任务继承 <code>Base_Task</code>，通过 <code>bridge_tasks.sh</code> 把 env + 指令 JSON symlink 进 RoboTwin submodule（类名 = 文件名 = task_name）。一次调用的数据流：</p>
+
+  <div class="flow">
+    <div class="node"><b>setup_demo(seed)</b><small>捕获 seed → <code>self._seed</code></small></div>
+    <div class="node"><b>load_actors</b><small><code>mode = ["click","press","pick"][seed%3]</code>；摆铃铛(static)+订书机(static)+1–2 可拿物(dynamic)；<code>delay(2)</code> 沉降；pick 时采 <code>target_origin_z</code></small></div>
+    <div class="node"><b>play_once / policy</b><small>oracle 跑专家或 policy 施加动作</small></div>
+    <div class="node"><b>check_success()</b><small>按 mode 判当前目标 → bool</small></div>
+  </div>
+
+  <p>三个分支各复用一个原生任务，判定 <b>target-specific</b>（只判当前指令那个目标，做错动作自然 False）：</p>
+  <div class="arm">
+    <div class="node click"><b><span class="chip click">click</span> 触碰铃铛顶</b><small>复用 <code>click_bell</code>。判据：动作臂夹爪闭合 + 夹爪∩铃铛 cp0 在 eps<code>[.025,.025]</code> 内。占位符 <code>{A}</code>。</small></div>
+    <div class="node press"><b><span class="chip press">press</span> 按下订书机</b><small>复用 <code>press_stapler</code>。判据：夹爪∩订书机 cp2 在 eps<code>[.03,.03]</code> 内。占位符 <code>{B}</code>。</small></div>
+    <div class="node pick"><b><span class="chip pick">pick</span> 拿起点名物</b><small>复用 <code>adjust_bottle</code> 单臂 grasp+lift。判据：目标 <code>z − origin_z &gt; 0.02</code> 且仍被夹爪接触。占位符 <code>{C}</code>。</small></div>
+  </div>
+
+  <div class="note"><b>两个设计要点。</b>
+  ① <b>mode 纯 seed 派生</b>（非随机抽）：eval 对同一 seed 会调两次 <code>setup_demo</code>（专家检查 + policy rollout），两次必须生成同一指令 + 同一判定，与 RNG 抽取顺序解耦。
+  ② <b>三向路由用三个不同占位符</b>：每 episode 的 <code>info["info"]</code> 只填 <code>{A}</code>/<code>{B}</code>/<code>{C}</code> 之一，原生 <code>filter_instructions</code> 按"非臂占位符集合精确匹配"零改动路由 —— 这是对 Operate-Stapler「<code>{B}</code> 有无二分」的三向推广。</div>
+
+  <p><b>指令池全部借自原生 raw-task 池</b>（不手写）：<span class="chip click">click</span> ← <code>click_bell.json</code>（<code>{A}</code> 不变）、<span class="chip press">press</span> ← <code>press_stapler.json</code>（<code>{A}→{B}</code>）、<span class="chip pick">pick</span> ← <code>adjust_bottle.json</code>（<code>{A}→{C}</code>，丢掉 head-up/upright/bottle 等瓶子专属措辞）。计数 28/5 · 48/10 · 12/4（seen/unseen）。</p>
+
+  <h3>可拿物候选池（pick 目标 / 可交互干扰物）</h3>
+  <p>每 episode 随机取 <b>1–2 个</b>、<b>品类互异</b>的可拿物（<code>is_static=False</code>，真能抓起 —— 是<b>真·可交互干扰物</b>，非摆设）。pick 模式里其一为点名目标、其余为干扰；click/press 模式里它们全是干扰。池子共 9 类桌面物，从 RoboTwin <code>put_object_cabinet</code> 已验证可抓的物体里挑，且每个 model_id 需满足 <b>stable + 有 mesh + 有 objects_description</b>。缩略图为各物体 <code>visual/base0.glb</code> 的离屏渲染：</p>
+  <div class="objgrid">
+    <div class="objcard"><img src="evidence/obj/047_mouse.png" alt="鼠标"><div class="nm">鼠标</div><div class="id">047_mouse</div></div>
+    <div class="objcard"><img src="evidence/obj/057_toycar.png" alt="玩具车"><div class="nm">玩具车</div><div class="id">057_toycar</div></div>
+    <div class="objcard"><img src="evidence/obj/073_rubikscube.png" alt="魔方"><div class="nm">魔方</div><div class="id">073_rubikscube</div></div>
+    <div class="objcard"><img src="evidence/obj/077_phone.png" alt="手机"><div class="nm">手机</div><div class="id">077_phone</div></div>
+    <div class="objcard"><img src="evidence/obj/081_playingcards.png" alt="扑克牌"><div class="nm">扑克牌</div><div class="id">081_playingcards</div></div>
+    <div class="objcard"><img src="evidence/obj/107_soap.png" alt="肥皂"><div class="nm">肥皂</div><div class="id">107_soap</div></div>
+    <div class="objcard"><img src="evidence/obj/112_tea-box.png" alt="茶叶盒"><div class="nm">茶叶盒</div><div class="id">112_tea-box</div></div>
+    <div class="objcard"><img src="evidence/obj/113_coffee-box.png" alt="咖啡盒"><div class="nm">咖啡盒</div><div class="id">113_coffee-box</div></div>
+    <div class="objcard"><img src="evidence/obj/075_bread.png" alt="面包"><div class="nm">面包</div><div class="id">075_bread</div></div>
+  </div>
+  <p style="font-size:.9rem;color:var(--muted)"><code>113_coffee-box</code> 正是论文 Figure 6 pick 分支点名的 "light brown coffee box"；<code>057_toycar</code> 也出现在原图 click 分支的场景里。<code>048_stapler</code> 被排除在池外（它是 press 目标，不当 pick 候选）。</p>
+  <div class="note"><b>已知边界：这 9 个是<em>窄子集</em>。</b> 它 = RoboTwin <code>put_object_cabinet</code> 场景清单去掉订书机。资产库 125 物体中，满足我们三条件（有抓取点 + stable + 有 description）的其实有 <b>60 个</b> —— 另有 51 个合格物体（cup / mug / pencup / tissue-box / remotecontrol / book …）未用。当初取这 9 个是因为 put_object_cabinet 那批经 RoboTwin <b>实测验证</b>可抓可举，其余仅满足数据条件、抓取可靠性未验。<b>决定：暂不扩池</b>（物体多样性主要交给专门的 Pick-Diverse-Object，Tabletop 的 pick 是次要维度）；扩池需排除任务保留物（bell / stapler / mic）并重跑 collection 验证成功率。</div>
+
+  <h2 id="synth">从原生任务合成：对比与演示</h2>
+  <p>Operate-Tabletop 不从零建场景，而是把三个原生 raw-task 的<b>动作 + 判定</b>合进同一个恒定场景，再加"三选一"的语言路由。</p>
+
+  <div class="tbl-scroll"><table>
+  <thead><tr><th>维度</th><th>原生 raw tasks（各自独立）</th><th>→ Operate-Tabletop（合成）</th></tr></thead>
+  <tbody>
+    <tr><td>场景</td><td>每个任务单一物体在桌上</td><td>铃铛 + 订书机 + 1–2 可拿物 <b>恒在同一场景</b>，三模式画面一致</td></tr>
+    <tr><td>指令</td><td>单一固定动作</td><td>三选一，靠 <code>{A}</code>/<code>{B}</code>/<code>{C}</code> 占位符路由</td></tr>
+    <tr><td>测试维度</td><td>能否完成该动作</td><td>能否<b>按语言</b>选对动作 + 目标（IF 抗 VLA→VA 退化）</td></tr>
+    <tr><td>成功判定</td><td>单一逻辑</td><td>mode-specific 三分支，做错动作自然 False</td></tr>
+  </tbody></table></div>
+
+  <div class="tbl-scroll"><table>
+  <thead><tr><th>分支</th><th>raw task</th><th>raw 干什么</th><th>复用（照搬）</th><th>tabletop 的改动</th></tr></thead>
+  <tbody>
+    <tr><td><span class="chip click">click</span></td><td><code>click_bell</code></td><td>单铃铛(static)，触碰顶部中心</td><td>触压序列 + check(夹爪∩cp0，eps .025)</td><td>占位符 <code>{A}</code>；铃铛只是三物之一；判定进 mode 分支</td></tr>
+    <tr><td><span class="chip press">press</span></td><td><code>press_stapler</code></td><td>单订书机(static)，按下</td><td>抓压序列 + check(cp2，eps .03)</td><td><code>{A}→{B}</code> 路由；共享场景</td></tr>
+    <tr><td><span class="chip pick">pick</span></td><td><code>adjust_bottle</code></td><td>单瓶子，单臂拿起(headup)</td><td>grasp + lift(z+0.1) 动作、抬升判定思路</td><td><code>{A}→{C}</code>；物体池换 9 类桌面物；丢 headup 朝向；基线 setup 期采</td></tr>
+  </tbody></table></div>
+
+  <h3>演示：原生任务 vs Operate-Tabletop（脚本专家 rollout）</h3>
+  <p>左列原生 raw-task、右列 Tabletop 对应模式的 oracle 演示 —— 同一动作在合成任务里发生在<b>多物体共享场景</b>中。</p>
+  <div class="vidgrid">
+    <div class="vrow">
+      <div class="vcell"><div class="vlabel"><span class="chip click">click</span> raw · click_bell</div>
+        <video controls preload="metadata" src="evidence/raw-click_bell.mp4"></video></div>
+      <div class="vcell"><div class="vlabel"><span class="chip click">click</span> tabletop · ep0（soap + toycar 在场）</div>
+        <video controls preload="metadata" src="evidence/tabletop-click.mp4"></video></div>
+    </div>
+    <div class="vrow">
+      <div class="vcell"><div class="vlabel"><span class="chip press">press</span> raw · press_stapler</div>
+        <video controls preload="metadata" src="evidence/raw-press_stapler.mp4"></video></div>
+      <div class="vcell"><div class="vlabel"><span class="chip press">press</span> tabletop · ep1（coffee-box + rubikscube 在场）</div>
+        <video controls preload="metadata" src="evidence/tabletop-press.mp4"></video></div>
+    </div>
+    <div class="vrow">
+      <div class="vcell"><div class="vlabel"><span class="chip pick">pick</span> raw · adjust_bottle</div>
+        <video controls preload="metadata" src="evidence/raw-adjust_bottle.mp4"></video></div>
+      <div class="vcell"><div class="vlabel"><span class="chip pick">pick</span> tabletop · ep2（拿起点名的 077_phone）</div>
+        <video controls preload="metadata" src="evidence/tabletop-pick.mp4"></video></div>
+    </div>
+  </div>
+  <div class="note"><b>注：</b>视频均为脚本 oracle 演示（非 policy），各 ~30–105KB，随 notes 目录走、可离线播放。三个原生 raw 源（click_bell / press_stapler / adjust_bottle）与 Tabletop 三模式一一对照。</div>
+
+  <h2 id="evidence">证据</h2>
+  <p>三份可复核的真实产物（原件在 <code>evidence/</code>）。前两层是判定正确性，第三层是场景可操作性 + 分布。</p>
+
+  <h3>① Layer-A — 三向指令路由（本机可跑，无需仿真）</h3>
+  <pre><span class="dim"># python tests/operate_tabletop/test_instructions.py</span>
+<span class="pass">[PASS]</span> click mode / seen: only click templates, non-empty  n=<span class="num">28</span> leak=0
+<span class="pass">[PASS]</span> press mode / seen: only press templates, non-empty  n=<span class="num">48</span> leak=0
+<span class="pass">[PASS]</span> pick  mode / seen: only pick templates, non-empty   n=<span class="num">12</span> leak=0
+<span class="pass">[PASS]</span> click / press / pick  seen∩unseen = empty   overlap=0
+==== <span class="num">23/23</span> passed ====</pre>
+  <div class="proves"><b>证明了：</b>三向占位符互斥、每动词 seen/unseen 零重叠、native filter 计数匹配 baseline —— 指令路由接线正确。</div>
+
+  <h3>② Layer-B — 判定正反例（仿真，正例真跑脚本专家）</h3>
+  <pre><span class="dim"># conda run -n RoboTwin python tests/operate_tabletop/test_check_success.py</span>
+<span class="pass">[PASS]</span> C1 click no-contact (default state):  got=False expect=False
+<span class="pass">[PASS]</span> C2 click positive (ran expert):      got=True  expect=True  plan_success=True
+<span class="pass">[PASS]</span> P1 press no-contact (default state):  got=False expect=False
+<span class="pass">[PASS]</span> P2 press positive (ran expert):      got=True  expect=True  plan_success=True
+<span class="pass">[PASS]</span> K1 pick not-picked (default state):   got=False expect=False
+<span class="pass">[PASS]</span> K2 pick positive (ran expert):       got=True  expect=True  plan_success=True
+<span class="pass">[PASS]</span> K3 pick wrong-object (lifted a distractor) <span class="key">&lt;-KEY</span>:
+        got=False expect=False  target=075_bread wrong=081_playingcards
+==== <span class="num">7/7</span> passed ====</pre>
+  <div class="proves"><b>证明了：</b>每模式正例 True、默认态 False，且 IF 命门 <b>K3 拿错物体 → False</b>（点名 075_bread，却抬起干扰物 081_playingcards，判失败）。正例靠真接触/真抬升，无法用 set_pose 造假。</div>
+
+  <h3>③ Layer-C oracle 侧 — 90-eps collection（可操作性 + 分布）</h3>
+  <pre><span class="dim"># python tools/report_operate_tabletop.py --collection .../demo_clean</span>
+seeds tried 0..91 (92), kept <span class="num">90</span>
+-- composition -- click=<span class="num">31</span>  press=<span class="num">31</span>  pick=<span class="num">28</span>  total=90
+== oracle expert success rate (kept/tried) ==
+  aggregate : 90/92 = <span class="num">97.8%</span>
+  click     : 31/31 = <span class="num">100.0%</span>
+  press     : 31/31 = <span class="num">100.0%</span>
+  pick      : 28/30 = <span class="num">93.3%</span>
+-- graspable objects -- per-episode count: {1: 44, 2: 46}</pre>
+  <div class="proves"><b>证明了：</b>三分支脚本专家都能稳定跑通（100 / 100 / 93.3%，达/超 native 基线 click_bell 91-100%、press_stapler 59-100%）；成功集三模式分布近均匀（31/31/28）；物体数 1/2 近 50/50、9 物体池均匀无垄断。<b>顺带验证 pick 的 0.02 抬升阈值不偏严。</b></div>
+
+  <h2 id="lessons">关键决策 / 教训</h2>
+  <p>这些是过程中真正有分岔、或纠正过的点（从对话历史挖，markdown 里未必记全）：</p>
+  <table><thead><tr><th>点</th><th>当时以为 → 后来发现</th><th>为什么</th></tr></thead>
+  <tbody>
+    <tr><td>click 动词语义</td><td>以为"摇铃/ring" → 实为"<b>touch 铃铛顶</b>"</td><td>用户纠正 + native <code>click_bell.json</code> 措辞全是 touch/tap/press the top；行为判定其实一直写对，错的只有指令措辞</td></tr>
+    <tr><td>指令池怎么来</td><td>准备手写 ~16/verb → 改为<b>借用 native 原生池</b></td><td>用户点出这是项目既定套路（Stapler 的 press 组就是照搬 press_stapler.json）；借用措辞权威、更省、更多样</td></tr>
+    <tr><td>pick 借用源</td><td>断言"没有单臂纯拿起任务" → 搜出 <code>adjust_bottle</code></td><td>用户 push back 让我先搜穷尽；<code>adjust_bottle</code> 的 env 动作与 pick play_once 一模一样，比 grab_roller(双臂)贴太多。教训：下结论"没有 X"前先 grep 全部</td></tr>
+    <tr><td>mode 决定方式</td><td>—（一开始就选对）→ 纯 <code>seed%3</code> 派生</td><td>eval 对同一 seed 调两次 setup_demo，两次要同 mode/同判定，不能靠随机抽</td></tr>
+    <tr><td>pick 基线采集时机</td><td>参照 cabinet 在 play_once 采 → 挪到 <b>setup 期</b>采</td><td>eval 不跑 play_once（那是 oracle），基线放那里会失效</td></tr>
+    <tr><td>可拿物 model_id</td><td>只筛 stable+mesh → 再加"有 objects_description"</td><td><code>{C}</code> 解析走 replace_placeholders，缺 description json 会 hard-exit</td></tr>
+  </tbody></table>
+
+  <h3>指令设计：动词 overlap 是<em>有意</em>保留</h3>
+  <div class="card" style="border-left:4px solid var(--accent)">
+    <p><b>现象。</b><span class="chip click">click</span> 借的 native <code>click_bell</code> 把"触碰铃铛顶"就措辞成 "Press / Push the bell's top center" —— 33 条里 <b>9 条用 press/push</b>，跟 <span class="chip press">press</span>（订书机）分支起始动词 <code>press/push/use</code> 直接撞。</p>
+    <p><b>本质。</b>场景里每个物体只有<b>一个</b> affordance（铃铛只能触、订书机只能按、物体只能拿），指令名了物体、动作就定了 —— 本任务实际是<b>三选一 target 选择</b>，动词搭车。这与 Operate-Stapler（<em>同一</em>订书机 + press/move 二选一 = 真·动词判别）本质不同。</p>
+    <p><b>决定：保留 overlap。</b>不把 click 清成 touch/tap-only。理由：动词撞 → 强迫 policy 靠<b>物体名词</b> ground bell↔stapler（更硬的 grounding 测试）+ 忠于 native；若动词各自独立，退化 policy 可<b>只看动词</b>就路由 click/press、绕过物体定位（反而是作弊捷径）。</p>
+    <div class="proves" style="border-left-color:var(--accent);background:#eef2ff"><b style="color:var(--accent)">关键：mode 与 verb 完全解耦。</b> <code>mode = seed % 3</code> 在指令生成前就定死；<code>filter_instructions</code> 按占位符 <code>{A}/{B}/{C}</code>（<b>非动词</b>）路由（Layer-A <code>leak=0</code> 证三池零串味）；<code>check_success</code> 按 <code>self.mode</code> 分支、不读指令文本。所以动词 overlap 只让 policy 读到的<b>语言更难</b>，对 mode / 场景 / 判据 / 路由<b>零影响</b>。</div>
+  </div>
+
+  <h2 id="status">现状与边界</h2>
+  <div class="tbl-scroll"><table><thead><tr><th>项</th><th>状态</th><th>依据</th></tr></thead>
+  <tbody>
+    <tr><td>三向指令路由</td><td><span class="status-ok">✓ 已验</span></td><td>Layer-A 23/23（本机）</td></tr>
+    <tr><td>判定正反例（含拿错物体）</td><td><span class="status-ok">✓ 已验</span></td><td>Layer-B 7/7（仿真）</td></tr>
+    <tr><td>场景可操作性 + 分布无偏</td><td><span class="status-ok">✓ 已验</span></td><td>90-eps oracle 97.8% / 31·31·28</td></tr>
+    <tr><td>数值约定与 native 一致</td><td><span class="status-ok">✓ 已验</span></td><td>click/press 照搬；pick 0.02 类推 + collection 验证</td></tr>
+    <tr><td>Layer-C 瞎猜 baseline ≈ 1/3</td><td><span class="status-todo">◻ TODO</span></td><td>需 dummy policy 过 eval_policy.sh，延到 policy/eval 阶段</td></tr>
+    <tr><td>跨具身（Piper/Franka）</td><td><span class="status-todo">◻ 未验</span></td><td>仅 aloha-agilex；pick 阈值可能需重标</td></tr>
+  </tbody></table></div>
+
+  <div class="note"><b>不证明什么（划清适用范围）：</b>
+  <ul class="tight">
+    <li>不证明<b>任何 policy / model 效果</b> —— 全程只有脚本 oracle 和构造终态，没跑真 VLA。</li>
+    <li>不证明<b>基准区分度的另一半</b>（无视语言的 baseline 应掉到 chance ≈ 1/3）—— 这是 Layer-C 的 TODO。</li>
+    <li>不证明<b>"人眼看单帧图分不出 mode"</b> —— 场景恒定假设逻辑成立但未实拍。</li>
+    <li><b>不测"真·动词判别"</b> —— 每物体单一 affordance，动词由物体决定，本任务实为三选一 target 选择（详见上「指令设计」）。</li>
+    <li>pick 的 <b>2/30 失败根因未逐一定位</b>（大概率抓取失败/摆放太挤），不影响 93.3% 结论。</li>
+  </ul></div>
+
+  <h2 id="eval">Policy eval 流程（接下来怎么评）</h2>
+  <p>评测入口 <code>eval_policy.py</code> 通过 <code>importlib.import_module("envs.operate_tabletop")</code> 加载我们桥接进去的 env（同采集）。每个候选 seed 走两阶段：</p>
+  <div class="flow">
+    <div class="node"><b>① expert_check</b><small><code>setup_demo(seed)</code> → <code>play_once()</code> 跑脚本 oracle。仅当 <code>plan_success ∧ check_success</code> 才算"可解题"，否则跳过 —— 保证每道题 oracle 能解，policy 失败是 policy 的锅</small></div>
+    <div class="node"><b>② setup 同 seed</b><small><code>setup_demo(<b>同一 seed</b>)</code> → 同场景 / <b>同 mode</b>（seed%3）</small></div>
+    <div class="node"><b>③ 生成 unseen 指令</b><small><code>info["info"]</code>（{A}/{B}/{C}）→ <code>generate_episode_descriptions</code> → 抽一条 <b>unseen</b> 模板 → <code>set_instruction</code></small></div>
+    <div class="node"><b>④ rollout</b><small><code>while &lt; step_lim</code>：<code>get_obs</code> → policy 动作 → <code>eval_success</code>（← <code>check_success</code>）→ Success!/Fail!</small></div>
+  </div>
+  <p>eval 用 <code>st_seed = 100000·(1+seed)</code> 高位种子，评测场景与采集的 0..N <b>不重叠</b>。</p>
+
+  <div class="tbl-scroll"><table>
+  <thead><tr><th>eval 机制</th><th>依赖我们的哪个设计</th></tr></thead>
+  <tbody>
+    <tr><td>同一 seed 调两次 <code>setup_demo</code>（①②）</td><td>mode <b>纯 seed 派生</b>（seed%3）—— 两次才给同 mode / 同指令 / 同判据</td></tr>
+    <tr><td>指令由 <code>info["info"]</code> 生成，取 <code>instruction_type=unseen</code></td><td>{A}/{B}/{C} 占位符路由；<b>unseen</b> = IF 核心（训练没见过的模板）</td></tr>
+    <tr><td><code>eval_success</code> 决定成败</td><td>← 我们的 <code>check_success()</code>（按 <code>self.mode</code> 分支）</td></tr>
+  </tbody></table></div>
+
+  <h3>结果：分 mode + 不分 mode 汇总</h3>
+  <p><code>eval_policy.py</code> 自己只打<b>总和</b>（滚动 <code>suc/test_num</code>）+ 每题 <code>Success!/Fail!</code> + <code>current seed: N</code>。分 mode 靠 <code>report_operate_tabletop.py --eval-log</code>：解析日志、按 <code>mode = seed%3</code> 反推，一份日志同出<b>总和 + click/press/pick 三档</b>（与 collection 报告同格式）。</p>
+  <pre><span class="dim"># eval 需要一个训练好的 policy 模块</span>
+&lt;eval 启动&gt; instruction_type=unseen ... | tee eval.log
+python tools/report_operate_tabletop.py --eval-log eval.log
+<span class="dim"># → aggregate: suc/total ; click / press / pick: 各自 suc/total</span></pre>
+
+  <div class="note"><b>尚未跑。</b> policy eval 需要一个训练好的 policy 模型（<code>policy_name</code> 模块）；本轮验证全在 <b>oracle 侧</b>（collection 97.8%）。policy eval + Layer-C（瞎猜 baseline）+ Layer-D（对论文量级）延到 policy/eval 阶段五任务一起做。report 工具已就绪，接上 eval 日志即可拆分 mode。</div>
+
+  <h2 id="repro">怎么复现</h2>
+  <pre><span class="dim"># 0. 桥接（幂等）</span>
+bash bridge_tasks.sh
+
+<span class="dim"># 1. Layer-A 指令路由（本机，无需仿真）</span>
+python tests/operate_tabletop/test_instructions.py          <span class="dim"># → 23/23</span>
+
+<span class="dim"># 2. Layer-B 判定正反例（需 RoboTwin 环境）</span>
+conda run -n RoboTwin python tests/operate_tabletop/test_check_success.py   <span class="dim"># → 7/7</span>
+
+<span class="dim"># 3. Oracle collection + 报告</span>
+cd third_party/robotwin
+conda run -n RoboTwin bash collect_data.sh operate_tabletop demo_clean 0
+cd ../.. &amp;&amp; python tools/report_operate_tabletop.py     <span class="dim"># → 97.8%</span></pre>
+  <p>深读：<a href="understanding.md">understanding.md</a>（问题理解 + 理解变更记录 + 待确认）、<a href="operate_tabletop-impl-verify.md">operate_tabletop-impl-verify.md</a>（逐字段 key mapping + 数值 provenance + core logic）。原始证据在 <a href="evidence/">evidence/</a>。</p>
+
+  <footer>
+    RoboTwin-IF 复刻 · Operate-Tabletop (feature-03) · commit 319bba0 · 2026-08-21<br>
+    本 report 由 feature 目录下的 notes + 会话历史整合而成，self-contained，可离线打开。
+  </footer>
+
+</div>
+</body>
+</html>

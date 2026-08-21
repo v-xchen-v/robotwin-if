@@ -1,0 +1,25 @@
+### captured 2026-08-21T06:38:46Z via: python tools/report_operate_tabletop.py --collection third_party/robotwin/data/operate_tabletop/demo_clean
+# operate_tabletop — collection (oracle expert) report
+# source: third_party/robotwin/data/operate_tabletop/demo_clean
+seeds tried 0..91 (92), kept 90
+
+-- collected dataset composition (successful episodes) --
+  click=31  press=31  pick=28  total=90
+
+== oracle expert success rate (kept/tried) ==
+  aggregate (whole task set): 90/92 = 97.8%
+  click                     : 31/31 = 100.0%
+  press                     : 31/31 = 100.0%
+  pick                      : 28/30 = 93.3%
+
+-- graspable objects --
+  per-episode count: {1: 44, 2: 46}
+    047_mouse: 19
+    075_bread: 19
+    057_toycar: 18
+    073_rubikscube: 18
+    113_coffee-box: 16
+    081_playingcards: 15
+    077_phone: 11
+    107_soap: 10
+    112_tea-box: 10

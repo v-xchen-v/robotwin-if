@@ -1,0 +1,27 @@
+### captured 2026-08-21T06:38:46Z via: python tests/operate_tabletop/test_instructions.py
+[PASS] seen: every template has exactly one of A/B/C  offenders=[]
+[PASS] unseen: every template has exactly one of A/B/C  offenders=[]
+[PASS] click templates in seen  
+[PASS] click templates in unseen  
+[PASS] press templates in seen  
+[PASS] press templates in unseen  
+[PASS] pick templates in seen  
+[PASS] pick templates in unseen  
+[PASS] click seen∩unseen = empty  overlap=0
+[PASS] press seen∩unseen = empty  overlap=0
+[PASS] pick seen∩unseen = empty  overlap=0
+[PASS] click mode / seen: only click templates, non-empty  n=28 leak=0
+[PASS] click mode / seen: count == 28  got 28
+[PASS] click mode / unseen: only click templates, non-empty  n=5 leak=0
+[PASS] click mode / unseen: count == 5  got 5
+[PASS] press mode / seen: only press templates, non-empty  n=48 leak=0
+[PASS] press mode / seen: count == 48  got 48
+[PASS] press mode / unseen: only press templates, non-empty  n=10 leak=0
+[PASS] press mode / unseen: count == 10  got 10
+[PASS] pick mode / seen: only pick templates, non-empty  n=12 leak=0
+[PASS] pick mode / seen: count == 12  got 12
+[PASS] pick mode / unseen: only pick templates, non-empty  n=4 leak=0
+[PASS] pick mode / unseen: count == 4  got 4
+
+==== 23/23 passed ====
+exit=0
