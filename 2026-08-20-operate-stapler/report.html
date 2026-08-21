@@ -125,6 +125,71 @@
     <b>核心设计：mode 是唯一枢纽。</b> 不是"从指令反推 mode"（框架里指令是场景的下游产物，反推不了），而是 <code>self.mode = seed % 2</code> 一处派生、三处读取——建场景、专家+写 info、判定，全读同一个 mode。指令措辞由 info 里带不带 <code>{B}</code>（垫子颜色）自动路由。指令和判定都是 mode 的兄弟投影，构造上永远一致。
   </div>
 
+  <h2>从原生任务到合并任务</h2>
+  <p>Operate-Stapler 不是从零建的，而是把 RoboTwin 两个<b>原生独立任务</b>合并进同一个场景：<code>press_stapler</code>（按订书机）+ <code>move_stapler_pad</code>（搬到彩色垫）。合并后同一套场景始终摆着订书机 + 垫子 + 干扰物，<b>指令的动词</b>决定做哪件事——这就是 IF 的动词判别。</p>
+
+  <h3>复刻目标：论文原图</h3>
+  <div class="vbox" style="max-width:620px;margin:12px 0">
+    <img src="evidence/paper-fig6-instruction-following-operate-stapler.png" alt="论文 Operate-Stapler 原图" style="width:100%;display:block">
+    <div class="cap">
+      <span class="vtag" style="background:#efe9fb;color:#6d28d9">论文原图 · 复刻目标</span>
+      <b>Qwen-RobotManip / RoboTwin-IF 里的 Operate-Stapler。</b>
+      <p>上排 <span class="pill move">move</span>「shift the blue stapler … to the <b>cyan</b> pad」、下排 <span class="pill press">press</span>「Apply pressure …」——同一套桌面元素、动词不同，正是我们复刻的动词判别设计。可见干扰物：一个<b>黄色圆角物体</b>（move 排）+ 一个<b>黑色手机</b>（press 排），pad 为 cyan。</p>
+      <p style="color:var(--warn)"><b>论文代码未开源</b>，我们只能照图 / 照语义尽量对齐（场景干净度、双动词、共享场景、垫子角色翻转），<b>非 100% 还原</b>——干扰物的具体物体、pad 颜色分布等按等价物近似（见待办 #1）。</p>
+    </div>
+  </div>
+
+  <h3>原生 · 两个独立任务</h3>
+  <div class="videos">
+    <div class="vbox">
+      <video controls preload="metadata" src="evidence/raw_press_stapler.mp4"></video>
+      <div class="cap">
+        <span class="vtag" style="background:#eceef2;color:#5b6472">原生 · press_stapler</span>
+        <b>桌面只有订书机</b>
+        <p>无垫子、无干扰物。专家按压订书机顶部。</p>
+      </div>
+    </div>
+    <div class="vbox">
+      <video controls preload="metadata" src="evidence/raw_move_stapler_pad.mp4"></video>
+      <div class="cap">
+        <span class="vtag" style="background:#eceef2;color:#5b6472">原生 · move_stapler_pad</span>
+        <b>订书机 + 彩色垫</b>
+        <p>无干扰物。专家把订书机抓起、对齐放到垫子。</p>
+      </div>
+    </div>
+  </div>
+  <div class="arrowlbl" style="font-size:15px;color:var(--accent);font-weight:600;margin:14px 0">↓ 合并进同一场景 · 动词判别（合并后的效果见下方「证据」）</div>
+
+  <h3>逐维度对比</h3>
+  <table>
+    <tr><th>维度</th><th>press_stapler</th><th>move_stapler_pad</th><th>operate_stapler（合并）</th></tr>
+    <tr><td>触发方式</td><td>固定 press</td><td>固定 move</td><td><b>mode = seed%2</b>（同场景）</td></tr>
+    <tr><td>彩色垫</td><td>无</td><td>有（目标）</td><td><b>两 mode 都有</b>（press 时是干扰）</td></tr>
+    <tr><td>干扰物</td><td>无</td><td>无</td><td><b>1–2 个 stable 办公物体</b>（IF 新增）</td></tr>
+    <tr><td><code>is_static</code></td><td>True</td><td>False</td><td><code>(mode=="press")</code></td></tr>
+    <tr><td>专家动作</td><td>抓 → 按压 cp2</td><td>抓 → 抬 → 对齐放</td><td class="yes">两分支逐字复用</td></tr>
+    <tr><td>check_success</td><td>夹爪-cp2 接触</td><td>pose 对齐 + 双爪张开</td><td class="yes">两分支逐字复用</td></tr>
+    <tr><td>指令占位符</td><td>{A} {a}</td><td>{A} {B} {a}</td><td>合并，靠 {B} 路由</td></tr>
+  </table>
+  <div class="callout">
+    <b>哪些逐字复用、哪些新增：</b>press/move 的<b>专家轨迹和判定逻辑逐字来自对应原生任务</b>（含 eps、接触点、对齐判据）；指令模板也来自两份原生 JSON。<b>真正新增的是</b>：① 同场景 + mode 枢纽（垫子两 mode 都在、角色翻转）；② 1–2 个干扰物；③ 指令合并 + <code>{B}</code> 路由。<span class="pill press">press mode</span> 面对的场景比原生 press 更拥挤（多了垫子和干扰物），成功率不可直接对齐原生。
+  </div>
+
+  <h3>场景与干扰物的选择</h3>
+  <table>
+    <tr><th></th><th>当前做法</th><th>依据 / 再优化</th></tr>
+    <tr>
+      <td><b>场景</b></td>
+      <td>follow 论文图的 <b>clean 场景</b>：用 <code>demo_clean</code> 配置（无杂乱桌面、无背景/光照/桌高随机），只摆订书机 + 垫子 + 少量干扰物。</td>
+      <td class="yes">已对齐论文的干净桌面设定</td>
+    </tr>
+    <tr>
+      <td><b>干扰物</b></td>
+      <td>选<b>办公桌面语境</b>的物体（phone / pencup / brush-pen / notebook / …），且都能自然平躺（stable）。</td>
+      <td class="todo">是按"办公语境 + 可平躺"自选的<b>等价物</b>，非论文原物。再优化：换成论文图里实际出现的干扰物（待办 #1，含定位那个黄色圆角物体）。</td>
+    </tr>
+  </table>
+
   <h2>架构：mode 枢纽 · 零侵入</h2>
   <div class="diagram">
     <div class="pivot">seed &rarr; <span class="mono">self.mode = ["press","move"][seed % 2]</span></div>
@@ -140,6 +205,61 @@
   <p>任务类只对采集/评测 pipeline 暴露 <code>setup_demo / play_once / check_success</code> 三个钩子，pipeline 对"做什么/怎么算成功"完全多态。<b>submodule 源码零改动</b>，靠 <code>bridge_tasks.sh</code> symlink 注入。详见 <code>architecture.md</code>。</p>
   <div class="callout warn">
     <b>eval 侧关键约束：</b>评测对一个 seed 会<b>两次 setup_demo</b>（setup#1 跑专家产指令、setup#2 policy rollout+判定），两次的 mode 靠 <code>seed % 2</code> 纯函数保证一致——否则指令说 press、判定按 move，会<b>静默污染分数</b>。这是本任务最要命的实现约束。
+  </div>
+
+  <h2>指令是怎么构造的</h2>
+  <p>合并任务最巧的一环：<b>一份 <code>operate_stapler.json</code> 里同时放 press 和 move 两套模板</b>，运行时靠 <code>info["info"]</code> 的<b>占位符集合</b>自动路由到正确的动词——代码里<b>不需要显式判断 mode</b>。开关就是 <code>{B}</code>（垫子颜色）在不在。</p>
+
+  <div class="callout">
+    <b>为什么 <code>{B}</code> 正好能当开关——它本来就是两个原生任务的天然区别。</b>
+    <code>press_stapler</code> 的 info 是 <code>{A, a}</code>（press 不涉及垫子 → 没有颜色可提）；<code>move_stapler_pad</code> 的 info 是 <code>{A, B, a}</code>（move 的目标就是某颜色的垫子 → 颜色是指令必要成分）。「有没有 <code>{B}</code>」在原生任务里<b>本来就是区分二者的东西</b>——move 指令之所以是 move 指令，正因为它带颜色。合并时我们只让 press 分支照抄前者的 info、move 分支照抄后者，于是<b>不用发明任何 mode 字段，<code>{B}</code> 直接当路由开关</b>，零额外机制。这就是合并能这么干净的根本原因。
+  </div>
+
+  <p>机制：RoboTwin 的 <code>filter_instructions</code> 只保留「占位符集合和 episode 参数<b>精确相等</b>」的模板（臂占位符 <code>{a}</code> 是唯一可选例外）。而 episode 参数就是 <code>play_once</code> 写的 <code>info["info"]</code>：</p>
+
+  <div class="grid">
+    <div class="card" style="border-top:3px solid var(--press)">
+      <h4 style="color:var(--press)">press 路径</h4>
+      <p style="font-size:13.5px;line-height:1.9">
+        <code>info["info"] = {A, a}</code>&nbsp;<span style="color:var(--muted)">（无 {B}）</span><br>
+        <span style="color:var(--muted)">↓ filter_instructions</span><br>
+        带 <code>{B}</code> 的 move 模板占位符多一个 → <b>被过滤掉</b><br>
+        <span style="color:var(--muted)">↓ replace_placeholders</span><br>
+        <span class="mono" style="font-size:12.5px;color:var(--press)">"Push down on the black smooth-textured stapler firmly."</span>
+      </p>
+    </div>
+    <div class="card" style="border-top:3px solid var(--move)">
+      <h4 style="color:var(--move)">move 路径</h4>
+      <p style="font-size:13.5px;line-height:1.9">
+        <code>info["info"] = {A, B, a}</code><br>
+        <span style="color:var(--muted)">↓ filter_instructions</span><br>
+        缺 <code>{B}</code> 的 press 模板 → <b>被过滤掉</b><br>
+        <span style="color:var(--muted)">↓ replace_placeholders</span><br>
+        <span class="mono" style="font-size:12.5px;color:var(--move)">"Relocate the curved blue and silver stapler to the Magenta mat."</span>
+      </p>
+    </div>
+  </div>
+
+  <h3>占位符怎么填</h3>
+  <table>
+    <tr><th>占位符</th><th>info 里的值</th><th>填充后</th></tr>
+    <tr><td><code>{A}</code></td><td><code>048_stapler/base1</code></td><td>识别为物体描述路径 → 随机取一条描述，如 "the black stapler with rectangular base"</td></tr>
+    <tr><td><code>{B}</code></td><td><code>Magenta</code></td><td>普通字符串字面替换（仅 move 有）</td></tr>
+    <tr><td><code>{a}</code></td><td><code>left</code> / <code>right</code></td><td>"the left arm" / "the right arm"</td></tr>
+  </table>
+
+  <div class="callout">
+    <b>move 指令天然是"双颜色"，正好对齐论文。</b><code>{A}</code>（订书机描述，按 model_id 含颜色，如 base0 = "blue stapler"）+ <code>{B}</code>（垫子颜色，如 Magenta）→ 典型 move 指令 <span class="mono" style="font-size:12.5px">"shift the <b>blue</b> stapler to the <b>Magenta</b> mat"</span>，和论文图的 "<b>blue</b> stapler … <b>cyan</b> pad" 结构一致——<b>我们没专门做什么，两个占位符自然拼出双颜色</b>。（实测 episode1：200 条 move 指令里 145 条带订书机颜色，其余用无色描述。）订书机颜色随 model_id 随机（base0/2/6 blue、base1 black、base4/5 red、base3 无色），<b>不固定 blue，可接受</b>。
+  </div>
+
+  <div class="callout" style="margin-top:14px">
+    <b>合并时的硬约束（否则出 bug）：</b>
+    <ul class="tight" style="margin:6px 0 0">
+      <li><b>press 模板绝不能含 <code>{B}</code>，move 模板必须含 <code>{B}</code></b>——否则动词会错路由。合并脚本<b>过滤掉了 move 池里 1 条漏 <code>{B}</code> 的模板</b>（它会带 <code>{A,a}</code> 泄漏进 press mode）。</li>
+      <li><b>每个动词在 seen 和 unseen 里都要出现</b>——否则某 mode 在某个 instruction_type 下 filter 完为空、测不到。</li>
+      <li>seen/unseen <b>去重且不相交</b>（IF 要求训练/评测模板零重叠）。</li>
+    </ul>
+    这套约束由 <code>tests/operate_stapler/test_instructions.py</code>（14/14）守护，见下方证据。
   </div>
 
   <h2>证据</h2>
@@ -192,6 +312,41 @@
   </table>
   <p>采集集 27 press / 23 move（≈54/46），轻微偏斜源于 move 专家没 press 稳，<b>已接受</b>——报告工具 <code>tools/report_operate_stapler.py</code> 同时给整体和分 mode 两个口径（eval 侧用 <code>--eval-log</code>）。12 个 stable 办公物体全部出现、分布均匀。</p>
 
+  <h2>评测一个 policy 时会发生什么</h2>
+  <p>评测时 policy 只拿到一句<b>自然语言指令</b> + 图像，<b>看不到 mode</b>。每个 seed 的走法由 <code>seed % 2</code> 定：</p>
+  <div class="grid">
+    <div class="card" style="border-top:3px solid var(--press)">
+      <h4 style="color:var(--press)">seed 偶 → press</h4>
+      <p style="font-size:13.5px;line-height:1.9">
+        <code>mode = seed%2</code> = press<br>
+        → policy 收到 <span class="mono" style="font-size:12px;color:var(--press)">"Press the … stapler firmly."</span><br>
+        → policy 动作<br>
+        → <b>check_success · press 分支</b>：夹爪-订书机顶部 cp2 接触<br>
+        <span style="color:var(--muted)">垫子在场，但是干扰项</span>
+      </p>
+    </div>
+    <div class="card" style="border-top:3px solid var(--move)">
+      <h4 style="color:var(--move)">seed 奇 → move</h4>
+      <p style="font-size:13.5px;line-height:1.9">
+        <code>mode = seed%2</code> = move<br>
+        → policy 收到 <span class="mono" style="font-size:12px;color:var(--move)">"… to the Magenta mat."</span><br>
+        → policy 动作<br>
+        → <b>check_success · move 分支</b>：订书机 pose ≈ 垫子 + 姿态对齐 + 双爪张开<br>
+        <span style="color:var(--muted)">垫子是目标</span>
+      </p>
+    </div>
+  </div>
+  <p><b>同一套场景（都有垫子），policy 只能靠语言读出动词。</b>一个无视指令、永远做默认动作（比如永远 press）的退化策略，会在所有 move episode 上翻车——这正是 IF 要诊断的 VLA→VA 退化。（注：eval 也走 expert_check gate，mode 分布会像采集一样 ≈54/46。）</p>
+
+  <h3>报告：分 mode + total</h3>
+  <p><code>eval_policy.sh … | tee eval.log</code> 后跑 <code>report_operate_stapler.py --eval-log eval.log</code>，按 seed 奇偶拆 mode，<b>同时给整体和分 mode 两个口径</b>：</p>
+<pre><code># operate_stapler — policy eval report   （数字为格式示意，非真实结果）
+== policy success rate ==
+  aggregate (whole task set): 41/50 = 82.0%   &larr; total（这个 taskset 的综合分）
+  press                     : 25/27 = 92.6%   &larr; 分 mode
+  move                      : 16/23 = 69.6%</code></pre>
+  <p><b>分 mode</b> 能看出"哪个动词跟不上"（示意里 move 明显弱于 press → 提示 policy 对 move 指令 grounding 差）；<b>total</b> 是综合分。别用 total 掩盖单动词短板。<span style="color:var(--warn)"><b>上面数字仅为输出格式示意——尚无真实 policy 跑过 eval。</b></span></p>
+
   <h2>关键决策 / 教训</h2>
   <div class="lesson"><b>mode 由 seed 纯派生，不用 <code>np.random</code>。</b>eval 两次 setup 靠 <code>seed%2</code> 复现同一 mode；用 RNG 采样会被"消耗顺序"影响、两次可能不一致 → 指令与判定错位。</div>
   <div class="lesson"><b><code>is_static</code> 随 mode 切（方案 A）。</b>press 要焊死订书机防倒、move 要能抓，共享场景没法两全。物理属性静止画面不可见，视觉一致的诊断前提不破。</div>
@@ -224,8 +379,8 @@
     <tr>
       <td class="n">1</td>
       <td><b>干扰物对齐论文图</b></td>
-      <td>把池子换成/补上论文图里的原物，更贴近原设计。含定位图中一个<b>黄色圆角物体</b>（候选 soap / rubikscube / glue / pillbottle，需逐个渲染比对）。</td>
-      <td>论文配图</td>
+      <td>论文图里的干扰物是<b>一个黄色圆角物体 + 一个黑色手机</b>，pad 为 cyan。手机我们池里已有（<code>077_phone</code>）；<b>黄色圆角物体</b>待在库里定位（候选 soap / rubikscube / glue / pillbottle，需逐个渲染比对）。把池子对齐这两个 + pad 颜色偏 cyan。</td>
+      <td class="yes">论文图已有 ✓</td>
     </tr>
     <tr>
       <td class="n">2</td>
