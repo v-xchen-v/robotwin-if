@@ -7,11 +7,19 @@ tags: [robotwin, vla, benchmark]
 
 # RoboTwin-IF 复刻
 
+> ⚠️ **"复刻"的性质说明**：RoboTwin-IF 原始代码未开源，我们无法对齐到实现细节。本项目实际是**基于论文公开描述（§6.2.1、Table 8、Figure 6/21）+ RoboTwin 2.0 官方文档/源码能力，重新实现一个语义/行为上尽量靠近的近似版本**，不是逐行/逐参数还原。凡是论文未明确给出的细节（成功判定阈值、场景随机化具体分布、干扰物摆放规则等），都只能类比 RoboTwin 2.0 原生同类任务的实现模式来猜，做的时候要显式标注"这是我们的假设，非原文确认"。
+
 ## 来源
 
 - 论文：[Qwen-RobotManip Technical Report](https://arxiv.org/abs/2606.17846)(不是最初以为的 2605.30280 / Qwen-VLA)
 - 基准原文位置：§6.2.1 "Instruction Following"，Table 8，Figure 6/21
 - 基于：[RoboTwin 2.0](https://github.com/RoboTwin-Platform/RoboTwin) 官方仿真环境（SAPIEN 引擎，50个双臂任务）
+
+### 论文原文截图（§6.2.1 + Figure 6）
+
+![Paper Figure 6: Instruction Following task suites](assets/paper-fig6-instruction-following.webp)
+
+论文对 5 个任务集的原始文字定义（§6.2.1）+ Figure 6 示例图（Operate-Tabletop、Operate-Stapler 两个任务集的分步演示）。后面"5个任务集"表格的中文描述以此截图为准，如有出入以截图/原文为准。
 
 ## 复刻范围（已确认）
 
@@ -27,13 +35,13 @@ tags: [robotwin, vla, benchmark]
 
 ### 5 个任务集
 
-| 任务集 | 场景 | 指令内容 | 测试维度 |
-|---|---|---|---|
-| Pick-Diverse-Object | 12物体池随机采4个 | "颜色+名词"点名1个目标，其余3个是干扰项 | 目标物体 grounding |
-| Place-Relative | 2命名物体+1-3干扰物 | 把A放到B"旁边/上面" | 空间关系理解 |
-| Operate-Mic-Drawer | 麦克风+带抽屉柜子 | 多步双臂序列（开抽屉→放麦克风），部分指令指定哪只手做哪步 | 多步序列+双臂协调 |
-| Operate-Stapler | 订书机+彩色垫+干扰物 | "按订书机" 或 "移到垫子上"，垫子在两种场景里角色不同（干扰项/目标） | 共享场景下动词判别 |
-| Operate-Tabletop | 铃铛+订书机+可拿物体 | 三选一（摇铃/按订书机/拿指定物体） | 三选一动词+目标判别 |
+| 任务集                 | 场景           | 指令内容                                  | 测试维度           |
+| ------------------- | ------------ | ------------------------------------- | -------------- |
+| Pick-Diverse-Object | 12物体池随机采4个   | "颜色+名词"点名1个目标，其余3个是干扰项                | 目标物体 grounding |
+| Place-Relative      | 2命名物体+1-3干扰物 | 把A放到B"旁边/上面"                          | 空间关系理解         |
+| Operate-Mic-Drawer  | 麦克风+带抽屉柜子    | 多步双臂序列（开抽屉→放麦克风），部分指令指定哪只手做哪步         | 多步序列+双臂协调      |
+| Operate-Stapler     | 订书机+彩色垫+干扰物  | "按订书机" 或 "移到垫子上"，垫子在两种场景里角色不同（干扰项/目标） | 共享场景下动词判别      |
+| Operate-Tabletop    | 铃铛+订书机+可拿物体  | 三选一（摇铃/按订书机/拿指定物体）                    | 三选一动词+目标判别     |
 
 ### 与 RoboTwin 2.0 原生任务的关系（调研发现，论文未明说）
 
@@ -129,6 +137,7 @@ RoboTwin 2.0 **本身就自带**一套 MLLM 驱动的指令/物体描述生成�
   - 反例：oracle 故意操作干扰物而非指令目标 → `check_success()` 应稳定为 False（最容易漏的坑：只检查"某物体到了目标位置"而没检查"是不是指令指定的那个物体"）
   - 作为每个任务集"完成"的验收标准之一，写进实施计划
 - **Layer C（基准区分度验证，留到后面）**：用"瞎猜/默认动作 baseline"（应接近 chance level，如 Pick-Diverse-Object 4选1约25%）和"作弊 oracle baseline"（应接近100%）两个对照实验，验证基准本身有没有区分度、场景设计有没有偏置。这一层暂不纳入本轮实施计划范围。
+- **Layer D（与原论文的外部对齐度，只能做粗略 sanity check，不追求一致）**：因原仓库未开源，我们的实现**不可能**验证与论文内部实现细节一致，只能做数量级层面的合理性检查——用我们复刻的基准跑一个真实 VLA policy（或至少 oracle/瞎猜 baseline），success rate 数值量级如果和论文 Table 8 报告的相差过大（比如论文某任务集80%+，我们跑出来只有10%或反过来接近100%），说明理解可能有系统性偏差，需要回头检查"信息来源与可信度"表里标注为"低可信度"的那些判定逻辑设计。这一层结论只能提示"可能有问题"，不能证明"完全对了"——即使数值量级接近，也可能是不同实现凑巧撞出相近数字。
 
 ## 未决问题 / 下一步要澄清
 
@@ -136,6 +145,20 @@ RoboTwin 2.0 **本身就自带**一套 MLLM 驱动的指令/物体描述生成�
 2. **Operate-Mic-Drawer 的 drawer 资产**：需要去 RoboTwin 2.0 的 asset 库确认是否有现成带功能性抽屉的 cabinet asset，或者需要新建/改造 URDF。
 3. **运行环境**：✅ 已决定——**远程 Linux GPU 机器**，用户自己 SSH 手动登录执行/验证；Claude 侧只负责在本机编写代码/脚本，不代为连接执行。待补充：GPU型号与数量、是否已装好 CUDA/SAPIEN 依赖——这些决定实施计划里"环境搭建"步骤要不要包含依赖安装脚本。
 4. **评测指标口径**：论文 Table 8 报告的是每个任务集的 success rate 均值，我们复刻后要不要也做"training steps 消融"（Figure 21 那种）——这属于训练侧实验，超出"只复刻基准"的范围，先不做。
+
+## 信息来源与可信度
+
+因原仓库未开源，各处设计决策依据的可信度不一，实现时要留意区分，避免把"我们的推测"当成"论文事实"来用：
+
+| 可信度 | 来源类型 | 用在哪些设计点 | 备注 |
+|---|---|---|---|
+| **高**（论文原文明确写的） | 论文正文/Table 8/Figure 6 | 5个任务集的名称、场景构成、测试维度；seen/unseen 隔离的核心机制描述 | 直接引用，不需要类推 |
+| **中**（从图表/描述反推，非直接给出实现） | 论文 Figure 21（消融曲线）、Table 8 数值量级 | success rate 大致范围、任务难度相对排序 | 只能作为"合理性 sanity check"，不能反推具体实现参数 |
+| **中**（RoboTwin 2.0 官方文档/源码，非 RoboTwin-IF 专属） | [RoboTwin 2.0 Task API](https://robotwin-platform.github.io/doc/usage/API.html)、[50个任务列表](https://robotwin-platform.github.io/doc/tasks/index.html)、`collect_data.py`/`generate_episode_instructions.py` 源码 | Task API 用法、桥接机制、description-gen 管线 | 这部分是"平台能力"，可信但不代表 RoboTwin-IF 就是这么用的，是我们的选择 |
+| **低**（类比原生任务模式，纯推测） | 对照 `press_stapler`/`click_bell` 等原生任务的判定代码模式 | 5个新/改造任务的 `check_success()` 具体阈值、接触检测逻辑 | **必须在代码注释和实现记录里显式标注"参照 XX 原生任务类推，非论文确认"** |
+| **未知/待确认** | Operate-Mic-Drawer 的抽屉资产是否现成 | 阶段4 | 需环境搭建后实地查 asset 库确认 |
+
+实现阶段的约定：每个任务的实现记录（如 `02-Operate-Stapler.md`）里，涉及"低可信度"的判定逻辑设计，要单独写一条"依据：类推自 XX，论文未确认"，方便以后如果论文补充细节或原仓库开源了，能快速定位哪些地方需要回头对照修正。
 
 ## 参考链接
 
