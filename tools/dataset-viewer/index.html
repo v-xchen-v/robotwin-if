@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>RoboTwin Dataset Viewer</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<header id="topbar">
+  <div class="brand">RoboTwin <span>Dataset Viewer</span></div>
+  <select id="task-select" aria-label="task filter"></select>
+  <input id="search" type="search" placeholder="搜索 instruction 文本…" autocomplete="off" />
+  <label class="toggle"><input type="checkbox" id="opt-missing" /> 只看缺 instruction</label>
+  <label class="toggle"><input type="checkbox" id="opt-autoplay" /> autoplay on hover</label>
+  <div class="count" id="count"></div>
+</header>
+
+<main id="content" aria-label="dataset content"></main>
+
+<!-- episode detail overlay -->
+<div id="detail" class="hidden" aria-hidden="true">
+  <div class="detail-panel">
+    <button class="close" id="detail-close" title="Close (Esc)">×</button>
+    <div class="detail-stage">
+      <video id="detail-video" controls loop playsinline></video>
+    </div>
+    <div class="detail-side">
+      <h2 id="detail-title">—</h2>
+      <div class="detail-meta" id="detail-meta"></div>
+      <div class="instr-tabs">
+        <button class="instr-tab active" data-kind="seen">seen <span id="cnt-seen"></span></button>
+        <button class="instr-tab" data-kind="unseen">unseen <span id="cnt-unseen"></span></button>
+      </div>
+      <ol id="instr-list" class="instr-list"></ol>
+    </div>
+  </div>
+</div>
+
+<div id="toast" class="hidden"></div>
+
+<script src="app.js"></script>
+</body>
+</html>
