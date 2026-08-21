@@ -84,6 +84,11 @@
   .lesson b{color:var(--ink)}
   .foot{margin-top:40px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:13px}
   @media(max-width:680px){.videos,.three{grid-template-columns:1fr}.hero h1{font-size:27px}}
+  .thumbs{display:grid;grid-template-columns:repeat(auto-fill,minmax(132px,1fr));gap:10px;margin:14px 0}
+  .thumb{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:8px 8px 9px;text-align:center;box-shadow:var(--shadow)}
+  .thumb img{width:100%;height:96px;object-fit:contain;background:#f5f6f8;border-radius:6px}
+  .thumb .nm{font-size:12.5px;font-weight:600;margin-top:6px;line-height:1.25}
+  .thumb .sub{font-size:11px;color:var(--muted);font-family:"SF Mono",Menlo,monospace}
 </style>
 </head>
 <body>
@@ -189,6 +194,24 @@
       <td class="todo">是按"办公语境 + 可平躺"自选的<b>等价物</b>，非论文原物。再优化：换成论文图里实际出现的干扰物（待办 #1，含定位那个黄色圆角物体）。</td>
     </tr>
   </table>
+
+  <h3>当前候选干扰物（12 个 · 每 episode 随机 1–2 个）</h3>
+  <p style="font-size:13.5px;color:var(--muted)">缩略图为软件渲染的<b>形状参考</b>（trimesh，非贴图实拍）；括号是该 asset 的 stable model_id。全部 <code>stable:true</code>、用统一 glb qpos 自然平躺。</p>
+  <div class="thumbs">
+    <div class="thumb"><img src="evidence/distractors/077_phone.png" alt="phone"><div class="nm">手机 phone</div><div class="sub">077 · 0–4</div></div>
+    <div class="thumb"><img src="evidence/distractors/078_phonestand.png" alt="phonestand"><div class="nm">手机支架</div><div class="sub">078 · 0–6</div></div>
+    <div class="thumb"><img src="evidence/distractors/079_remotecontrol.png" alt="remote"><div class="nm">遥控器</div><div class="sub">079 · 0–6</div></div>
+    <div class="thumb"><img src="evidence/distractors/059_pencup.png" alt="pencup"><div class="nm">笔筒 pencup</div><div class="sub">059 · 0–6</div></div>
+    <div class="thumb"><img src="evidence/distractors/093_brush-pen.png" alt="brush-pen"><div class="nm">签字笔</div><div class="sub">093 · 0,1,2,4,5</div></div>
+    <div class="thumb"><img src="evidence/distractors/092_notebook.png" alt="notebook"><div class="nm">笔记本</div><div class="sub">092 · 0–2</div></div>
+    <div class="thumb"><img src="evidence/distractors/095_glue.png" alt="glue"><div class="nm">胶水 glue</div><div class="sub">095 · 0,1,2,4,5,6</div></div>
+    <div class="thumb"><img src="evidence/distractors/081_playingcards.png" alt="playingcards"><div class="nm">扑克牌</div><div class="sub">081 · 0–2</div></div>
+    <div class="thumb"><img src="evidence/distractors/100_seal.png" alt="seal"><div class="nm">印章 seal</div><div class="sub">100 · 1,2,3,4,6</div></div>
+    <div class="thumb"><img src="evidence/distractors/024_scanner.png" alt="scanner"><div class="nm">扫描仪</div><div class="sub">024 · 2</div></div>
+    <div class="thumb"><img src="evidence/distractors/047_mouse.png" alt="mouse"><div class="nm">鼠标 mouse</div><div class="sub">047 · 0–2</div></div>
+    <div class="thumb"><img src="evidence/distractors/021_cup.png" alt="cup"><div class="nm">杯子 cup</div><div class="sub">021 · 0–12</div></div>
+  </div>
+  <p style="font-size:12.5px;color:var(--muted)">缩略图可用 <code>python tools/render_distractor_thumbs.py</code> 重新生成。</p>
 
   <h2>架构：mode 枢纽 · 零侵入</h2>
   <div class="diagram">
