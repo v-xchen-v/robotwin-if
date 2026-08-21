@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>RoboTwin Object Gallery</title>
+<link rel="stylesheet" href="style.css" />
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+    "three/": "https://unpkg.com/three@0.160.0/",
+    "urdf-loader": "https://unpkg.com/urdf-loader@0.12.1/src/URDFLoader.js"
+  }
+}
+</script>
+</head>
+<body>
+<header id="topbar">
+  <div class="brand">RoboTwin <span>Object Gallery</span></div>
+  <input id="search" type="search" placeholder="Search objects…  (e.g. bottle, cup, hammer)" autocomplete="off" />
+  <div id="filters"></div>
+  <div class="count" id="count"></div>
+</header>
+
+<main id="grid" aria-label="object grid"></main>
+
+<!-- shared thumbnail renderer canvas, positioned behind the cards -->
+<canvas id="thumb-canvas"></canvas>
+
+<div id="detail" class="hidden" aria-hidden="true">
+  <div class="detail-panel">
+    <button class="close" id="detail-close" title="Close (Esc)">×</button>
+    <div class="detail-stage">
+      <canvas id="detail-canvas"></canvas>
+      <div class="detail-loading" id="detail-loading">loading…</div>
+    </div>
+    <div class="detail-side">
+      <h2 id="detail-title">—</h2>
+      <div class="detail-meta" id="detail-meta"></div>
+      <div class="detail-controls">
+        <label><input type="checkbox" id="opt-rotate" checked /> auto-rotate</label>
+        <label><input type="checkbox" id="opt-wire" /> wireframe</label>
+        <label><input type="checkbox" id="opt-grid" checked /> ground grid</label>
+      </div>
+      <div class="instances">
+        <div class="instances-label">instances</div>
+        <div id="instance-list"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="toast" class="hidden"></div>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>

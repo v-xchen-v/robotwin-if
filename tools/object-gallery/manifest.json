@@ -1,0 +1,3696 @@
+{
+  "objectsRoot": "/third_party/robotwin/assets/objects",
+  "count": 148,
+  "objects": [
+    {
+      "id": "001_bottle",
+      "dir": "001_bottle",
+      "name": "bottle",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        },
+        {
+          "mesh": "visual/base1.glb"
+        },
+        {
+          "mesh": "visual/base2.glb"
+        },
+        {
+          "mesh": "visual/base3.glb"
+        },
+        {
+          "mesh": "visual/base4.glb"
+        },
+        {
+          "mesh": "visual/base5.glb"
+        },
+        {
+          "mesh": "visual/base6.glb"
+        },
+        {
+          "mesh": "visual/base7.glb"
+        },
+        {
+          "mesh": "visual/base8.glb"
+        },
+        {
+          "mesh": "visual/base9.glb"
+        },
+        {
+          "mesh": "visual/base10.glb"
+        },
+        {
+          "mesh": "visual/base11.glb"
+        },
+        {
+          "mesh": "visual/base12.glb"
+        },
+        {
+          "mesh": "visual/base13.glb"
+        },
+        {
+          "mesh": "visual/base14.glb"
+        },
+        {
+          "mesh": "visual/base15.glb"
+        },
+        {
+          "mesh": "visual/base16.glb"
+        },
+        {
+          "mesh": "visual/base17.glb"
+        },
+        {
+          "mesh": "visual/base18.glb"
+        },
+        {
+          "mesh": "visual/base19.glb"
+        },
+        {
+          "mesh": "visual/base20.glb"
+        },
+        {
+          "mesh": "visual/base21.glb"
+        },
+        {
+          "mesh": "visual/base22.glb"
+        }
+      ]
+    },
+    {
+      "id": "002_bowl",
+      "dir": "002_bowl",
+      "name": "bowl",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base1.glb"
+        },
+        {
+          "mesh": "visual/base2.glb"
+        },
+        {
+          "mesh": "visual/base3.glb"
+        },
+        {
+          "mesh": "visual/base4.glb"
+        },
+        {
+          "mesh": "visual/base5.glb"
+        },
+        {
+          "mesh": "visual/base6.glb"
+        },
+        {
+          "mesh": "visual/base7.glb"
+        }
+      ]
+    },
+    {
+      "id": "003_plate",
+      "dir": "003_plate",
+      "name": "plate",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        }
+      ]
+    },
+    {
+      "id": "004_fluted-block",
+      "dir": "004_fluted-block",
+      "name": "fluted block",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        },
+        {
+          "mesh": "visual/base1.glb"
+        }
+      ]
+    },
+    {
+      "id": "005_french-fries",
+      "dir": "005_french-fries",
+      "name": "french fries",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        },
+        {
+          "mesh": "visual/base1.glb"
+        },
+        {
+          "mesh": "visual/base2.glb"
+        },
+        {
+          "mesh": "visual/base3.glb"
+        }
+      ]
+    },
+    {
+      "id": "006_hamburg",
+      "dir": "006_hamburg",
+      "name": "hamburg",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        },
+        {
+          "mesh": "visual/base1.glb"
+        },
+        {
+          "mesh": "visual/base2.glb"
+        },
+        {
+          "mesh": "visual/base3.glb"
+        },
+        {
+          "mesh": "visual/base4.glb"
+        },
+        {
+          "mesh": "visual/base5.glb"
+        }
+      ]
+    },
+    {
+      "id": "007_shoe-box",
+      "dir": "007_shoe-box",
+      "name": "shoe box",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        }
+      ]
+    },
+    {
+      "id": "008_tray",
+      "dir": "008_tray",
+      "name": "tray",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        },
+        {
+          "mesh": "visual/base1.glb"
+        },
+        {
+          "mesh": "visual/base2.glb"
+        },
+        {
+          "mesh": "visual/base3.glb"
+        }
+      ]
+    },
+    {
+      "id": "009_kettle",
+      "dir": "009_kettle",
+      "name": "kettle",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        },
+        {
+          "mesh": "visual/base1.glb"
+        },
+        {
+          "mesh": "visual/base2.glb"
+        }
+      ]
+    },
+    {
+      "id": "010_pen",
+      "dir": "010_pen",
+      "name": "pen",
+      "group": "numbered",
+      "type": "urdf",
+      "instances": [
+        {
+          "mesh": "101685/mobility.urdf"
+        },
+        {
+          "mesh": "101727/mobility.urdf"
+        },
+        {
+          "mesh": "101732/mobility.urdf"
+        },
+        {
+          "mesh": "101736/mobility.urdf"
+        },
+        {
+          "mesh": "101748/mobility.urdf"
+        },
+        {
+          "mesh": "101786/mobility.urdf"
+        },
+        {
+          "mesh": "101787/mobility.urdf"
+        }
+      ]
+    },
+    {
+      "id": "011_dustbin",
+      "dir": "011_dustbin",
+      "name": "dustbin",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        }
+      ]
+    },
+    {
+      "id": "012_plant-pot",
+      "dir": "012_plant-pot",
+      "name": "plant pot",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        },
+        {
+          "mesh": "visual/base1.glb"
+        },
+        {
+          "mesh": "visual/base2.glb"
+        },
+        {
+          "mesh": "visual/base3.glb"
+        },
+        {
+          "mesh": "visual/base4.glb"
+        }
+      ]
+    },
+    {
+      "id": "013_dumbbell-rack",
+      "dir": "013_dumbbell-rack",
+      "name": "dumbbell rack",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        },
+        {
+          "mesh": "visual/base1.glb"
+        },
+        {
+          "mesh": "visual/base2.glb"
+        },
+        {
+          "mesh": "visual/base3.glb"
+        }
+      ]
+    },
+    {
+      "id": "014_bookcase",
+      "dir": "014_bookcase",
+      "name": "bookcase",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        },
+        {
+          "mesh": "visual/base1.glb"
+        },
+        {
+          "mesh": "visual/base2.glb"
+        },
+        {
+          "mesh": "visual/base3.glb"
+        }
+      ]
+    },
+    {
+      "id": "015_laptop",
+      "dir": "015_laptop",
+      "name": "laptop",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        },
+        {
+          "mesh": "visual/base1.glb"
+        },
+        {
+          "mesh": "visual/base2.glb"
+        },
+        {
+          "mesh": "visual/base3.glb"
+        },
+        {
+          "mesh": "visual/base4.glb"
+        },
+        {
+          "mesh": "visual/base5.glb"
+        },
+        {
+          "mesh": "visual/base6.glb"
+        },
+        {
+          "mesh": "visual/base7.glb"
+        },
+        {
+          "mesh": "visual/base8.glb"
+        },
+        {
+          "mesh": "visual/base9.glb"
+        },
+        {
+          "mesh": "visual/base10.glb"
+        }
+      ]
+    },
+    {
+      "id": "016_oven",
+      "dir": "016_oven",
+      "name": "oven",
+      "group": "numbered",
+      "type": "urdf",
+      "instances": [
+        {
+          "mesh": "7179/mobility.urdf"
+        },
+        {
+          "mesh": "7201/mobility.urdf"
+        },
+        {
+          "mesh": "7332/mobility.urdf"
+        },
+        {
+          "mesh": "7347/mobility.urdf"
+        }
+      ]
+    },
+    {
+      "id": "017_calculator",
+      "dir": "017_calculator",
+      "name": "calculator",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        },
+        {
+          "mesh": "visual/base1.glb"
+        },
+        {
+          "mesh": "visual/base2.glb"
+        },
+        {
+          "mesh": "visual/base3.glb"
+        },
+        {
+          "mesh": "visual/base4.glb"
+        },
+        {
+          "mesh": "visual/base5.glb"
+        }
+      ]
+    },
+    {
+      "id": "018_microphone",
+      "dir": "018_microphone",
+      "name": "microphone",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        },
+        {
+          "mesh": "visual/base1.glb"
+        },
+        {
+          "mesh": "visual/base4.glb"
+        },
+        {
+          "mesh": "visual/base5.glb"
+        }
+      ]
+    },
+    {
+      "id": "019_coaster",
+      "dir": "019_coaster",
+      "name": "coaster",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        }
+      ]
+    },
+    {
+      "id": "020_hammer",
+      "dir": "020_hammer",
+      "name": "hammer",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        }
+      ]
+    },
+    {
+      "id": "021_cup",
+      "dir": "021_cup",
+      "name": "cup",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        },
+        {
+          "mesh": "visual/base1.glb"
+        },
+        {
+          "mesh": "visual/base2.glb"
+        },
+        {
+          "mesh": "visual/base3.glb"
+        },
+        {
+          "mesh": "visual/base4.glb"
+        },
+        {
+          "mesh": "visual/base5.glb"
+        },
+        {
+          "mesh": "visual/base6.glb"
+        },
+        {
+          "mesh": "visual/base7.glb"
+        },
+        {
+          "mesh": "visual/base8.glb"
+        },
+        {
+          "mesh": "visual/base9.glb"
+        },
+        {
+          "mesh": "visual/base10.glb"
+        },
+        {
+          "mesh": "visual/base11.glb"
+        },
+        {
+          "mesh": "visual/base12.glb"
+        }
+      ]
+    },
+    {
+      "id": "022_cup-with-liquid",
+      "dir": "022_cup-with-liquid",
+      "name": "cup with liquid",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        }
+      ]
+    },
+    {
+      "id": "023_tissue-box",
+      "dir": "023_tissue-box",
+      "name": "tissue box",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        },
+        {
+          "mesh": "visual/base1.glb"
+        },
+        {
+          "mesh": "visual/base2.glb"
+        },
+        {
+          "mesh": "visual/base3.glb"
+        },
+        {
+          "mesh": "visual/base4.glb"
+        },
+        {
+          "mesh": "visual/base5.glb"
+        },
+        {
+          "mesh": "visual/base6.glb"
+        }
+      ]
+    },
+    {
+      "id": "024_scanner",
+      "dir": "024_scanner",
+      "name": "scanner",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        },
+        {
+          "mesh": "visual/base1.glb"
+        },
+        {
+          "mesh": "visual/base2.glb"
+        },
+        {
+          "mesh": "visual/base3.glb"
+        },
+        {
+          "mesh": "visual/base4.glb"
+        }
+      ]
+    },
+    {
+      "id": "025_chips-tub",
+      "dir": "025_chips-tub",
+      "name": "chips tub",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        },
+        {
+          "mesh": "visual/base1.glb"
+        },
+        {
+          "mesh": "visual/base2.glb"
+        },
+        {
+          "mesh": "visual/base3.glb"
+        }
+      ]
+    },
+    {
+      "id": "026_pet-collar",
+      "dir": "026_pet-collar",
+      "name": "pet collar",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        },
+        {
+          "mesh": "visual/base1.glb"
+        },
+        {
+          "mesh": "visual/base2.glb"
+        },
+        {
+          "mesh": "visual/base3.glb"
+        }
+      ]
+    },
+    {
+      "id": "027_table-tennis",
+      "dir": "027_table-tennis",
+      "name": "table tennis",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        },
+        {
+          "mesh": "visual/base1.glb"
+        }
+      ]
+    },
+    {
+      "id": "028_roll-paper",
+      "dir": "028_roll-paper",
+      "name": "roll paper",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        },
+        {
+          "mesh": "visual/base1.glb"
+        },
+        {
+          "mesh": "visual/base2.glb"
+        },
+        {
+          "mesh": "visual/base3.glb"
+        }
+      ]
+    },
+    {
+      "id": "029_olive-oil",
+      "dir": "029_olive-oil",
+      "name": "olive oil",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        },
+        {
+          "mesh": "visual/base1.glb"
+        },
+        {
+          "mesh": "visual/base2.glb"
+        },
+        {
+          "mesh": "visual/base3.glb"
+        },
+        {
+          "mesh": "visual/base4.glb"
+        }
+      ]
+    },
+    {
+      "id": "030_drill",
+      "dir": "030_drill",
+      "name": "drill",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        },
+        {
+          "mesh": "visual/base1.glb"
+        },
+        {
+          "mesh": "visual/base2.glb"
+        },
+        {
+          "mesh": "visual/base3.glb"
+        },
+        {
+          "mesh": "visual/base4.glb"
+        },
+        {
+          "mesh": "visual/base5.glb"
+        },
+        {
+          "mesh": "visual/base6.glb"
+        }
+      ]
+    },
+    {
+      "id": "031_jam-jar",
+      "dir": "031_jam-jar",
+      "name": "jam jar",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        },
+        {
+          "mesh": "visual/base1.glb"
+        },
+        {
+          "mesh": "visual/base2.glb"
+        },
+        {
+          "mesh": "visual/base3.glb"
+        },
+        {
+          "mesh": "visual/base4.glb"
+        }
+      ]
+    },
+    {
+      "id": "032_screwdriver",
+      "dir": "032_screwdriver",
+      "name": "screwdriver",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        }
+      ]
+    },
+    {
+      "id": "033_fork",
+      "dir": "033_fork",
+      "name": "fork",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        }
+      ]
+    },
+    {
+      "id": "034_knife",
+      "dir": "034_knife",
+      "name": "knife",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        }
+      ]
+    },
+    {
+      "id": "035_apple",
+      "dir": "035_apple",
+      "name": "apple",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        },
+        {
+          "mesh": "visual/base1.glb"
+        }
+      ]
+    },
+    {
+      "id": "036_cabinet",
+      "dir": "036_cabinet",
+      "name": "cabinet",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        }
+      ]
+    },
+    {
+      "id": "037_box",
+      "dir": "037_box",
+      "name": "box",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        }
+      ]
+    },
+    {
+      "id": "038_milk-box",
+      "dir": "038_milk-box",
+      "name": "milk box",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        },
+        {
+          "mesh": "visual/base1.glb"
+        },
+        {
+          "mesh": "visual/base2.glb"
+        },
+        {
+          "mesh": "visual/base3.glb"
+        }
+      ]
+    },
+    {
+      "id": "039_mug",
+      "dir": "039_mug",
+      "name": "mug",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        },
+        {
+          "mesh": "visual/base1.glb"
+        },
+        {
+          "mesh": "visual/base2.glb"
+        },
+        {
+          "mesh": "visual/base3.glb"
+        },
+        {
+          "mesh": "visual/base4.glb"
+        },
+        {
+          "mesh": "visual/base5.glb"
+        },
+        {
+          "mesh": "visual/base6.glb"
+        },
+        {
+          "mesh": "visual/base7.glb"
+        },
+        {
+          "mesh": "visual/base8.glb"
+        },
+        {
+          "mesh": "visual/base9.glb"
+        },
+        {
+          "mesh": "visual/base10.glb"
+        },
+        {
+          "mesh": "visual/base11.glb"
+        },
+        {
+          "mesh": "visual/base12.glb"
+        }
+      ]
+    },
+    {
+      "id": "040_rack",
+      "dir": "040_rack",
+      "name": "rack",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        }
+      ]
+    },
+    {
+      "id": "041_shoe",
+      "dir": "041_shoe",
+      "name": "shoe",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        },
+        {
+          "mesh": "visual/base1.glb"
+        },
+        {
+          "mesh": "visual/base2.glb"
+        },
+        {
+          "mesh": "visual/base3.glb"
+        },
+        {
+          "mesh": "visual/base4.glb"
+        },
+        {
+          "mesh": "visual/base5.glb"
+        },
+        {
+          "mesh": "visual/base6.glb"
+        },
+        {
+          "mesh": "visual/base7.glb"
+        },
+        {
+          "mesh": "visual/base8.glb"
+        },
+        {
+          "mesh": "visual/base9.glb"
+        }
+      ]
+    },
+    {
+      "id": "042_wooden_box",
+      "dir": "042_wooden_box",
+      "name": "wooden box",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        }
+      ]
+    },
+    {
+      "id": "043_book",
+      "dir": "043_book",
+      "name": "book",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        },
+        {
+          "mesh": "visual/base1.glb"
+        }
+      ]
+    },
+    {
+      "id": "044_microwave",
+      "dir": "044_microwave",
+      "name": "microwave",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        },
+        {
+          "mesh": "visual/base1.glb"
+        }
+      ]
+    },
+    {
+      "id": "045_sand-clock",
+      "dir": "045_sand-clock",
+      "name": "sand clock",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        },
+        {
+          "mesh": "visual/base1.glb"
+        },
+        {
+          "mesh": "visual/base3.glb"
+        }
+      ]
+    },
+    {
+      "id": "046_alarm-clock",
+      "dir": "046_alarm-clock",
+      "name": "alarm clock",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        },
+        {
+          "mesh": "visual/base1.glb"
+        },
+        {
+          "mesh": "visual/base2.glb"
+        },
+        {
+          "mesh": "visual/base3.glb"
+        },
+        {
+          "mesh": "visual/base4.glb"
+        },
+        {
+          "mesh": "visual/base5.glb"
+        }
+      ]
+    },
+    {
+      "id": "047_mouse",
+      "dir": "047_mouse",
+      "name": "mouse",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        },
+        {
+          "mesh": "visual/base1.glb"
+        },
+        {
+          "mesh": "visual/base2.glb"
+        }
+      ]
+    },
+    {
+      "id": "048_stapler",
+      "dir": "048_stapler",
+      "name": "stapler",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        },
+        {
+          "mesh": "visual/base1.glb"
+        },
+        {
+          "mesh": "visual/base2.glb"
+        },
+        {
+          "mesh": "visual/base3.glb"
+        },
+        {
+          "mesh": "visual/base4.glb"
+        },
+        {
+          "mesh": "visual/base5.glb"
+        },
+        {
+          "mesh": "visual/base6.glb"
+        }
+      ]
+    },
+    {
+      "id": "049_shampoo",
+      "dir": "049_shampoo",
+      "name": "shampoo",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base1.glb"
+        },
+        {
+          "mesh": "visual/base2.glb"
+        },
+        {
+          "mesh": "visual/base3.glb"
+        },
+        {
+          "mesh": "visual/base4.glb"
+        },
+        {
+          "mesh": "visual/base5.glb"
+        },
+        {
+          "mesh": "visual/base6.glb"
+        },
+        {
+          "mesh": "visual/base7.glb"
+        }
+      ]
+    },
+    {
+      "id": "050_bell",
+      "dir": "050_bell",
+      "name": "bell",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        },
+        {
+          "mesh": "visual/base1.glb"
+        }
+      ]
+    },
+    {
+      "id": "051_candlestick",
+      "dir": "051_candlestick",
+      "name": "candlestick",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        },
+        {
+          "mesh": "visual/base1.glb"
+        },
+        {
+          "mesh": "visual/base2.glb"
+        },
+        {
+          "mesh": "visual/base3.glb"
+        },
+        {
+          "mesh": "visual/base4.glb"
+        }
+      ]
+    },
+    {
+      "id": "052_dumbbell",
+      "dir": "052_dumbbell",
+      "name": "dumbbell",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        },
+        {
+          "mesh": "visual/base1.glb"
+        },
+        {
+          "mesh": "visual/base2.glb"
+        },
+        {
+          "mesh": "visual/base3.glb"
+        },
+        {
+          "mesh": "visual/base4.glb"
+        },
+        {
+          "mesh": "visual/base5.glb"
+        },
+        {
+          "mesh": "visual/base6.glb"
+        }
+      ]
+    },
+    {
+      "id": "053_teanet",
+      "dir": "053_teanet",
+      "name": "teanet",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base1.glb"
+        },
+        {
+          "mesh": "visual/base4.glb"
+        },
+        {
+          "mesh": "visual/base5.glb"
+        },
+        {
+          "mesh": "visual/base6.glb"
+        },
+        {
+          "mesh": "visual/base7.glb"
+        }
+      ]
+    },
+    {
+      "id": "054_baguette",
+      "dir": "054_baguette",
+      "name": "baguette",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base2.glb"
+        },
+        {
+          "mesh": "visual/base3.glb"
+        }
+      ]
+    },
+    {
+      "id": "055_small-speaker",
+      "dir": "055_small-speaker",
+      "name": "small speaker",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base1.glb"
+        },
+        {
+          "mesh": "visual/base2.glb"
+        },
+        {
+          "mesh": "visual/base3.glb"
+        }
+      ]
+    },
+    {
+      "id": "056_switch",
+      "dir": "056_switch",
+      "name": "switch",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        },
+        {
+          "mesh": "visual/base1.glb"
+        },
+        {
+          "mesh": "visual/base2.glb"
+        },
+        {
+          "mesh": "visual/base3.glb"
+        },
+        {
+          "mesh": "visual/base4.glb"
+        },
+        {
+          "mesh": "visual/base5.glb"
+        },
+        {
+          "mesh": "visual/base6.glb"
+        },
+        {
+          "mesh": "visual/base7.glb"
+        }
+      ]
+    },
+    {
+      "id": "057_toycar",
+      "dir": "057_toycar",
+      "name": "toycar",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        },
+        {
+          "mesh": "visual/base1.glb"
+        },
+        {
+          "mesh": "visual/base2.glb"
+        },
+        {
+          "mesh": "visual/base3.glb"
+        },
+        {
+          "mesh": "visual/base4.glb"
+        },
+        {
+          "mesh": "visual/base5.glb"
+        }
+      ]
+    },
+    {
+      "id": "058_markpen",
+      "dir": "058_markpen",
+      "name": "markpen",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        },
+        {
+          "mesh": "visual/base1.glb"
+        },
+        {
+          "mesh": "visual/base2.glb"
+        },
+        {
+          "mesh": "visual/base3.glb"
+        },
+        {
+          "mesh": "visual/base4.glb"
+        },
+        {
+          "mesh": "visual/base5.glb"
+        }
+      ]
+    },
+    {
+      "id": "059_pencup",
+      "dir": "059_pencup",
+      "name": "pencup",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        },
+        {
+          "mesh": "visual/base1.glb"
+        },
+        {
+          "mesh": "visual/base2.glb"
+        },
+        {
+          "mesh": "visual/base3.glb"
+        },
+        {
+          "mesh": "visual/base4.glb"
+        },
+        {
+          "mesh": "visual/base5.glb"
+        },
+        {
+          "mesh": "visual/base6.glb"
+        }
+      ]
+    },
+    {
+      "id": "060_kitchenpot",
+      "dir": "060_kitchenpot",
+      "name": "kitchenpot",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        },
+        {
+          "mesh": "visual/base1.glb"
+        },
+        {
+          "mesh": "visual/base2.glb"
+        },
+        {
+          "mesh": "visual/base3.glb"
+        },
+        {
+          "mesh": "visual/base4.glb"
+        },
+        {
+          "mesh": "visual/base5.glb"
+        },
+        {
+          "mesh": "visual/base6.glb"
+        },
+        {
+          "mesh": "visual/base7.glb"
+        }
+      ]
+    },
+    {
+      "id": "061_battery",
+      "dir": "061_battery",
+      "name": "battery",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        },
+        {
+          "mesh": "visual/base1.glb"
+        },
+        {
+          "mesh": "visual/base2.glb"
+        },
+        {
+          "mesh": "visual/base3.glb"
+        },
+        {
+          "mesh": "visual/base4.glb"
+        },
+        {
+          "mesh": "visual/base5.glb"
+        }
+      ]
+    },
+    {
+      "id": "062_plasticbox",
+      "dir": "062_plasticbox",
+      "name": "plasticbox",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        },
+        {
+          "mesh": "visual/base1.glb"
+        },
+        {
+          "mesh": "visual/base2.glb"
+        },
+        {
+          "mesh": "visual/base3.glb"
+        },
+        {
+          "mesh": "visual/base4.glb"
+        },
+        {
+          "mesh": "visual/base5.glb"
+        },
+        {
+          "mesh": "visual/base6.glb"
+        },
+        {
+          "mesh": "visual/base7.glb"
+        },
+        {
+          "mesh": "visual/base8.glb"
+        },
+        {
+          "mesh": "visual/base9.glb"
+        },
+        {
+          "mesh": "visual/base10.glb"
+        }
+      ]
+    },
+    {
+      "id": "063_tabletrashbin",
+      "dir": "063_tabletrashbin",
+      "name": "tabletrashbin",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        },
+        {
+          "mesh": "visual/base1.glb"
+        },
+        {
+          "mesh": "visual/base2.glb"
+        },
+        {
+          "mesh": "visual/base3.glb"
+        },
+        {
+          "mesh": "visual/base4.glb"
+        },
+        {
+          "mesh": "visual/base5.glb"
+        },
+        {
+          "mesh": "visual/base6.glb"
+        },
+        {
+          "mesh": "visual/base7.glb"
+        },
+        {
+          "mesh": "visual/base8.glb"
+        },
+        {
+          "mesh": "visual/base9.glb"
+        },
+        {
+          "mesh": "visual/base10.glb"
+        }
+      ]
+    },
+    {
+      "id": "064_msg",
+      "dir": "064_msg",
+      "name": "msg",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        },
+        {
+          "mesh": "visual/base1.glb"
+        },
+        {
+          "mesh": "visual/base2.glb"
+        },
+        {
+          "mesh": "visual/base3.glb"
+        },
+        {
+          "mesh": "visual/base4.glb"
+        },
+        {
+          "mesh": "visual/base5.glb"
+        }
+      ]
+    },
+    {
+      "id": "065_soy-sauce",
+      "dir": "065_soy-sauce",
+      "name": "soy sauce",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        },
+        {
+          "mesh": "visual/base1.glb"
+        },
+        {
+          "mesh": "visual/base2.glb"
+        },
+        {
+          "mesh": "visual/base3.glb"
+        },
+        {
+          "mesh": "visual/base4.glb"
+        }
+      ]
+    },
+    {
+      "id": "066_vinegar",
+      "dir": "066_vinegar",
+      "name": "vinegar",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        },
+        {
+          "mesh": "visual/base1.glb"
+        },
+        {
+          "mesh": "visual/base2.glb"
+        }
+      ]
+    },
+    {
+      "id": "067_steamer",
+      "dir": "067_steamer",
+      "name": "steamer",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        },
+        {
+          "mesh": "visual/base1.glb"
+        },
+        {
+          "mesh": "visual/base2.glb"
+        }
+      ]
+    },
+    {
+      "id": "068_boxdrink",
+      "dir": "068_boxdrink",
+      "name": "boxdrink",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        },
+        {
+          "mesh": "visual/base1.glb"
+        },
+        {
+          "mesh": "visual/base2.glb"
+        },
+        {
+          "mesh": "visual/base3.glb"
+        }
+      ]
+    },
+    {
+      "id": "069_vagetable",
+      "dir": "069_vagetable",
+      "name": "vagetable",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        },
+        {
+          "mesh": "visual/base1.glb"
+        },
+        {
+          "mesh": "visual/base2.glb"
+        },
+        {
+          "mesh": "visual/base3.glb"
+        },
+        {
+          "mesh": "visual/base4.glb"
+        },
+        {
+          "mesh": "visual/base5.glb"
+        },
+        {
+          "mesh": "visual/base6.glb"
+        }
+      ]
+    },
+    {
+      "id": "070_paymentsign",
+      "dir": "070_paymentsign",
+      "name": "paymentsign",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        },
+        {
+          "mesh": "visual/base1.glb"
+        },
+        {
+          "mesh": "visual/base2.glb"
+        },
+        {
+          "mesh": "visual/base3.glb"
+        }
+      ]
+    },
+    {
+      "id": "071_can",
+      "dir": "071_can",
+      "name": "can",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        },
+        {
+          "mesh": "visual/base1.glb"
+        },
+        {
+          "mesh": "visual/base2.glb"
+        },
+        {
+          "mesh": "visual/base3.glb"
+        },
+        {
+          "mesh": "visual/base5.glb"
+        },
+        {
+          "mesh": "visual/base6.glb"
+        }
+      ]
+    },
+    {
+      "id": "072_electronicscale",
+      "dir": "072_electronicscale",
+      "name": "electronicscale",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        },
+        {
+          "mesh": "visual/base1.glb"
+        },
+        {
+          "mesh": "visual/base2.glb"
+        },
+        {
+          "mesh": "visual/base5.glb"
+        },
+        {
+          "mesh": "visual/base6.glb"
+        }
+      ]
+    },
+    {
+      "id": "073_rubikscube",
+      "dir": "073_rubikscube",
+      "name": "rubikscube",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        },
+        {
+          "mesh": "visual/base1.glb"
+        },
+        {
+          "mesh": "visual/base2.glb"
+        }
+      ]
+    },
+    {
+      "id": "074_displaystand",
+      "dir": "074_displaystand",
+      "name": "displaystand",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        },
+        {
+          "mesh": "visual/base1.glb"
+        },
+        {
+          "mesh": "visual/base2.glb"
+        },
+        {
+          "mesh": "visual/base3.glb"
+        },
+        {
+          "mesh": "visual/base4.glb"
+        }
+      ]
+    },
+    {
+      "id": "075_bread",
+      "dir": "075_bread",
+      "name": "bread",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        },
+        {
+          "mesh": "visual/base1.glb"
+        },
+        {
+          "mesh": "visual/base2.glb"
+        },
+        {
+          "mesh": "visual/base3.glb"
+        },
+        {
+          "mesh": "visual/base4.glb"
+        },
+        {
+          "mesh": "visual/base5.glb"
+        },
+        {
+          "mesh": "visual/base6.glb"
+        }
+      ]
+    },
+    {
+      "id": "076_breadbasket",
+      "dir": "076_breadbasket",
+      "name": "breadbasket",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        },
+        {
+          "mesh": "visual/base1.glb"
+        },
+        {
+          "mesh": "visual/base2.glb"
+        },
+        {
+          "mesh": "visual/base3.glb"
+        },
+        {
+          "mesh": "visual/base4.glb"
+        }
+      ]
+    },
+    {
+      "id": "077_phone",
+      "dir": "077_phone",
+      "name": "phone",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        },
+        {
+          "mesh": "visual/base1.glb"
+        },
+        {
+          "mesh": "visual/base2.glb"
+        },
+        {
+          "mesh": "visual/base3.glb"
+        },
+        {
+          "mesh": "visual/base4.glb"
+        }
+      ]
+    },
+    {
+      "id": "078_phonestand",
+      "dir": "078_phonestand",
+      "name": "phonestand",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        },
+        {
+          "mesh": "visual/base1.glb"
+        },
+        {
+          "mesh": "visual/base2.glb"
+        },
+        {
+          "mesh": "visual/base3.glb"
+        },
+        {
+          "mesh": "visual/base4.glb"
+        },
+        {
+          "mesh": "visual/base5.glb"
+        },
+        {
+          "mesh": "visual/base6.glb"
+        }
+      ]
+    },
+    {
+      "id": "079_remotecontrol",
+      "dir": "079_remotecontrol",
+      "name": "remotecontrol",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        },
+        {
+          "mesh": "visual/base1.glb"
+        },
+        {
+          "mesh": "visual/base2.glb"
+        },
+        {
+          "mesh": "visual/base3.glb"
+        },
+        {
+          "mesh": "visual/base4.glb"
+        },
+        {
+          "mesh": "visual/base5.glb"
+        },
+        {
+          "mesh": "visual/base6.glb"
+        }
+      ]
+    },
+    {
+      "id": "080_pillbottle",
+      "dir": "080_pillbottle",
+      "name": "pillbottle",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base1.glb"
+        },
+        {
+          "mesh": "visual/base2.glb"
+        },
+        {
+          "mesh": "visual/base3.glb"
+        },
+        {
+          "mesh": "visual/base4.glb"
+        },
+        {
+          "mesh": "visual/base5.glb"
+        }
+      ]
+    },
+    {
+      "id": "081_playingcards",
+      "dir": "081_playingcards",
+      "name": "playingcards",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        },
+        {
+          "mesh": "visual/base1.glb"
+        },
+        {
+          "mesh": "visual/base2.glb"
+        }
+      ]
+    },
+    {
+      "id": "082_smallshovel",
+      "dir": "082_smallshovel",
+      "name": "smallshovel",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        },
+        {
+          "mesh": "visual/base1.glb"
+        },
+        {
+          "mesh": "visual/base2.glb"
+        },
+        {
+          "mesh": "visual/base3.glb"
+        }
+      ]
+    },
+    {
+      "id": "083_brush",
+      "dir": "083_brush",
+      "name": "brush",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        },
+        {
+          "mesh": "visual/base1.glb"
+        },
+        {
+          "mesh": "visual/base2.glb"
+        },
+        {
+          "mesh": "visual/base3.glb"
+        }
+      ]
+    },
+    {
+      "id": "084_woodenmallet",
+      "dir": "084_woodenmallet",
+      "name": "woodenmallet",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        },
+        {
+          "mesh": "visual/base1.glb"
+        },
+        {
+          "mesh": "visual/base2.glb"
+        },
+        {
+          "mesh": "visual/base3.glb"
+        },
+        {
+          "mesh": "visual/base4.glb"
+        }
+      ]
+    },
+    {
+      "id": "085_gong",
+      "dir": "085_gong",
+      "name": "gong",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        },
+        {
+          "mesh": "visual/base1.glb"
+        },
+        {
+          "mesh": "visual/base2.glb"
+        },
+        {
+          "mesh": "visual/base3.glb"
+        },
+        {
+          "mesh": "visual/base4.glb"
+        },
+        {
+          "mesh": "visual/base5.glb"
+        }
+      ]
+    },
+    {
+      "id": "086_woodenblock",
+      "dir": "086_woodenblock",
+      "name": "woodenblock",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        },
+        {
+          "mesh": "visual/base1.glb"
+        },
+        {
+          "mesh": "visual/base2.glb"
+        },
+        {
+          "mesh": "visual/base3.glb"
+        },
+        {
+          "mesh": "visual/base4.glb"
+        }
+      ]
+    },
+    {
+      "id": "087_waterer",
+      "dir": "087_waterer",
+      "name": "waterer",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        },
+        {
+          "mesh": "visual/base1.glb"
+        },
+        {
+          "mesh": "visual/base2.glb"
+        },
+        {
+          "mesh": "visual/base3.glb"
+        },
+        {
+          "mesh": "visual/base4.glb"
+        },
+        {
+          "mesh": "visual/base5.glb"
+        },
+        {
+          "mesh": "visual/base6.glb"
+        },
+        {
+          "mesh": "visual/base7.glb"
+        }
+      ]
+    },
+    {
+      "id": "088_wineglass",
+      "dir": "088_wineglass",
+      "name": "wineglass",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        },
+        {
+          "mesh": "visual/base1.glb"
+        },
+        {
+          "mesh": "visual/base2.glb"
+        },
+        {
+          "mesh": "visual/base3.glb"
+        },
+        {
+          "mesh": "visual/base4.glb"
+        }
+      ]
+    },
+    {
+      "id": "089_globe",
+      "dir": "089_globe",
+      "name": "globe",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base2.glb"
+        },
+        {
+          "mesh": "visual/base3.glb"
+        }
+      ]
+    },
+    {
+      "id": "090_trophy",
+      "dir": "090_trophy",
+      "name": "trophy",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        },
+        {
+          "mesh": "visual/base1.glb"
+        },
+        {
+          "mesh": "visual/base2.glb"
+        },
+        {
+          "mesh": "visual/base3.glb"
+        },
+        {
+          "mesh": "visual/base4.glb"
+        }
+      ]
+    },
+    {
+      "id": "091_kettle",
+      "dir": "091_kettle",
+      "name": "kettle",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        },
+        {
+          "mesh": "visual/base1.glb"
+        },
+        {
+          "mesh": "visual/base2.glb"
+        },
+        {
+          "mesh": "visual/base3.glb"
+        },
+        {
+          "mesh": "visual/base4.glb"
+        },
+        {
+          "mesh": "visual/base5.glb"
+        }
+      ]
+    },
+    {
+      "id": "092_notebook",
+      "dir": "092_notebook",
+      "name": "notebook",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        },
+        {
+          "mesh": "visual/base1.glb"
+        },
+        {
+          "mesh": "visual/base2.glb"
+        }
+      ]
+    },
+    {
+      "id": "093_brush-pen",
+      "dir": "093_brush-pen",
+      "name": "brush pen",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        },
+        {
+          "mesh": "visual/base1.glb"
+        },
+        {
+          "mesh": "visual/base2.glb"
+        },
+        {
+          "mesh": "visual/base3.glb"
+        },
+        {
+          "mesh": "visual/base4.glb"
+        },
+        {
+          "mesh": "visual/base5.glb"
+        }
+      ]
+    },
+    {
+      "id": "094_rest",
+      "dir": "094_rest",
+      "name": "rest",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        },
+        {
+          "mesh": "visual/base1.glb"
+        },
+        {
+          "mesh": "visual/base2.glb"
+        },
+        {
+          "mesh": "visual/base3.glb"
+        }
+      ]
+    },
+    {
+      "id": "095_glue",
+      "dir": "095_glue",
+      "name": "glue",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        },
+        {
+          "mesh": "visual/base1.glb"
+        },
+        {
+          "mesh": "visual/base2.glb"
+        },
+        {
+          "mesh": "visual/base4.glb"
+        },
+        {
+          "mesh": "visual/base5.glb"
+        },
+        {
+          "mesh": "visual/base6.glb"
+        }
+      ]
+    },
+    {
+      "id": "096_cleaner",
+      "dir": "096_cleaner",
+      "name": "cleaner",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        },
+        {
+          "mesh": "visual/base1.glb"
+        },
+        {
+          "mesh": "visual/base2.glb"
+        },
+        {
+          "mesh": "visual/base3.glb"
+        }
+      ]
+    },
+    {
+      "id": "097_screen",
+      "dir": "097_screen",
+      "name": "screen",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        },
+        {
+          "mesh": "visual/base1.glb"
+        },
+        {
+          "mesh": "visual/base2.glb"
+        },
+        {
+          "mesh": "visual/base3.glb"
+        }
+      ]
+    },
+    {
+      "id": "098_speaker",
+      "dir": "098_speaker",
+      "name": "speaker",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        },
+        {
+          "mesh": "visual/base1.glb"
+        },
+        {
+          "mesh": "visual/base2.glb"
+        },
+        {
+          "mesh": "visual/base3.glb"
+        },
+        {
+          "mesh": "visual/base4.glb"
+        },
+        {
+          "mesh": "visual/base5.glb"
+        }
+      ]
+    },
+    {
+      "id": "099_fan",
+      "dir": "099_fan",
+      "name": "fan",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        },
+        {
+          "mesh": "visual/base1.glb"
+        },
+        {
+          "mesh": "visual/base2.glb"
+        },
+        {
+          "mesh": "visual/base3.glb"
+        },
+        {
+          "mesh": "visual/base4.glb"
+        },
+        {
+          "mesh": "visual/base5.glb"
+        },
+        {
+          "mesh": "visual/base6.glb"
+        }
+      ]
+    },
+    {
+      "id": "100_seal",
+      "dir": "100_seal",
+      "name": "seal",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        },
+        {
+          "mesh": "visual/base1.glb"
+        },
+        {
+          "mesh": "visual/base2.glb"
+        },
+        {
+          "mesh": "visual/base3.glb"
+        },
+        {
+          "mesh": "visual/base4.glb"
+        },
+        {
+          "mesh": "visual/base6.glb"
+        }
+      ]
+    },
+    {
+      "id": "101_milk-tea",
+      "dir": "101_milk-tea",
+      "name": "milk tea",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        },
+        {
+          "mesh": "visual/base1.glb"
+        },
+        {
+          "mesh": "visual/base2.glb"
+        },
+        {
+          "mesh": "visual/base4.glb"
+        },
+        {
+          "mesh": "visual/base5.glb"
+        },
+        {
+          "mesh": "visual/base6.glb"
+        }
+      ]
+    },
+    {
+      "id": "102_roller",
+      "dir": "102_roller",
+      "name": "roller",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        },
+        {
+          "mesh": "visual/base1.glb"
+        },
+        {
+          "mesh": "visual/base2.glb"
+        }
+      ]
+    },
+    {
+      "id": "103_fruit",
+      "dir": "103_fruit",
+      "name": "fruit",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        },
+        {
+          "mesh": "visual/base1.glb"
+        },
+        {
+          "mesh": "visual/base2.glb"
+        },
+        {
+          "mesh": "visual/base3.glb"
+        },
+        {
+          "mesh": "visual/base4.glb"
+        },
+        {
+          "mesh": "visual/base5.glb"
+        },
+        {
+          "mesh": "visual/base6.glb"
+        }
+      ]
+    },
+    {
+      "id": "104_board",
+      "dir": "104_board",
+      "name": "board",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        },
+        {
+          "mesh": "visual/base1.glb"
+        },
+        {
+          "mesh": "visual/base2.glb"
+        },
+        {
+          "mesh": "visual/base3.glb"
+        },
+        {
+          "mesh": "visual/base4.glb"
+        }
+      ]
+    },
+    {
+      "id": "105_sauce-can",
+      "dir": "105_sauce-can",
+      "name": "sauce can",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        },
+        {
+          "mesh": "visual/base2.glb"
+        },
+        {
+          "mesh": "visual/base4.glb"
+        },
+        {
+          "mesh": "visual/base5.glb"
+        },
+        {
+          "mesh": "visual/base6.glb"
+        }
+      ]
+    },
+    {
+      "id": "106_skillet",
+      "dir": "106_skillet",
+      "name": "skillet",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        },
+        {
+          "mesh": "visual/base1.glb"
+        },
+        {
+          "mesh": "visual/base2.glb"
+        },
+        {
+          "mesh": "visual/base3.glb"
+        }
+      ]
+    },
+    {
+      "id": "107_soap",
+      "dir": "107_soap",
+      "name": "soap",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        },
+        {
+          "mesh": "visual/base1.glb"
+        },
+        {
+          "mesh": "visual/base2.glb"
+        },
+        {
+          "mesh": "visual/base3.glb"
+        }
+      ]
+    },
+    {
+      "id": "108_block",
+      "dir": "108_block",
+      "name": "block",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        },
+        {
+          "mesh": "visual/base1.glb"
+        },
+        {
+          "mesh": "visual/base2.glb"
+        },
+        {
+          "mesh": "visual/base3.glb"
+        },
+        {
+          "mesh": "visual/base4.glb"
+        },
+        {
+          "mesh": "visual/base5.glb"
+        },
+        {
+          "mesh": "visual/base6.glb"
+        }
+      ]
+    },
+    {
+      "id": "109_hydrating-oil",
+      "dir": "109_hydrating-oil",
+      "name": "hydrating oil",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        },
+        {
+          "mesh": "visual/base1.glb"
+        },
+        {
+          "mesh": "visual/base2.glb"
+        },
+        {
+          "mesh": "visual/base5.glb"
+        }
+      ]
+    },
+    {
+      "id": "110_basket",
+      "dir": "110_basket",
+      "name": "basket",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        },
+        {
+          "mesh": "visual/base1.glb"
+        },
+        {
+          "mesh": "visual/base2.glb"
+        },
+        {
+          "mesh": "visual/base3.glb"
+        }
+      ]
+    },
+    {
+      "id": "111_callbell",
+      "dir": "111_callbell",
+      "name": "callbell",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        },
+        {
+          "mesh": "visual/base1.glb"
+        },
+        {
+          "mesh": "visual/base2.glb"
+        },
+        {
+          "mesh": "visual/base3.glb"
+        },
+        {
+          "mesh": "visual/base4.glb"
+        },
+        {
+          "mesh": "visual/base5.glb"
+        }
+      ]
+    },
+    {
+      "id": "112_tea-box",
+      "dir": "112_tea-box",
+      "name": "tea box",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        },
+        {
+          "mesh": "visual/base1.glb"
+        },
+        {
+          "mesh": "visual/base2.glb"
+        },
+        {
+          "mesh": "visual/base3.glb"
+        },
+        {
+          "mesh": "visual/base4.glb"
+        },
+        {
+          "mesh": "visual/base5.glb"
+        }
+      ]
+    },
+    {
+      "id": "113_coffee-box",
+      "dir": "113_coffee-box",
+      "name": "coffee box",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        },
+        {
+          "mesh": "visual/base1.glb"
+        },
+        {
+          "mesh": "visual/base2.glb"
+        },
+        {
+          "mesh": "visual/base3.glb"
+        },
+        {
+          "mesh": "visual/base4.glb"
+        },
+        {
+          "mesh": "visual/base5.glb"
+        },
+        {
+          "mesh": "visual/base6.glb"
+        }
+      ]
+    },
+    {
+      "id": "114_bottle",
+      "dir": "114_bottle",
+      "name": "bottle",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base1.glb"
+        },
+        {
+          "mesh": "visual/base2.glb"
+        },
+        {
+          "mesh": "visual/base3.glb"
+        },
+        {
+          "mesh": "visual/base4.glb"
+        }
+      ]
+    },
+    {
+      "id": "115_perfume",
+      "dir": "115_perfume",
+      "name": "perfume",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        },
+        {
+          "mesh": "visual/base1.glb"
+        },
+        {
+          "mesh": "visual/base2.glb"
+        },
+        {
+          "mesh": "visual/base3.glb"
+        }
+      ]
+    },
+    {
+      "id": "116_keyboard",
+      "dir": "116_keyboard",
+      "name": "keyboard",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        },
+        {
+          "mesh": "visual/base1.glb"
+        },
+        {
+          "mesh": "visual/base2.glb"
+        },
+        {
+          "mesh": "visual/base3.glb"
+        }
+      ]
+    },
+    {
+      "id": "117_whiteboard-eraser",
+      "dir": "117_whiteboard-eraser",
+      "name": "whiteboard eraser",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        }
+      ]
+    },
+    {
+      "id": "118_tooth-paste",
+      "dir": "118_tooth-paste",
+      "name": "tooth paste",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        }
+      ]
+    },
+    {
+      "id": "119_mini-chalkboard",
+      "dir": "119_mini-chalkboard",
+      "name": "mini chalkboard",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        }
+      ]
+    },
+    {
+      "id": "120_plant",
+      "dir": "120_plant",
+      "name": "plant",
+      "group": "numbered",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "visual/base0.glb"
+        }
+      ]
+    },
+    {
+      "id": "cube",
+      "dir": "cube",
+      "name": "cube",
+      "group": "misc",
+      "type": "obj",
+      "instances": [
+        {
+          "mesh": "textured.obj",
+          "mtl": "base.mtl"
+        }
+      ]
+    },
+    {
+      "id": "objaverse/bottle",
+      "dir": "objaverse/bottle",
+      "name": "bottle",
+      "group": "objaverse",
+      "type": "obj",
+      "instances": [
+        {
+          "mesh": "006/textured.obj",
+          "mtl": "006/006.obj.mtl"
+        },
+        {
+          "mesh": "007/textured.obj",
+          "mtl": "007/007.obj.mtl"
+        },
+        {
+          "mesh": "013/textured.obj",
+          "mtl": "013/013.obj.mtl"
+        },
+        {
+          "mesh": "017/textured.obj",
+          "mtl": "017/017.obj.mtl"
+        },
+        {
+          "mesh": "019/textured.obj",
+          "mtl": "019/019.obj.mtl"
+        },
+        {
+          "mesh": "020/textured.obj",
+          "mtl": "020/020.obj.mtl"
+        },
+        {
+          "mesh": "025/textured.obj",
+          "mtl": "025/025.obj.mtl"
+        }
+      ]
+    },
+    {
+      "id": "objaverse/bowl",
+      "dir": "objaverse/bowl",
+      "name": "bowl",
+      "group": "objaverse",
+      "type": "obj",
+      "instances": [
+        {
+          "mesh": "001/textured.obj",
+          "mtl": "001/001.obj.mtl"
+        },
+        {
+          "mesh": "002/textured.obj",
+          "mtl": "002/002.obj.mtl"
+        },
+        {
+          "mesh": "003/textured.obj",
+          "mtl": "003/003.obj.mtl"
+        },
+        {
+          "mesh": "004/textured.obj",
+          "mtl": "004/004.obj.mtl"
+        },
+        {
+          "mesh": "005/textured.obj",
+          "mtl": "005/005.obj.mtl"
+        },
+        {
+          "mesh": "007/textured.obj",
+          "mtl": "007/007.obj.mtl"
+        },
+        {
+          "mesh": "010/textured.obj",
+          "mtl": "010/010.obj.mtl"
+        },
+        {
+          "mesh": "011/textured.obj",
+          "mtl": "011/011.obj.mtl"
+        },
+        {
+          "mesh": "012/textured.obj",
+          "mtl": "012/012.obj.mtl"
+        },
+        {
+          "mesh": "016/textured.obj",
+          "mtl": "016/016.obj.mtl"
+        },
+        {
+          "mesh": "018/textured.obj",
+          "mtl": "018/018.obj.mtl"
+        },
+        {
+          "mesh": "020/textured.obj",
+          "mtl": "020/020.obj.mtl"
+        },
+        {
+          "mesh": "021/textured.obj",
+          "mtl": "021/021.obj.mtl"
+        },
+        {
+          "mesh": "022/textured.obj",
+          "mtl": "022/022.obj.mtl"
+        },
+        {
+          "mesh": "024/textured.obj",
+          "mtl": "024/024.obj.mtl"
+        }
+      ]
+    },
+    {
+      "id": "objaverse/brush",
+      "dir": "objaverse/brush",
+      "name": "brush",
+      "group": "objaverse",
+      "type": "obj",
+      "instances": [
+        {
+          "mesh": "005/textured.obj",
+          "mtl": "005/005.obj.mtl"
+        },
+        {
+          "mesh": "006/textured.obj",
+          "mtl": "006/006.obj.mtl"
+        },
+        {
+          "mesh": "007/textured.obj",
+          "mtl": "007/007.obj.mtl"
+        }
+      ]
+    },
+    {
+      "id": "objaverse/can",
+      "dir": "objaverse/can",
+      "name": "can",
+      "group": "objaverse",
+      "type": "obj",
+      "instances": [
+        {
+          "mesh": "001/textured.obj",
+          "mtl": "001/001.obj.mtl"
+        },
+        {
+          "mesh": "005/textured.obj",
+          "mtl": "005/005.obj.mtl"
+        },
+        {
+          "mesh": "008/textured.obj",
+          "mtl": "008/008.obj.mtl"
+        },
+        {
+          "mesh": "009/textured.obj",
+          "mtl": "009/009.obj.mtl"
+        },
+        {
+          "mesh": "011/textured.obj",
+          "mtl": "011/011.obj.mtl"
+        },
+        {
+          "mesh": "013/textured.obj",
+          "mtl": "013/013.obj.mtl"
+        },
+        {
+          "mesh": "015/textured.obj",
+          "mtl": "015/015.obj.mtl"
+        },
+        {
+          "mesh": "017/textured.obj",
+          "mtl": "017/017.obj.mtl"
+        },
+        {
+          "mesh": "018/textured.obj",
+          "mtl": "018/018.obj.mtl"
+        }
+      ]
+    },
+    {
+      "id": "objaverse/chip_can",
+      "dir": "objaverse/chip_can",
+      "name": "chip can",
+      "group": "objaverse",
+      "type": "obj",
+      "instances": [
+        {
+          "mesh": "003/textured.obj",
+          "mtl": "003/003.obj.mtl"
+        },
+        {
+          "mesh": "007/textured.obj",
+          "mtl": "007/007.obj.mtl"
+        },
+        {
+          "mesh": "008/textured.obj",
+          "mtl": "008/008.obj.mtl"
+        }
+      ]
+    },
+    {
+      "id": "objaverse/clock",
+      "dir": "objaverse/clock",
+      "name": "clock",
+      "group": "objaverse",
+      "type": "obj",
+      "instances": [
+        {
+          "mesh": "005/textured.obj",
+          "mtl": "005/005.obj.mtl"
+        },
+        {
+          "mesh": "006/textured.obj",
+          "mtl": "006/006.obj.mtl"
+        }
+      ]
+    },
+    {
+      "id": "objaverse/drinkbox",
+      "dir": "objaverse/drinkbox",
+      "name": "drinkbox",
+      "group": "objaverse",
+      "type": "obj",
+      "instances": [
+        {
+          "mesh": "003/textured.obj",
+          "mtl": "003/003.obj.mtl"
+        }
+      ]
+    },
+    {
+      "id": "objaverse/hammer",
+      "dir": "objaverse/hammer",
+      "name": "hammer",
+      "group": "objaverse",
+      "type": "obj",
+      "instances": [
+        {
+          "mesh": "001/textured.obj",
+          "mtl": "001/001.obj.mtl"
+        },
+        {
+          "mesh": "002/textured.obj",
+          "mtl": "002/002.obj.mtl"
+        },
+        {
+          "mesh": "003/textured.obj",
+          "mtl": "003/003.obj.mtl"
+        },
+        {
+          "mesh": "004/textured.obj",
+          "mtl": "004/004.obj.mtl"
+        },
+        {
+          "mesh": "005/textured.obj",
+          "mtl": "005/005.obj.mtl"
+        }
+      ]
+    },
+    {
+      "id": "objaverse/marker",
+      "dir": "objaverse/marker",
+      "name": "marker",
+      "group": "objaverse",
+      "type": "obj",
+      "instances": [
+        {
+          "mesh": "002/textured.obj",
+          "mtl": "002/002.obj.mtl"
+        },
+        {
+          "mesh": "004/textured.obj",
+          "mtl": "004/004.obj.mtl"
+        }
+      ]
+    },
+    {
+      "id": "objaverse/notebook",
+      "dir": "objaverse/notebook",
+      "name": "notebook",
+      "group": "objaverse",
+      "type": "obj",
+      "instances": [
+        {
+          "mesh": "001/textured.obj",
+          "mtl": "001/001.obj.mtl"
+        },
+        {
+          "mesh": "002/textured.obj",
+          "mtl": "002/002.obj.mtl"
+        },
+        {
+          "mesh": "003/textured.obj",
+          "mtl": "003/003.obj.mtl"
+        },
+        {
+          "mesh": "004/textured.obj",
+          "mtl": "004/004.obj.mtl"
+        },
+        {
+          "mesh": "008/textured.obj",
+          "mtl": "008/008.obj.mtl"
+        }
+      ]
+    },
+    {
+      "id": "objaverse/plate",
+      "dir": "objaverse/plate",
+      "name": "plate",
+      "group": "objaverse",
+      "type": "obj",
+      "instances": [
+        {
+          "mesh": "003/textured.obj",
+          "mtl": "003/003.obj.mtl"
+        },
+        {
+          "mesh": "004/textured.obj",
+          "mtl": "004/004.obj.mtl"
+        },
+        {
+          "mesh": "007/textured.obj",
+          "mtl": "007/007.obj.mtl"
+        },
+        {
+          "mesh": "008/textured.obj",
+          "mtl": "008/008.obj.mtl"
+        },
+        {
+          "mesh": "009/textured.obj",
+          "mtl": "009/009.obj.mtl"
+        }
+      ]
+    },
+    {
+      "id": "objaverse/pot",
+      "dir": "objaverse/pot",
+      "name": "pot",
+      "group": "objaverse",
+      "type": "obj",
+      "instances": [
+        {
+          "mesh": "002/textured.obj",
+          "mtl": "002/002.obj.mtl"
+        },
+        {
+          "mesh": "004/textured.obj",
+          "mtl": "004/004.obj.mtl"
+        },
+        {
+          "mesh": "005/textured.obj",
+          "mtl": "005/005.obj.mtl"
+        },
+        {
+          "mesh": "006/textured.obj",
+          "mtl": "006/006.obj.mtl"
+        },
+        {
+          "mesh": "007/textured.obj",
+          "mtl": "007/007.obj.mtl"
+        },
+        {
+          "mesh": "008/textured.obj",
+          "mtl": "008/008.obj.mtl"
+        },
+        {
+          "mesh": "009/textured.obj",
+          "mtl": "009/009.obj.mtl"
+        },
+        {
+          "mesh": "010/textured.obj",
+          "mtl": "010/010.obj.mtl"
+        }
+      ]
+    },
+    {
+      "id": "objaverse/ramen_box",
+      "dir": "objaverse/ramen_box",
+      "name": "ramen box",
+      "group": "objaverse",
+      "type": "obj",
+      "instances": [
+        {
+          "mesh": "001/textured.obj",
+          "mtl": "001/001.obj.mtl"
+        },
+        {
+          "mesh": "002/textured.obj",
+          "mtl": "002/002.obj.mtl"
+        },
+        {
+          "mesh": "005/textured.obj",
+          "mtl": "005/005.obj.mtl"
+        },
+        {
+          "mesh": "012/textured.obj",
+          "mtl": "012/012.obj.mtl"
+        },
+        {
+          "mesh": "013/textured.obj",
+          "mtl": "013/013.obj.mtl"
+        },
+        {
+          "mesh": "015/textured.obj",
+          "mtl": "015/015.obj.mtl"
+        },
+        {
+          "mesh": "017/textured.obj",
+          "mtl": "017/017.obj.mtl"
+        },
+        {
+          "mesh": "018/textured.obj",
+          "mtl": "018/018.obj.mtl"
+        },
+        {
+          "mesh": "019/textured.obj",
+          "mtl": "019/019.obj.mtl"
+        },
+        {
+          "mesh": "022/textured.obj",
+          "mtl": "022/022.obj.mtl"
+        },
+        {
+          "mesh": "023/textured.obj",
+          "mtl": "023/023.obj.mtl"
+        },
+        {
+          "mesh": "024/textured.obj",
+          "mtl": "024/024.obj.mtl"
+        }
+      ]
+    },
+    {
+      "id": "objaverse/remote",
+      "dir": "objaverse/remote",
+      "name": "remote",
+      "group": "objaverse",
+      "type": "obj",
+      "instances": [
+        {
+          "mesh": "002/textured.obj",
+          "mtl": "002/002.obj.mtl"
+        },
+        {
+          "mesh": "004/textured.obj",
+          "mtl": "004/004.obj.mtl"
+        },
+        {
+          "mesh": "005/textured.obj",
+          "mtl": "005/005.obj.mtl"
+        },
+        {
+          "mesh": "006/textured.obj",
+          "mtl": "006/006.obj.mtl"
+        }
+      ]
+    },
+    {
+      "id": "objaverse/slipper",
+      "dir": "objaverse/slipper",
+      "name": "slipper",
+      "group": "objaverse",
+      "type": "obj",
+      "instances": [
+        {
+          "mesh": "001/textured.obj",
+          "mtl": "001/001.obj.mtl"
+        },
+        {
+          "mesh": "002/textured.obj",
+          "mtl": "002/002.obj.mtl"
+        },
+        {
+          "mesh": "003/textured.obj",
+          "mtl": "003/003.obj.mtl"
+        },
+        {
+          "mesh": "004/textured.obj",
+          "mtl": "004/004.obj.mtl"
+        },
+        {
+          "mesh": "005/textured.obj",
+          "mtl": "005/005.obj.mtl"
+        },
+        {
+          "mesh": "006/textured.obj",
+          "mtl": "006/006.obj.mtl"
+        },
+        {
+          "mesh": "007/textured.obj",
+          "mtl": "007/007.obj.mtl"
+        },
+        {
+          "mesh": "008/textured.obj",
+          "mtl": "008/008.obj.mtl"
+        },
+        {
+          "mesh": "009/textured.obj",
+          "mtl": "009/009.obj.mtl"
+        },
+        {
+          "mesh": "010/textured.obj",
+          "mtl": "010/010.obj.mtl"
+        },
+        {
+          "mesh": "011/textured.obj",
+          "mtl": "011/011.obj.mtl"
+        },
+        {
+          "mesh": "012/textured.obj",
+          "mtl": "012/012.obj.mtl"
+        },
+        {
+          "mesh": "015/textured.obj",
+          "mtl": "015/015.obj.mtl"
+        },
+        {
+          "mesh": "020/textured.obj",
+          "mtl": "020/020.obj.mtl"
+        },
+        {
+          "mesh": "021/textured.obj",
+          "mtl": "021/021.obj.mtl"
+        },
+        {
+          "mesh": "022/textured.obj",
+          "mtl": "022/022.obj.mtl"
+        },
+        {
+          "mesh": "023/textured.obj",
+          "mtl": "023/023.obj.mtl"
+        },
+        {
+          "mesh": "024/textured.obj",
+          "mtl": "024/024.obj.mtl"
+        },
+        {
+          "mesh": "026/textured.obj",
+          "mtl": "026/026.obj.mtl"
+        },
+        {
+          "mesh": "027/textured.obj",
+          "mtl": "027/027.obj.mtl"
+        },
+        {
+          "mesh": "028/textured.obj",
+          "mtl": "028/028.obj.mtl"
+        },
+        {
+          "mesh": "029/textured.obj",
+          "mtl": "029/029.obj.mtl"
+        },
+        {
+          "mesh": "031/textured.obj",
+          "mtl": "031/031.obj.mtl"
+        },
+        {
+          "mesh": "033/textured.obj",
+          "mtl": "033/033.obj.mtl"
+        },
+        {
+          "mesh": "035/textured.obj",
+          "mtl": "035/035.obj.mtl"
+        }
+      ]
+    },
+    {
+      "id": "objaverse/snack_box",
+      "dir": "objaverse/snack_box",
+      "name": "snack box",
+      "group": "objaverse",
+      "type": "obj",
+      "instances": [
+        {
+          "mesh": "018/textured.obj",
+          "mtl": "018/018.obj.mtl"
+        },
+        {
+          "mesh": "020/textured.obj",
+          "mtl": "020/020.obj.mtl"
+        },
+        {
+          "mesh": "022/textured.obj",
+          "mtl": "022/022.obj.mtl"
+        },
+        {
+          "mesh": "025/textured.obj",
+          "mtl": "025/025.obj.mtl"
+        },
+        {
+          "mesh": "031/textured.obj",
+          "mtl": "031/031.obj.mtl"
+        },
+        {
+          "mesh": "034/textured.obj",
+          "mtl": "034/034.obj.mtl"
+        },
+        {
+          "mesh": "047/textured.obj",
+          "mtl": "047/047.obj.mtl"
+        }
+      ]
+    },
+    {
+      "id": "objaverse/snack_package",
+      "dir": "objaverse/snack_package",
+      "name": "snack package",
+      "group": "objaverse",
+      "type": "obj",
+      "instances": [
+        {
+          "mesh": "003/textured.obj",
+          "mtl": "003/003.obj.mtl"
+        },
+        {
+          "mesh": "004/textured.obj",
+          "mtl": "004/004.obj.mtl"
+        }
+      ]
+    },
+    {
+      "id": "objaverse/sneaker",
+      "dir": "objaverse/sneaker",
+      "name": "sneaker",
+      "group": "objaverse",
+      "type": "obj",
+      "instances": [
+        {
+          "mesh": "001/textured.obj",
+          "mtl": "001/001.obj.mtl"
+        },
+        {
+          "mesh": "002/textured.obj",
+          "mtl": "002/002.obj.mtl"
+        },
+        {
+          "mesh": "003/textured.obj",
+          "mtl": "003/003.obj.mtl"
+        },
+        {
+          "mesh": "005/textured.obj",
+          "mtl": "005/005.obj.mtl"
+        },
+        {
+          "mesh": "006/textured.obj",
+          "mtl": "006/006.obj.mtl"
+        },
+        {
+          "mesh": "007/textured.obj",
+          "mtl": "007/007.obj.mtl"
+        }
+      ]
+    },
+    {
+      "id": "objaverse/spoon",
+      "dir": "objaverse/spoon",
+      "name": "spoon",
+      "group": "objaverse",
+      "type": "obj",
+      "instances": [
+        {
+          "mesh": "011/textured.obj",
+          "mtl": "011/011.obj.mtl"
+        },
+        {
+          "mesh": "020/textured.obj",
+          "mtl": "020/020.obj.mtl"
+        }
+      ]
+    },
+    {
+      "id": "objaverse/steel_tape",
+      "dir": "objaverse/steel_tape",
+      "name": "steel tape",
+      "group": "objaverse",
+      "type": "obj",
+      "instances": [
+        {
+          "mesh": "003/textured.obj",
+          "mtl": "003/003.obj.mtl"
+        }
+      ]
+    },
+    {
+      "id": "objaverse/tape",
+      "dir": "objaverse/tape",
+      "name": "tape",
+      "group": "objaverse",
+      "type": "obj",
+      "instances": [
+        {
+          "mesh": "001/textured.obj",
+          "mtl": "001/001.obj.mtl"
+        },
+        {
+          "mesh": "002/textured.obj",
+          "mtl": "002/002.obj.mtl"
+        },
+        {
+          "mesh": "003/textured.obj",
+          "mtl": "003/003.obj.mtl"
+        },
+        {
+          "mesh": "004/textured.obj",
+          "mtl": "004/004.obj.mtl"
+        }
+      ]
+    },
+    {
+      "id": "objaverse/thermos",
+      "dir": "objaverse/thermos",
+      "name": "thermos",
+      "group": "objaverse",
+      "type": "obj",
+      "instances": [
+        {
+          "mesh": "002/textured.obj",
+          "mtl": "002/002.obj.mtl"
+        },
+        {
+          "mesh": "003/textured.obj",
+          "mtl": "003/003.obj.mtl"
+        },
+        {
+          "mesh": "005/textured.obj",
+          "mtl": "005/005.obj.mtl"
+        }
+      ]
+    },
+    {
+      "id": "objaverse/tissue",
+      "dir": "objaverse/tissue",
+      "name": "tissue",
+      "group": "objaverse",
+      "type": "obj",
+      "instances": [
+        {
+          "mesh": "004/textured.obj",
+          "mtl": "004/004.obj.mtl"
+        },
+        {
+          "mesh": "005/textured.obj",
+          "mtl": "005/005.obj.mtl"
+        }
+      ]
+    },
+    {
+      "id": "objaverse/toothbrush",
+      "dir": "objaverse/toothbrush",
+      "name": "toothbrush",
+      "group": "objaverse",
+      "type": "obj",
+      "instances": [
+        {
+          "mesh": "009/textured.obj",
+          "mtl": "009/009.obj.mtl"
+        },
+        {
+          "mesh": "010/textured.obj",
+          "mtl": "010/010.obj.mtl"
+        },
+        {
+          "mesh": "019/textured.obj",
+          "mtl": "019/019.obj.mtl"
+        },
+        {
+          "mesh": "030/textured.obj",
+          "mtl": "030/030.obj.mtl"
+        }
+      ]
+    },
+    {
+      "id": "objaverse/toy_car",
+      "dir": "objaverse/toy_car",
+      "name": "toy car",
+      "group": "objaverse",
+      "type": "obj",
+      "instances": [
+        {
+          "mesh": "001/textured.obj",
+          "mtl": "001/001.obj.mtl"
+        },
+        {
+          "mesh": "002/textured.obj",
+          "mtl": "002/002.obj.mtl"
+        },
+        {
+          "mesh": "003/textured.obj",
+          "mtl": "003/003.obj.mtl"
+        },
+        {
+          "mesh": "005/textured.obj",
+          "mtl": "005/005.obj.mtl"
+        },
+        {
+          "mesh": "006/textured.obj",
+          "mtl": "006/006.obj.mtl"
+        },
+        {
+          "mesh": "007/textured.obj",
+          "mtl": "007/007.obj.mtl"
+        },
+        {
+          "mesh": "009/textured.obj",
+          "mtl": "009/009.obj.mtl"
+        },
+        {
+          "mesh": "011/textured.obj",
+          "mtl": "011/011.obj.mtl"
+        },
+        {
+          "mesh": "013/textured.obj",
+          "mtl": "013/013.obj.mtl"
+        }
+      ]
+    },
+    {
+      "id": "objaverse/wallet",
+      "dir": "objaverse/wallet",
+      "name": "wallet",
+      "group": "objaverse",
+      "type": "obj",
+      "instances": [
+        {
+          "mesh": "003/textured.obj",
+          "mtl": "003/003.obj.mtl"
+        },
+        {
+          "mesh": "007/textured.obj",
+          "mtl": "007/007.obj.mtl"
+        },
+        {
+          "mesh": "010/textured.obj",
+          "mtl": "010/010.obj.mtl"
+        },
+        {
+          "mesh": "011/textured.obj",
+          "mtl": "011/011.obj.mtl"
+        },
+        {
+          "mesh": "012/textured.obj",
+          "mtl": "012/012.obj.mtl"
+        },
+        {
+          "mesh": "017/textured.obj",
+          "mtl": "017/017.obj.mtl"
+        }
+      ]
+    },
+    {
+      "id": "vis_box",
+      "dir": "vis_box",
+      "name": "vis box",
+      "group": "misc",
+      "type": "glb",
+      "instances": [
+        {
+          "mesh": "base.glb"
+        },
+        {
+          "mesh": "functional.glb"
+        },
+        {
+          "mesh": "gripper.glb"
+        }
+      ]
+    }
+  ]
+}

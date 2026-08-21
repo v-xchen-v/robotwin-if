@@ -1,0 +1,51 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>compare</title>
+<style>
+  body{margin:0;background:#f0f0f0;font:13px system-ui;display:flex;flex-wrap:wrap}
+  .cell{width:240px;height:240px;position:relative;border:1px solid #ccc}
+  .cell canvas{width:100%;height:100%;display:block}
+  .cap{position:absolute;left:0;bottom:0;background:#000a;color:#fff;padding:2px 6px}
+</style>
+<script type="importmap">
+{"imports":{"three":"https://unpkg.com/three@0.160.0/build/three.module.js","three/":"https://unpkg.com/three@0.160.0/"}}
+</script></head>
+<body>
+<script type="module">
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+const ROOT='/third_party/robotwin/assets/objects';
+const items=[
+ ['107_soap','107_soap/visual/base0.glb'],
+ ['117_whiteboard-eraser','117_whiteboard-eraser/visual/base0.glb'],
+ ['108_block','108_block/visual/base0.glb'],
+ ['086_woodenblock','086_woodenblock/visual/base0.glb'],
+ ['004_fluted-block','004_fluted-block/visual/base0.glb'],
+ ['100_seal','100_seal/visual/base0.glb'],
+ ['095_glue','095_glue/visual/base0.glb'],
+ ['094_rest','094_rest/visual/base0.glb'],
+ ['118_tooth-paste','118_tooth-paste/visual/base0.glb'],
+ ['061_battery','061_battery/visual/base0.glb'],
+];
+for(const [name,rel] of items){
+  const cell=document.createElement('div');cell.className='cell';
+  const cap=document.createElement('div');cap.className='cap';cap.textContent=name;
+  document.body.appendChild(cell);cell.appendChild(cap);
+  const r=new THREE.WebGLRenderer({antialias:true});r.setSize(240,240);r.outputColorSpace=THREE.SRGBColorSpace;
+  cell.insertBefore(r.domElement,cap);
+  const scene=new THREE.Scene();scene.background=new THREE.Color(0xeeeeee);
+  scene.add(new THREE.HemisphereLight(0xffffff,0x555555,2.5));
+  const d=new THREE.DirectionalLight(0xffffff,2);d.position.set(3,5,4);scene.add(d);
+  const cam=new THREE.PerspectiveCamera(35,1,0.01,100);
+  new GLTFLoader().load(ROOT+'/'+rel,g=>{
+    const o=g.scene;const box=new THREE.Box3().setFromObject(o);
+    const s=box.getSize(new THREE.Vector3()),c=box.getCenter(new THREE.Vector3());
+    const md=Math.max(s.x,s.y,s.z)||1;o.position.sub(c);
+    const piv=new THREE.Group();piv.add(o);piv.scale.setScalar(1/md);scene.add(piv);
+    const rad=0.5*s.length()/md,dist=rad/Math.tan(17.5*Math.PI/180)*1.6;
+    cam.position.set(dist*.7,dist*.6,dist);cam.lookAt(0,0,0);
+    r.render(scene,cam);
+    window.__done=(window.__done||0)+1;
+  },undefined,e=>{cap.textContent=name+' ERR';});
+}
+</script>
+</body></html>
