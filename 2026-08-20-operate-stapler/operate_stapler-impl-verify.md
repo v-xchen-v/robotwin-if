@@ -119,8 +119,8 @@ check_success():                          # rollout 每 step 调（[base:1657]�
 - **新干扰物池生效**：episode 用的是 stable 办公物体（cup/playingcards/glue），非旧 markpen。
 
 **不证明**（适用范围边界）：
-- **不证明干扰物视觉朝向已"自然平躺"**：数据是新池、物体均为 stable（理论应平躺），但**未逐帧肉眼核对 video 里每个物体的姿态**。需人工看 `evidence/*.mp4` 确认无竖立/悬浮。
-- **不证明反例判定**：只跑了正例（oracle 正确操作→success）。**未测**"操作干扰物/错动词→check_success 应 False"（Layer B 反例）。
+- **干扰物视觉朝向**：✅ 用户肉眼核对 50 条采集 video（2026-08-21）——12 个 stable 办公物体均自然平躺、无竖立/悬浮/穿模。
+- ~~**不证明反例判定**~~ → **已补测（2026-08-21）**：`tests/operate_stapler/test_check_success.py` 5/5 PASS，含 move 对象特异性（干扰物上垫子→False）、两 mode 默认态→False、两 mode 正控→True。见 `negative-test-plan.md` + `evidence/negative_test_output.txt`。仍缺：press "抓侧面非按顶部"的假阳细案、跨 mode 误触。
 - **不证明 eval loop 端到端**：只跑 `collect_data`（单次 setup）。**未在真实 `eval_policy.sh` 的双 setup 流程里验证** setup#1/setup#2 的 mode 一致（逻辑上 `seed%2` 保证，但未实测）。
 - **不证明 step_lim 足够 / 两 mode 专家成功率均衡**：样本仅 2 条（各 1）。move 是否总在 1000 步 fallback 内完成、两 mode pass 率是否接近 50/50，需大批量采集统计。
 - **不证明模型效果**：本任务只做基准场景/判定，不涉及任何 policy 训练或评分。

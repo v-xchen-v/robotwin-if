@@ -1,0 +1,10 @@
+$ python tests/operate_stapler/test_check_success.py   (2026-08-21, RoboTwin conda env)
+
+[PASS] T1 move positive (stapler on pad): got=True expect=True
+[PASS] T2 move wrong-object (distractor on pad) <-KEY: got=False expect=False  distractor=095_glue/base0
+[PASS] T3 move not-placed (default state): got=False expect=False
+[PASS] T5 press no-contact (default state): got=False expect=False
+[PASS] T6 press positive (ran expert): got=True expect=True  plan_success=True
+
+==== summary ====
+5/5 passed

@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Operate-Stapler · RoboTwin-IF 复刻 report</title>
+<style>
+  :root{
+    --bg:#f6f7f9; --card:#ffffff; --ink:#16181d; --muted:#5b6472; --line:#e4e7ec;
+    --accent:#4f46e5; --press:#c2660c; --press-bg:#fdf1e3; --move:#0e7490; --move-bg:#e5f4f7;
+    --ok:#15803d; --ok-bg:#e8f5ec; --warn:#b45309; --code:#f1f3f7; --shadow:0 1px 2px rgba(16,24,40,.06),0 1px 3px rgba(16,24,40,.1);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;
+    line-height:1.6;font-size:15px}
+  .wrap{max-width:960px;margin:0 auto;padding:0 20px 80px}
+  code,pre,.mono{font-family:"SF Mono",SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace}
+  code{background:var(--code);padding:1px 6px;border-radius:5px;font-size:.88em}
+  pre{background:#0f1729;color:#e7ecf5;padding:14px 16px;border-radius:10px;overflow-x:auto;font-size:13px;line-height:1.55}
+  pre code{background:none;padding:0;color:inherit}
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline}
+  h2{font-size:22px;margin:44px 0 14px;padding-top:14px;border-top:1px solid var(--line)}
+  h3{font-size:16px;margin:22px 0 8px}
+  p{margin:10px 0}
+  /* hero */
+  .hero{background:linear-gradient(135deg,#4f46e5 0%,#0e7490 100%);color:#fff;border-radius:0 0 20px 20px;
+    padding:40px 20px 34px;margin-bottom:8px}
+  .hero .inner{max-width:960px;margin:0 auto;padding:0 20px}
+  .hero .kicker{text-transform:uppercase;letter-spacing:.14em;font-size:12px;opacity:.85;font-weight:600}
+  .hero h1{font-size:34px;margin:8px 0 6px;line-height:1.15}
+  .hero .sub{font-size:16px;opacity:.94;max-width:680px}
+  .badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+  .badge{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.28);color:#fff;
+    padding:4px 11px;border-radius:999px;font-size:13px;font-weight:600;backdrop-filter:blur(4px)}
+  .meta{display:flex;flex-wrap:wrap;gap:18px;margin-top:18px;font-size:12.5px;opacity:.9}
+  .meta b{font-weight:600}
+  /* cards */
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px;margin:16px 0}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;box-shadow:var(--shadow)}
+  .card h4{margin:0 0 6px;font-size:13px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+  .card p{margin:0;font-size:14.5px}
+  .pill{display:inline-block;padding:1px 8px;border-radius:6px;font-size:12px;font-weight:700;vertical-align:middle}
+  .pill.press{background:var(--press-bg);color:var(--press)}
+  .pill.move{background:var(--move-bg);color:var(--move)}
+  .pill.ok{background:var(--ok-bg);color:var(--ok)}
+  /* diagram */
+  .diagram{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:24px;box-shadow:var(--shadow);margin:16px 0}
+  .pivot{max-width:360px;margin:0 auto;text-align:center;background:#eef0ff;border:1.5px solid var(--accent);
+    border-radius:10px;padding:10px 14px;font-weight:600}
+  .pivot .mono{color:var(--accent);font-size:13px}
+  .down{width:2px;height:22px;background:var(--line);margin:6px auto}
+  .three{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:4px}
+  .node{border:1px solid var(--line);border-radius:10px;padding:12px;text-align:center;font-size:13.5px;background:#fbfcfe}
+  .node b{display:block;margin-bottom:3px}
+  .node small{color:var(--muted);font-size:12px}
+  .arrowlbl{text-align:center;color:var(--muted);font-size:12.5px;margin:10px 0 2px}
+  /* video */
+  .videos{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:16px 0}
+  .vbox{background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden;box-shadow:var(--shadow)}
+  .vbox video{width:100%;display:block;background:#000}
+  .vbox .cap{padding:12px 14px}
+  .vbox .cap b{font-size:14px}
+  .vbox .cap p{font-size:13px;color:var(--muted);margin:4px 0 0}
+  .vtag{display:inline-block;font-size:11.5px;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px}
+  /* table */
+  table{border-collapse:collapse;width:100%;margin:14px 0;font-size:14px;background:var(--card);
+    border:1px solid var(--line);border-radius:10px;overflow:hidden}
+  th,td{padding:9px 13px;text-align:left;border-bottom:1px solid var(--line)}
+  th{background:#f0f2f6;font-weight:600;font-size:12.5px;text-transform:uppercase;letter-spacing:.03em;color:var(--muted)}
+  tr:last-child td{border-bottom:none}
+  td.n{font-variant-numeric:tabular-nums;font-family:"SF Mono",Menlo,monospace}
+  .yes{color:var(--ok);font-weight:700}
+  .no{color:#b91c1c;font-weight:700}
+  .todo{color:var(--warn);font-weight:600}
+  /* misc */
+  .callout{background:var(--move-bg);border-left:3px solid var(--move);border-radius:0 8px 8px 0;padding:12px 16px;margin:16px 0;font-size:14px}
+  .callout.warn{background:#fef6e7;border-left-color:var(--warn)}
+  ul.tight{margin:8px 0;padding-left:22px}
+  ul.tight li{margin:5px 0}
+  .lesson{background:var(--card);border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;
+    padding:12px 16px;margin:12px 0;box-shadow:var(--shadow)}
+  .lesson b{color:var(--ink)}
+  .foot{margin-top:40px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:13px}
+  @media(max-width:680px){.videos,.three{grid-template-columns:1fr}.hero h1{font-size:27px}}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="inner">
+    <div class="kicker">RoboTwin-IF · 任务复刻</div>
+    <h1>Operate-Stapler</h1>
+    <div class="sub">把两个原生任务合并进<b>同一个场景</b>，用指令里的<b>动词</b>决定要做哪件事——诊断 VLA 是否真按语言行动（VLA→VA 退化）。</div>
+    <div class="badges">
+      <span class="badge">✓ 实现完成</span>
+      <span class="badge">✓ 判定区分度 5/5</span>
+      <span class="badge">✓ 指令路由 14/14</span>
+      <span class="badge">✓ 均衡实测</span>
+      <span class="badge">零改 submodule</span>
+    </div>
+    <div class="meta">
+      <span><b>主仓 commits</b>&nbsp; 50c756b · 39eb4a9 · 1fe5d5b</span>
+      <span><b>日期</b>&nbsp; 2026-08-20 ~ 21</span>
+      <span><b>核心文件</b>&nbsp; tasks/envs/operate_stapler.py · operate_stapler.json</span>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <h2 style="border-top:none">TL;DR</h2>
+  <div class="grid">
+    <div class="card"><h4>做了什么</h4><p>合并 <code>press_stapler</code> + <code>move_stapler_pad</code> 成一个共享场景（订书机+彩色垫+干扰物）的动词判别任务。<span class="pill press">press</span> 按订书机、<span class="pill move">move</span> 搬到垫子。</p></div>
+    <div class="card"><h4>怎么验证</h4><p>oracle 采集正例 · 反例判定测试 <b>5/5</b> · 指令路由断言 <b>14/14</b> · 50 条采集统计均衡与成功率。</p></div>
+    <div class="card"><h4>结论</h4><p>判定<b>对象特异</b>（干扰物上垫子→False）；指令路由<b>零泄漏</b>；专家 press <b>100%</b> / move <b>88.5%</b>。</p></div>
+    <div class="card"><h4>最大的坑</h4><p>干扰物<b>朝向</b>——每个 mesh 坐标系不同，只有 <code>stable</code> 物体能用统一 qpos 平躺；markpen 这类圆柱没有平躺姿态。</p></div>
+  </div>
+
+  <h2>背景与目标</h2>
+  <p>RoboTwin-IF 要诊断 VLA policy 是否真按语言指令控制动作，而不是退化成"看图选默认动作"。Operate-Stapler 的机制是：<b>同一个场景始终摆着订书机 + 彩色垫 + 干扰物</b>，指令的动词决定成功条件——垫子在两种指令下角色翻转（press 时是干扰项、move 时是目标）。一个无视语言的退化策略必然在其中一半 episode 上翻车。</p>
+
+  <div class="callout">
+    <b>核心设计：mode 是唯一枢纽。</b> 不是"从指令反推 mode"（框架里指令是场景的下游产物，反推不了），而是 <code>self.mode = seed % 2</code> 一处派生、三处读取——建场景、专家+写 info、判定，全读同一个 mode。指令措辞由 info 里带不带 <code>{B}</code>（垫子颜色）自动路由。指令和判定都是 mode 的兄弟投影，构造上永远一致。
+  </div>
+
+  <h2>架构：mode 枢纽 · 零侵入</h2>
+  <div class="diagram">
+    <div class="pivot">seed &rarr; <span class="mono">self.mode = ["press","move"][seed % 2]</span></div>
+    <div class="down"></div>
+    <div class="three">
+      <div class="node"><b>load_actors</b><small>建场景：订书机+垫子+干扰物<br>仅 <code>is_static</code> 随 mode 变</small></div>
+      <div class="node"><b>play_once</b><small>按 mode 出专家轨迹<br>写 info（press 无 {B} / move 有 {B}）</small></div>
+      <div class="node"><b>check_success</b><small>按 mode 分支判定<br>复用两原生判据</small></div>
+    </div>
+    <div class="arrowlbl">↓ info["info"] 的占位符集合（带不带 {B}）</div>
+    <div class="node" style="max-width:520px;margin:0 auto"><b>generate_episode_instructions · filter_instructions</b><small>占位符精确匹配 → press 参数 {A,a} 只命中 press 模板；move 参数 {A,B,a} 只命中 move 模板</small></div>
+  </div>
+  <p>任务类只对采集/评测 pipeline 暴露 <code>setup_demo / play_once / check_success</code> 三个钩子，pipeline 对"做什么/怎么算成功"完全多态。<b>submodule 源码零改动</b>，靠 <code>bridge_tasks.sh</code> symlink 注入。详见 <code>architecture.md</code>。</p>
+  <div class="callout warn">
+    <b>eval 侧关键约束：</b>评测对一个 seed 会<b>两次 setup_demo</b>（setup#1 跑专家产指令、setup#2 policy rollout+判定），两次的 mode 靠 <code>seed % 2</code> 纯函数保证一致——否则指令说 press、判定按 move，会<b>静默污染分数</b>。这是本任务最要命的实现约束。
+  </div>
+
+  <h2>证据</h2>
+  <p>两个 mode 的 oracle 专家演示（seed 0 = press，seed 1 = move），同一套场景、动词不同：</p>
+  <div class="videos">
+    <div class="vbox">
+      <video controls preload="metadata" src="evidence/episode0_press.mp4"></video>
+      <div class="cap">
+        <span class="vtag" style="background:var(--press-bg);color:var(--press)">PRESS · seed 0</span>
+        <b>按订书机</b>
+        <p>专家下压订书机顶部。桌上的垫子 + 干扰物（cup / playingcards）是干扰项——指令绝口不提颜色。</p>
+      </div>
+    </div>
+    <div class="vbox">
+      <video controls preload="metadata" src="evidence/episode1_move.mp4"></video>
+      <div class="cap">
+        <span class="vtag" style="background:var(--move-bg);color:var(--move)">MOVE · seed 1</span>
+        <b>搬到 Magenta 垫子</b>
+        <p>专家抓起订书机、对齐放到彩色垫。此时垫子是目标，指令里带颜色 <code>Magenta</code>。</p>
+      </div>
+    </div>
+  </div>
+
+  <h3>判定有区分度：反例测试 <span class="pill ok">5/5 PASS</span></h3>
+  <p>正例只证明"做对→True"。反例证明"做错→False"——这才是 IF 基准立得住的前提（<code>evidence/negative_test_output.txt</code>）。</p>
+  <table>
+    <tr><th>case</th><th>构造</th><th>实际</th><th>期望</th></tr>
+    <tr><td>T1 move 正控</td><td>订书机放到垫子</td><td class="n yes">True</td><td class="n">True</td></tr>
+    <tr><td><b>T2 move 错物体 ★</b></td><td><b>干扰物(095_glue)放到垫子</b></td><td class="n no">False</td><td class="n">False</td></tr>
+    <tr><td>T3 move 未放置</td><td>默认态</td><td class="n no">False</td><td class="n">False</td></tr>
+    <tr><td>T5 press 无接触</td><td>默认态</td><td class="n no">False</td><td class="n">False</td></tr>
+    <tr><td>T6 press 正控</td><td>真跑专家</td><td class="n yes">True</td><td class="n">True</td></tr>
+  </table>
+  <p><b>T2 是关键</b>：干扰物放到垫子上判定为 False，证明判定认的是<b>订书机本身</b>，不是"垫子上有东西"——共享场景 IF 判定可信。</p>
+
+  <h3>指令路由零泄漏：断言 <span class="pill ok">14/14 PASS</span></h3>
+  <table>
+    <tr><th>mode</th><th>指令含垫子颜色</th><th>路由命中模板</th></tr>
+    <tr><td><span class="pill press">press</span></td><td class="n"><b>0 / 200</b></td><td class="n">seen 48 · unseen 10（全 press）</td></tr>
+    <tr><td><span class="pill move">move</span></td><td class="n"><b>200 / 200</b></td><td class="n">seen 48 · unseen 8（全 move）</td></tr>
+  </table>
+  <p>用 RoboTwin 真实的 <code>filter_instructions</code> 验证：press 指令一处不提颜色，move 指令每条都带颜色。（press 里的 "black" 是订书机自身描述，非垫子颜色。）</p>
+
+  <h3>数据集均衡与专家成功率（50 条采集）</h3>
+  <table>
+    <tr><th>口径</th><th>成功率</th><th>说明</th></tr>
+    <tr><td>整体（taskset）</td><td class="n">50/53 = 94.3%</td><td>oracle 专家</td></tr>
+    <tr><td><span class="pill press">press</span></td><td class="n">27/27 = 100%</td><td>全部成功</td></tr>
+    <tr><td><span class="pill move">move</span></td><td class="n">88.5% (23/26)</td><td>3 个 seed 抓取/规划失败</td></tr>
+  </table>
+  <p>采集集 27 press / 23 move（≈54/46），轻微偏斜源于 move 专家没 press 稳，<b>已接受</b>——报告工具 <code>tools/report_operate_stapler.py</code> 同时给整体和分 mode 两个口径（eval 侧用 <code>--eval-log</code>）。12 个 stable 办公物体全部出现、分布均匀。</p>
+
+  <h2>关键决策 / 教训</h2>
+  <div class="lesson"><b>mode 由 seed 纯派生，不用 <code>np.random</code>。</b>eval 两次 setup 靠 <code>seed%2</code> 复现同一 mode；用 RNG 采样会被"消耗顺序"影响、两次可能不一致 → 指令与判定错位。</div>
+  <div class="lesson"><b><code>is_static</code> 随 mode 切（方案 A）。</b>press 要焊死订书机防倒、move 要能抓，共享场景没法两全。物理属性静止画面不可见，视觉一致的诊断前提不破。</div>
+  <div class="lesson"><b>干扰物三个坑（跨任务，其余 IF 任务会复发）。</b>① model_id 不连续（<code>071_can</code> 缺 4）；② 缺 <code>scale</code> 键 → <code>config=None</code>（<code>108_block</code>）；③ 朝向——只有 <code>stable</code> 物体能用统一 glb qpos 平躺。缓解：只从 <code>stable:true</code> 的 id 采、config 兜底、glb 平躺 qpos。详见 <code>gotchas.md</code>。</div>
+  <div class="lesson"><b>markpen 调研 → 省事路线。</b>RoboTwin 50 任务无一摆 markpen（<code>stable=false</code>，圆柱会滚），没有现成 qpos 可抄。与其硬调，不如换成等价的 stable 办公物体（<code>093_brush-pen</code> 顶替笔），全部自然平躺、零手调。</div>
+  <div class="lesson"><b>指令合并要去泄漏。</b>move 池里 1 条漏 <code>{B}</code> 的模板会带 <code>{A,a}</code> 泄漏进 press mode；另有重复、seen/unseen 重叠。合并脚本做了过滤 + 去重 + 强制不相交。</div>
+
+  <h2>现状与边界</h2>
+  <table>
+    <tr><th>验证项</th><th>状态</th></tr>
+    <tr><td>两 mode 专家跑通</td><td class="yes">✓ 已验</td></tr>
+    <tr><td>判定对象特异 / 有区分度</td><td class="yes">✓ 5/5</td></tr>
+    <tr><td>指令路由零泄漏 + 去重不相交</td><td class="yes">✓ 14/14</td></tr>
+    <tr><td>两 mode 专家成功率均衡</td><td class="yes">✓ 已测（100% / 88.5%）</td></tr>
+    <tr><td>干扰物平躺 + z 落位</td><td class="yes">✓ 肉眼核对 video</td></tr>
+    <tr><td>step_lim 够不够 move</td><td class="todo">⏳ eval-only，待 policy</td></tr>
+    <tr><td>eval loop 端到端 mode 一致</td><td class="todo">⏳ 待 policy</td></tr>
+  </table>
+  <p><b>不证明什么（划清适用范围）：</b></p>
+  <ul class="tight">
+    <li><b>不证明模型效果</b>——本任务只做基准场景/判定，不涉及任何 policy 训练或评分。</li>
+    <li><b>不证明 eval 端到端</b>——只跑了 <code>collect_data</code>（单次 setup）；双 setup 的 mode 一致靠 <code>seed%2</code> 逻辑保证，未在真实 <code>eval_policy.sh</code> 里跑通。</li>
+    <li><b>不证明 press 假阳细案</b>——"抓侧面而非按顶部"是否误判 True，contact-based 难静态构造，未覆盖。</li>
+    <li><b>干扰物未对齐论文图</b>——当前池是按"办公语境 + stable 可平躺"自选的等价物，非论文原物（待优化）。</li>
+  </ul>
+
+  <h2>待办（下一步）</h2>
+  <table>
+    <tr><th>#</th><th>待办</th><th>为什么 / 产出</th><th>依赖</th></tr>
+    <tr>
+      <td class="n">1</td>
+      <td><b>干扰物对齐论文图</b></td>
+      <td>把池子换成/补上论文图里的原物，更贴近原设计。含定位图中一个<b>黄色圆角物体</b>（候选 soap / rubikscube / glue / pillbottle，需逐个渲染比对）。</td>
+      <td>论文配图</td>
+    </tr>
+    <tr>
+      <td class="n">2</td>
+      <td><b>真实 policy 跑 eval</b></td>
+      <td>① 验 <code>step_lim</code>（1000 fallback）对 move 够不够——采集侧无 step 上限、测不到，只有 eval 生效；② 端到端验双 setup 的 mode 一致；③ 用 <code>report --eval-log</code> 出<b>分 mode 的真实 policy 成绩</b>。</td>
+      <td>baseline policy</td>
+    </tr>
+    <tr>
+      <td class="n">3</td>
+      <td><b>press 假阳细案</b></td>
+      <td>补测"抓侧面而非按顶部"是否被误判 True（contact-based，需专门设计错误抓取轨迹）。</td>
+      <td>—</td>
+    </tr>
+    <tr>
+      <td class="n">4</td>
+      <td><b>跨 mode 误触测试</b></td>
+      <td>强制 mode 与实际动作错配，验两 mode 判定在共享场景下互不误触。</td>
+      <td>—</td>
+    </tr>
+  </table>
+
+  <h2>怎么复现</h2>
+<pre><code># 采集（oracle 专家演示两个 mode）
+cd third_party/robotwin
+bash collect_data.sh operate_stapler demo_clean 0
+
+# 反例判定测试（5/5）
+python tests/operate_stapler/test_check_success.py
+
+# 指令路由断言（14/14）
+python tests/operate_stapler/test_instructions.py
+
+# 成功率报告：整体 + 按 mode
+python tools/report_operate_stapler.py                    # 采集/oracle
+python tools/report_operate_stapler.py --eval-log eval.log # 有 policy 后</code></pre>
+
+  <div class="foot">
+    深读各维度：<code>spec.md</code>（实现前 spec）· <code>understanding.md</code>（问题理解 + 变更记录）· <code>architecture.md</code>（黑盒流程图）· <code>operate_stapler-impl-verify.md</code>（逐字段映射 + 证据）· <code>gotchas.md</code>（已知隐患）· <code>negative-test-plan.md</code>（反例设计）。<br>
+    本 report 与 <code>evidence/</code> 同属 notes 独立仓库，整目录 copy 即可离线打开（视频随目录走）。
+  </div>
+
+</div>
+</body>
+</html>

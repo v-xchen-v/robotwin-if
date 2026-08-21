@@ -2,7 +2,7 @@
 
 > 目的：证明 `check_success` **有区分度**——不只"做对→True"，还要"做错→False"。正例（oracle 正确操作→success，见 `operate_stapler-impl-verify.md`）证明不了这一点：一个恒 True 的判定也能通过所有正例，却让基准失去意义。IF 基准的效力**完全取决于**判定的紧度。
 >
-> 脚本：`tools/test_operate_stapler_check.py`（在 GPU 机器、RoboTwin conda 环境跑）。
+> 脚本：`tests/operate_stapler/test_check_success.py`（在 GPU 机器、RoboTwin conda 环境跑）。
 
 ## 可构造性（决定怎么测）
 
@@ -36,7 +36,7 @@
 ```bash
 cd /home/xichen6/Documents/repos/robotwin-if
 conda activate RoboTwin      # 或对应环境
-python tools/test_operate_stapler_check.py
+python tests/operate_stapler/test_check_success.py
 ```
 
 脚本对每个 case 打印 `实际 vs 期望` 和 PASS/FAIL，末尾汇总；有 FAIL 则退出码非 0，可纳入回归。
@@ -45,6 +45,20 @@ python tools/test_operate_stapler_check.py
 
 - **全 PASS**：判定对两 mode 都有区分度，尤其 T2 证明了对象特异性 → 基准判定可信。
 - **T2 若 False 期望但实际 True**（即干扰物上垫子也判成功）：说明判定太松、只看位置不看对象 → **基准失效，必须收紧**（改成校验是 `self.stapler` 到位）。当前代码看 `self.stapler.pose` 应该 OK，但必须实测坐实。
+
+## 实测结果（2026-08-21，RoboTwin conda 环境）✅ 5/5 PASS
+
+见 `evidence/negative_test_output.txt`。
+
+| # | case | 实际 | 期望 |
+|---|---|---|---|
+| T1 | move 订书机上垫子 | True | True ✅ |
+| **T2** | **move 干扰物(`095_glue/base0`)上垫子** | **False** | **False ✅** |
+| T3 | move 默认态 | False | False ✅ |
+| T5 | press 无接触 | False | False ✅ |
+| T6 | press 真跑专家 | True | True ✅（plan_success=True）|
+
+**结论**：`check_success` 对两 mode 均有区分度；**T2 坐实判定对象特异**（认订书机本身、非"垫子上有物"）——共享场景 IF 判定可信。（T2 实测中静态干扰物 `set_pose` 正常工作，之前担心的 SAPIEN 限制未出现。）
 
 ## 边界（这个脚本不覆盖）
 

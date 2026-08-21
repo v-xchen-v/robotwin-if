@@ -51,10 +51,10 @@
 
 ## 待确认
 
-- [ ] **step_lim 对 move mode 是否够**：`_eval_step_limit.yml` 无 operate_stapler 项 → 吃 1000 fallback，两 mode 共用。move（抓取+搬运，步数更多）若 1000 步跑不完会被判失败。**要真机大批量采集/eval 观察 move 的步数分布确认**；不够就得单配更大值。
-- [ ] **两 mode 专家成功率是否均衡**：eval 的 expert_check gate 会跳过专家失败的 seed，若 move 专家偶发失败率明显高于 press，会导致 move mode 在 eval 被系统性少采、偏离 50/50。**要统计两 mode 的专家 pass 率确认**。
-- [ ] **新干扰物池是否都自然平躺**：pool 已换成 12 个 stable 办公物体（理论上都能用 glb qpos 平躺），但**用户尚未对新池重跑并肉眼核对 video**（之前竖立的是旧池 markpen）。要 `rm -rf data/operate_stapler && bash collect_data.sh operate_stapler demo_clean 0` 后看 video + `scene_info.json` 的 `distractors` 字段确认。
-- [ ] **干扰物 z 落位**：静态干扰物 spawn 在默认 z=0.741，依赖 stable 物体的 mesh 原点恰好贴桌。绝大多数应 OK（stable 已验证），但个别物体可能略悬浮/穿模，要 video 核对。
+- [ ] **step_lim 对 move mode 是否够**：`_eval_step_limit.yml` 无 operate_stapler 项 → 吃 1000 fallback，两 mode 共用。move（抓取+搬运，步数更多）若 1000 步跑不完会被判失败。**注**：`collect_data` phase 1 无 step 上限，step_lim **只在 eval 生效**，所以 50 条采集没触发它——要等真机跑 **eval** 才能确认 move 是否在 1000 步内完成。
+- [x] **两 mode 专家成功率是否均衡**：已实测（50 条采集）——press **100%**(27/27)、move **88.5%**(23/26)，采集集 27 press/23 move（≈54/46）。轻微偏斜源于 move 专家没 press 稳，**已接受**（按 mode 分报，见 `tools/report_operate_stapler.py`）。eval 侧同样 gate 会有类似偏斜，用 `--eval-log` 拆 mode 报告。
+- [x] **新干扰物池是否都自然平躺**：已由用户肉眼核对 50 条采集的 video（2026-08-21）——12 个 stable 办公物体均自然平躺，无竖立，OK。
+- [x] **干扰物 z 落位**：同上 video 核对通过——无悬浮/穿模。默认 z=0.741 + stable 物体 mesh 原点贴桌成立。
 - [ ] **mode 决定性在真实 eval loop 未端到端验证**：`seed%2` 纯函数逻辑上保证两次 setup mode 一致，但没在实际 `eval_policy.sh` 跑通里验证过（当前只跑了 `collect_data`）。要真机跑一次 eval 确认指令 mode 与判定 mode 对齐。
 - [x] **press 指令是否泄漏 pad 颜色**：已验证——episode0(press) 200 条指令 0 处 pad/mat；episode1(move) 196/200 含 `Magenta mat`。`{B}` 路由正确。
 - [x] **两 mode 能否跑通专家**：已验证——`collect_data` 中 seed0(press)/seed1(move) 均成功产出轨迹+video。
