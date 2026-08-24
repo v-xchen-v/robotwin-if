@@ -1,0 +1,155 @@
+[
+  {
+    "noun": "bottle",
+    "obj": "001_bottle",
+    "base_id": 0,
+    "claimed": "red",
+    "auto": "brown",
+    "hex": "#97020e",
+    "match": false
+  },
+  {
+    "noun": "bottle",
+    "obj": "001_bottle",
+    "base_id": 22,
+    "claimed": "green",
+    "auto": "green",
+    "hex": "#799a59",
+    "match": true
+  },
+  {
+    "noun": "bottle",
+    "obj": "001_bottle",
+    "base_id": 5,
+    "claimed": "orange",
+    "auto": "golden",
+    "hex": "#d48c26",
+    "match": false
+  },
+  {
+    "noun": "cup",
+    "obj": "021_cup",
+    "base_id": 8,
+    "claimed": "blue",
+    "auto": "silver",
+    "hex": "#94a0ce",
+    "match": false
+  },
+  {
+    "noun": "cup",
+    "obj": "021_cup",
+    "base_id": 4,
+    "claimed": "white",
+    "auto": "white",
+    "hex": "#f3f2f1",
+    "match": true
+  },
+  {
+    "noun": "cup",
+    "obj": "021_cup",
+    "base_id": 12,
+    "claimed": "black",
+    "auto": "black",
+    "hex": "#2c2a29",
+    "match": true
+  },
+  {
+    "noun": "shoe",
+    "obj": "041_shoe",
+    "base_id": 8,
+    "claimed": "red",
+    "auto": "red",
+    "hex": "#a73641",
+    "match": true
+  },
+  {
+    "noun": "shoe",
+    "obj": "041_shoe",
+    "base_id": 4,
+    "claimed": "green",
+    "auto": "gray",
+    "hex": "#b1a187",
+    "match": false
+  },
+  {
+    "noun": "mug",
+    "obj": "039_mug",
+    "base_id": 0,
+    "claimed": "black",
+    "auto": "black",
+    "hex": "#323230",
+    "match": true
+  },
+  {
+    "noun": "can",
+    "obj": "071_can",
+    "base_id": 3,
+    "claimed": "red",
+    "auto": "silver",
+    "hex": "#d7d4d3",
+    "match": false
+  },
+  {
+    "noun": "toycar",
+    "obj": "057_toycar",
+    "base_id": 3,
+    "claimed": "green",
+    "auto": "black",
+    "hex": "#2a2a25",
+    "match": false
+  },
+  {
+    "noun": "phone",
+    "obj": "077_phone",
+    "base_id": 4,
+    "claimed": "black",
+    "auto": "brown",
+    "hex": "#5c646a",
+    "match": false
+  },
+  {
+    "noun": "soap",
+    "obj": "107_soap",
+    "base_id": 2,
+    "claimed": "blue",
+    "auto": "silver",
+    "hex": "#0cd4f6",
+    "match": false
+  },
+  {
+    "noun": "hamburg",
+    "obj": "006_hamburg",
+    "base_id": 4,
+    "claimed": "yellow",
+    "auto": "yellow",
+    "hex": "#f5c053",
+    "match": true
+  },
+  {
+    "noun": "bread",
+    "obj": "075_bread",
+    "base_id": 4,
+    "claimed": "golden",
+    "auto": "orange",
+    "hex": "#f3a143",
+    "match": false
+  },
+  {
+    "noun": "coffee-box",
+    "obj": "113_coffee-box",
+    "base_id": 0,
+    "claimed": "brown",
+    "auto": "golden",
+    "hex": "#dfb183",
+    "match": false
+  },
+  {
+    "noun": "mouse",
+    "obj": "047_mouse",
+    "base_id": 0,
+    "claimed": "gray",
+    "auto": "brown",
+    "hex": "#4f5348",
+    "match": false
+  }
+]

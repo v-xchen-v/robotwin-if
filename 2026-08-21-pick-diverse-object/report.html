@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pick-Diverse-Object · RoboTwin-IF</title>
+<style>
+  :root{
+    --bg:#f7f8fa; --card:#fff; --ink:#1f2430; --mut:#5b6472; --line:#e4e8ee;
+    --accent:#0e9f6e; --accentbg:#e7f7f0; --warn:#b7791f; --warnbg:#fdf6e7;
+    --danger:#c0392b; --box:#eceff3; --code:#2d333b;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;
+    line-height:1.65;font-size:16px}
+  .wrap{max-width:900px;margin:0 auto;padding:0 20px 80px}
+  code,pre,.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+  a{color:var(--accent)}
+  /* hero */
+  header.hero{background:linear-gradient(135deg,#0e9f6e 0%,#0b7a75 100%);color:#fff;
+    margin-bottom:28px;padding:38px 0 30px}
+  header.hero .wrap{padding-bottom:0}
+  .kicker{font-size:13px;letter-spacing:.08em;text-transform:uppercase;opacity:.85;margin:0 0 6px}
+  h1{font-size:30px;margin:0 0 10px;line-height:1.2}
+  .lede{font-size:17px;opacity:.95;margin:0 0 16px;max-width:680px}
+  .badges{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 4px}
+  .badge{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);
+    color:#fff;border-radius:20px;padding:4px 12px;font-size:13px;font-weight:600}
+  .meta{display:flex;flex-wrap:wrap;gap:18px;margin-top:16px;font-size:13px;opacity:.9}
+  .meta b{font-weight:600}
+  /* cards & sections */
+  section{background:var(--card);border:1px solid var(--line);border-radius:12px;
+    padding:22px 24px;margin:18px 0;box-shadow:0 1px 2px rgba(20,30,50,.03)}
+  h2{font-size:21px;margin:2px 0 14px;padding-bottom:8px;border-bottom:2px solid var(--accentbg)}
+  h3{font-size:16px;margin:18px 0 8px}
+  p{margin:8px 0}
+  ul{margin:8px 0;padding-left:22px}
+  li{margin:4px 0}
+  .mut{color:var(--mut)}
+  /* tl;dr grid */
+  .tldr{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-top:6px}
+  .tldr .c{background:var(--box);border-radius:10px;padding:14px 16px}
+  .tldr .c h4{margin:0 0 6px;font-size:13px;text-transform:uppercase;letter-spacing:.05em;color:var(--mut)}
+  .tldr .c p{margin:0;font-size:15px}
+  /* callouts */
+  .note{border-left:4px solid var(--accent);background:var(--accentbg);
+    padding:10px 14px;border-radius:0 8px 8px 0;margin:12px 0}
+  .warnbox{border-left:4px solid var(--warn);background:var(--warnbg);
+    padding:10px 14px;border-radius:0 8px 8px 0;margin:12px 0}
+  /* evidence */
+  .ev{margin:20px 0}
+  .ev video,.ev img{width:100%;border:1px solid var(--line);border-radius:10px;background:#fff;display:block}
+  .ev .cap{font-size:14px;color:var(--mut);margin-top:8px}
+  .ev .cap b{color:var(--ink)}
+  .vgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px}
+  /* pipeline diagram (pure CSS/HTML, no JS) */
+  .flow{display:flex;flex-direction:column;gap:10px;margin:8px 0}
+  .frow{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+  .node{border-radius:8px;padding:8px 12px;font-size:13.5px;border:1.5px solid}
+  .n-new{background:#e7f7f0;border-color:var(--accent);color:#0a6b4a;font-weight:600}
+  .n-chg{background:#fdf6e7;border-color:var(--warn);color:#8a5a10;font-weight:600}
+  .n-box{background:var(--box);border-color:#c8cfd8;border-style:dashed;color:#48505c}
+  .arr{color:var(--mut);font-size:13px;white-space:nowrap}
+  .legend{display:flex;gap:16px;flex-wrap:wrap;font-size:13px;margin-top:10px;color:var(--mut)}
+  .legend span{display:inline-flex;align-items:center;gap:6px}
+  .sw{width:14px;height:14px;border-radius:4px;border:1.5px solid}
+  /* tables */
+  table{width:100%;border-collapse:collapse;margin:10px 0;font-size:14.5px}
+  th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{color:var(--mut);font-weight:600;font-size:13px;text-transform:uppercase;letter-spacing:.03em}
+  .ok{color:var(--accent);font-weight:700}
+  .no{color:var(--danger);font-weight:700}
+  .todo{color:var(--warn);font-weight:700}
+  /* code */
+  pre{background:var(--code);color:#e6edf3;border-radius:10px;padding:14px 16px;overflow-x:auto;font-size:13.5px;line-height:1.55}
+  pre .c{color:#8b98a5}
+  code.inl{background:var(--box);padding:1px 6px;border-radius:5px;font-size:14px}
+  .foot{color:var(--mut);font-size:13px;text-align:center;margin-top:26px}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <p class="kicker">RoboTwin-IF 复刻 · feature-04</p>
+    <h1>Pick-Diverse-Object</h1>
+    <p class="lede">指令用「颜色 + 名词」点名桌上一个物体，机器人单臂把它拿起——诊断 VLA policy 是否真的<b>读指令选对物体</b>，而不是看图做默认动作。</p>
+    <div class="badges">
+      <span class="badge">✓ Layer A 9/9</span>
+      <span class="badge">✓ Layer B 16/16</span>
+      <span class="badge">✓ 12 品类等概率目标</span>
+      <span class="badge">✓ oracle 采集跑通 82.8%</span>
+      <span class="badge">TODO 若干（见边界）</span>
+    </div>
+    <div class="meta">
+      <span><b>状态</b> 实现完成 · 已验证</span>
+      <span><b>日期</b> 2026-08-21 ～ 08-24</span>
+      <span><b>核心文件</b> tasks/envs/pick_diverse_object.py</span>
+      <span><b>验证具身</b> aloha-agilex</span>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <section>
+    <h2>TL;DR</h2>
+    <div class="tldr">
+      <div class="c"><h4>做了什么</h4><p>在 RoboTwin 2.0 上新建一个「颜色+名词 grounding」IF 任务：12 品类池采 4 个、指令点名 1 个、单臂拿起。含 oracle 专家演示 + 评测 harness。</p></div>
+      <div class="c"><h4>怎么验证</h4><p>Layer A（指令路由，纯 python 9/9）+ Layer B（判定正反例，仿真 16/16）+ collect_data→reporter 全流程跑通。</p></div>
+      <div class="c"><h4>结论</h4><p>核心 IF 诊断成立（位置随机、判定 target-specific）；12 品类等概率目标；瓶子 50/50 站/躺。oracle 成功率 82.8%。</p></div>
+      <div class="c"><h4>最大的坑</h4><p>「颜色最干净的变体未必能抓」；「站立瓶子」一度误判做不到，参考原生 <code class="inl">pick_dual_bottles</code> 才解决。</p></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>背景与目标</h2>
+    <p>RoboTwin-IF 基准诊断 VLA policy 是否真按语言指令控制动作，而非退化成「看图选默认动作」。<b>Pick-Diverse-Object</b> 专测 <b>target-object grounding</b>：场景里 4 个物体，指令用「颜色+名词」（如 "the blue cup"）点名 1 个，其余 3 个是真实可抓的干扰项——policy 必须读懂指令才能选对。</p>
+    <div class="note">论文（§6.2.1）只说「12 物品池采 4、颜色+名词点名、3 干扰、单臂、测 grounding」，<b>没给</b>具体 12 个物体、颜色词表、成功判据。这些都是本项目<b>自建</b>并显式标注「非论文确认」。</div>
+    <p class="mut">深读：<code class="inl">understanding.md</code>（问题/需求维度）。</p>
+  </section>
+
+  <section>
+    <h2>架构：往既有流水线挂一个任务节点</h2>
+    <p>RoboTwin 的采集/评测驱动靠 <code class="inl">importlib.import_module(f"envs.{task_name}")</code> 按名字发现任务。我们把一个继承 <code class="inl">Base_Task</code> 的 env + 指令 json <b>symlink 进 submodule</b>，就接进了这条流水线——<b>零改 submodule 源码</b>。</p>
+
+    <div class="flow">
+      <div class="frow">
+        <span class="node n-new">pick_diverse_object.py</span>
+        <span class="arr">← import_module / setup_demo·play_once·check_success ←</span>
+        <span class="node n-box">collect_data.py（黑盒·驱动）</span>
+      </div>
+      <div class="frow">
+        <span class="arr">继承 + 调 API ↓</span>
+        <span class="arr">&nbsp;&nbsp;check_success 委托 ↓</span>
+      </div>
+      <div class="frow">
+        <span class="node n-box">Base_Task + utils（黑盒）<br><span class="mut">create_actor / rand_pose / grasp_actor / move_by_displacement</span></span>
+        <span class="node n-new">_if_grounding.py<br><span class="mut">named_object_lifted_and_held</span></span>
+      </div>
+      <div class="frow"><span class="arr">物理/渲染 ↓</span></div>
+      <div class="frow"><span class="node n-box">SAPIEN 仿真（黑盒）</span></div>
+      <div class="frow">
+        <span class="node n-box">scene_info.json + seed.txt<br><span class="mut">每 episode 存 info（target/color/distractors + {A}/{a}）</span></span>
+      </div>
+      <div class="frow">
+        <span class="node n-new">pick_diverse_object.json<br><span class="mut">指令模板</span></span>
+        <span class="arr">→ 模板 + info 字面替换 →</span>
+        <span class="node n-box">generate_episode_instructions.py（黑盒）</span>
+        <span class="arr">→</span>
+        <span class="node n-box">instructions/episode*.json<br><span class="mut">"Find the blue cup ..."</span></span>
+      </div>
+      <div class="frow">
+        <span class="node n-box">scene_info + seed.txt</span>
+        <span class="arr">→ 读 →</span>
+        <span class="node n-new">report_pick_diverse_object.py</span>
+        <span class="arr">→ 成功率 by noun/color</span>
+      </div>
+    </div>
+
+    <div class="legend">
+      <span><span class="sw" style="background:#e7f7f0;border-color:#0e9f6e"></span>本 feature 新增</span>
+      <span><span class="sw" style="background:#fdf6e7;border-color:#b7791f"></span>改动（operate_tabletop 也改调共用 helper）</span>
+      <span><span class="sw" style="background:#eceff3;border-color:#c8cfd8;border-style:dashed"></span>submodule 黑盒（未改）</span>
+    </div>
+    <p class="mut" style="margin-top:12px">深读：<code class="inl">architecture.md</code>（含 mermaid 图 + 逐框说明）。</p>
+  </section>
+
+  <section>
+    <h2>证据：眼见为实</h2>
+    <p class="mut">以下视频是 <code class="inl">collect_data</code> 采集出的 oracle 专家演示（aloha-agilex），随 notes 目录离线可放。</p>
+
+    <div class="ev">
+      <div class="vgrid">
+        <div>
+          <video controls muted loop preload="metadata" src="evidence/videos/cup_green_color-grounding.mp4"></video>
+          <div class="cap"><b>颜色 grounding：</b>目标「green cup」，场景里<b>另有一个异色 cup</b> 当干扰——光靠名词分不清，必须读颜色才能选对。这正是本 task 要考的点。</div>
+        </div>
+        <div>
+          <video controls muted loop preload="metadata" src="evidence/videos/bottle_green.mp4"></video>
+          <div class="cap"><b>瓶子拿取：</b>目标 green bottle。瓶子 50/50 站立/躺放——站立用 <code class="inl">[0.66,0.66,-0.25,-0.25]</code>（参考 pick_dual_bottles）+ 世界系抬起。</div>
+        </div>
+        <div>
+          <video controls muted loop preload="metadata" src="evidence/videos/shoe_red_color-grounding.mp4"></video>
+          <div class="cap"><b>颜色 grounding：</b>目标「red shoe」，干扰含另一只<b>异色 shoe</b>——同样逼读颜色。</div>
+        </div>
+        <div>
+          <video controls muted loop preload="metadata" src="evidence/videos/cup_blue.mp4"></video>
+          <div class="cap"><b>基本拾取：</b>目标 blue cup，干扰为 hamburg/can/mouse（4 个不同名词，名词即可辨——多数 episode 是这种）。</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ev">
+      <img src="evidence/pool/snapshots.png" alt="12 物体池真实贴图快照">
+      <div class="cap"><b>12 品类 / 16 变体池</b>（SAPIEN 真实贴图 3D 快照）。颜色全部人眼核校锁定——native 描述里的颜色词是 MLLM 文本、有噪，不可信，最终以贴图为准。</div>
+    </div>
+
+    <div class="ev">
+      <img src="evidence/pool/bottle_orient2.png" alt="瓶子站立朝向对比">
+      <div class="cap"><b>站立瓶子的破解：</b>带 scale 渲染后看清——<code class="inl">[0.66,0.66,-0.25,-0.25]</code>（右三格）让高瘦瓶子<b>真·直立</b>站住，而我最初试的 qpos 会倒。左一是躺放（端面朝外）。</div>
+    </div>
+  </section>
+
+  <section>
+    <h2>关键决策 / 教训</h2>
+    <ul>
+      <li><b>指令颜色+名词 = 字面量注入</b>：<code class="inl">{A}="the blue cup"</code>（不含 <code class="inl">/</code>）走 native 的字面替换分支，而非随机物体描述——因为随机描述<b>不保证含颜色、不保证能区分目标</b>。</li>
+      <li><b>采样策略 churn 三版</b>（诚实记）：option A（强制颜色必要，但分布偏斜）→ option B（均匀，但目标仅 3 类）→ <b>12 品类等概率目标</b>。根因是实现前没把「分布均匀」和「颜色 grounding 强度」这对张力想清楚，走了两轮返工。</li>
+      <li><b>目标用 <code class="inl">seed % 12</code> 而非 rng 抽取</b>：<code class="inl">default_rng(seed).integers</code> 对低连续 seed <b>聚簇</b>（seed 0/2/3/4/8/10 全 → shoe/red），小规模采集直接偏斜。<code class="inl">seed%N</code> 又轻又对。</li>
+      <li><b>「颜色最干净」≠「能抓」≠「放得住」</b>：最蓝的 <code class="inl">021_cup/base8</code> 没有抓取标注、grasp 失败——三个信号（stable / 有 mesh / 有抓取标注）要分别核查。</li>
+      <li><b>站立瓶子：别轻易下「asset 做不到」的结论</b>。一度误判高瓶站不住，用户提示参考 <code class="inl">pick_dual_bottles</code>，去查发现正解 qpos + 世界系抬起（<code class="inl">move_axis="arm"</code> 对侧抓无效，会平移不升起）。</li>
+    </ul>
+    <p class="mut">深读：<code class="inl">decisions.md</code>（轻量 ADR + 改动量级批判 + 设计模式）。</p>
+  </section>
+
+  <section>
+    <h2>现状与边界</h2>
+    <table>
+      <tr><th>项</th><th>状态</th><th>说明</th></tr>
+      <tr><td>Layer A 指令路由</td><td class="ok">✓ 9/9</td><td>seen∩unseen=∅、{A} 路由、字面量注入成句（纯 python）</td></tr>
+      <tr><td>Layer B 判定正反例</td><td class="ok">✓ 16/16</td><td>12 类目标 oracle 都能抓 + 同色/同名/未握住三反例判 False</td></tr>
+      <tr><td>operate_tabletop 回归</td><td class="ok">✓ 7/7</td><td>共用 helper 重构后无退化</td></tr>
+      <tr><td>collect_data → reporter</td><td class="ok">✓ 跑通</td><td>oracle 82.8%（24 kept / 29 tries）；指令真实渲染正确</td></tr>
+      <tr><td>目标 & 干扰分布</td><td class="ok">✓ 均匀</td><td>12 品类 tried 均匀、干扰均匀</td></tr>
+      <tr><td>颜色 grounding 强度</td><td class="todo">⚠ TODO</td><td>均匀采样下颜色必要仅 ~10-15% episode，偏名词 grounding</td></tr>
+      <tr><td>站立瓶子避障</td><td class="todo">⚠ TODO</td><td>侧抓不避障，会撞开干扰物</td></tr>
+      <tr><td>Layer C 区分度</td><td class="no">✗ 未做</td><td>本轮不含瞎猜/作弊 baseline 对照</td></tr>
+    </table>
+
+    <div class="warnbox">
+      <b>这份 report 不证明什么（诚实声明）：</b>
+      <ul style="margin-bottom:0">
+        <li>82.8% 是 <b>oracle 脚本专家</b>的成功率，<b>不是任何训练过的 VLA policy</b>——不代表某个模型 grounding 能力好。</li>
+        <li>只 <b>24-episode 小样本</b>，每物体真实成功率有噪。</li>
+        <li>该成功率<b>混了场景稳定性</b>（~17% 是瓶子/mug 翻倒，非 grounding），完美 grounding 也超不过 ~83%。</li>
+        <li>颜色维度目前<b>基本没压力</b>——一个「色盲但懂名词」的 policy 仍能拿高分（见颜色 grounding TODO）。</li>
+        <li>判定阈值 <code class="inl">0.02</code> / 各物体抓取参数<b>类推自原生任务，论文未确认</b>。</li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <h2>怎么复现</h2>
+    <pre><span class="c"># 1. 桥接（把 task 文件 symlink 进 submodule）</span>
+bash bridge_tasks.sh
+
+<span class="c"># 2. Layer A（纯 python，秒级）</span>
+conda run -n RoboTwin python tests/pick_diverse_object/test_instructions.py      <span class="c"># → 9/9</span>
+
+<span class="c"># 3. Layer B（仿真，~10 分钟）</span>
+conda run -n RoboTwin python tests/pick_diverse_object/test_check_success.py     <span class="c"># → 16/16</span>
+
+<span class="c"># 4. 数据采集 + 成功率报告</span>
+cd third_party/robotwin && python script/collect_data.py pick_diverse_object pdo_bench
+cd - && python tools/report_pick_diverse_object.py --collection \
+    third_party/robotwin/data/pick_diverse_object/pdo_bench
+
+<span class="c"># 渲染 12 物体池快照（颜色核校证据）</span>
+conda run -n RoboTwin python tools/render_pick_pool_snapshots.py</pre>
+    <p class="mut">更深的实现/决策细节见同目录 <code class="inl">understanding.md</code> · <code class="inl">architecture.md</code> · <code class="inl">decisions.md</code>；权威设计文档见主仓库 <code class="inl">docs/features/04-Pick-Diverse-Object.md</code>。</p>
+  </section>
+
+  <p class="foot">RoboTwin-IF · Pick-Diverse-Object · 生成于 2026-08-24 · 证据随 notes/ 目录离线可放</p>
+
+</div>
+</body>
+</html>
