@@ -3,6 +3,7 @@ import re
 from pathlib import Path
 
 from ._base_task import Base_Task
+from ._if_grounding import named_object_lifted_and_held
 from .utils import *
 from ._GLOBAL_CONFIGS import *
 
@@ -238,8 +239,7 @@ class operate_tabletop(Base_Task):
 
         # pick: the NAMED object is lifted clear of the table AND still held by a
         # gripper. Lifting a distractor (or clicking/pressing) leaves the target at
-        # rest -> False, which is what the IF benchmark tests.
-        target_z = float(self.target.get_pose().p[2])
-        lifted = (target_z - self.target_origin_z) > 0.02
-        held = len(self.get_gripper_actor_contact_position(self.target_modelname)) > 0
-        return bool(lifted and held)
+        # rest -> False, which is what the IF benchmark tests. Shared with
+        # pick_diverse_object via named_object_lifted_and_held.
+        return named_object_lifted_and_held(self, self.target, self.target_modelname,
+                                            self.target_origin_z)

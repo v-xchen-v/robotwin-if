@@ -1,0 +1,25 @@
+{
+    "full_description": "Four objects are sampled from a 12-category pool; the instruction names ONE of them by color and noun (e.g. 'the red cup'), and the robot lifts that one single-arm among three distractors. Tests target-object grounding (color + noun jointly).",
+    "schema": "{A}=the named target object, filled by play_once with the literal 'the {color} {noun}' (no '/', so replace_placeholders substitutes it verbatim instead of drawing a random objects_description -> color+noun controlled and always present). {a}=arm. Templates borrowed from adjust_bottle's orientation-free subset (the same set operate_tabletop's pick branch used, {C}->{A}); bottle-orientation wording (head-up/upright/'the bottle') was dropped.",
+    "preference": "borrowed from adjust_bottle native pool; num of words should not exceed 15",
+    "seen": [
+        "Grab {A} from the table with {a}",
+        "Use {a} to hold {A} from the table",
+        "Identify {A} and grab it with {a}",
+        "Grab {A} and lift it with {a}",
+        "Lift {A} from the table with {a}",
+        "Pick up {A} from the table carefully.",
+        "Use {a} to pick up {A} from the table.",
+        "Raise {A} from the table using the correct arm, {a}.",
+        "Grab {A} and lift it upward from the table.",
+        "Use the correct arm to pick up {A}.",
+        "Pick up {A} from the table using {a}.",
+        "Find {A} on the table and raise it using {a}."
+    ],
+    "unseen": [
+        "Pick up {A} using the correct arm",
+        "Pick up {A} carefully using {a}",
+        "Lift {A} from the table using {a}.",
+        "Grab {A} on the table and raise it."
+    ]
+}
