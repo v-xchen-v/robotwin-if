@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Place-Relative — RoboTwin-IF</title>
+<style>
+  :root{
+    --ink:#1a1d24; --muted:#5b6470; --line:#e6e9ef; --bg:#f6f7f9; --card:#fff;
+    --brand:#4f46e5; --brand-soft:#eef0fe;
+    --beside:#0e7490; --beside-soft:#e0f2f7;   /* beside = teal, 全文一致 */
+    --ontop:#c2410c;  --ontop-soft:#fbeee6;     /* on-top = orange, 全文一致 */
+    --ok:#15803d; --ok-soft:#e7f5ec; --warn:#b45309; --warn-soft:#fbf1e3;
+    --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB",sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.65;
+       -webkit-font-smoothing:antialiased}
+  .wrap{max-width:940px;margin:0 auto;padding:0 20px 80px}
+  h1,h2,h3{line-height:1.25;font-weight:700}
+  h2{margin:48px 0 16px;font-size:1.5rem;padding-bottom:8px;border-bottom:2px solid var(--line)}
+  h3{margin:26px 0 10px;font-size:1.12rem}
+  p{margin:10px 0}
+  code{font-family:var(--mono);font-size:.86em;background:#eef0f3;padding:1px 6px;border-radius:5px}
+  a{color:var(--brand);text-decoration:none} a:hover{text-decoration:underline}
+  .badge{display:inline-block;font-size:.78rem;font-weight:600;padding:3px 10px;border-radius:999px;
+         border:1px solid transparent;white-space:nowrap}
+  .b-ok{background:var(--ok-soft);color:var(--ok);border-color:#bfe3ca}
+  .b-beside{background:var(--beside-soft);color:var(--beside)}
+  .b-ontop{background:var(--ontop-soft);color:var(--ontop)}
+  .b-brand{background:var(--brand-soft);color:var(--brand)}
+  .b-warn{background:var(--warn-soft);color:var(--warn);border-color:#e2cfa8}
+
+  /* hero */
+  header.hero{background:linear-gradient(135deg,#4f46e5 0%,#7c3aed 100%);color:#fff;
+    margin:0 -20px 0;padding:44px 20px 40px;border-radius:0 0 20px 20px}
+  header.hero .wrap2{max-width:900px;margin:0 auto}
+  header.hero .kicker{font-size:.8rem;letter-spacing:.12em;text-transform:uppercase;opacity:.85;font-weight:600}
+  header.hero h1{font-size:2.15rem;margin:8px 0 6px}
+  header.hero p.lede{font-size:1.06rem;opacity:.95;margin:8px 0 18px;max-width:680px}
+  header.hero .badges{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px}
+  header.hero .badge{background:rgba(255,255,255,.16);color:#fff;border-color:rgba(255,255,255,.25)}
+  header.hero .meta{display:flex;flex-wrap:wrap;gap:6px 22px;font-size:.85rem;opacity:.9;border-top:1px solid rgba(255,255,255,.2);padding-top:14px}
+  header.hero .meta b{font-weight:600;opacity:.75;font-weight:400}
+  header.hero code{background:rgba(255,255,255,.18);color:#fff}
+
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px 22px;margin:16px 0;
+        box-shadow:0 1px 2px rgba(20,25,40,.03)}
+  .tldr{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .tldr .cell{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+  .tldr .cell h4{margin:0 0 4px;font-size:.82rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+  .tldr .cell p{margin:0;font-size:.96rem}
+  @media(max-width:640px){.tldr{grid-template-columns:1fr}}
+
+  table{border-collapse:collapse;width:100%;margin:14px 0;font-size:.92rem}
+  th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{background:#fafbfc;font-weight:600;font-size:.85rem;color:var(--muted)}
+  td.num{font-family:var(--mono);white-space:nowrap}
+  .rate-old{color:var(--muted)} .rate-new{color:var(--ok);font-weight:700}
+
+  .videos{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:16px 0}
+  @media(max-width:720px){.videos{grid-template-columns:1fr}}
+  figure{margin:0;background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+  figure video{width:100%;display:block;background:#000}
+  figure figcaption{padding:11px 14px;font-size:.88rem}
+  figure figcaption .t{font-weight:600;display:block;margin-bottom:2px}
+  figure figcaption .d{color:var(--muted);font-size:.83rem}
+  .contact{width:100%;border:1px solid var(--line);border-radius:12px;margin:8px 0}
+
+  .diagram{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:22px;margin:16px 0}
+  .flow{display:flex;align-items:stretch;gap:0;flex-wrap:wrap}
+  .flow .node{flex:1;min-width:150px;text-align:center;padding:12px 10px;border-radius:10px;font-size:.86rem}
+  .flow .arrow{display:flex;align-items:center;padding:0 8px;color:var(--muted);font-size:1.3rem}
+  .n-scene{background:#f1f3f7;border:1px solid var(--line)}
+  .n-beside{background:var(--beside-soft);border:1px solid #b9dde6}
+  .n-ontop{background:var(--ontop-soft);border:1px solid #ecccb6}
+  .flow .node b{display:block;margin-bottom:3px}
+  .flow .node code{font-size:.8em}
+  .split{display:flex;gap:14px;margin-top:14px}
+  @media(max-width:640px){.split{flex-direction:column}}
+  .split .lane{flex:1;border-radius:10px;padding:12px 14px;font-size:.85rem}
+  .lane.beside{background:var(--beside-soft)} .lane.ontop{background:var(--ontop-soft)}
+  .lane .h{font-weight:700;margin-bottom:6px}
+  .lane.beside .h{color:var(--beside)} .lane.ontop .h{color:var(--ontop)}
+  .lane .ex{font-family:var(--mono);font-size:.78rem;background:rgba(255,255,255,.6);padding:6px 8px;border-radius:6px;margin-top:6px}
+
+  ul{margin:8px 0;padding-left:22px} li{margin:5px 0}
+  .callout{border-left:4px solid var(--brand);background:var(--brand-soft);padding:12px 16px;border-radius:0 10px 10px 0;margin:14px 0}
+  .callout.warn{border-color:var(--warn);background:var(--warn-soft)}
+  .callout .h{font-weight:700;margin-bottom:3px}
+  pre{background:#1e222b;color:#e6e9ef;padding:14px 16px;border-radius:10px;overflow-x:auto;font-family:var(--mono);
+      font-size:.82rem;line-height:1.5;margin:12px 0}
+  pre .c{color:#7f8a9a}
+  .tick{color:var(--ok);font-weight:700} .cross{color:#b91c1c;font-weight:700}
+  .foot{margin-top:40px;padding-top:18px;border-top:1px solid var(--line);color:var(--muted);font-size:.85rem}
+  .kv{font-size:.85rem;color:var(--muted)}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap2">
+    <div class="kicker">RoboTwin-IF 复刻 · 第 5 个任务集</div>
+    <h1>Place-Relative</h1>
+    <p class="lede">诊断 VLA policy 是否真读懂空间关系词——把 A「放到 B <em>旁边</em>」还是「<em>上面</em>」，
+       同一套场景只有指令词能决定对错。</p>
+    <div class="badges">
+      <span class="badge">Layer A 11/11 ✓</span>
+      <span class="badge">Layer B 9/9 ✓</span>
+      <span class="badge">oracle 92.6% ✓</span>
+      <span class="badge">on-top = beside 92.6% ✓</span>
+      <span class="badge">端到端路由零串味 ✓</span>
+    </div>
+    <div class="meta">
+      <span><b>状态</b>&nbsp; 功能完成，未提交</span>
+      <span><b>日期</b>&nbsp; 2026-08-24</span>
+      <span><b>核心文件</b>&nbsp; <code>tasks/envs/place_relative.py</code></span>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+<h2>TL;DR</h2>
+<div class="tldr">
+  <div class="cell"><h4>做了什么</h4><p>在 RoboTwin 2.0 上新建 Place-Relative 任务：拿起 A 放到 B 的
+     <span class="badge b-beside">beside</span> 或 <span class="badge b-ontop">on-top</span>，1–3 个干扰物在场，测空间关系理解。</p></div>
+  <div class="cell"><h4>怎么验证</h4><p>Layer A（指令池不变量 11/11）+ Layer B（判定正反例 teleport 9/9）+ 50-episode 采集端到端，
+     oracle 专家成功率 <b>92.6%</b>（beside/on-top 各 92.6%，完美均衡）。</p></div>
+  <div class="cell"><h4>结论</h4><p>关系词是<b>唯一</b>被打分的轴；同一套物体池两关系通用，场景不泄露关系；
+     路由靠占位符签名（<code>{B}</code> vs <code>{C}</code>），保留原生措辞多样性。</p></div>
+  <div class="cell"><h4>最大的坑</h4><p>on-top 首轮只有 29%——诊断出是<b>放置规划</b>失败（不是物理）：B 太偏够不到 + mover 跨身体。
+     改场景布局后 → <b>92.6%</b>（与 beside 齐平）。</p></div>
+</div>
+
+<h2>背景与目标</h2>
+<p>RoboTwin-IF 的存在意义是抓 <b>VLA→VA 退化</b>：policy 是否真按语言控制动作，还是退化成"看图做默认动作"。
+   Place-Relative 专测<b>空间关系理解</b>——Pick-Diverse 已经覆盖了"颜色+名词" grounding，这一关新增的诊断维度是<b>关系词</b>。</p>
+<div class="callout">
+  <div class="h">论文锚点（§6.2.1）</div>
+  <p style="margin:0">"Two named objects and 1–3 distractors are on the table. The instruction specifies picking up object A
+     and placing it in a spatial relation ("beside" or "on top of") with respect to object B, testing spatial-relation understanding."</p>
+</div>
+<p>两处把论文措辞收紧、且标注为"我们的设计决策"（非原文）：
+   <b>①</b> "beside" 落地成<b>非方向性</b>（任一侧都算，贴论文字面"旁边"，非 left/right）；
+   <b>②</b> 指令里的<b>颜色只是 grounding 辅助、不作考核</b>——考核的只有空间关系。</p>
+
+<h2>核心机制：关系词是唯一信号</h2>
+<p>要让这关成为真正的空间测试，必须做到两件事：<b>(a)</b> 场景本身不能泄露是 beside 还是 on-top（否则 policy 看图就能猜）；
+   <b>(b)</b> 指令句子必须和关系严格对齐（beside episode 不能抽到 on-top 的句子）。</p>
+
+<div class="diagram">
+  <div class="flow">
+    <div class="node n-scene"><b>同一套场景</b><span class="kv">A(mover) + B(box) + 干扰物<br>两关系<u>完全相同</u>的物体池</span></div>
+    <div class="arrow">→</div>
+    <div class="node n-scene"><b>指令词决定</b><span class="kv">唯一区分 beside / on-top 的信号</span></div>
+    <div class="arrow">→</div>
+    <div class="node n-beside" style="flex:.7"><b style="color:var(--beside)">beside</b><code>info={A,B,a}</code></div>
+    <div class="node n-ontop" style="flex:.7"><b style="color:var(--ontop)">on-top</b><code>info={A,C,a}</code></div>
+  </div>
+  <div class="split">
+    <div class="lane beside">
+      <div class="h">beside → 参照物键 <code>{B}</code></div>
+      <div class="kv"><code>filter_instructions</code> 只匹配占位符集合 = {A,B} 的模板 → 只抽到 beside 句</div>
+      <div class="ex">"Place the gray mouse <b>next to</b> the brown coffee-box"</div>
+    </div>
+    <div class="lane ontop">
+      <div class="h">on-top → 参照物键 <code>{C}</code></div>
+      <div class="kv">占位符集合 = {A,C} → 只抽到 on-top 句。<code>{B}</code>≠<code>{C}</code> 两族不可能串味</div>
+      <div class="ex">"<b>Stack</b> the green toycar <b>on</b> the brown coffee-box"</div>
+    </div>
+  </div>
+  <p class="kv" style="margin:12px 0 0">关键：不在指令里写死关系词，而是借 RoboTwin 既有的 <code>filter_instructions</code>（按占位符签名精确匹配）自动路由。
+     beside 句借 <code>move_can_pot</code> 原生池（换键去重），on-top 句沿用同款单臂结构 + <code>stack_blocks_two</code> 的 on-top 词汇。</p>
+</div>
+
+<h3>物体池怎么挑的（设计期，按贴图验色挑死）</h3>
+<p>池分两组，每个名词锁一个变体（含颜色）；<b>两关系共用同一套池</b>（反泄露）。每个场景 = 1 个盒(B) + 1 个 mover(A) + 干扰物。</p>
+<div class="split">
+  <div class="lane" style="background:#f1f3f7;border:1px solid var(--line)">
+    <div class="h" style="color:var(--ink)">Movers（A，被抓被移）× 6</div>
+    <div class="kv">mouse·gray / toycar·green / stapler·red / remotecontrol·black / can·red / soap·blue<br>
+    <b>条件</b>：有抓取标注 + 紧凑到能稳放盒顶 + 单色干净；统一 <code>pre_grasp_dis=0.1</code>（源自 place_object_stand 已证的多样 mover 集）</div>
+  </div>
+  <div class="lane" style="background:#f1f3f7;border:1px solid var(--line)">
+    <div class="h" style="color:var(--ink)">Bases（B，承接面）× 2</div>
+    <div class="kv">coffee-box·brown / tea-box·red<br>
+    <b>条件</b>：平顶盒，高度足够让 beside(同高) vs on-top(叠上) 在 z 上分得开</div>
+  </div>
+</div>
+<p class="kv"><b>验色方法</b>：颜色以真实 <code>base{K}.glb</code> 贴图渲染人眼核校（native 描述里的色词有噪，不信）——见下方「证据」的 contact sheet。
+   <b>剔除</b>：bell（半球会滚）、rubikscube（唯一纯色变体是全黑、语义怪）、plate（太扁，on-top/beside 的 z 差仅 1–2cm）、displaystand/scale（是支架/仪器、非日常物）。
+   <b>跨名词撞色无所谓</b>（stapler/red + can/red）——grounding 靠名词、颜色只是辅助，不造"同名异色"混淆项。
+   <b>每局干扰物</b>：从"全池去掉 A/B 名词"里 <code>permutation</code> 取前 n 个——池里每名词仅一变体 → 天然不同名词；可含另一个盒。</p>
+
+<h3>场景编排：relation 由 seed 奇偶决定（可复现 + 均衡）</h3>
+<p>整个场景是 seed 的确定函数——<b>偶数 seed → beside，奇数 seed → on_top</b>，物体也一样按 seed 轮转：</p>
+<table>
+  <thead><tr><th>维度</th><th>派生式</th><th>周期</th></tr></thead>
+  <tbody>
+    <tr><td><b>relation</b></td><td class="num">["beside","on_top"][seed % 2]</td><td class="num">2</td></tr>
+    <tr><td>mover</td><td class="num">MOVERS[(seed // 2) % 6]</td><td class="num">12</td></tr>
+    <tr><td>reference</td><td class="num">BASES[(seed // 12) % 2]</td><td class="num">24</td></tr>
+    <tr><td>干扰物数量/身份</td><td class="num">混合种子流 default_rng([seed, const])</td><td class="num">—</td></tr>
+  </tbody>
+</table>
+<div class="callout">
+  <p style="margin:0"><b>为什么确定性、不随机</b>：eval 用同一 seed 调两次 <code>setup_demo</code>（专家检查 + policy rollout），两次必须生成完全相同的场景+指令，否则指令与场景对不上。故用 <code>seed%N</code> 轮转（同 pick_diverse/operate_tabletop 惯例），非运行时随机。</p>
+</div>
+<p class="kv"><b>奇偶决定 relation 不引入偏置</b>：连续两个 seed <code>(2k, 2k+1)</code> 的 mover 相同、relation 相反 → 每个 mover 各出现一次 beside、一次 on_top，mover 与 relation 完全解耦；完整周期 24 里每个 (relation,mover,reference) 组合恰好一次。50-ep 实测 beside 25 / on_top 25。<b>也不泄露给 policy</b>：policy 看不到 seed，只能从指令里的关系词判断 beside/on-top，而两关系的场景物体完全一致、视觉上无法区分。</p>
+
+<h2>指令怎么设计的</h2>
+<p>一个指令池装两族句子，靠"参照物占位符的键不同"自动路由，关系词<b>从不写死、也不当字面参数注入</b>。四个要点：</p>
+
+<h3>① 占位符方案：参照物故意用两个键</h3>
+<table>
+  <thead><tr><th>占位符</th><th>含义</th><th>beside 帧</th><th>on-top 帧</th></tr></thead>
+  <tbody>
+    <tr><td><code>{A}</code></td><td>mover（被抓被移的物体）</td><td class="num"><span class="tick">✓</span></td><td class="num"><span class="tick">✓</span></td></tr>
+    <tr><td><code>{B}</code></td><td>reference（参照物）</td><td class="num"><span class="badge b-beside">✓</span></td><td class="num">—</td></tr>
+    <tr><td><code>{C}</code></td><td>reference（参照物）</td><td class="num">—</td><td class="num"><span class="badge b-ontop">✓</span></td></tr>
+    <tr><td><code>{a}</code></td><td>手臂（可缺省）</td><td class="num"><span class="tick">✓</span></td><td class="num"><span class="tick">✓</span></td></tr>
+  </tbody>
+</table>
+<p class="kv">同一个语义角色（参照物）在两族用不同键 <code>{B}</code>/<code>{C}</code>——这就是路由开关。<code>filter_instructions</code> 只保留占位符集合与 episode <code>info</code> 键完全匹配的模板（<code>{a}</code> 可缺省），于是 beside（<code>info</code> 有 <code>{B}</code>）只抽 beside 帧、on-top（有 <code>{C}</code>）只抽 on-top 帧。<b>比固定 <code>{rel}</code> 字面词好</b>：各族保留完整原生措辞多样性（next to/beside/near/by vs stack on/atop/onto）。</p>
+
+<h3>② 颜色+名词是"字面受控注入"，不是随机描述</h3>
+<div class="callout">
+  <p style="margin:0"><code>replace_placeholders</code> 若见到值里含 <code>/</code>（如 <code>047_mouse/base0</code>）会去 <code>objects_description/</code> 抽<b>随机</b>描述；否则<b>逐字替换</b>。
+     env 故意传 <code>"the gray mouse"</code>（无 <code>/</code>）→ 逐字填 → <b>颜色+名词完全受控、每条必含、可复现</b>。颜色是帮 model grounding 的辅助信息，<b>不是被考核的轴</b>（考核只有空间关系），故不造"同名异色"混淆项。</p>
+</div>
+
+<h3>③ seen / unseen 隔离在句式层</h3>
+<p class="kv">desc-gen 对 <code>seen</code>(72) 和 <code>unseen</code>(16) 两个数组<b>分别</b>跑 filter+fill，每 episode 拿到两套渲染。隔离发生在<b>句子模板</b>层（训练喂 seen 模板、评测换 unseen），不在物体/颜色层；两数组严格 <code>seen∩unseen=∅</code>（Layer A 断言）。beside 句借 <code>move_can_pot</code> 原生池（换键 + 去重，原生 seen/unseen 本有重叠），on-top 句自写（借 <code>stack_blocks_two</code> 词汇）。</p>
+
+<h3>④ 一条完整数据流（真实例子）</h3>
+<pre><span class="c"># 同一对物体 mouse→coffee-box，只有 relation 不同 → 渲染出不同关系的句子</span>
+episode_0  relation=<span style="color:#7fd3e6">beside</span>  mover=gray/mouse  ref=brown/coffee-box  arm=left
+  ↓ play_once: info["info"] = {"{A}":"the gray mouse", <span style="color:#7fd3e6">"{B}"</span>:"the brown coffee-box", "{a}":"left"}
+  ↓ filter_instructions(seen, info) → 只留 48 条 beside 帧（含 {B}）
+  ↓ 抽 "Place {A} next to {B}" + 逐字填
+  → "Place the gray mouse <span style="color:#7fd3e6">next to</span> the brown coffee-box"
+
+episode_1  relation=<span style="color:#f0a679">on_top</span>   mover=gray/mouse  ref=brown/coffee-box  arm=left
+  ↓ info["info"] = {"{A}":"the gray mouse", <span style="color:#f0a679">"{C}"</span>:"the brown coffee-box", "{a}":"left"}
+  ↓ filter → 只留 24 条 on-top 帧（含 {C}）
+  → "<span style="color:#f0a679">Stack</span> the gray mouse <span style="color:#f0a679">on</span> the brown coffee-box"</pre>
+<p class="kv">这正是 IF 内核：同一对物体、同一场景，只有关系词变了 → 正确动作不同（放旁边 vs 叠上面），policy 必须读懂那个词。对照视频见下方「证据」。</p>
+
+<h2>证据</h2>
+<p>下面头两段是<b>同一对物体</b>（gray mouse → brown coffee-box），<b>只有指令关系词不同</b> → 机器人做出不同动作。
+   这正是本任务的 IF 内核："场景一样，读懂词才知道该放旁边还是上面"。</p>
+
+<div class="videos">
+  <figure>
+    <video controls muted playsinline preload="metadata" src="evidence/videos/beside_mouse_coffeebox.mp4"></video>
+    <figcaption>
+      <span class="t"><span class="badge b-beside">beside</span> &nbsp;gray mouse → brown coffee-box</span>
+      <span class="d">证明：指令说"旁边"时，把 mouse 放到盒子<b>桌面旁</b>（同高、不叠）。</span>
+    </figcaption>
+  </figure>
+  <figure>
+    <video controls muted playsinline preload="metadata" src="evidence/videos/ontop_mouse_coffeebox.mp4"></video>
+    <figcaption>
+      <span class="t"><span class="badge b-ontop">on-top</span> &nbsp;gray mouse → brown coffee-box</span>
+      <span class="d">证明：<b>同样的物体</b>，指令说"上面"时，把 mouse <b>叠到盒子顶上</b>。仅关系词改变了结果。</span>
+    </figcaption>
+  </figure>
+</div>
+<div class="videos">
+  <figure>
+    <video controls muted playsinline preload="metadata" src="evidence/videos/ontop_remotecontrol_coffeebox.mp4"></video>
+    <figcaption>
+      <span class="t"><span class="badge b-ontop">on-top</span> &nbsp;black remotecontrol → brown coffee-box</span>
+      <span class="d">证明：可靠性修复后，连细长 mover（remotecontrol）也能稳定放到盒顶——这正是首轮 0/2 的难例。</span>
+    </figcaption>
+  </figure>
+  <figure style="display:flex;flex-direction:column">
+    <div style="padding:14px 16px;flex:1">
+      <span class="t" style="font-weight:600;display:block;margin-bottom:6px">按贴图验色的物体池</span>
+      <span class="d" style="color:var(--muted);font-size:.85rem">右图是候选物体每个 base 变体的<b>真实 baseColor 贴图</b>渲染（不信 native 描述里的颜色词）。
+      据此锁定 6 个 mover + 2 个平顶盒 base，剔除会滚的 bell、纯色只有黑的 rubikscube、太扁的 plate。</span>
+    </div>
+    <img class="contact" src="evidence/pool/candidates.png" alt="物体池验色 contact sheet" style="border:0;border-top:1px solid var(--line);border-radius:0">
+  </figure>
+</div>
+
+<h3>判定正反例（Layer B，teleport 驱动 9/9）</h3>
+<p>正例只能证"做对→True"，证不了"做错→False"。下面几条<b>把物体瞬移到指定末态</b>、断言判定布尔值，才是基准有效性的关键：</p>
+<table>
+  <thead><tr><th>用例</th><th>末态</th><th>期望</th><th>为什么关键</th></tr></thead>
+  <tbody>
+    <tr><td>R4a 错关系</td><td>要 beside，却把 A <b>叠到 B 上</b></td><td class="num"><span class="cross">False</span></td><td>关系词必须被打分</td></tr>
+    <tr><td>R4b 错关系</td><td>要 on-top，却把 A <b>放到 B 旁</b></td><td class="num"><span class="cross">False</span></td><td>同上，反向</td></tr>
+    <tr><td>R5a 错参照</td><td>beside，但放到<b>干扰物</b>旁</td><td class="num"><span class="cross">False</span></td><td>判定锚定具名 B、非"随便某物"</td></tr>
+    <tr><td>R5b 错参照</td><td>on-top，但放到<b>干扰物</b>上</td><td class="num"><span class="cross">False</span></td><td>同上</td></tr>
+    <tr><td>R1 空操作</td><td>什么都不动</td><td class="num"><span class="cross">False</span></td><td>堵死"不读指令原地不动蒙对"</td></tr>
+    <tr><td>R2/R3/R6</td><td>正确 beside / on-top / oracle 实跑</td><td class="num"><span class="tick">True</span></td><td>正例可达</td></tr>
+  </tbody>
+</table>
+
+<h3>oracle 专家成功率（50-episode 采集）</h3>
+<table>
+  <thead><tr><th>阶段</th><th>aggregate</th><th>beside</th><th>on-top</th></tr></thead>
+  <tbody>
+    <tr><td>修复前（宽随机布局，12 ep）</td><td class="num rate-old">40%</td><td class="num rate-old">50%*</td><td class="num rate-old">29%</td></tr>
+    <tr><td>修复后（B 居中 + mover 同侧 + 间距&gt;0.22，<b>50 ep</b>）</td>
+        <td class="num rate-new">92.6%</td><td class="num rate-new">92.6%</td><td class="num rate-new">92.6%</td></tr>
+  </tbody>
+</table>
+<p class="kv">* 修复前的 beside 率含"空操作蒙对"的虚高——两物体恰好 spawn 在判据带内、不动也算过。修复后已不可能。</p>
+<p class="kv">50 ep 细分：仅 4/54 失败；关系完美均衡（beside 25 / on_top 25）；按 mover mouse/remotecontrol/soap 100%、toycar/stapler 90%、<b>can 75%</b>（圆柱直立偶尔翻）；干扰物数量 1×11 / 2×21 / 3×18（验证"随机 1–3"、不再卡 3）。</p>
+
+<h2>关键决策 / 教训</h2>
+
+<h3>决策：关系→模板路由用占位符签名，不写死关系词</h3>
+<p>三个候选：<b>轻</b>=固定 <code>{rel}</code> 字面词（一族模板，但措辞永远同一个词）；<b>中（选中）</b>=参照物键 <code>{B}</code>/<code>{C}</code> 靠 <code>filter_instructions</code> 路由；<b>重</b>=env 自拼指令绕开 desc-gen。
+   选中间的，因为它复用了框架既有机制、保留原生措辞多样性、还保住 seen/unseen 隔离。代价：<code>{B}</code> vs <code>{C}</code> 这个约定不直观，靠注释 + schema 字段抵消。</p>
+
+<h3>决策：A 池、B 池两关系完全一致（反泄露）</h3>
+<p>若 on-top 才出现某类物体，policy 能"看物体猜关系"绕过读指令。所以每个场景都含一个承接面 B、mover 池两关系通用。
+   代价转嫁到"reference 恒为盒 → B 身份 grounding 变 trivial"，但 grounding 非本关考点，取舍对。</p>
+
+<div class="callout warn">
+  <div class="h">教训 1 · on-top 率低的真因是"够不到"，不是物理（尤其别把细长物的失败当成"放不稳"）</div>
+  <p style="margin:0 0 8px">最早细长物（stapler/remotecontrol）on-top <b>0/2</b>，直觉是"长条放盒顶站不稳滚下来"。逐 seed 诊断打印
+     <code>plan_success / moved / planar / rise</code> 打脸：失败几乎全是 <code>plan=False, moved=0, rise≈0.11</code>——
+     <b>抓+举都成了、但"放"这步规划失败</b>，物体吊在原地上方压根没落到盒上。所以不是"放上去又倒了"，是<b>手臂算不出放置轨迹</b>。</p>
+  <p style="margin:0 0 8px">元凶跟"细长"基本无关，是布局：① B 摆太偏 → 举高放置超可达；② mover 与 B 异侧 → 抓取臂<b>跨身体</b>放置必失败（诊断里 mouse 也一样中招，细长物只是小样本里碰巧显示成 0/2、看着最惨）。</p>
+  <p style="margin:0">改的<b>只是 spawn 位置</b>——质量/resting 姿态/判定阈值一个没动：<code>B 居中</code> + <code>mover 同侧</code>（决定性）+ <code>间距&gt;0.22</code>。效果分两跳：宽随机 0/2 → 只居中+挪侧边 ~2/4（跨身体的还 fail）→ <b>再加同侧 12/12</b>。50 ep stapler 90%、remotecontrol 100%。<b>教训：别凭直觉归因"物理不稳"，先量。</b></p>
+</div>
+<div class="callout warn">
+  <div class="h">教训 2 · beside 的"空操作蒙对"漏洞</div>
+  <p style="margin:0">两物体恰好 spawn 在 <code>[0.08,0.20]</code> 判据带内时，policy 什么都不做也判 True——正是要防的退化。
+     强制 spawn 间距 <code>&gt;0.22</code>（&gt;判据上界）堵死。这是修 on-top 时<b>附带发现</b>的 IF 有效性 bug。</p>
+</div>
+<div class="callout warn">
+  <div class="h">教训 3 · collect 双跑竞态</div>
+  <p style="margin:0">用后台任务时又在命令里加 <code>&amp;</code> → 二次后台化、python 孤儿化、与重跑抢同一 data 目录 →
+     <code>_traj_data</code> pkl 缺失、export 崩。清孤儿、单次不打断跑即正常（export 本身无 bug）。</p>
+</div>
+<div class="callout warn">
+  <div class="h">教训 4 · 干扰物数量"看着永远是 3"（首抽聚簇）</div>
+  <p style="margin:0"><code>default_rng(seed).integers(1,4)</code> 作为<b>首抽</b>对小连续 seed 严重聚簇（低 seed 里 10/16 抽到 3）→ 采出来像"每次都 3 个"。
+     改用<b>混合种子流</b> <code>default_rng([seed, const]).integers(3)</code>：可复现、1/2/3 均匀、与 mover/relation 解耦（<code>seed%3</code> 虽均匀但会锁死每个 mover 只出 2 种数量）。同 pick_diverse 的首抽聚簇坑。</p>
+</div>
+
+<h2>Eval pipeline（policy 怎么被评）</h2>
+<p>入口 <code>bash script/eval_policy.sh &lt;policy&gt; &lt;task_config&gt;</code> → <code>eval_policy.py</code>。每个 task 是个<b>两阶段循环</b>，跑满 <code>test_num</code>(默认 100) 个"可解场景"为止。Place-Relative 直接吃这套，无需改。</p>
+
+<div class="diagram">
+  <div class="flow">
+    <div class="node n-scene" style="flex:1.1"><b>阶段 1 · 专家预筛</b>
+      <span class="kv"><code>setup_demo(seed)</code> → <code>play_once()</code> 跑 oracle → <code>check_success()</code>？<br>
+      失败（oracle 都做不到）→ <b>跳过该 seed</b></span></div>
+    <div class="arrow">→</div>
+    <div class="node n-beside" style="flex:1.4"><b style="color:var(--beside)">阶段 2 · policy rollout</b>
+      <span class="kv">同一 seed <b>再</b> <code>setup_demo</code>（必须复现）→ desc-gen 出指令 → <code>set_instruction</code> → policy 步进</span></div>
+  </div>
+  <pre style="margin:14px 0 0"><span class="c"># 阶段 2 内层（eval_policy.py L256-298）</span>
+setup_demo(seed=now_seed, is_test=True)                 <span class="c"># 与阶段1同 seed，完全复现</span>
+results = generate_episode_descriptions(task, [info["info"]], ...)  <span class="c"># 同一套 desc-gen</span>
+instruction = choice(results[0][<span style="color:#f0a679">instruction_type</span>])         <span class="c"># seen 或 unseen（config eval_instruction）</span>
+set_instruction(instruction)
+while take_action_cnt &lt; step_lim:
+    obs = get_obs()                                     <span class="c"># head/wrist RGB + robot state + instruction</span>
+    eval_func(env, model, obs)                          <span class="c"># policy 预测动作 → take_action 步进物理</span>
+    if eval_success: break                              <span class="c"># 每步物理后轮询 check_success（_base_task L1657）</span></pre>
+  <p class="kv" style="margin:12px 0 0">成功 = step_lim 内某一步 <code>check_success()</code> 变 True（按 <code>self.relation</code> 分派 placed_beside/on_top）。成功率 = <code>suc / test_num</code>。</p>
+</div>
+
+<div class="split">
+  <div class="lane beside">
+    <div class="h">seed 范围隔离</div>
+    <div class="kv"><code>st_seed = 100000×(1+seed)</code> → eval 场景 seed 落在 10 万量级，和采集用的 <code>0..N</code> <b>完全不重叠</b>：eval 场景 ≠ 训练场景。</div>
+  </div>
+  <div class="lane ontop">
+    <div class="h">seen / unseen 是命门</div>
+    <div class="kv">eval 通常取 <b>unseen</b> 指令——训练只见过 seen 模板，换没见过的说法还认得该干嘛，才是真 IF。正是指令池做 <code>seen∩unseen=∅</code> 的意义。</div>
+  </div>
+</div>
+
+<div class="callout">
+  <div class="h">与本任务的接口</div>
+  <p style="margin:0">eval 的 <code>generate_episode_descriptions</code> 和采集<b>同一套</b>（<code>filter_instructions</code>+<code>replace_placeholders</code>）→ <code>{B}</code>/<code>{C}</code> 路由在 eval 时一样生效，beside episode 只抽 beside 句、on-top 只抽 on-top 句；<code>play_once</code> 写的 <code>info["info"]</code> 就是喂给它的原料。<b>oracle 率的作用</b>：阶段 1 只做预筛，92.6% 影响的是"多少 seed 被跳过"，<b>不影响 eval 正确性</b>——被评的都是可解场景。桥接后 <code>importlib.import_module("envs.place_relative")</code> 可发现，接进 <code>all_tasks_plus_if.yml</code> 即合并评测。</p>
+</div>
+
+<h2>现状与边界</h2>
+<table>
+  <thead><tr><th>维度</th><th>状态</th><th>说明</th></tr></thead>
+  <tbody>
+    <tr><td>Layer A 指令池不变量</td><td><span class="badge b-ok">已验 11/11</span></td><td>seen∩unseen=∅、路由零串味、字面注入成句</td></tr>
+    <tr><td>Layer B 判定正反例</td><td><span class="badge b-ok">已验 9/9</span></td><td>错关系/错参照/空操作全 False</td></tr>
+    <tr><td>端到端 desc-gen 路由</td><td><span class="badge b-ok">已验</span></td><td>beside/on-top 句与关系一一对齐</td></tr>
+    <tr><td>oracle 可靠性</td><td><span class="badge b-ok">已验 92.6%（50 ep）</span></td><td>beside/on-top 各 92.6%；can 最弱 75%</td></tr>
+    <tr><td>真实 policy 跑分（Layer C/D）</td><td><span class="badge b-warn">未做</span></td><td>只有 oracle；是否真区分"读指令 vs 瞎猜"未验</td></tr>
+    <tr><td>判定阈值</td><td><span class="badge b-warn">自定</span></td><td>类推自 place_a2b/stack_blocks_two，论文未确认</td></tr>
+    <tr><td>base 池多样性</td><td><span class="badge b-warn">偏小</span></td><td>仅 2 个盒，reference 近乎二元</td></tr>
+  </tbody>
+</table>
+<div class="callout warn">
+  <div class="h">这份 report 不证明什么</div>
+  <ul style="margin:6px 0 0">
+    <li>不证明"某个真实 VLA 在这关表现好/差"——<b>只跑了脚本 oracle 专家</b>，没接任何 policy。</li>
+    <li>不证明"基准有区分度"——Layer C（瞎猜 baseline ≈ chance、作弊 baseline ≈ 100%）<b>未做</b>。</li>
+    <li>不证明"与论文数值对齐"——原仓库未开源，这是语义近似复刻，判定阈值是我们的设计。</li>
+    <li>oracle 92% 混了<b>场景稳定性 + 抓取 + 放置</b>，不是"grounding 准确率"。</li>
+  </ul>
+</div>
+
+<h2>怎么复现</h2>
+<pre><span class="c"># 桥接任务文件进 submodule（symlink，幂等）</span>
+bash bridge_tasks.sh
+
+<span class="c"># Layer A：指令池不变量（无需仿真）</span>
+conda run -n RoboTwin python tests/place_relative/test_instructions.py   <span class="c"># 11/11</span>
+
+<span class="c"># Layer B：判定正反例（teleport，需仿真）</span>
+conda run -n RoboTwin python tests/place_relative/test_check_success.py  <span class="c"># 9/9</span>
+
+<span class="c"># 采集 12 episode + 端到端 desc-gen（单次不打断，勿加 &amp;）</span>
+cd third_party/robotwin
+conda run -n RoboTwin python script/collect_data.py place_relative pr_bench
+
+<span class="c"># 按关系 / mover / reference 拆 oracle 成功率</span>
+python tools/report_place_relative.py --collection \
+  third_party/robotwin/data/place_relative/pr_bench
+
+<span class="c"># 重渲物体池验色 contact sheet</span>
+conda run -n RoboTwin python tools/render_place_pool_candidates.py</pre>
+
+<p class="kv">深读：设计定稿 <code>docs/features/05-Place-Relative.md</code>；理解重建 <code>understanding.md</code>；工程决策批判 <code>decisions.md</code>；物体池验色 <code>evidence/pool/POOL.md</code>。</p>
+
+<div class="foot">
+  RoboTwin-IF 复刻 · Place-Relative（feature-05）· 生成于 2026-08-24 ·
+  证据（视频 + contact sheet）与本文件同在 <code>notes/2026-08-24-place-relative/</code>，整目录 copy 走即可离线打开。
+</div>
+
+</div>
+</body>
+</html>
