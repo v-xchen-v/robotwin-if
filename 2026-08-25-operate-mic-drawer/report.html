@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Operate-Mic-Drawer — 搁置调研报告</title>
+<style>
+  :root{
+    --bg:#f6f7f9; --card:#ffffff; --ink:#1c2330; --muted:#5b6675; --line:#e3e7ee;
+    --new:#1a9e6f; --new-bg:#e6f7f0; --box:#64748b; --box-bg:#eef1f5;
+    --accent:#2563eb; --accent-bg:#eaf1ff; --warn:#b45309; --warn-bg:#fdf3e4;
+    --ok:#137a4b; --bad:#b91c1c; --bad-bg:#fdeaea; --code:#0f172a; --code-bg:#f1f4f8;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;
+    line-height:1.65;font-size:15.5px}
+  .wrap{max-width:960px;margin:0 auto;padding:0 20px 80px}
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline}
+  code,kbd{font-family:"SF Mono",ui-monospace,"JetBrains Mono",Menlo,Consolas,monospace;
+    font-size:.86em;background:var(--code-bg);padding:1.5px 5px;border-radius:4px;color:#334155}
+  pre{background:var(--code);color:#e2e8f0;padding:16px 18px;border-radius:10px;overflow-x:auto;
+    font-family:"SF Mono",ui-monospace,Menlo,Consolas,monospace;font-size:12.5px;line-height:1.55}
+  pre code{background:none;color:inherit;padding:0}
+  h2{font-size:22px;margin:0 0 4px;letter-spacing:-.01em}
+  h3{font-size:16.5px;margin:24px 0 8px}
+  section{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:26px 30px;margin:20px 0;box-shadow:0 1px 2px rgba(16,24,40,.04)}
+  .sec-tag{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:14px}
+  table{width:100%;border-collapse:collapse;margin:12px 0;font-size:14px}
+  th,td{text-align:left;padding:9px 11px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{background:#fafbfc;font-weight:600;font-size:13px;color:var(--muted)}
+  tr:last-child td{border-bottom:none}
+  .badge{display:inline-block;padding:3px 10px;border-radius:999px;font-size:12.5px;font-weight:600}
+  .b-ok{background:var(--new-bg);color:var(--ok)}
+  .b-warn{background:var(--warn-bg);color:var(--warn)}
+  .b-bad{background:var(--bad-bg);color:var(--bad)}
+  .b-box{background:var(--box-bg);color:var(--box)}
+  ul{padding-left:20px;margin:8px 0}
+  li{margin:5px 0}
+  .muted{color:var(--muted)}
+  .hero{background:linear-gradient(135deg,#3b2a12 0%,#5b431c 55%,#7a5a22 100%);color:#fdf3e4;
+    border-radius:16px;padding:38px 34px;margin:26px 0 8px}
+  .hero h1{margin:0 0 8px;font-size:29px;letter-spacing:-.02em}
+  .hero .lead{font-size:16px;color:#f0dcc0;margin:0 0 18px;max-width:680px}
+  .hero .meta{display:flex;flex-wrap:wrap;gap:8px 18px;font-size:13px;color:#e6cfa8;
+    border-top:1px solid rgba(255,255,255,.12);padding-top:16px;margin-top:4px}
+  .hero .meta b{color:#fdf3e4;font-weight:600}
+  .hero-badges{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+  .hero-badges .badge{background:rgba(255,255,255,.14);color:#fdf3e4}
+  .hero-badges .amber{background:#e0a83a;color:#2c1e06}
+  .tldr{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .tldr .cell{background:#fafbfc;border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+  .tldr .cell h4{margin:0 0 4px;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+  .tldr .cell p{margin:0;font-size:14.5px}
+  @media(max-width:640px){.tldr{grid-template-columns:1fr}.wall{grid-template-columns:1fr!important}}
+  .callout{border-left:3px solid var(--accent);background:var(--accent-bg);padding:10px 14px;border-radius:0 8px 8px 0;margin:14px 0;font-size:14px}
+  .callout.warn{border-color:#e0a83a;background:var(--warn-bg)}
+  .callout.bad{border-color:var(--bad);background:var(--bad-bg)}
+  .callout.ok{border-color:var(--new);background:var(--new-bg)}
+  .wall{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:8px 0}
+  .wall .w{border:1px solid var(--line);border-radius:12px;padding:16px 18px;background:#fafbfc}
+  .wall .w h4{margin:0 0 6px;font-size:15px}
+  .wall .w .tag{font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--bad)}
+  .diagram{margin:16px 0;padding:22px 20px;background:#fafbfc;border:1px solid var(--line);border-radius:12px}
+  .flow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:center}
+  .node{border-radius:10px;padding:11px 13px;font-size:12.5px;min-width:120px;text-align:center}
+  .node .t{font-weight:700;font-size:12.5px;margin-bottom:2px}
+  .node .s{font-size:11px;line-height:1.35;color:var(--muted)}
+  .n-ok{background:var(--new-bg);border:1.5px solid var(--new)}
+  .n-bad{background:var(--bad-bg);border:1.5px solid var(--bad)}
+  .n-mid{background:#eef4ff;border:1px solid #b9cdf5}
+  .arrow{color:var(--muted);font-size:18px;font-weight:700}
+  .num{display:inline-block;min-width:22px;height:22px;line-height:22px;text-align:center;border-radius:50%;
+    background:var(--accent);color:#fff;font-size:12px;font-weight:700;margin-right:7px}
+  .mono-tbl td{font-family:"SF Mono",ui-monospace,Menlo,Consolas,monospace;font-size:12.5px}
+  .prove td:first-child{font-weight:600;white-space:nowrap}
+  .yes{color:var(--ok);font-weight:700}.no{color:var(--bad);font-weight:700}
+  .toc{font-size:13.5px;color:var(--muted)}
+  .toc a{margin-right:14px;white-space:nowrap}
+  footer{color:var(--muted);font-size:13px;text-align:center;margin-top:30px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="hero">
+    <div class="hero-badges">
+      <span class="badge amber">状态：暂时搁置</span>
+      <span class="badge">feature-06</span>
+      <span class="badge">RoboTwin-IF · 第 5/5 个任务</span>
+    </div>
+    <h1>Operate-Microphone-Drawer</h1>
+    <p class="lead">论文里"最复杂"的 IF 任务：双臂多步——一只手开抽屉、另一只手把麦克风放进去，指令还要指定哪只手做哪步。三天多轮探针后判定：现有资产对（<code>018_microphone</code> + <code>036_cabinet</code>）在几何上做不出可用的 oracle，<b>暂时搁置</b>，env + 指令池已建好留待换资产复活。</p>
+    <div class="meta">
+      <span><b>结论：</b>oracle 天花板 ~30%（其它任务 ~90%）</span>
+      <span><b>根因：</b>抽屉垂直净空 &lt; 麦克风+夹爪</span>
+      <span><b>日期：</b>2026-08-25</span>
+      <span><b>核心文件：</b>tasks/envs/operate_mic_drawer.py</span>
+    </div>
+  </div>
+
+  <section>
+    <div class="toc">
+      <a href="#tldr">TL;DR</a><a href="#bg">背景与目标</a><a href="#walls">两道墙</a>
+      <a href="#journey">调研历程</a><a href="#evidence">证据</a><a href="#lessons">决策与教训</a>
+      <a href="#status">现状与边界</a><a href="#repro">复现 / 复活</a>
+    </div>
+  </section>
+
+  <section id="tldr">
+    <div class="sec-tag">TL;DR</div>
+    <div class="tldr">
+      <div class="cell"><h4>做了什么</h4><p>按论文实现 Operate-Mic-Drawer：双臂开抽屉+放麦克风，指令指定哪只手做哪步，check_success 严格判"步完成 + 手正确"。</p></div>
+      <div class="cell"><h4>怎么验证的</h4><p>约 11 轮 headless oracle 探针（每轮 8–12 seed），逐字段量 plan/抽屉 qpos/麦克风入位/失败阶段，隔离每个失败的真因。</p></div>
+      <div class="cell"><h4>结论</h4><p>两道<b>独立</b>的几何墙：强 arm 轴不可行 + 麦克风放进抽屉 oracle 只有 ~10–30%。缩小麦克风、放大柜子、改放置策略都顶不过去。</p></div>
+      <div class="cell"><h4>最大的坑</h4><p>"把麦克风放中央让两臂都够得着"这个直觉<b>弄巧成拙</b>——反而让两臂争中央；真正的硬限是抽屉上方隔板净空不够。</p></div>
+    </div>
+    <div class="callout warn"><b>这不是"实现失败"，是"资产不兼容"的判定。</b> env、指令 JSON、严格判定器都写好且跑得起来；卡住的是这对 RoboTwin 资产的物理几何。换个净空更大的抽屉/容器即可复活，代码可直接复用。</div>
+  </section>
+
+  <section id="bg">
+    <div class="sec-tag">背景与目标</div>
+    <h3>任务是什么</h3>
+    <p>RoboTwin-IF 论文 5 个 IF 任务集里的第 5 个，被论文称为最复杂。原文措辞：<i>"a microphone and a cabinet with a functional drawer are present. The instruction specifies a multi-step bimanual sequence: open the drawer with one arm, then pick up the microphone with the other arm and place it inside. Some instructions further specify which arm performs which sub-tasks."</i></p>
+    <p>相比前 4 个任务各有一条干净的判别轴（动词 / 目标 / 关系），这个任务论文给的 IF 新意是<b>双臂角色分配</b>——指令点名哪只手开抽屉、哪只手放麦克风，测多步序列 + 双臂协调。</p>
+    <h3>起点：机制骨架其实现成</h3>
+    <p>native <code>put_object_cabinet</code> 几乎就是这个任务的机械骨架（一臂抓物、对臂拉抽屉、放入 <code>get_functional_point(0)</code>），<code>handover_mic</code> 提供麦克风资产细节（<code>018_microphone</code>、model_ids [0,4,5]、抓取接触点）。指令池可直接借 native <code>put_object_cabinet.json</code> 里含 <code>{a}</code> 的模板。所以"跑通"层面看似工作量不大——真正的坑全在**双臂角色的可行性 + 麦克风放进抽屉的可行性**。</p>
+  </section>
+
+  <section id="walls">
+    <div class="sec-tag">核心结论 · 两道独立的几何墙</div>
+    <div class="wall">
+      <div class="w">
+        <div class="tag">墙 1</div>
+        <h4>强 arm 轴不可行</h4>
+        <p class="muted" style="font-size:13.5px">要让"哪只手"成为真判别，得让两只手都能放进抽屉（中央麦克风）。但中央麦克风→两臂争中央（抓取规划冲突）；顺序化后放置臂又要探进正中后方抽屉、在工作空间边缘。柜子前移也没救回 reach。</p>
+        <p style="font-size:13.5px;margin-bottom:0"><b>结果：</b>放置只能由麦克风同侧手做 → 开抽屉手被几何锁死 → 指令的"哪只手"和几何冗余，只剩弱 arm 轴。</p>
+      </div>
+      <div class="w">
+        <div class="tag">墙 2</div>
+        <h4>放进抽屉本身 oracle 极低</h4>
+        <p class="muted" style="font-size:13.5px">退一步做 regime i（麦克风侧置、native 机制），oracle 仍只有 ~10–30%。铁证：显式航点把麦克风精确移到抽屉正上方（xy≈0.001），<b>下探照样塞不进去</b>（卡在上方 0.13，plan=False）。</p>
+        <p style="font-size:13.5px;margin-bottom:0"><b>根因：</b>抽屉垂直净空（上方隔板）&lt; 麦克风(16cm) + 夹爪高度。几何硬限，任何接近策略绕不过。</p>
+      </div>
+    </div>
+    <div class="callout bad"><b>两道墙互相独立。</b> 即便接受弱 arm 轴（放弃墙 1），墙 2 仍把 oracle 压在 ~30%，采不出可训练的数据。这才是决定搁置的那道墙。</div>
+  </section>
+
+  <section id="journey">
+    <div class="sec-tag">调研历程 · 探针驱动</div>
+    <p>没有纸面拍板——每个假设都用 headless 探针实测（monkeypatch <code>collect_data.run</code> 抓取构建好的 env，逐 seed 跑 <code>setup_demo</code> + <code>play_once</code> + <code>check_success</code>，逐字段量状态）。时间线：</p>
+    <table>
+      <thead><tr><th>#</th><th>假设 / 动作</th><th>结果</th><th>学到</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>regime ii：中央麦克风让两臂都可达</td><td><span class="badge b-bad">两分工都挂 grasp_drawer</span></td><td>两臂争中央，抓完麦克风就挡住开抽屉臂</td></tr>
+        <tr><td>2</td><td>隔离诊断 A/B/C（只开抽屉 / 麦克风优先 / 抽屉优先）</td><td><span class="badge b-warn">A 单臂开抽屉 ✓；B/C 挂</span></td><td>抽屉单臂能开；挂的是两臂同时占中央</td></tr>
+        <tr><td>3</td><td>顺序流：开抽屉→松手退臂→再抓放</td><td><span class="badge b-bad">0/6</span></td><td>松手退臂时抽屉滑回全关</td></tr>
+        <tr><td>4</td><td>逐阶段隔离抽屉滑回的真因</td><td><span class="badge b-ok">是退臂动作拖的</span></td><td>松手/静置抽屉不动；"横扫回原位"把它带关了</td></tr>
+        <tr><td>5</td><td>顺序流修正：先竖直抬离把手再回原位</td><td><span class="badge b-warn">抽屉留 0.10–0.15 开</span></td><td>抽屉有摩擦能保持开；但失败后移到 place_mic</td></tr>
+        <tr><td>6</td><td>place 失败 = 开度不够？强制抽屉全开再放</td><td><span class="badge b-bad">仍挂</span></td><td>排除开度——是 reach，不是开度</td></tr>
+        <tr><td>7</td><td>柜子前移让 fp 进两臂 reach 甜区</td><td><span class="badge b-bad">0/12</span></td><td>fp 的 z 恒 0.757 不随前移变；reach 是硬限</td></tr>
+        <tr><td>8</td><td>转 regime i（麦克风侧置、native 机制）建真任务</td><td><span class="badge b-bad">~1/10</span></td><td>native 机制对长麦克风放置也不灵</td></tr>
+        <tr><td>9</td><td>放置调参：functional_point_id=0 / constrain=free / 降抬起</td><td><span class="badge b-bad">更差或甩飞</span></td><td>朝向/接近调参救不了</td></tr>
+        <tr><td>10</td><td>缩小麦克风 0.08→0.055</td><td><span class="badge b-warn">3/10（最好）</span></td><td>尺寸有影响，但顶不过 ~30%</td></tr>
+        <tr><td>11</td><td>显式航点对齐 + 放大柜子 0.34</td><td><span class="badge b-bad">航点证实净空墙；放大破坏抓取</span></td><td>见下方"证据"——决定性两条</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section id="evidence">
+    <div class="sec-tag">证据 · 两条决定性数据</div>
+    <p>没有视频（探针全 headless），证据是逐字段的状态数据。两条最有说服力：</p>
+
+    <h3><span class="num">1</span>中央麦克风 → 两臂争中央（墙 1 的根）</h3>
+    <p>seed 0，三条件 × 左右臂。<code>drawer_q</code> 是抽屉滑出量（~0.15=全开，0=没开）：</p>
+    <table class="mono-tbl">
+      <thead><tr><th>条件</th><th>open=left</th><th>open=right</th><th>含义</th></tr></thead>
+      <tbody>
+        <tr><td>A 只开抽屉（跳过麦克风）</td><td class="yes">✓ q≈0.147</td><td class="yes">✓ q≈0.148</td><td>抽屉<b>单臂就能开</b>，左右手都行</td></tr>
+        <tr><td>B 先抓麦克风（native 顺序）</td><td class="no">✗ grasp_drawer</td><td class="no">✗ grasp_drawer</td><td>抓完中央麦克风后开抽屉臂<b>规划不到把手</b></td></tr>
+        <tr><td>C 先开抽屉</td><td class="no">✗ grasp_mic</td><td class="no">✗ grasp_mic</td><td>抓住抽屉后另一臂<b>规划不到中央麦克风</b></td></tr>
+      </tbody>
+    </table>
+    <div class="callout">单看 A：抽屉、麦克风各自单臂都能操作。挂的是<b>两臂同时都要占中央</b>——RoboTwin 规划器做不了两臂在共享中央体积里同时作业。native 靠把物体推到 <code>|x|&gt;0.2</code> 一侧、让抓物臂在侧、开抽屉臂在中，错开才不冲突。</div>
+
+    <h3><span class="num">2</span>抽屉垂直净空不足（墙 2 的根，最硬的一条）</h3>
+    <p>regime i + 缩小麦克风(0.055) + 显式航点把麦克风平移到抽屉正上方后再下探。<code>xy</code> 是麦克风与 functional point 的水平差，<code>mic_z</code> 是麦克风高度（抽屉在 z≈0.757）：</p>
+    <table class="mono-tbl">
+      <thead><tr><th>seed</th><th>xy 差</th><th>mic_z</th><th>plan</th><th>说明</th></tr></thead>
+      <tbody>
+        <tr><td>5</td><td class="yes">(0.001, 0.000)</td><td>0.909</td><td class="no">False</td><td>水平<b>完美对齐</b>抽屉正上方，却<b>下不去</b></td></tr>
+        <tr><td>6</td><td class="yes">(0.012, 0.004)</td><td>0.889</td><td class="no">False</td><td>同上——对齐了但卡在抽屉上方 0.13</td></tr>
+        <tr><td>12</td><td class="yes">(0.001, 0.001)</td><td>0.889</td><td class="no">False</td><td>同上</td></tr>
+        <tr><td>7</td><td>(0.008, 0.006)</td><td>0.761</td><td class="yes">True</td><td>少数成功：下到抽屉高度</td></tr>
+        <tr><td>8</td><td>(0.015, 0.004)</td><td>0.757</td><td class="yes">True</td><td>少数成功</td></tr>
+      </tbody>
+    </table>
+    <div class="callout bad"><b>对齐完美却塞不进去，就是净空墙。</b> 夹爪夹着 11cm（已缩小）的麦克风，总高仍超过抽屉开口与上方隔板之间的净空，下探必撞。这不是朝向、不是开度、不是 reach 能调的——是抽屉几何本身的硬限。</div>
+
+    <h3>放大柜子为什么也不行</h3>
+    <p>试图把 <code>036_cabinet</code> scale 0.27→0.34 换取更大净空：<b>8/8 抽屉根本没开</b>（<code>drawer_q=0</code>）。等比放大整体位移了几何，抽屉把手移出可抓范围，functional point 也错位（z 反而降到 0.705）。柜子是 URDF，scale 写在 <code>46653/model_data.json</code> 里、会覆盖建时传参；朴素缩放同时破坏抓取点和功能点，要救得连摆位+抓取一起重调 = 资产重调校。</p>
+  </section>
+
+  <section id="lessons">
+    <div class="sec-tag">关键决策与教训</div>
+    <h3>决策分岔</h3>
+    <ul>
+      <li><b>判定器设计（用户拍板）：</b>combine "手正确" + "步完成"，任一错即失败，但 <code>info["fail_reason"]</code> 区分 <code>incomplete:drawer/mic</code> vs <code>wrong_arm:open/place</code>。比 native 只查终位更强。</li>
+      <li><b>regime ii（中央、强 arm 轴）vs regime i（侧置、弱 arm 轴）：</b>用户看重强 arm 轴，于是先啃 ii；四个杠杆（顺序化 / 抬臂退臂 / 强制全开 / 柜子前移）逐一验证后判 ii 出局，退 i。</li>
+      <li><b>救活方向（用户拍板）：</b>放大柜子 &gt; 缩小麦克风（更贴论文，两者都保留）——但实测放大破坏抓取，缩小只到 3/10。</li>
+      <li><b>最终（用户拍板）：</b>搁置，往下走；需求高再回来换资产做。</li>
+    </ul>
+    <h3>教训</h3>
+    <ul>
+      <li><b>"让两臂都够得着"的直觉会反噬。</b> 把麦克风放中央本意是让任一手都能放，结果两臂争中央、全挂。双臂任务的可行性取决于"错开"，不是"都够得着"。</li>
+      <li><b>arm 检测靠 <code>fl_</code>/<code>fr_</code> link 前缀最稳。</b> aloha-agilex 的 <code>fix_gripper_name</code> 是 None、<code>robot.gripper_name</code> 为空；直接扫 <code>scene.get_contacts()</code> 按夹爪 link 名前缀判左右手，不依赖那个空列表。</li>
+      <li><b>抽屉松手不滑回，退臂横扫才滑回。</b> 松手/静置抽屉几乎不动（有摩擦），是 <code>back_to_origin</code> 的横向扫动把抽屉带关；退臂前先竖直抬离把手即可留住。</li>
+      <li><b>URDF 资产等比缩放会连带破坏抓取点/功能点。</b> scale 藏在 <code>model_data.json</code> 覆盖传参，不能当"纯放大"用。</li>
+      <li><b>踩过的低级坑：</b>/tmp 里的探针脚本用了"向上找 repo 根"的 while 循环，但脚本在 /tmp 找不到 → <code>dirname("/")=="/"</code> 死循环，99.9% CPU、8MB RSS、零输出空转 2.5 小时。repo 内的 <code>tests/</code> 版本正常，只有 /tmp 副本中招。</li>
+    </ul>
+  </section>
+
+  <section id="status">
+    <div class="sec-tag">现状与边界</div>
+    <h3>已交付（留待复活）</h3>
+    <table class="prove">
+      <tbody>
+        <tr><td>env</td><td><code>tasks/envs/operate_mic_drawer.py</code> — regime i、native 机制、latch 式 arm 检测、严格 <code>check_success</code>（步+手，带 <code>fail_reason</code>）<span class="yes"> 已写好、语法/加载通过</span></td></tr>
+        <tr><td>指令池</td><td><code>tasks/task_instruction/operate_mic_drawer.json</code> — 借 native <code>put_object_cabinet</code> 含 <code>{a}</code> 模板，20 seen / 7 unseen，<code>{a}</code>=开抽屉手<span class="yes"> 已写好</span></td></tr>
+        <tr><td>探针</td><td>evidence/ 下 3 个探针脚本（oracle 检查 / 争中央诊断 / 退臂隔离）<span class="yes"> 已归档</span></td></tr>
+      </tbody>
+    </table>
+    <h3 style="margin-top:20px">明确「不证明什么」</h3>
+    <div class="callout warn">
+      <ul style="margin:0">
+        <li>本报告<b>不证明</b>"这个 IF 任务本身不可做"——只证明 <code>018_microphone</code> + <code>036_cabinet</code> 这对具体资产几何不兼容。换净空更大的抽屉/容器很可能可行。</li>
+        <li><b>不证明</b> check_success 的判别正确性——因为 oracle 跑不到高成功率，Layer B（wrong-arm 反例判 False）和 collect 冒烟<b>都还没做</b>。判定器逻辑写好了但未经反例验证。</li>
+        <li>oracle 率来自每轮 8–12 个 seed 的小样本；量级可信（~10–30% vs ~90%），精确百分比不必当真。</li>
+        <li><b>未做</b>：全量数据采集、指令 desc-gen 端到端渲染核查、合并评测接入。</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="repro">
+    <div class="sec-tag">复现 / 复活</div>
+    <h3>复现 oracle 率（确认现状）</h3>
+    <pre><code>conda activate RoboTwin
+cd &lt;repo&gt; &amp;&amp; bash bridge_tasks.sh          # symlink env+json 进 submodule
+python notes/2026-08-25-operate-mic-drawer/evidence/probe_oracle_check.py 1 2 3 4 5 6 7 8 10 12
+# 逐 seed 打印 plan_success / drawer_q / mic 位置 / xy 差 / rise —— 预期 ~1/10 成功</code></pre>
+    <h3>复活这个任务（换资产）</h3>
+    <ul>
+      <li><b>首选：</b>找/建一个净空更大的抽屉资产（off-the-shelf 柜子只有 036_cabinet，没有更大抽屉的），或改造 URDF 增大抽屉开口与上方净空。</li>
+      <li><b>次选：</b>换大开口铰接容器 <code>044_microwave</code> / <code>016_oven</code>（内腔大、麦克风放得进），但没有 native "放进去"机制、要从零搭+验证，且偏离"drawer"字面。</li>
+      <li>换好资产后，<code>tasks/envs/operate_mic_drawer.py</code> 的 play_once 机制 + 严格判定器 + 指令 JSON 可直接复用；接着补 Layer B（wrong-arm 反例）+ collect 冒烟测 oracle 率。</li>
+    </ul>
+    <h3>深读</h3>
+    <p class="muted">完整逐轮探针数据在本次会话记录；关键结论已存入项目 memory <code>mic-drawer-oracle-infeasible.md</code>。env / 指令 / 探针脚本快照见同目录 <code>evidence/</code>。</p>
+  </section>
+
+  <footer>Operate-Mic-Drawer 搁置调研报告 · RoboTwin-IF feature-06 · 2026-08-25 · 自包含离线可开</footer>
+
+</div>
+</body>
+</html>
