@@ -1,0 +1,36 @@
+{
+  "full_description": "Use one arm to open the cabinet's drawer and the other arm to place the microphone from the table into the drawer. Every instruction names which arm opens the drawer.",
+  "schema": "{A} notifies the microphone, {B} notifies the cabinet (use 'the drawer of {B}' or '{B}'s drawer'), {a} notifies the arm that OPENS the drawer; the other arm (literal 'the other arm'/'another arm') places {A} into the drawer. Every template contains {a}, {A} and {B}. Borrowed from native put_object_cabinet's arm-specifying templates ({a} rebound to the opening arm, which the native wording already implies).",
+  "preference": "num of words should not exceed 20. {a} is the arm that opens the drawer and MUST appear in every description; the placing arm is always referred to as 'the other arm' or 'another arm'. {A} and {B} must always be mentioned.",
+  "seen": [
+    "Use {a} to open the drawer of {B} and then the other arm to place {A} inside.",
+    "Pull open {B}'s drawer with {a} and use the other arm to insert {A}.",
+    "Use {a} to open {B}'s drawer before the other arm places {A} inside.",
+    "With {a}, open {B}'s drawer and let the other arm drop {A} inside.",
+    "Use {a} to open the drawer of {B} and let the other arm set {A} inside.",
+    "Slide open {B}'s drawer with {a} and use the other arm to put {A} into it.",
+    "With {a}, open the drawer of {B} and place {A} inside using the other arm.",
+    "Use {a} to open {B}'s drawer, then transfer {A} into it with the other arm.",
+    "Use {a} to slide open {B}'s drawer, then the other arm to put {A} in.",
+    "Use {a} to open {B}'s drawer and use another arm to stick {A} inside.",
+    "Use {a} to open the drawer of {B}, then use the other arm to set {A} inside.",
+    "With {a}, open {B}'s drawer, then place {A} in using another arm.",
+    "Use {a} to pull {B}'s drawer open and use the other arm to stick {A} inside.",
+    "Use {a} to slide open {B}'s drawer, then use the other arm to transfer {A} inside.",
+    "Unlock {B}'s drawer with {a} and set {A} inside using the other arm.",
+    "Use {a} to pull the drawer of {B} open and the other arm to put {A} inside.",
+    "Use {a} to slide open {B}'s drawer and move {A} in with the other arm.",
+    "Place {A} inside the drawer of {B} after opening it using {a}.",
+    "Use {a} to open {B}'s drawer and drop {A} inside with the other arm.",
+    "Slide open the drawer of {B} using {a} and place {A} into it with the other arm."
+  ],
+  "unseen": [
+    "Use {a} to open {B}'s drawer and the other arm to place {A} inside.",
+    "Open {B}'s drawer with {a} and use the other arm to put {A} inside.",
+    "Open the drawer of {B} with {a} and place {A} inside using the other arm.",
+    "Use {a} to pull open {B}'s drawer and the other arm to move {A} into it.",
+    "Open the drawer of {B} with {a}, then the other arm places {A} inside.",
+    "Open {B}'s drawer using {a} and place {A} inside with the other arm.",
+    "Set {A} in the drawer of {B} after opening it with {a}."
+  ]
+}
