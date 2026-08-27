@@ -36,7 +36,7 @@ tags: [robotwin, vla, benchmark]
 - `tasks/task_instruction/operate_tabletop.json`：click/press/pick 三组模板
 - `tests/operate_tabletop/test_instructions.py`（Layer A）+ `test_check_success.py`（Layer B）
 - `tools/report_operate_tabletop.py`：三向成功率报告
-- `bash bridge_tasks.sh` 已把上面两份 symlink 进 submodule
+- `bash scripts/bridge_tasks.sh` 已把上面两份 symlink 进 submodule
 
 **关键设计**：
 1. **场景三模式恒定**：铃铛(050_bell, static) + 订书机(048_stapler, static) + 1-2 个可拿取物体(dynamic) 每个 episode 都在，静止时三种模式的画面一致（IF 要求"看图不能反推指令"）。

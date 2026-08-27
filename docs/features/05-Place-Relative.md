@@ -99,7 +99,7 @@ beside 的落点不能直接 `B.x±0.13` 拍死——那个点可能已经有干
 - `tests/place_relative/test_instructions.py`（Layer A）+ `test_check_success.py`（Layer B）
 - `tools/report_place_relative.py`：按关系 + mover/reference 名词拆成功率
 - `tools/render_place_pool_candidates.py`：验色工具
-- `bash bridge_tasks.sh` 自动 symlink；**不需要** objects_description（字面注入）
+- `bash scripts/bridge_tasks.sh` 自动 symlink；**不需要** objects_description（字面注入）
 
 ## 验证结果
 

@@ -112,7 +112,7 @@ tags: [robotwin, vla, benchmark]
 - `tasks/task_instruction/pick_diverse_object.json`：借 `adjust_bottle` orientation-free 子集（12 seen / 4 unseen），占位符 `{A}`=目标、`{a}`=臂
 - `tests/pick_diverse_object/test_instructions.py`（Layer A）+ `test_check_success.py`（Layer B）
 - `tools/report_pick_diverse_object.py`：按目标 noun/color 拆成功率
-- `bash bridge_tasks.sh` 自动 symlink（glob，无需改脚本）；**不需要** `objects_description`（指令用字面量）
+- `bash scripts/bridge_tasks.sh` 自动 symlink（glob，无需改脚本）；**不需要** `objects_description`（指令用字面量）
 
 **关键设计**：
 1. **seed 派生确定性组合**：`load_actors` 开头 `rng = np.random.default_rng(self._seed)`，派生 3 干扰（先于全局 np 位姿采样）→ eval 两次 `setup_demo(同 seed)` 生成同一 episode，可复现。**目标 noun = `品类[seed % 12]`、颜色 = `seed // 12` 轮转**（确定性，非 rng 抽取，见踩坑；reporter 据此从 seed 反推目标，无需额外 logging）。
