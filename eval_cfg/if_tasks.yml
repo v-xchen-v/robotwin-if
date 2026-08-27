@@ -1,0 +1,28 @@
+# RoboTwin-IF · IF-only task list
+#
+# The 5 instruction-following task sets reproduced from Qwen-RobotManip §6.2.1.
+# Format: a plain `tasks:` list of task names. Each name must resolve to
+# envs/<name>.py after `bridge_tasks.sh` symlinks our tasks/envs/*.py into the
+# submodule (RoboTwin discovers tasks by `importlib.import_module("envs."+name)`).
+#
+# NOTE: operate_mic_drawer is SHELVED — the 018_microphone + 036_cabinet asset pair
+# is geometrically mismatched (drawer vertical clearance < mic+gripper; oracle ~10–30%
+# ceiling). Env + instruction JSON exist but it is excluded from active runs.
+# See docs/features and notes/2026-08-25-operate-mic-drawer. Listed commented below to
+# document the full 5-task intent.
+#
+# Usage — collect the whole list by looping over the RAW collect_data.sh (single-task;
+# no native multitask runner in this locked commit, so no bespoke wrapper needed):
+#
+#   bash bridge_tasks.sh
+#   cd third_party/robotwin
+#   for t in $(python3 -c "import yaml;print(' '.join(yaml.safe_load(open('../../eval_cfg/if_tasks.yml'))['tasks']))"); do
+#     bash collect_data.sh "$t" demo_clean 0   # <task> <config> <gpu_id>
+#   done
+
+tasks:
+  - pick_diverse_object
+  - place_relative
+  - operate_stapler
+  - operate_tabletop
+  # - operate_mic_drawer   # shelved: asset geometry mismatch (feature-06)
