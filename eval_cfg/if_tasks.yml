@@ -19,6 +19,14 @@
 #   for t in $(python3 -c "import yaml;print(' '.join(yaml.safe_load(open('../../eval_cfg/if_tasks.yml'))['tasks']))"); do
 #     bash collect_data.sh "$t" demo_clean 0   # <task> <config> <gpu_id>
 #   done
+#
+# Eval — same bridge + loop, but eval is per-(policy, task) and REQUIRES a policy module
+# under policy/<X>/ (get_model/eval/reset_model; there is NO oracle-only eval mode).
+# instruction_type defaults to `unseen` in every deploy_policy.yml (IF-correct; override to
+# `seen` for a sanity pass). Once a policy exists:
+#   for t in $(python3 -c "import yaml;print(' '.join(yaml.safe_load(open('../../eval_cfg/if_tasks.yml'))['tasks']))"); do
+#     bash policy/<X>/eval.sh "$t" demo_clean <ckpt_setting> <expert_data_num> <seed> 0
+#   done
 
 tasks:
   - pick_diverse_object
