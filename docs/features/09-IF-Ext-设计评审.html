@@ -1,0 +1,410 @@
+<title>IF-Ext 七轴指令跟随扩展任务集 · 设计评审稿</title>
+<style>
+  :root{
+    --bg:#EDF0F4; --surface:#FFFFFF; --surface-2:#F4F6F9;
+    --ink:#161B24; --muted:#58616F; --line:#DBE0E8; --line-strong:#C4CBD6;
+    --accent:#0E7A83; --accent-strong:#0B5A61; --accent-soft:#E1F0F1;
+    --risk-low:#3C7D53; --risk-low-soft:#E4EFE7;
+    --risk-med:#9A6612; --risk-med-soft:#F4EBD6;
+    --risk-high:#B0432F; --risk-high-soft:#F6E2DC;
+    --shadow:0 1px 2px rgba(18,25,38,.04),0 8px 24px -16px rgba(18,25,38,.18);
+    --font-sans:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans CJK SC","Source Han Sans SC",sans-serif;
+    --font-mono:ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,"Liberation Mono","Noto Sans Mono CJK SC",monospace;
+  }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]){
+      --bg:#0E1117; --surface:#161B23; --surface-2:#1B212B;
+      --ink:#E6EAF1; --muted:#949EAD; --line:#262E3A; --line-strong:#374250;
+      --accent:#3BB0B8; --accent-strong:#6FD0D6; --accent-soft:#123338;
+      --risk-low:#63BE88; --risk-low-soft:#16281D;
+      --risk-med:#D2A04E; --risk-med-soft:#2C2413;
+      --risk-high:#E0765F; --risk-high-soft:#2E1A15;
+      --shadow:0 1px 2px rgba(0,0,0,.3),0 10px 30px -18px rgba(0,0,0,.6);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0E1117; --surface:#161B23; --surface-2:#1B212B;
+    --ink:#E6EAF1; --muted:#949EAD; --line:#262E3A; --line-strong:#374250;
+    --accent:#3BB0B8; --accent-strong:#6FD0D6; --accent-soft:#123338;
+    --risk-low:#63BE88; --risk-low-soft:#16281D;
+    --risk-med:#D2A04E; --risk-med-soft:#2C2413;
+    --risk-high:#E0765F; --risk-high-soft:#2E1A15;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 10px 30px -18px rgba(0,0,0,.6);
+  }
+
+  *{box-sizing:border-box}
+  body{
+    background:var(--bg); color:var(--ink);
+    font-family:var(--font-sans); font-size:16px; line-height:1.75;
+    -webkit-font-smoothing:antialiased; margin:0;
+    font-variant-ligatures:none;
+  }
+  .wrap{max-width:860px; margin:0 auto; padding:0 22px 88px}
+
+  /* ---- nav ---- */
+  nav{
+    position:sticky; top:0; z-index:10; background:color-mix(in srgb,var(--bg) 88%,transparent);
+    backdrop-filter:blur(8px); border-bottom:1px solid var(--line);
+    margin-bottom:40px;
+  }
+  .nav-inner{max-width:860px; margin:0 auto; padding:10px 22px; display:flex; flex-wrap:wrap; gap:4px 18px; align-items:baseline}
+  .nav-inner .brand{font-family:var(--font-mono); font-size:12px; letter-spacing:.04em; color:var(--accent-strong); font-weight:600; margin-right:6px}
+  nav a{font-size:13px; color:var(--muted); text-decoration:none; padding:2px 0; border-bottom:1.5px solid transparent}
+  nav a:hover,nav a:focus-visible{color:var(--ink); border-bottom-color:var(--accent)}
+
+  /* ---- header ---- */
+  header{padding:16px 0 8px}
+  .kicker{font-family:var(--font-mono); font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:var(--accent-strong)}
+  h1{font-size:clamp(1.65rem,4.4vw,2.2rem); line-height:1.2; margin:.5rem 0 .2rem; text-wrap:balance; letter-spacing:-.01em}
+  .lede{font-size:1.06rem; color:var(--muted); margin:.4rem 0 1.1rem; max-width:60ch}
+  .lede b{color:var(--ink); font-weight:600}
+  .meta{display:flex; flex-wrap:wrap; gap:8px; font-family:var(--font-mono); font-size:12px}
+  .meta span{background:var(--surface-2); border:1px solid var(--line); color:var(--muted); padding:3px 9px; border-radius:4px}
+  .meta span b{color:var(--ink); font-weight:600}
+
+  /* ---- sections ---- */
+  section{margin-top:52px; scroll-margin-top:64px}
+  .sec-head{display:flex; align-items:baseline; gap:12px; margin-bottom:18px; padding-bottom:10px; border-bottom:1px solid var(--line)}
+  .sec-head .idx{font-family:var(--font-mono); font-size:12px; color:var(--accent); letter-spacing:.1em}
+  .sec-head h2{font-size:1.32rem; margin:0; letter-spacing:-.01em}
+  p{margin:.7rem 0}
+  p b,li b{font-weight:600}
+  .accent-tx{color:var(--accent-strong); font-weight:600}
+
+  code,.mono{font-family:var(--font-mono); font-size:.86em; background:var(--surface-2); border:1px solid var(--line); padding:.05em .38em; border-radius:4px; word-break:break-word}
+  .axis-list{list-style:none; padding:0; margin:1rem 0 0; display:grid; gap:0}
+
+  /* ---- criteria cards ---- */
+  .criteria{display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-top:6px}
+  @media (max-width:680px){.criteria{grid-template-columns:1fr}}
+  .crit{background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:16px 16px 18px; box-shadow:var(--shadow)}
+  .crit .tag{font-family:var(--font-mono); font-weight:700; color:var(--accent); font-size:14px}
+  .crit h3{font-size:1rem; margin:.35rem 0 .35rem}
+  .crit p{font-size:.92rem; color:var(--muted); margin:0; line-height:1.65}
+  .note{background:var(--surface-2); border-left:3px solid var(--accent); border-radius:0 6px 6px 0; padding:14px 16px; margin-top:20px; font-size:.94rem}
+  .note ul{margin:.4rem 0 0; padding-left:1.15rem}
+  .note li{margin:.3rem 0; color:var(--muted)}
+  .note li b{color:var(--ink)}
+
+  /* ---- tables ---- */
+  .table-wrap{overflow-x:auto; border:1px solid var(--line); border-radius:8px; box-shadow:var(--shadow)}
+  table{border-collapse:collapse; width:100%; min-width:600px; font-size:.9rem; background:var(--surface)}
+  th,td{text-align:left; padding:10px 13px; border-bottom:1px solid var(--line); vertical-align:top}
+  thead th{background:var(--surface-2); font-family:var(--font-mono); font-size:11px; letter-spacing:.05em; text-transform:uppercase; color:var(--muted); font-weight:600; white-space:nowrap}
+  tbody tr:last-child td{border-bottom:0}
+  td .mono,th .mono{white-space:nowrap}
+  .col-c{text-align:center; font-variant-numeric:tabular-nums}
+  .dot{display:inline-block; width:8px; height:8px; border-radius:50%}
+  .dot.on{background:var(--accent)} .dot.off{background:var(--line-strong)}
+
+  /* ---- task cards ---- */
+  .tasks{display:grid; gap:14px}
+  .task{background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:0; box-shadow:var(--shadow); border-top:3px solid var(--tc,var(--line-strong)); overflow:hidden; transition:border-color .15s ease}
+  .task:hover{border-color:var(--line-strong)}
+  .task.r-low{--tc:var(--risk-low)} .task.r-med{--tc:var(--risk-med)} .task.r-high{--tc:var(--risk-high)}
+  .task-head{display:flex; flex-wrap:wrap; align-items:center; gap:7px 9px; padding:12px 16px 11px; background:color-mix(in srgb,var(--tc) 7%,var(--surface)); border-bottom:1px solid var(--line)}
+  .task-head .tid{font-family:var(--font-mono); font-size:11.5px; color:var(--muted)}
+  .task-head h3{font-size:1.06rem; margin:0; width:100%; order:-1; letter-spacing:-.01em; line-height:1.35}
+  .chip{font-family:var(--font-mono); font-size:11px; font-weight:600; padding:2px 8px; border-radius:4px; border:1px solid transparent; white-space:nowrap; letter-spacing:.02em}
+  .chip.risk.low{background:var(--risk-low-soft); color:var(--risk-low); border-color:color-mix(in srgb,var(--risk-low) 30%,transparent)}
+  .chip.risk.med{background:var(--risk-med-soft); color:var(--risk-med); border-color:color-mix(in srgb,var(--risk-med) 30%,transparent)}
+  .chip.risk.high{background:var(--risk-high-soft); color:var(--risk-high); border-color:color-mix(in srgb,var(--risk-high) 30%,transparent)}
+  .chip.scope.now{background:var(--accent-soft); color:var(--accent-strong); border-color:color-mix(in srgb,var(--accent) 30%,transparent)}
+  .chip.scope.later{background:var(--surface-2); color:var(--muted); border-color:var(--line)}
+  .rows{display:grid; gap:0; padding:2px 16px 8px}
+  .r{display:grid; grid-template-columns:4.3rem 1fr; gap:1px 13px; padding:7px 0; border-top:1px solid var(--line); font-size:.895rem; line-height:1.52}
+  .r:first-child{border-top:0}
+  @media (max-width:560px){.r{grid-template-columns:1fr; gap:1px}}
+  .r .k{font-size:.78rem; font-weight:600; color:var(--accent-strong); letter-spacing:.02em; padding-top:.1em}
+  .r .v{color:var(--ink)}
+  .r.risk .v{color:var(--muted)}
+  .r .v b{color:var(--ink)}
+
+  /* ---- scope ---- */
+  .split{display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:6px}
+  @media (max-width:640px){.split{grid-template-columns:1fr}}
+  .panel{background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:16px 18px; box-shadow:var(--shadow)}
+  .panel h4{margin:0 0 .4rem; font-size:.98rem; display:flex; align-items:center; gap:8px}
+  .panel.now h4::before{content:""; width:9px; height:9px; border-radius:2px; background:var(--accent)}
+  .panel.later h4::before{content:""; width:9px; height:9px; border-radius:2px; background:var(--line-strong)}
+  .panel ul{margin:.5rem 0 0; padding-left:1.1rem}
+  .panel li{margin:.42rem 0; font-size:.92rem; color:var(--muted)}
+  .panel li b{color:var(--ink)}
+  .tiers{display:flex; flex-wrap:wrap; gap:8px; margin-top:16px; font-size:.86rem; font-family:var(--font-mono)}
+  .tiers span{padding:4px 10px; border-radius:4px; border:1px solid var(--line)}
+  .tiers .t-low{background:var(--risk-low-soft); color:var(--risk-low)}
+  .tiers .t-med{background:var(--risk-med-soft); color:var(--risk-med)}
+  .tiers .t-high{background:var(--risk-high-soft); color:var(--risk-high)}
+
+  /* ---- open questions ---- */
+  ol.decide{counter-reset:d; list-style:none; padding:0; margin:8px 0 0; display:grid; gap:12px}
+  ol.decide li{position:relative; background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:14px 16px 14px 48px; box-shadow:var(--shadow)}
+  ol.decide li::before{counter-increment:d; content:"Q"counter(d); position:absolute; left:14px; top:13px; font-family:var(--font-mono); font-size:12px; font-weight:700; color:var(--accent); background:var(--accent-soft); border:1px solid color-mix(in srgb,var(--accent) 26%,transparent); border-radius:5px; width:24px; height:22px; display:grid; place-items:center}
+  ol.decide li b{font-weight:600}
+
+  footer{margin-top:56px; padding-top:18px; border-top:1px solid var(--line); font-size:.85rem; color:var(--muted); display:flex; flex-wrap:wrap; gap:6px 16px; justify-content:space-between}
+
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+  a:focus-visible,th:focus-visible{outline:2px solid var(--accent); outline-offset:2px; border-radius:3px}
+</style>
+
+<nav>
+  <div class="nav-inner">
+    <span class="brand">IF-Ext</span>
+    <a href="#purpose">目的</a>
+    <a href="#method">方法</a>
+    <a href="#matrix">矩阵</a>
+    <a href="#tasks">逐任务</a>
+    <a href="#scope">排期</a>
+    <a href="#decide">待确认</a>
+  </div>
+</nav>
+
+<div class="wrap">
+  <header>
+    <div class="kicker">RoboTwin-IF · 设计评审稿</div>
+    <h1>七轴指令跟随扩展任务集</h1>
+    <p class="lede">在论文 5 个<b>多维度耦合</b>任务之外，新增 7 个<b>单轴</b>任务：每个只隔离测一个指令跟随能力，用来定位一个 policy 到底在<b>哪个轴上"没听懂指令"</b>。</p>
+    <div class="meta">
+      <span>状态 <b>planning</b></span>
+      <span>日期 <b>2026-08-28</b></span>
+      <span>规模 <b>7 轴</b></span>
+      <span>本周目标 <b>3 个</b></span>
+      <span>Deadline <b>09-04</b></span>
+    </div>
+  </header>
+
+  <section id="purpose">
+    <div class="sec-head"><span class="idx">一</span><h2>为什么这么设计</h2></div>
+    <p>论文的 5 个任务把多个能力<b>耦合</b>在一起——比如 Operate-Tabletop 里"选摇铃这个动词"就等于"选了铃铛这个物体"，动词和名词绑死。结果是：policy 失败了，说不清它是<b>动词没听懂</b>还是<b>物体没认出</b>。</p>
+    <p>IF-Ext 反过来做<b>单轴拆分</b>：每个任务里只有一个"指令槽位"是决定成败的变量，其余（几何、可达性、物体身份）全部保持中性。这样一个 policy 跑完 7 个任务，得到的就是它在各轴上的一张 <span class="accent-tx">"指令服从率指纹"</span>——哪个槽位它读了、哪个它无视，一目了然。</p>
+    <div class="table-wrap" style="margin-top:18px">
+      <table>
+        <thead><tr><th>#</th><th>轴</th><th>一句话</th></tr></thead>
+        <tbody>
+          <tr><td class="col-c">1</td><td>动词 verb</td><td>同物体同几何，只有动词变（开 vs 关）</td></tr>
+          <tr><td class="col-c">2</td><td>名词 noun</td><td>跨类别干扰物，只靠类别名词点名</td></tr>
+          <tr><td class="col-c">3</td><td>形容词 adjective</td><td>color &gt; texture &gt; shape 分档，测按需升级</td></tr>
+          <tr><td class="col-c">4</td><td>左右臂 arm</td><td>物体在双臂重叠区，只靠指令选臂</td></tr>
+          <tr><td class="col-c">5</td><td>顺序 sequence</td><td>多物体依次入容器，顺序不能错</td></tr>
+          <tr><td class="col-c">6</td><td>方位 direction</td><td>相对某物体的 左/右/前/后/上</td></tr>
+          <tr><td class="col-c">7</td><td>抓取方向 grasp-approach</td><td>同物体从顶部抓 vs 从侧面抓</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="method">
+    <div class="sec-head"><span class="idx">二</span><h2>贯穿所有任务的三条判据</h2></div>
+    <p>整套设计的核心。一个任务要成立，必须<b>同时</b>满足三条——它们既是设计判据，也是可实现性判据：</p>
+    <div class="criteria">
+      <div class="crit">
+        <div class="tag">(a)</div>
+        <h3>唯一区分量</h3>
+        <p>被测的那个指令槽位，是场景里<b style="color:var(--ink)">唯一</b>能区分正确动作的信息；其它一切（几何、可达性、物体身份）都保持中性。</p>
+      </div>
+      <div class="crit">
+        <div class="tag">(b)</div>
+        <h3>双值 oracle ~90%</h3>
+        <p>oracle 对该槽位的<b style="color:var(--ink)">两个取值都</b>要能 ~90% 执行。这是"反例 / Layer B"的基础：两个方向都跑得通，"故意做错必判失败"才验证得了。</p>
+      </div>
+      <div class="crit">
+        <div class="tag">(c)</div>
+        <h3>画面可分</h3>
+        <p>两个取值的结果，在相机画面上必须<b style="color:var(--ink)">明显不同</b>。否则 policy 连当前状态都看不出、成功差异也没意义，任务不可解。</p>
+      </div>
+    </div>
+    <div class="note">
+      <b>这三条不是事后总结，是筛选/淘汰任务的尺子：</b>
+      <ul>
+        <li><code>056_switch</code> 拨杆栽在 <b>(b)(c)</b>——本身成功率低、开/关画面几乎同一张 → 淘汰。</li>
+        <li>Attribute 的"纹理/大小"档栽在 <b>(a)(c)</b>——构造不出"除一属性外全同"的干扰物、相机也分不清 → 大小砍掉、纹理留但列为最高风险。</li>
+        <li>mic-drawer 式双臂 Arm-Select 栽在 <b>(b)</b>——双臂同时动作会互撞、几何还会把"用哪只臂"变冗余 → 改成单臂中央盒子。</li>
+      </ul>
+    </div>
+    <p style="margin-top:18px; font-size:.94rem; color:var(--muted)"><b style="color:var(--ink)">验证方法论：</b>每任务做 Layer A（结构/集成正确）+ Layer B（oracle 正例判 True、反例判 False）。带"故意做错"反例的 5 个（Verb / Arm / Sequence / Spatial / Grasp）——反例验证是<b style="color:var(--ink)">验收必过项</b>。</p>
+  </section>
+
+  <section id="matrix">
+    <div class="sec-head"><span class="idx">三</span><h2>七任务一览</h2></div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>任务</th><th>轴</th><th>指令示例</th><th>成功判定核心</th><th class="col-c">风险</th><th class="col-c">本周</th></tr></thead>
+        <tbody>
+          <tr><td><span class="mono">verb_select</span></td><td>动词</td><td>把它合上 / 打开</td><td>铰链关节角到达指令方向端</td><td class="col-c"><span class="chip risk med">中</span></td><td class="col-c"><span class="dot on" title="本周"></span></td></tr>
+          <tr><td><span class="mono">noun_grounding</span></td><td>名词</td><td>拿起杯子</td><td>抓取物类别 == 指令名词</td><td class="col-c"><span class="chip risk low">低</span></td><td class="col-c"><span class="dot off" title="延后"></span></td></tr>
+          <tr><td><span class="mono">attribute_ladder</span></td><td>形容词</td><td>拿起红色条纹方形盒子</td><td>全部指定属性匹配 + 分档统计</td><td class="col-c"><span class="chip risk high">高</span></td><td class="col-c"><span class="dot off" title="延后"></span></td></tr>
+          <tr><td><span class="mono">arm_select</span></td><td>左右臂</td><td>用左臂拿起积木</td><td><b>哪只夹爪</b>最终握着（state）</td><td class="col-c"><span class="chip risk low">低</span></td><td class="col-c"><span class="dot on" title="本周"></span></td></tr>
+          <tr><td><span class="mono">sequence_container</span></td><td>顺序</td><td>先红积木再蓝球最后绿瓶</td><td><b>进入顺序</b>（轨迹/时间戳）</td><td class="col-c"><span class="chip risk med">中</span></td><td class="col-c"><span class="dot off" title="延后"></span></td></tr>
+          <tr><td><span class="mono">spatial_direction</span></td><td>方位</td><td>把 A 放到 B 前面</td><td>指令轴带符号偏移 + 正交锁住</td><td class="col-c"><span class="chip risk low">低</span></td><td class="col-c"><span class="dot off" title="延后"></span></td></tr>
+          <tr><td><span class="mono">grasp_approach</span></td><td>抓取方向</td><td>从顶部 / 侧面拿起方块</td><td>夹爪 <b>approach 轴朝向</b>匹配</td><td class="col-c"><span class="chip risk med">中</span></td><td class="col-c"><span class="dot on" title="本周"></span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="font-size:.83rem; color:var(--muted); margin-top:8px"><span class="dot on"></span> 本周做　<span class="dot off"></span> 延后。task 前缀统一 <code>if_ext_</code>。风险档来自"时间评估"（判定机制是否已复用/落地）。</p>
+  </section>
+
+  <section id="tasks">
+    <div class="sec-head"><span class="idx">四</span><h2>逐任务设计</h2></div>
+    <div class="tasks">
+
+      <article class="task r-med">
+        <div class="task-head">
+          <span class="tid">if_ext_verb_select</span>
+          <span class="chip risk med">实现风险 中</span>
+          <span class="chip scope now">本周</span>
+          <h3>1 · IF-Verb-Select — 动词判别</h3>
+        </div>
+        <div class="rows">
+          <div class="r"><span class="k">目的</span><span class="v">动词与物体<b>解耦</b>：同物体同几何，只有动词变。诊断"动词被<b>物体→惯用动作先验</b>盖掉"（学到 laptop→开就无视"关"）。命令<b>非默认</b>动词，看它是否真读了动词。</span></div>
+          <div class="r"><span class="k">场景</span><span class="v"><code>015_laptop</code> 开/关。两变体都从<b>同一 ~50% 半开中间态</b>起，初始画面完全相同，只有指令动词不同。备选：cabinet 抽屉、pick-vs-press。</span></div>
+          <div class="r"><span class="k">判定</span><span class="v">铰链关节角到达指令方向端（开→过高阈值 / 关→回低区间）。<b>不是</b>"角度变了就算"。</span></div>
+          <div class="r"><span class="k">反例</span><span class="v">oracle 反方向（应关却开）→ qpos 走错端 → 必败。</span></div>
+          <div class="r risk"><span class="k">风险</span><span class="v">native 无 <code>close_*</code>，<b>合盖 oracle 要自写</b>。先 spike：从中间态<b>双向</b>跑，确认开、关都能 ~90%，不过退 cabinet。</span></div>
+        </div>
+      </article>
+
+      <article class="task r-low">
+        <div class="task-head">
+          <span class="tid">if_ext_noun_grounding</span>
+          <span class="chip risk low">实现风险 低</span>
+          <span class="chip scope later">延后</span>
+          <h3>2 · IF-Noun-Grounding — 目标名词 grounding</h3>
+        </div>
+        <div class="rows">
+          <div class="r"><span class="k">目的</span><span class="v">只隔离<b>名词槽位</b>：干扰物<b>跨类别</b>、被点名类别只有一个。定位是 Attribute-Ladder 的<b>对照基线</b>——连这挂 = 基础 grounding 问题，而非属性优先级问题。</span></div>
+          <div class="r"><span class="k">场景</span><span class="v">2–3 个<b>不同类别</b>物体（杯/瓶/盒），单臂，纯名词点名。不堆到论文的 4 物体——职责是"对照"。</span></div>
+          <div class="r"><span class="k">判定</span><span class="v">抓取物类别标签 == 指令名词 且离地。<b>不是</b>"抓到就算"。</span></div>
+          <div class="r"><span class="k">反例</span><span class="v">oracle 故意抓干扰物（错名词）→ 必败。</span></div>
+          <div class="r risk"><span class="k">风险</span><span class="v">机制可靠，但依赖多物体抓取池 infra，<b>当前在 <code>pick_diverse_object</code> 分支、不在本分支</b>（需搬）。</span></div>
+        </div>
+      </article>
+
+      <article class="task r-high">
+        <div class="task-head">
+          <span class="tid">if_ext_attribute_ladder</span>
+          <span class="chip risk high">实现风险 高</span>
+          <span class="chip scope later">延后</span>
+          <h3>3 · IF-Attribute-Ladder — 形容词优先级阶梯</h3>
+        </div>
+        <div class="rows">
+          <div class="r"><span class="k">目的</span><span class="v">验证 policy 是否按信息量优先级<b>只在必要时才升级</b>修饰词——不是有形容词就用。分档干扰物看它实际用到哪一层。</span></div>
+          <div class="r"><span class="k">三档</span><span class="v"><b>T1</b> 异色（只需颜色）· <b>T2</b> 同色异纹理（需+纹理）· <b>T3</b> 同色同纹理异形（需+形状）。大小档已砍。</span></div>
+          <div class="r"><span class="k">判定</span><span class="v">抓取物在<b>全部指定属性上都匹配</b> + <b>分档统计</b>：T1 高分而 T2/T3 骤降 = 没真正用到细属性（退化的量化证据）。</span></div>
+          <div class="r"><span class="k">反例</span><span class="v">抓"只满足低档、不满足本档新增属性"的干扰物 → 必败。</span></div>
+          <div class="r risk"><span class="k">风险</span><span class="v"><b>全 7 任务最高</b>。纹理档双重不确定性——<b>构造</b>（~120 池能否凑出"同色异纹理"）+ <b>视觉</b>（相机能否分辨同色不同纹理）。凑不够则合成/新增物体描述。</span></div>
+        </div>
+      </article>
+
+      <article class="task r-low">
+        <div class="task-head">
+          <span class="tid">if_ext_arm_select</span>
+          <span class="chip risk low">实现风险 低</span>
+          <span class="chip scope now">本周</span>
+          <h3>4 · IF-Arm-Select — 左右臂指定</h3>
+        </div>
+        <div class="rows">
+          <div class="r"><span class="k">目的</span><span class="v">指令指定"用左/右臂"，物体在<b>双臂重叠区</b>、无 grounding 歧义。测是否服从指定臂而非用惯用手。</span></div>
+          <div class="r"><span class="k">场景</span><span class="v">三不变量：① 物体放 <code>x≈0</code> 重叠区（几何不泄露答案）；② <b>只有被指定臂动作</b>（故无 mic-drawer 互撞）；③ 判定 state-based。复用 <code>handover_block</code> 的 box（native 已证两臂皆可抓）。</span></div>
+          <div class="r"><span class="k">判定</span><span class="v"><b>state-based</b>：盒子离地 且被<b>指定臂</b>夹爪握着、另一只没握。不能自报 ArmTag——policy eval 只能看末态。</span></div>
+          <div class="r"><span class="k">反例</span><span class="v">oracle 用错误的臂完成抓取（即使举起）→ 必败。</span></div>
+          <div class="r risk"><span class="k">风险</span><span class="v">验"盒子固定 x≈0 后左、右两臂各自都 ~90%"（对称盒子应直接成立）。</span></div>
+        </div>
+      </article>
+
+      <article class="task r-med">
+        <div class="task-head">
+          <span class="tid">if_ext_sequence_container</span>
+          <span class="chip risk med">实现风险 中</span>
+          <span class="chip scope later">延后</span>
+          <h3>5 · IF-Sequence-Container — 多物体按序放入容器</h3>
+        </div>
+        <div class="rows">
+          <div class="r"><span class="k">目的</span><span class="v">3 个可命名物体<b>单臂依次放入同一容器，顺序不能错</b>。诊断"三个都放进去但<b>无视顺序</b>"的假阳性。</span></div>
+          <div class="r"><span class="k">场景</span><span class="v">单臂 + <b>开口容器</b>（<code>062_plasticbox</code>/<code>110_basket</code>，绕开净空墙）+ 3 个 color+noun 物体。单臂顺序放（双臂会破坏顺序定义）。</span></div>
+          <div class="r"><span class="k">判定</span><span class="v"><b>轨迹-based</b>：逐 step 记录各物体<b>首次进入容器</b>的时刻，排序比对指令顺序，任一相邻颠倒即败。<b>绝不能只判"都在"</b>（native <code>place_cans_plasticbox</code> 的假阳性正是要避开的）。</span></div>
+          <div class="r"><span class="k">反例</span><span class="v">oracle 倒序放（即使都在）→ 必败。</span></div>
+          <div class="r risk"><span class="k">风险</span><span class="v">① oracle 单臂 3 次复合（≈0.9³，靠开口容器+松判定顶高）；② eval 能否 rollout 中<b>逐 step 采样</b>——待查。</span></div>
+        </div>
+      </article>
+
+      <article class="task r-low">
+        <div class="task-head">
+          <span class="tid">if_ext_spatial_direction</span>
+          <span class="chip risk low">实现风险 低</span>
+          <span class="chip scope later">延后</span>
+          <h3>6 · IF-Spatial-Direction — 放置方位</h3>
+        </div>
+        <div class="rows">
+          <div class="r"><span class="k">目的</span><span class="v">在 Place-Relative（左/右/上）基础上<b>补齐"前/后"</b>，凑齐 5 方位。方位词是唯一区分量。</span></div>
+          <div class="r"><span class="k">轴映射</span><span class="v">左/右 = 带符号 <b>x 轴</b>（native <code>place_a2b_left</code> 落地）；前/后 = 带符号 <b>y 轴</b>（新增）；上 = align。前/后参考系<b>以机器人朝向为准</b>（近=前），避免用物体自身朝向。</span></div>
+          <div class="r"><span class="k">判定</span><span class="v">指令轴<b>带符号偏移</b>过阈值 + <b>正交轴锁住</b> + 距离带内。左右和前后<b>用不同轴</b> → 每个方向对<b>分别测反例</b>（易一对一错）。</span></div>
+          <div class="r"><span class="k">反例</span><span class="v">oracle 放到相反方位（应前却后）→ 必败。</span></div>
+          <div class="r risk"><span class="k">风险</span><span class="v">world-y <b>哪个符号朝机器人</b>需跑通确定；前后是深度差(~0.13m)、视觉比左右弱；infra 同 §2 在另一分支需搬。</span></div>
+        </div>
+      </article>
+
+      <article class="task r-med">
+        <div class="task-head">
+          <span class="tid">if_ext_grasp_approach</span>
+          <span class="chip risk med">实现风险 中</span>
+          <span class="chip scope now">本周</span>
+          <h3>7 · IF-Grasp-Approach — 抓取接近方向</h3>
+        </div>
+        <div class="rows">
+          <div class="r"><span class="k">目的</span><span class="v">指令指定<b>抓取构型</b>（从顶部 vs 从侧面），同物体两种抓法都可行——动词都是"抓"，唯一区分量是抓法词。测是否服从而非用最省力抓法。</span></div>
+          <div class="r"><span class="k">场景</span><span class="v"><code>create_box</code> 立方体（复用 §4 的 box，高度可控让侧抓清桌面），中央固定。顶抓 = 竖直 -z 接近；侧抓 = 水平接近。</span></div>
+          <div class="r"><span class="k">判定</span><span class="v"><b>orientation-based</b>：物体离地 且 夹爪 <b>approach 轴朝向</b>匹配（竖直 vs 水平）。两种都能举起，只有朝向能区分。</span></div>
+          <div class="r"><span class="k">反例</span><span class="v">oracle 用错抓法（该顶却侧）→ 必败。</span></div>
+          <div class="r risk"><span class="k">风险</span><span class="v">侧抓清桌面 + 朝向判定，spike 验证顶、侧两抓法都 ~90%。</span></div>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <section id="scope">
+    <div class="sec-head"><span class="idx">五</span><h2>范围与排期（一周 08-28 ～ 09-04）</h2></div>
+    <p><b>现实目标：一周做扎实 3 个</b>，其余 4 个延后。7 个全做+全验证一周内不现实（每个带 spike/构造风险，4 个还要先搬 infra）。策略：<span class="accent-tx">先打 3 个 spike 退风险，再量产 + Layer A/B 验证。</span></p>
+    <div class="split">
+      <div class="panel now">
+        <h4>本周 3 个</h4>
+        <ul>
+          <li><b>Arm-Select</b> — 中央盒子，验两臂各自 ~90%</li>
+          <li><b>Grasp-Approach</b> — 复用同一 box，验侧抓清桌面</li>
+          <li><b>Verb-Select</b> — laptop 合盖 oracle 自写，双向 spike</li>
+        </ul>
+        <p style="font-size:.85rem; color:var(--muted); margin:.7rem 0 0">共用 <code>create_box</code> 脚手架，不依赖跨分支 infra。</p>
+      </div>
+      <div class="panel later">
+        <h4>延后 4 个</h4>
+        <ul>
+          <li><b>Noun / Spatial</b> — 机制不难，先搬 pool / place-relative infra</li>
+          <li><b>Sequence</b> — 3 次复合 + eval 逐 step 采样可能是坑</li>
+          <li><b>Attribute</b> — 纹理档构造+视觉，最高风险</li>
+        </ul>
+        <p style="font-size:.85rem; color:var(--muted); margin:.7rem 0 0">杠杆：3 个 spike 都快过 → 可冲第 4 个 Noun。</p>
+      </div>
+    </div>
+    <div class="tiers">
+      <span class="t-low">低风险　Noun · Arm · Spatial</span>
+      <span class="t-med">中风险　Verb · Sequence · Grasp</span>
+      <span class="t-high">高风险　Attribute</span>
+    </div>
+  </section>
+
+  <section id="decide">
+    <div class="sec-head"><span class="idx">六</span><h2>待确认（review 重点）</h2></div>
+    <ol class="decide">
+      <li><b>范围：</b>本周锁 3 个够不够，还是愿意为第 4 个（Noun）赌一把 infra 搬迁（有挤占验证时间的风险）？</li>
+      <li><b>infra 策略：</b>依赖池 / place-relative 的 4 个任务——<b>搬过来合并</b> 还是 <b>本分支起精简版</b>？</li>
+      <li><b>第一动作：</b>Verb-Select 的合盖 oracle spike（最大未知、有 cabinet 后备），先跑它退风险，可以吗？</li>
+      <li><b>Attribute 纹理档：</b>值不值得为"纹理"花那份构造 + 视觉核对成本，还是进一步降级 / 延后？</li>
+    </ol>
+  </section>
+
+  <footer>
+    <span>源设计文档 · <code>docs/features/09-IF-Ext-六轴扩展任务设计.md</code></span>
+    <span>IF-Ext · 62 tasks total（50 native + 5 paper + 7 ext）</span>
+  </footer>
+</div>
