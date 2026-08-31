@@ -1,0 +1,205 @@
+<!-- IF-Verb-Select report — self-contained, open directly in a browser. Videos are relative refs into evidence/. -->
+<meta charset="utf-8">
+<title>IF-Verb-Select — laptop 开/关动词任务 · report</title>
+<style>
+  :root{
+    --bg:#f6f7f9; --card:#ffffff; --ink:#1f2430; --muted:#5b6472; --line:#e4e7ec;
+    --accent:#4f46e5; --open:#c2711c; --openbg:#fdf3e7; --close:#0d7d84; --closebg:#e7f6f6;
+    --ok:#177245; --okbg:#e8f5ee; --warn:#b42318; --warnbg:#fdecea; --code:#f2f3f6;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font:15px/1.62 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"PingFang SC","Microsoft YaHei",sans-serif;}
+  .wrap{max-width:960px;margin:0 auto;padding:32px 22px 80px}
+  h1{font-size:30px;line-height:1.2;margin:0 0 6px}
+  h2{font-size:21px;margin:44px 0 14px;padding-bottom:8px;border-bottom:2px solid var(--line)}
+  h3{font-size:16px;margin:22px 0 8px}
+  p{margin:10px 0}
+  a{color:var(--accent)}
+  code,kbd{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.9em;background:var(--code);padding:1px 6px;border-radius:5px}
+  pre{background:#0f1524;color:#e6e9f2;padding:14px 16px;border-radius:10px;overflow-x:auto;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;line-height:1.55}
+  pre .c{color:#8b93a7}
+  .hero{background:linear-gradient(135deg,#4f46e5 0%,#0d7d84 100%);color:#fff;border-radius:16px;padding:26px 28px}
+  .hero h1{color:#fff}
+  .hero .sub{font-size:16px;opacity:.95;margin:6px 0 16px;max-width:70ch}
+  .badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+  .badge{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.32);color:#fff;
+    padding:4px 11px;border-radius:999px;font-size:12.5px;font-weight:600}
+  .meta{display:flex;flex-wrap:wrap;gap:6px 22px;margin-top:16px;font-size:12.5px;opacity:.92}
+  .meta b{font-weight:600;opacity:.8}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin:14px 0}
+  .tldr{display:grid;grid-template-columns:120px 1fr;gap:6px 14px;align-items:baseline}
+  .tldr dt{font-weight:700;color:var(--accent)}
+  .tldr dd{margin:0}
+  .open{color:var(--open)} .close{color:var(--close)}
+  .pill{display:inline-block;padding:1px 8px;border-radius:6px;font-size:12px;font-weight:700}
+  .pill.open{background:var(--openbg);color:var(--open)} .pill.close{background:var(--closebg);color:var(--close)}
+  table{border-collapse:collapse;width:100%;margin:12px 0;font-size:14px}
+  th,td{border:1px solid var(--line);padding:8px 11px;text-align:left;vertical-align:top}
+  th{background:#eef0f4;font-weight:600}
+  .vgrid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:14px 0}
+  .vgrid figure{margin:0;background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+  video{width:100%;display:block;background:#000}
+  figcaption{padding:10px 13px;font-size:13px;color:var(--muted)}
+  figcaption b{color:var(--ink)}
+  .tag{font-size:11px;font-weight:700;padding:2px 8px;border-radius:6px}
+  .tag.bad{background:var(--warnbg);color:var(--warn)} .tag.good{background:var(--okbg);color:var(--ok)}
+  .flow{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin:14px 0;font-size:13px}
+  .node{background:#fff;border:1.5px solid var(--line);border-radius:9px;padding:9px 12px;line-height:1.4}
+  .node b{display:block;font-size:13.5px}
+  .node small{color:var(--muted)}
+  .arrow{color:var(--muted);font-weight:700}
+  .split{display:flex;gap:8px;flex-wrap:wrap}
+  .callout{border-left:4px solid var(--accent);background:#f0f1fb;border-radius:0 10px 10px 0;padding:12px 16px;margin:14px 0}
+  .callout.warn{border-color:var(--warn);background:var(--warnbg)}
+  .ok{color:var(--ok);font-weight:700}.no{color:var(--warn);font-weight:700}
+  ul{margin:10px 0;padding-left:22px}li{margin:4px 0}
+  .foot{margin-top:40px;color:var(--muted);font-size:12.5px;border-top:1px solid var(--line);padding-top:14px}
+  @media(max-width:680px){.vgrid,.tldr{grid-template-columns:1fr}}
+</style>
+
+<div class="wrap">
+
+  <div class="hero">
+    <h1>IF-Verb-Select — laptop 开/关动词任务</h1>
+    <div class="sub">同一台笔记本、同一个 50% 半开场景，指令里的<b>动词</b>（open vs close）决定机械臂做什么。用来诊断 VLA policy 到底<b>读不读动词</b>，还是被"物体→惯用动作"先验盖掉。</div>
+    <div class="badges">
+      <span class="badge">✓ oracle 双向 90/100%</span>
+      <span class="badge">✓ 同帧只变动词（结构保证）</span>
+      <span class="badge">✓ 原生采集只出成对</span>
+      <span class="badge">✓ 视频质检去翻转</span>
+      <span class="badge">◐ 未训练/评测 policy</span>
+    </div>
+    <div class="meta">
+      <span><b>branch</b> docs/if-ext-six-axis-benchmark</span>
+      <span><b>date</b> 2026-08-31</span>
+      <span><b>核心文件</b> tasks/envs/laptop_verb.py</span>
+      <span><b>commits</b> 0b30f32 · 56f1149 · 145e9e0</span>
+    </div>
+  </div>
+
+  <h2>TL;DR</h2>
+  <div class="card">
+    <dl class="tldr">
+      <dt>做了什么</dt><dd>一个 RoboTwin 任务 env <code>laptop_verb</code>：50% 半开的笔记本，指令动词选<span class="pill open">开→掀起</span>或<span class="pill close">关→折下</span>，成功判据随动词切换。</dd>
+      <dt>怎么验的</dt><dd>逐变体扫描选出可靠子集 {1,9}；Layer-B 判定 12/12；原生 <code>collect_data</code> 采 20 条 = 10 完整开/关对、10:10 均衡；<code>check-video</code> 抽帧确认动作方向与动词一致、合盖不再翻转。</dd>
+      <dt>结论</dt><dd>oracle 开 90% / 关 100%，同场景两动词像素级同帧（种子解耦），采集端只落盘完整对。可用于生成诊断数据。</dd>
+      <dt>最大的坑</dt><dd>合盖动作数值全绿、视频里却多转了 ~110°——<b>只有看视频才发现</b>；已修到 ~8°。见下方证据与「教训」。</dd>
+    </dl>
+  </div>
+
+  <h2>背景与目标</h2>
+  <p>论文 RoboTwin-IF 的既有任务把"动词"和"目标物体"绑在一起测。IF-Verb-Select 做<b>单轴拆分</b>：只隔离<b>动词</b>这一个变量——同一物体、同一套几何、同一个初始画面，唯一变的是指令里的动词。真正要诊断的失败模式是<b>动词被"物体→惯用动作"先验盖掉</b>（policy 学到 laptop→开，就无视指令里的"关"）。</p>
+  <p>选 <code>015_laptop</code>：盖子平放 vs 立起，视觉差最大。关键设计约束：<b>开、关必须从同一个场景出发</b>，否则初始几何本身就泄露了答案（盖子立着显然该合），诊断被架空。</p>
+
+  <div class="callout">
+    <b>为什么"关"这个动词特别有诊断力（native 对照）：</b>全部 58 个 native 任务里 <b>open×2、close×0</b>——<code>open_laptop</code> 用的正是同一个 <code>015_laptop</code>（"开"这一半是复用），但<b>没有任何 native 任务关过 laptop，也没有任何 native 任务把任何铰链物体往闭合端驱动过</b>（<code>open_laptop</code>/<code>open_microwave</code>/<code>put_object_cabinet</code> 全是开/拉出方向）。所以对预训练 policy 而言，"laptop→惯用动作"先验在<b>数据层面</b>就是"开"，close 在<b>动作层面 OOD</b>——指令让它"关"是在对抗一个有数据支撑的先验，这恰恰强化了本任务的诊断有效性。</div>
+
+  <h2>实现</h2>
+  <p>把开/关合并进<b>一个 env</b>，靠两个机制让"同帧只变动词"成为结构保证、而非约定：</p>
+
+  <div class="flow">
+    <div class="node"><b>seed</b><small>采集迭代</small></div>
+    <span class="arrow">→</span>
+    <div class="split">
+      <div class="node"><b>scene = seed // 2</b><small>相邻对 (2k,2k+1) 同一场景</small></div>
+      <div class="node"><b>verb = ["open","close"][seed % 2]</b><small>偶=开 · 奇=关</small></div>
+    </div>
+    <span class="arrow">⇒</span>
+    <div class="node" style="border-color:var(--accent)"><b>(2k,2k+1) = 同场景 · 相反动词</b><small>像素级同帧，唯一区别是动词词</small></div>
+  </div>
+
+  <table>
+    <tr><th>机制</th><th>做法</th><th>为什么</th></tr>
+    <tr><td>场景/动词解耦</td><td><code>scene=seed//2</code>、<code>verb=seed%2</code>；<code>load_actors</code> 顶部 <code>np.random.seed(scene)</code></td><td>同帧性变结构保证；避免"mode=seed%2 单用会把每个场景绑死一个动词"</td></tr>
+    <tr><td>指令路由</td><td><code>{V}</code> 动词占位符，开/关共用一套模板池</td><td>开/关占位符集合相同 → RoboTwin 原生 <code>filter_instructions</code> 直接可用，不 hack 框架</td></tr>
+    <tr><td>可靠子集</td><td><code>ALLOWED_MODEL_IDS=[1,9]</code>（11 选 2）</td><td>唯一"非翻转 + 抓取不退化 + 双向都稳"的变体；绕开逐变体标注不一致</td></tr>
+    <tr><td>阈值</td><td>开 <code>qpos≥70%</code>、关 <code>qpos≤20%</code></td><td>开可靠上限 ~78%（够不到 90%）；关去翻转后停 ~12–15%，20% 留余量</td></tr>
+    <tr><td class="close">去翻转合盖</td><td>servo 目标 = 基座 point-3 <b>位置</b> + 屏幕 point-0 <b>朝向</b></td><td>直接 servo 到 point-3 会把腕拽转 ~110°；镜像开向"目标点随屏幕转"→ 转角降到 ~8°</td></tr>
+    <tr><td>成对门控</td><td><code>check_success</code> = 本方向成功 <b>且</b> 同场景另一动词也可完成（伙伴试跑、按 scene 缓存）</td><td>让原生 <code>collect_data</code> 只落盘<b>完整开/关对</b>，不留孤儿</td></tr>
+  </table>
+
+  <h2>证据</h2>
+  <p>数值 gate 之外，视频是这份 report 的核心——尤其下面这对<b>同场景 seed=1、close 方向</b>的前后对比，证明了"数值全绿≠动作正确"。</p>
+
+  <h3>合盖去腕部翻转（同一 seed=1、close，仅运动代码不同）</h3>
+  <div class="vgrid">
+    <figure>
+      <video src="evidence/before-fix-close-seed1.mp4" controls muted playsinline preload="metadata"></video>
+      <figcaption><span class="tag bad">修复前 ~110°</span> <b>证明</b>：合盖时夹爪多做一个大幅腕部翻转——很显眼、很不自然，但 <code>check_success</code>/成功率/数据落盘全绿，只有看这段视频才发现。</figcaption>
+    </figure>
+    <figure>
+      <video src="evidence/after-fix-close-seed1.mp4" controls muted playsinline preload="metadata"></video>
+      <figcaption><span class="tag good">修复后 ~8°</span> <b>证明</b>：同一场景、同一动词，改成"point-3 位置 + point-0 朝向"后，夹爪只随盖子自然俯仰下折，多余翻转消失。</figcaption>
+    </figure>
+  </div>
+
+  <h3>最终采集样本（20 条中各取一条，方向与动词一致）</h3>
+  <div class="vgrid">
+    <figure>
+      <video src="evidence/final-open-ep0.mp4" controls muted playsinline preload="metadata"></video>
+      <figcaption><span class="tag good">episode0 · <span class="open">OPEN</span></span> <b>证明</b>：指令动词为 open 时，50% 半开 → 抓屏幕 → <b>掀起</b>到近直立。</figcaption>
+    </figure>
+    <figure>
+      <video src="evidence/final-close-ep1.mp4" controls muted playsinline preload="metadata"></video>
+      <figcaption><span class="tag good">episode1 · <span class="close">CLOSE</span></span> <b>证明</b>：同一场景（seed 配对）动词为 close 时，50% → <b>折下</b>到近合平，无翻转。</figcaption>
+    </figure>
+  </div>
+  <p style="font-size:13px;color:var(--muted)"><code>check-video</code> 抽帧判读三条（ep0 开 / ep1、ep19 关）均判 <b>MATCHES</b>；两条 close 都确认修复后不再翻转。</p>
+
+  <h2>关键决策 / 教训</h2>
+  <div class="card">
+    <h3>① 合并单 env vs 两并列 task</h3>
+    <p>先做了两并列 task（单池里靠占位符分不开开/关），后改合并：合并把"同帧性"从"两份代码别改歪 + 评测喂同种子"这种<b>约定</b>升级成<b>结构保证</b>，而 <code>{V}</code> 占位符让单 env 也能走标准路由，避开了自定义路由。</p>
+    <h3>② 数值全绿 ≠ 动作正确（本 feature 最大教训）</h3>
+    <p>合盖 ~110° 翻转通过了所有数值检查（成功判据只看末态关节角，对<b>轨迹质量</b>是盲的），只有渲染出视频人眼/VLM 才发现。方法论：<b>大批量采集前必须看视频（人工或 VLM）</b>——对模仿学习尤其致命，policy 学的是被演示的动作本身。详见 <a href="why-video-check.md">why-video-check.md</a>。</p>
+    <h3>③ 成对门控 —— 用户知情接受的债</h3>
+    <p>采集独立计数会留下"关成/开败"的孤儿。选了把门控<b>嵌进 <code>check_success</code></b>（伙伴方向试跑）——好处是原生 <code>collect_data</code> 开箱即用；代价是把一个谓词重载成"可能新建 env、跑一整套 setup+play（~2×）、并存第二个 sapien.Engine"。外部采集器其实更干净，此选择赢在 UX 而非设计。详见 <a href="decisions.md">decisions.md</a> D6。</p>
+  </div>
+
+  <h2>现状与边界</h2>
+  <table>
+    <tr><th>项</th><th>状态</th><th>依据</th></tr>
+    <tr><td>oracle 双向成功率</td><td><span class="ok">已验</span></td><td>开 90% / 关 100%（子集 {1,9}，N=20）</td></tr>
+    <tr><td>同场景两动词同帧</td><td><span class="ok">已验</span></td><td>种子配对逐字节一致（含 model_id/位姿）</td></tr>
+    <tr><td>判定方向 + 反例（Layer-B）</td><td><span class="ok">已验</span></td><td>12/12（应关却开→False、应开却关→False）</td></tr>
+    <tr><td>原生采集只出成对</td><td><span class="ok">已验</span></td><td>门控丢弃 open 撞墙的整对；20 条 = 10 完整对、10:10</td></tr>
+    <tr><td>轨迹质量（无翻转）</td><td><span class="ok">已验</span></td><td>check-video 抽帧，ep1/ep19 确认</td></tr>
+    <tr><td>policy 端到端诊断价值</td><td><span class="no">未验</span></td><td>还没训练/评测任何 policy</td></tr>
+    <tr><td>双 sapien.Engine 在规模/换机下的稳定性</td><td><span class="no">未验</span></td><td>仅本机 6+20 条各验一次不崩</td></tr>
+  </table>
+
+  <div class="callout warn">
+    <b>这份 report 不证明什么：</b>
+    <ul>
+      <li>不证明任何 policy 会读动词——<b>还没有 policy 在这批数据上训练或评测过</b>；诊断价值是设计上的，尚未端到端跑通（需按 CogACT 走 VLA eval）。</li>
+      <li>不证明视觉多样性够——子集只有 <b>2 个变体</b>，多样性靠随机位姿/偏航，未用真实 policy 压过。</li>
+      <li>"采集跑通"≠"数据质量已全面覆盖"——只 <code>check-video</code> 抽查了 3 条，不是全部 20 条逐条人工过。</li>
+      <li>已知实现隐患见 <a href="gotchas.md">gotchas.md</a>：<code>use_seed=true</code> 全新进程会崩、门控依赖仿真确定性、缓存无失效等。</li>
+    </ul>
+  </div>
+
+  <h2>怎么复现</h2>
+  <pre><span class="c"># 采集（门控 env，原生 collect_data 直接出成对；episode_num 用偶数）</span>
+conda run -n RoboTwin python script/collect_data.py laptop_verb laptop_verb
+<span class="c"># 输出： third_party/robotwin/data/laptop_verb/laptop_verb/{data,video,seed.txt}</span>
+
+<span class="c"># 采集前诊断（成功率 / 均衡 / seed→场景配对；不写数据）</span>
+python tools/task_diag.py laptop_verb 20      <span class="c"># 或： /task-diag laptop_verb 20</span>
+
+<span class="c"># 逐变体×双向可靠性扫描（重选子集时用）</span>
+python tests/laptop_verb/sweep_per_variant.py 6
+
+<span class="c"># Layer-B 判定 + 配对测试</span>
+python tests/laptop_verb/test_check_success.py
+
+<span class="c"># 视频质检（抽帧 + 判读方向/翻转）</span>
+bash tools/extract_frames.sh &lt;video&gt;.mp4 8</pre>
+
+  <p>深读：<a href="understanding.md">understanding.md</a>（问题与理解变更）· <a href="decisions.md">decisions.md</a>（工程选择与批判）· <a href="gotchas.md">gotchas.md</a>（实现隐患）· <a href="why-video-check.md">why-video-check.md</a>（视频质检方法论）。</p>
+
+  <div class="foot">
+    IF-Verb-Select · laptop_verb · 2026-08-31 · 自包含 report，与 <code>evidence/</code> 同目录，整个目录 copy 走即可离线打开（视频随目录走）。
+  </div>
+
+</div>
