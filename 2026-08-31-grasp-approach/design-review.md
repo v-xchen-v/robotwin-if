@@ -14,17 +14,19 @@
 | 2 | 干扰物/中性 | **OK** | 单 cube 无 grounding 歧义；cube 几何**最大中性**——不像杯子（把手→侧）/盘子（→顶）有天然抓取 affordance，顶/侧都不被视觉偏向 |
 | 3 | oracle 可行性 | **OK** | 两值都 100%（顶 100 / 侧 100，锁 face 6）。过 [[mic-drawer-oracle-infeasible]] 那条线——没有够不到的值 |
 | 4 | 视觉可分 | **OK** | 末态夹爪**竖直 vs 水平**，相机上一眼可分（check-video 抽帧已证：n50 水平侧入 → n88 抬离） |
-| 5 | **ACTION-OOD** | **RISK**（比 laptop 轻） | 侧抓非新技巧（native handover_block/stamp_seal 已做侧抓 + 顶抓遍地），oracle 证明可执行；但小 cube 侧抓在 native 更少见 + 顶抓先验强 → zeroshot/native-ft 下侧抓 0 有轻度歧义；ifext-ft 下溶解 |
+| 5 | **ACTION-OOD** | **RISK**（比 laptop 轻） | 侧抓非新技巧（native handover_block/stamp_seal 已做侧抓 + 顶抓遍地），oracle 证明可执行；但小 cube 侧抓在 native 更少见 + 顶抓先验强 → zeroshot/native-ft 下侧抓 0 有轻度歧义。**注：IF-Ext 只做测试、无 ifext-ft（见下），没有"训练进分布"的退路** |
 | 6 | 判据分辨率 | **RISK（最高杠杆）** | `check_success = lifted AND oriented` 二元 AND **恰好糊掉 dim-5 关心的失败模式**："朝向对了但没抬起"和"用错抓法"都记 0，无法区分 |
 | 7 | 先验强度 | **RISK/优点两面** | 顶抓先验**数据接地**（native 小物体几乎只顶抓）→ 真实且强，是优点；但也让"顶"条件近乎无信息（policy 本来就顶抓），判别力几乎全在"侧"条件 + gap 上，别看原始平均 |
-| 8 | 评测协议依赖 | **RISK（必须明写）** | 非对称：ifext-ft 干净（两值都在分布内）；zeroshot/native-ft 下侧抓轻度 OOD + 二值判据 → 侧抓 0 歧义 |
+| 8 | 评测协议依赖 | **RISK（必须明写）** | IF-Ext 是**纯测试集、不产/不用 finetune data → 只有 zeroshot / native-ft，ifext-ft 永不在场**。而这恰是侧抓轻度 OOD + 二值判据 → 侧抓 0 歧义的两个协议。没有"ifext-ft 下干净"这条逃生通道 |
 
 ## 综合结论
 
 **四项硬指标（隔离/中性/oracle/可分）都强，比多数 IF-Ext 任务干净。短板集中在度量，且好修。**
 
-- **as-is（二元 AND 判据）**：只在 `ifext-ft` 协议下是干净单轴诊断。
-- **`zeroshot` / `native-ft`**：侧抓轻度 OOD + 二值判据 → 侧抓 0 无法归因（"没读指令" vs "读了但没夹住"）。**注意**：比 laptop_verb 的同名问题**轻一档**，因为侧抓在 repertoire 内（"做不出"这一支概率低），不是真 OOD。
+> **前提（收窄）**：IF-Ext 是纯测试集、不提供 finetune data → **只有 zeroshot / native-ft 两种协议，ifext-ft 永不适用**（[[ifext-eval-test-only]]）。所以"在 ifext-ft 下就干净了"这条退路**不存在**——而 zeroshot/native-ft 恰恰是侧抓轻度 OOD + 二值判据会塌的两个协议。
+
+- **as-is（二元 AND 判据）在唯一在场的两个协议下都不够干净**：侧抓 0 无法归因（"没读指令" vs "读了但没夹住"）。比 laptop_verb 的同名问题**轻一档**（侧抓在 repertoire 内，"做不出"概率低），但方向仍错。
+- **结论：拆分度量不是可选优化，是让任务成立的必需项**（因为没有 ifext-ft 兜底）。
 
 ## 单点最高杠杆改动（成本低、不动 oracle/几何）
 
@@ -33,7 +35,7 @@
 > - **lift**（是否抬离）= 执行信号。
 > 再永远报 **顶/侧 gap**。
 
-已有 `_approach_axis_z`，改动极小。这一改让"摆对朝向但没抬起"不再和"用错抓法"混成 0 → **三种协议下都干净可读**，解掉维度 5/6 的混淆。诊断真正信号是 **顶↔侧 gap**，不是侧抓绝对成功率。
+已有 `_approach_axis_z`，改动极小。这一改让"摆对朝向但没抬起"不再和"用错抓法"混成 0 → 在唯一在场的 **zeroshot / native-ft** 下都干净可读，解掉维度 5/6 的混淆。诊断真正信号是 **顶↔侧 gap**，不是侧抓绝对成功率。**（已落地：`check_success` 保持严格供采集门控，新增 `eval_signals()` 输出 orientation_match + lifted 供 eval。）**
 
 ## 要不要退成 seen-vs-seen 对照？
 
@@ -45,6 +47,6 @@
 
 ## 待办（从本 review 派生）
 
-- [ ] 给 `grasp_cube` 加拆分度量：`orientation-match`（主 IF 信号，approach 轴匹配）+ `lift`（执行），评测主报 orientation + **顶/侧 gap**，二元 AND 降为"完全成功"严格档。
-- [ ] 任务文档**明写协议依赖**（ifext-ft 干净 / zeroshot·native-ft 需方向性判据），不藏。
+- [x] 给 `grasp_cube` 加拆分度量：`orientation_match`（主 IF 信号）+ `lifted`（执行），`check_success` 保持严格供采集门控，eval 用 `eval_signals()` 主报 orientation + **顶/侧 gap**。（已落地）
+- [ ] 任务文档**明写协议依赖**：IF-Ext 只做测试、无 ifext-ft（[[ifext-eval-test-only]]），只有 zeroshot / native-ft → **方向性判据必需**，二元 AND 仅作"完全成功"严格档。
 - [ ] 量产时决策固定位姿 vs 抖动+动态选面（记进 [[grasp-approach-spike]] 的 face-locking caveat）。
