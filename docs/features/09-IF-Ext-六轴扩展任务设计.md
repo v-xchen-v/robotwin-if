@@ -53,6 +53,7 @@ IF-Ext 补充 7 个**单轴**任务集，每个只隔离测试一个具体能力
 - **主要风险与待验**：native 只有 `open_*` 没有 `close_*`，**合盖 oracle 要自写**（把中间态的盖子沿铰链弧线往下折——复用 open/microwave 的"抓一点 servo 向另一接触点"惯用法反向驱动，弧线由铰链约束自动产生，无需手写；目标点为基座 `link_0` 上的 contact_point 3，接近合上时盖/座可能碰撞）。第一步先跑一个小 oracle spike，从共用中间态（~50%）**双向**跑，确认开、关**都**能到 ~90%——过了才锁 B，不过就退到备选 A。
 - **spike 结论（双向已跑，锁定 B、子集 {1, 9}）**：合盖 oracle `tasks/envs/close_laptop.py`（抓 contact_point 0 → 循环 servo 向 contact_point 3 折下，判据 `qpos <= 15%`）；开向 oracle `tasks/envs/open_laptop_mid.py`（同 init/子集，抓 0 → servo 向 1 掀开，判据 `qpos >= 70%`）。成功率**逐变体确定性**分层，根因是 `015_laptop` 11 个变体接触点**逐变体手工标注、彼此不一致**：① **INV 变体 {0,2,5}** 屏幕/基座接触点互换 → 合向驱动语义反、双峰、贴 15.8% 判定线；② **{3,4,6,8}** 的 point-3 抓取位姿退化 → `choose_grasp_pose` 返回 None 崩。合向可靠子集本为 {1,9,10}（91.5%），但**开向进一步暴露 mid=10 不可靠**：开向 servo 屏幕转陡后点 1 抓取规划撞墙（需 `try/except` guard 就地停，否则崩），mid=1/9 稳定开到 77–81%、mid=10 约 60% 概率卡在 63%。**两方向都要过 → 共用子集收到 {1, 9}**：开向 ≥70% 100%(22/22)、合向 ≤15% ~92%(33/36)。验证脚本：`tests/close_laptop/{spike_success_rate,spike_open_success_rate,sweep_per_variant}.py`。
 - **可信度**：中偏高（开、合两向 spike 均已过、机制与判定验证充分；开向可达上限 ~78% 而非 ~90%，阈值已按实测下修到 70%；残余不确定性只是子集缩到 2 个变体、视觉多样性降低——但 IF-Verb-Select 固定同一物体、只变动词，变体多样性非核心诊断量）。
+- **⚠ 前提风险（选型层面，比实现更重要）**：`close` 是全 native 里唯一没演示过的闭合动作 → 对 zeroshot / 只 native-ft 的模型是 **action-OOD**，二值判据下 close=0 无法归因（"没读动词" vs "执行不出"），**IF 会塌成 OOD 泛化**。有效性随评测协议翻转：`ifext-ft` 下干净、`zeroshot`/`native-ft` 下需改**方向性/分级判据 + 报 open/close gap**。详见设计准则 [被测行为须在能力库内-IF避免塌成OOD](../task-design/被测行为须在能力库内-IF避免塌成OOD.md)。
 
 ### 2. IF-Noun-Grounding（目标名词 grounding，纯净基线）
 
