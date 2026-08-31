@@ -17,7 +17,8 @@ class laptop_verb(Base_Task):
     So eval seeds (0,1),(2,3),... give scene #0,#1,... each once opening and once
     closing, with pixel-identical initial frames — the only difference the policy
     sees is the verb. Reliable variant subset {1,9} and thresholds (open >=70%,
-    close <=15%) come from the oracle spikes (see close_laptop.py / open_laptop_mid.py).
+    close <=20%) come from the oracle feasibility sweep
+    (tests/laptop_verb/sweep_per_variant.py).
     """
 
     INIT_OPEN = 0.5
