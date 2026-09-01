@@ -2,6 +2,15 @@
 
 > 由 `/task-design-review laptop_verb` 产出（三评测协议全评）。这不是代码 review，是"这个任务到底测没测到它声称要测的东西"。实现见 commit `56f1149`。相关：[understanding.md](understanding.md)（与 native 的关系）、[decisions.md](decisions.md)、[gotchas.md](gotchas.md)。
 
+## 核心教训（前提层面，比任何实现细节都重要）
+
+**IF 诊断的被测行为必须在模型"能力库"内；选了 unseen/OOD 的动词，IF 就塌成 OOD 泛化。**
+
+- instruction-following 的前提是"给一组**做得到**的行为、看它按指令挑对哪个"。一旦被测动作 OOD，失败不再是"没跟随指令"而是"根本做不出"，0 分不可归因，单轴坍塌。
+- 本任务在**每一个可检查的轴上都完美**（隔离/oracle/视觉/配对/去翻转/门控），错在**上游前提**——`close` 是全 58 个 native 里唯一没演示过的闭合动作，选它当被测动词就把行为**挤出了模型 repertoire**。**可以在错的靶子上执行得无可挑剔**，这才是最贵的失败模式。
+- **强先验与 OOD 是同一枚硬币**：对不对称物体（laptop 只被开过），为对抗强惯性先验而选的"非默认动词"，恰恰就是那个从没演示、因而 OOD 的值。"最大化先验冲突"和"留在分布内"互相拉扯，单个不对称物体上不可兼得。
+- **下次照做**：任务**选型**阶段就跑 `/task-design-review` 的 action-OOD 维度，别等 oracle 建完；优先 seen-vs-seen；若为强先验保留 OOD 值，则要么在 ifext-ft 协议下评、要么改方向性判据并**诚实标注为复合轴(IF+OOD)**。跨会话记忆：[[if-tasks-need-in-repertoire-behaviors]]。
+
 ## 维度判定
 
 | # | 维度 | 判定 | 理由 |
