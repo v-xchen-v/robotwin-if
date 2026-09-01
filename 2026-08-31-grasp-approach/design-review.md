@@ -1,10 +1,10 @@
 # IF-Grasp-Approach — task design review（基准有效性）
 
-> 由 `/task-design-review grasp_cube` 产出（三评测协议全评）。这不是代码 review，是"这个任务到底测没测到它声称要测的东西"。实现见 `tasks/envs/grasp_cube.py` + `tests/grasp_cube/`（本 session spike：顶 100% / 侧 100%（锁 `SIDE_FACE=6`）/ 反例 0%，固定中央位姿）。相关：[[grasp-approach-spike]]、[[if-tasks-need-in-repertoire-behaviors]]、姊妹任务 [../2026-08-31-laptop-verb/design-review.md](../2026-08-31-laptop-verb/design-review.md)（同款度量修法）。
+> 由 `/task-design-review grasp_cube_approach` 产出（三评测协议全评）。这不是代码 review，是"这个任务到底测没测到它声称要测的东西"。实现见 `tasks/envs/grasp_cube_approach.py` + `tests/grasp_cube_approach/`（本 session spike：顶 100% / 侧 100%（锁 `SIDE_FACE=6`）/ 反例 0%，固定中央位姿）。相关：[[grasp-approach-spike]]、[[if-tasks-need-in-repertoire-behaviors]]、姊妹任务 [../2026-08-31-laptop-verb/design-review.md](../2026-08-31-laptop-verb/design-review.md)（同款度量修法）。
 
 ## 核心结论（一句话）
 
-**grasp_cube 是 laptop_verb 的"干净版"——两者共享同一个度量/协议短板，但 grasp_cube 没有那个致命的 OOD 前提问题。** laptop_verb 错在选了 native 从没演示过的 `close` 动词（被测行为出了 repertoire，见 [[if-tasks-need-in-repertoire-behaviors]]）；而 grasp_cube 的两个被测行为**都在能力库内**——native `handover_block` / `stamp_seal` 都做过侧面抓（接触组 [4,5,6,7]），顶抓更是遍地都是。所以侧抓只是"已见子技能的新方向"，不是新技巧。**唯一要修的是度量，任务本身地基是稳的。**
+**grasp_cube_approach 是 laptop_verb 的"干净版"——两者共享同一个度量/协议短板，但 grasp_cube_approach 没有那个致命的 OOD 前提问题。** laptop_verb 错在选了 native 从没演示过的 `close` 动词（被测行为出了 repertoire，见 [[if-tasks-need-in-repertoire-behaviors]]）；而 grasp_cube_approach 的两个被测行为**都在能力库内**——native `handover_block` / `stamp_seal` 都做过侧面抓（接触组 [4,5,6,7]），顶抓更是遍地都是。所以侧抓只是"已见子技能的新方向"，不是新技巧。**唯一要修的是度量，任务本身地基是稳的。**
 
 ## 维度判定
 
@@ -47,6 +47,6 @@
 
 ## 待办（从本 review 派生）
 
-- [x] 给 `grasp_cube` 加拆分度量：`orientation_match`（主 IF 信号）+ `lifted`（执行），`check_success` 保持严格供采集门控，eval 用 `eval_signals()` 主报 orientation + **顶/侧 gap**。（已落地）
+- [x] 给 `grasp_cube_approach` 加拆分度量：`orientation_match`（主 IF 信号）+ `lifted`（执行），`check_success` 保持严格供采集门控，eval 用 `eval_signals()` 主报 orientation + **顶/侧 gap**。（已落地）
 - [ ] 任务文档**明写协议依赖**：IF-Ext 只做测试、无 ifext-ft（[[ifext-eval-test-only]]），只有 zeroshot / native-ft → **方向性判据必需**，二元 AND 仅作"完全成功"严格档。
 - [ ] 量产时决策固定位姿 vs 抖动+动态选面（记进 [[grasp-approach-spike]] 的 face-locking caveat）。
