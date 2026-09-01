@@ -1,0 +1,238 @@
+<!-- bottle_verb (IF-Verb-Select v2) report — self-contained, open in a browser. Videos are relative refs into evidence/. -->
+<meta charset="utf-8">
+<title>bottle_verb — pick vs shake · report</title>
+<style>
+  :root{
+    --bg:#f6f7f9; --card:#fff; --ink:#1f2430; --muted:#5b6472; --line:#e4e7ec;
+    --accent:#4f46e5; --pick:#0d7d84; --pickbg:#e7f6f6; --shake:#c2711c; --shakebg:#fdf3e7;
+    --ok:#177245; --okbg:#e8f5ee; --warn:#b42318; --warnbg:#fdecea; --code:#f2f3f6;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font:15px/1.62 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"PingFang SC","Microsoft YaHei",sans-serif}
+  .wrap{max-width:960px;margin:0 auto;padding:32px 22px 80px}
+  h1{font-size:30px;line-height:1.2;margin:0 0 6px}
+  h2{font-size:21px;margin:44px 0 14px;padding-bottom:8px;border-bottom:2px solid var(--line)}
+  h3{font-size:16px;margin:22px 0 8px}
+  p{margin:10px 0}
+  a{color:var(--accent)}
+  code,kbd{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.9em;background:var(--code);padding:1px 6px;border-radius:5px}
+  pre{background:#0f1524;color:#e6e9f2;padding:14px 16px;border-radius:10px;overflow-x:auto;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;line-height:1.55}
+  pre .c{color:#8b93a7}
+  .hero{background:linear-gradient(135deg,#0d7d84 0%,#c2711c 100%);color:#fff;border-radius:16px;padding:26px 28px}
+  .hero h1{color:#fff}
+  .hero .sub{font-size:16px;opacity:.96;margin:6px 0 16px;max-width:72ch}
+  .badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+  .badge{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.32);color:#fff;padding:4px 11px;border-radius:999px;font-size:12.5px;font-weight:600}
+  .meta{display:flex;flex-wrap:wrap;gap:6px 22px;margin-top:16px;font-size:12.5px;opacity:.92}
+  .meta b{font-weight:600;opacity:.8}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin:14px 0}
+  .tldr{display:grid;grid-template-columns:120px 1fr;gap:6px 14px;align-items:baseline}
+  .tldr dt{font-weight:700;color:var(--accent)}
+  .tldr dd{margin:0}
+  .pick{color:var(--pick)} .shake{color:var(--shake)}
+  .pill{display:inline-block;padding:1px 8px;border-radius:6px;font-size:12px;font-weight:700}
+  .pill.pick{background:var(--pickbg);color:var(--pick)} .pill.shake{background:var(--shakebg);color:var(--shake)}
+  table{border-collapse:collapse;width:100%;margin:12px 0;font-size:14px}
+  th,td{border:1px solid var(--line);padding:8px 11px;text-align:left;vertical-align:top}
+  th{background:#eef0f4;font-weight:600}
+  .vgrid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:14px 0}
+  .vgrid figure{margin:0;background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+  video{width:100%;display:block;background:#000}
+  figcaption{padding:10px 13px;font-size:13px;color:var(--muted)}
+  figcaption b{color:var(--ink)}
+  .tag{font-size:11px;font-weight:700;padding:2px 8px;border-radius:6px}
+  .tag.pick{background:var(--pickbg);color:var(--pick)} .tag.shake{background:var(--shakebg);color:var(--shake)}
+  .flow{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin:14px 0;font-size:13px}
+  .node{background:#fff;border:1.5px solid var(--line);border-radius:9px;padding:9px 12px;line-height:1.4}
+  .node b{display:block;font-size:13.5px}.node small{color:var(--muted)}
+  .arrow{color:var(--muted);font-weight:700}
+  .split{display:flex;gap:8px;flex-wrap:wrap}
+  .callout{border-left:4px solid var(--accent);background:#f0f1fb;border-radius:0 10px 10px 0;padding:12px 16px;margin:14px 0}
+  .callout.warn{border-color:var(--warn);background:var(--warnbg)}
+  .ok{color:var(--ok);font-weight:700}.no{color:var(--warn);font-weight:700}
+  ul{margin:10px 0;padding-left:22px}li{margin:4px 0}
+  .foot{margin-top:40px;color:var(--muted);font-size:12.5px;border-top:1px solid var(--line);padding-top:14px}
+  @media(max-width:680px){.vgrid,.tldr{grid-template-columns:1fr}}
+</style>
+
+<div class="wrap">
+
+  <div class="hero">
+    <h1>bottle_verb — pick vs shake</h1>
+    <div class="sub">IF-Verb-Select v2：同一个瓶子、同一个桌面场景，指令里的<b>动词</b>（<span style="color:#bff">pick</span> vs <span style="color:#ffd9a8">shake</span>）决定机械臂做什么。用 <b>seen-vs-seen</b> 修掉了 laptop 版 close 的 OOD 混淆——两个动作都是 native 演示过的、在模型能力库内。</div>
+    <div class="badges">
+      <span class="badge">✓ 两向都 native in-domain</span>
+      <span class="badge">✓ oracle pick 100% / shake 100%</span>
+      <span class="badge">✓ 轨迹判据(末态撞车)</span>
+      <span class="badge">✓ 统一成对门控(无孤儿)</span>
+      <span class="badge">◐ 未训练/评测 policy</span>
+    </div>
+    <div class="meta">
+      <span><b>branch</b> docs/if-ext-six-axis-benchmark</span>
+      <span><b>date</b> 2026-09-01</span>
+      <span><b>核心文件</b> tasks/envs/bottle_verb.py</span>
+      <span><b>asset</b> 001_bottle</span>
+    </div>
+  </div>
+
+  <h2>TL;DR</h2>
+  <div class="card">
+    <dl class="tldr">
+      <dt>做了什么</dt><dd>一个 RoboTwin 任务 <code>bottle_verb</code>：瓶子放桌上，指令动词选 <span class="pill pick">pick=抓起抬高</span> 或 <span class="pill shake">shake=握住来回晃</span>。</dd>
+      <dt>怎么验的</dt><dd>承重假设 spike（pick 抬得比 shake 高）+ Layer-B 10/10（含两向反例）+ task_diag 100%/100% + 采集 20 条 + 抽帧确认 pick/shake 可分。</dd>
+      <dt>结论</dt><dd>比 laptop 更正统的 IF verb 任务：pick、shake 都是 native seen 动作 → 在 zeroshot / native-ft 下都 in-distribution，0 分可归因于"没读动词"。</dd>
+      <dt>最大的坑</dt><dd>pick 和 shake <b>末态相同</b>（都"瓶子举在空中"）→ 成功判据必须看<b>轨迹</b>；且 eval 每子步 latch，pick 判据得用"抬得比 shake 高"的正状态。</dd>
+    </dl>
+  </div>
+
+  <h2>seed ↔ verb ↔ 场景 的关系</h2>
+  <p>整个任务的骨架就是这三行（<code>load_actors</code>），把<b>场景</b>和<b>动词</b>用种子解耦：</p>
+  <pre>scene_seed = seed // 2                          <span class="c"># ← 决定「场景」</span>
+np.random.seed(scene_seed); 抽 bottle 变体 + 位姿   <span class="c"># 同一 scene_seed ⇒ 同一瓶子、同一位姿</span>
+mode = ["pick","shake"][seed % 2]               <span class="c"># ← 决定「动词」(偶=pick 奇=shake)</span></pre>
+
+  <div class="flow">
+    <div class="node"><b>seed</b><small>采集/评测迭代</small></div>
+    <span class="arrow">→</span>
+    <div class="split">
+      <div class="node"><b>场景 = seed // 2</b><small>相邻对 (2k,2k+1) 同一瓶子+位姿</small></div>
+      <div class="node"><b>动词 = seed % 2</b><small>偶=pick · 奇=shake</small></div>
+    </div>
+    <span class="arrow">⇒</span>
+    <div class="node" style="border-color:var(--accent)"><b>(2k,2k+1) = 同场景 · 相反动词</b><small>初始画面像素级相同，唯一区别是动词</small></div>
+  </div>
+
+  <table>
+    <tr><th>seed</th><th>场景 = seed//2</th><th>动词 = seed%2</th></tr>
+    <tr><td>0</td><td>场景 0</td><td class="pick">pick（偶）</td></tr>
+    <tr><td>1</td><td>场景 0</td><td class="shake">shake（奇）</td></tr>
+    <tr><td>2</td><td>场景 1</td><td class="pick">pick</td></tr>
+    <tr><td>3</td><td>场景 1</td><td class="shake">shake</td></tr>
+    <tr><td>…</td><td>…</td><td>…</td></tr>
+    <tr><td><b>2k</b></td><td><b>场景 k</b></td><td class="pick">pick</td></tr>
+    <tr><td><b>2k+1</b></td><td><b>场景 k</b></td><td class="shake">shake</td></tr>
+  </table>
+
+  <p><b>三条关系：</b></p>
+  <ul>
+    <li><b>场景由 <code>seed//2</code> 决定</b>：<code>load_actors</code> 顶部先 <code>np.random.seed(scene_seed)</code> 再抽瓶子 → 同一 scene_seed 必给同一瓶子、同一位姿。</li>
+    <li><b>动词由 <code>seed%2</code> 决定</b>：偶数 = pick，奇数 = shake。</li>
+    <li><b>相邻一对 <code>(2k, 2k+1)</code> = 同一场景、相反动词</b> → 初始帧像素级相同，只有指令动词不同（"同帧只变动词"的结构保证）。</li>
+  </ul>
+  <p>成对门控里的「伙伴」也是这个关系：<code>partner_seed = scene_seed*2 + (1 - seed%2)</code> = 同场景的另一个动词那个 seed。门控问的是"这个场景 pick 和 shake 是不是都做得成"。</p>
+
+  <h2>seed ↔ instruction 的关系 & instruction 设计</h2>
+
+  <h3>seed → 指令动词（确定性）</h3>
+  <p>seed 不止定场景/模式，还定<b>动词词本身</b>：</p>
+  <pre>{V} = pool[(seed // 2) % len(pool)]     <span class="c"># pool = PICK_VERBS 或 SHAKE_VERBS</span>
+PICK_VERBS = ["pick up", "grab", "lift"]   SHAKE_VERBS = ["shake"]</pre>
+  <ul>
+    <li>动词<b>族</b>由 <code>seed%2</code> 定（pick 族 / shake 族）；<b>具体词</b>由 <code>(seed//2)%len(pool)</code> 定——所以指令动词是 <b>scene_seed 的确定性函数</b>，同一 seed 每次 setup 都给同一个词（评测的两遍 setup 复现一致，不靠 RNG 顺序）。</li>
+    <li>pick 族 3 个同义词（pick up / grab / lift）增加词汇多样性；shake 族只用无歧义的 "shake"。</li>
+    <li><b>一对 <code>(2k,2k+1)</code> 的指令只在动词族上不同</b>：同场景、同 <code>{A}</code>/<code>{a}</code>，唯一变量是动词 → 最纯的动词对比。</li>
+  </ul>
+
+  <h3>instruction 设计：<code>{V}</code> 动词占位符走原生路由</h3>
+  <table>
+    <tr><th>要素</th><th>做法</th></tr>
+    <tr><td>占位符</td><td><code>{A}</code>=瓶子(<code>001_bottle/base{id}</code>→"the plastic bottle…")、<code>{a}</code>=臂、<b><code>{V}</code>=动词</b></td></tr>
+    <tr><td>路由</td><td>pick/shake 两向都交 <code>{A}/{a}/{V}</code> → 占位符集合相同 → RoboTwin 原生 <code>filter_instructions</code> 精确匹配直接通，<b>不 hack 框架</b>；<code>{V}</code> 注入动词</td></tr>
+    <tr><td>模板池</td><td>单一 <code>bottle_verb.json</code>（40 seen + 10 unseen），<b>每条都含 <code>{V}</code>+<code>{A}</code></b>(可选 <code>{a}</code>)，pick/shake 共用同一套 → 只有动词变</td></tr>
+    <tr><td>约束</td><td>不在 <code>{A}</code>/<code>{a}</code> 前直接写 "the"（二者已自带冠词）</td></tr>
+  </table>
+  <p>渲染示例（真实生成）：</p>
+  <table>
+    <tr><th class="pick">pick 族</th><th class="shake">shake 族</th></tr>
+    <tr>
+      <td>"pick up the smooth plastic bottle steadily."<br>"grab the plastic bottle with curved sides."<br>"Have the left arm lift the plastic bottle."</td>
+      <td>"shake the plastic bottle with curved sides right now."<br>"Quickly shake the bottle with screw cap."<br>"shake the medium-sized bottle carefully."</td>
+    </tr>
+  </table>
+  <p style="font-size:13px;color:var(--muted)">pick/shake 用<b>同一套模板</b>，句式分布一致、只有动词不同——这正是 verb-select 想要的：policy 唯一能依据的区分量就是动词。</p>
+
+  <h2>背景与目标</h2>
+  <p>前作 <code>laptop_verb</code> 用 open/close，但 <b>close 是全 50 个 native 任务里唯一没演示过的闭合动作</b> → 对 native-trained 模型是 action-OOD，close=0 无法归因（"没读动词" vs "执行不出"），IF 塌成 OOD 泛化。而 IF-Ext 是 <b>test-only、无微调数据</b>，那个"finetune 让它 in-distribution"的逃生舱不存在。</p>
+  <p><b>bottle pick/shake 修掉这个前提错误</b>：pick（<code>pick_dual_bottles</code>）和 shake（<code>shake_bottle</code>）都是 native 动作、同一 asset 001_bottle → 两向都在模型 repertoire 内 → zeroshot/native-ft 下都干净。代价：瓶子无强"默认动作"，先验弱——seen-vs-seen 的既定权衡。设计准则见 <code>docs/task-design/被测行为须在能力库内-IF避免塌成OOD.md</code>。</p>
+
+  <h2>实现（两个新东西）</h2>
+  <div class="callout">
+    <b>crux：pick 和 shake 末态相同。</b> 两个动作最后都"瓶子举在空中"——native <code>shake_bottle</code> 自己的判据就是 <code>bottle.z&gt;0.8</code>，根本分不清。所以成功必须看<b>轨迹</b>。而 eval 时 <code>check_success</code> 每物理子步都被调、且<b>首次 True 即 latch</b> → "抬起+没晃"的 pick 判据会在 shake 的抬升阶段误 latch。
+  </div>
+  <table>
+    <tr><th>机制</th><th>做法</th><th>为什么</th></tr>
+    <tr><td>场景/动词解耦</td><td><code>scene=seed//2</code>、<code>verb=seed%2</code></td><td>同帧只变动词，结构保证</td></tr>
+    <tr><td>指令路由</td><td><code>{V}</code> 动词占位符（pick 族 / shake 族），一套模板</td><td>RoboTwin 原生占位符匹配直接可用</td></tr>
+    <tr><td class="pick">pick 判据</td><td>bottle 峰值 <code>z &gt; 0.95</code>（抬得比 shake 高的正状态）</td><td>只有真高抬能到 → 对 eval 的 first-True latch 稳；shake 峰值 ~0.93 触不到</td></tr>
+    <tr><td class="shake">shake 判据</td><td>累计竖直行程 <code>Σ|Δz| ≥ 0.30</code>（振荡）</td><td>pick 单调 ~0.2、shake 来回 ~0.4 → 干净分开</td></tr>
+    <tr><td>轨迹记录</td><td><code>_record()</code> 在 oracle play_once（采集）+ check_success（eval 每子步）都调</td><td>采集末尾只调一次 check、eval 每子步调 → 两条路径都要记</td></tr>
+    <tr><td>统一成对门控</td><td>check_success = 本向成功 <b>且</b> oracle 伙伴方向也可行（按 scene_seed 缓存）</td><td>不可配对场景整场景丢；采集/eval 用同一批"两向都可做"的场景，无孤儿</td></tr>
+  </table>
+
+  <h2>证据</h2>
+  <p>采集出的两条 demo（同一瓶子、seed 配对：<code>episode0</code>=seed2 pick、<code>episode1</code>=seed3 shake），画面上 pick 与 shake 明显可分。</p>
+  <div class="vgrid">
+    <figure>
+      <video src="evidence/pick-ep0.mp4" controls muted playsinline preload="metadata"></video>
+      <figcaption><span class="tag pick">episode0 · PICK</span> <b>证明</b>：抓住瓶子后<b>径直抬高</b>（抬出低位相机视野）→ 峰值 z≈0.97、累计行程 ≈0.20。</figcaption>
+    </figure>
+    <figure>
+      <video src="evidence/shake-ep1.mp4" controls muted playsinline preload="metadata"></video>
+      <figcaption><span class="tag shake">episode1 · SHAKE</span> <b>证明</b>：抓起举高后<b>握住来回摆</b>（瓶子留在画面、腕部 ±7π/8 摆动）→ 峰值 z≈0.93、累计行程 ≈0.38。</figcaption>
+    </figure>
+  </div>
+  <p style="font-size:13px;color:var(--muted)">承重假设 spike（多变体）：pick 峰值 0.97–0.98 vs shake 峰值 0.928–0.933，阈值 0.95 稳落其间；pick 累计 0.20 vs shake 累计 0.37–0.39，阈值 0.30 稳落其间。四种判别（pick/shake × 正例/反例）全干净。</p>
+
+  <h2>关键决策 / 教训</h2>
+  <div class="card">
+    <h3>① 为什么选 pick/shake（in-repertoire）</h3>
+    <p>直接来自 laptop 的教训：IF 的被测行为必须在模型能力库内，否则 0 分不可归因。pick、shake 都是 native seen 动作 → 纯 IF、无 OOD 混淆。这是<b>选型阶段</b>就该做的 action-OOD 检查的结果。</p>
+    <h3>② 末态撞车 → 轨迹判据 + 高度差</h3>
+    <p>pick/shake 末态都是"瓶子在空中"。用 <b>pick=高抬正状态 + shake=累计行程</b> 两个独立信号分开，且 pick 的"高"是 eval-latch 稳的正状态（不是"没晃"这种负状态，会误 latch）。</p>
+    <h3>③ 成对门控：从"去掉"到"统一加回"（纠正过一次）</h3>
+    <p>先以为"pick/shake 都稳、种子解耦护住配对，不需门控"——但采集 20 条时发现 <b>per-verb 运动失败会产生孤儿</b>（某场景 pick 挂、shake 成 → 落单）。于是加回门控，但按需求<b>统一到 collection + eval</b>：一个场景只有 oracle 两向都可做才算有效，不可配对整场景丢。门控跑的是 <b>oracle</b> 伙伴方向（场景属性），不是 policy。</p>
+  </div>
+
+  <h2>现状与边界</h2>
+  <table>
+    <tr><th>项</th><th>状态</th><th>依据</th></tr>
+    <tr><td>两向都 in-domain（seen-vs-seen）</td><td><span class="ok">已验</span></td><td>pick/shake 均 native（pick_dual_bottles / shake_bottle）</td></tr>
+    <tr><td>oracle 成功率</td><td><span class="ok">已验</span></td><td>task_diag 20/20：pick 100% / shake 100%（稳定场景）</td></tr>
+    <tr><td>判据方向 + 反例（Layer-B）</td><td><span class="ok">已验</span></td><td>10/10（该 pick 却晃→False、该 shake 却抬→False）</td></tr>
+    <tr><td>末态撞车的轨迹判据</td><td><span class="ok">已验</span></td><td>height-gap spike + 视频 pick/shake 可分</td></tr>
+    <tr><td>成对门控无孤儿</td><td><span class="no">待重验</span></td><td>统一门控刚加，需用新版重采一小批确认</td></tr>
+    <tr><td>policy 端到端诊断价值</td><td><span class="no">未验</span></td><td>还没训练/评测任何 policy</td></tr>
+  </table>
+  <div class="callout warn">
+    <b>这份 report 不证明什么：</b>
+    <ul>
+      <li>不证明任何 policy 会读动词——<b>还没 policy 在这批数据上评测过</b>；诊断价值是设计上的。</li>
+      <li>oracle 100% 是<b>稳定场景</b>上的：瓶子初始常<b>不稳</b>（UnStableError），采集靠重试跳过（不稳场景整对一起丢，种子解耦护住配对）。task_diag 的 100% 因静默跳过不稳 seed 而略乐观。</li>
+      <li><b>统一门控在 eval 时会跑一次 oracle buddy（第二个 sapien.Engine，每 episode 至多一次）</b>——eval 必须跑在已验证的可配对种子集上，否则非配对场景会读成 policy fail。</li>
+      <li>先验弱：瓶子无强"默认动作"，测的是纯动词跟随、对抗的先验比 laptop 弱。</li>
+    </ul>
+  </div>
+
+  <h2>怎么复现</h2>
+  <pre><span class="c"># 采集(门控 env,原生 collect_data;episode_num 用偶数)</span>
+conda run -n RoboTwin python script/collect_data.py bottle_verb bottle_verb
+<span class="c"># 输出： data/bottle_verb/bottle_verb/{data,video,seed.txt}</span>
+
+<span class="c"># 采前诊断(成功率 / pick-shake 均衡 / seed→场景配对)</span>
+python tools/task_diag.py bottle_verb 20      <span class="c"># 或 /task-diag bottle_verb 20</span>
+
+<span class="c"># Layer-B 判据 + 配对测试</span>
+python tests/bottle_verb/test_check_success.py
+
+<span class="c"># 逐变体×双向可靠性扫描(选子集时)</span>
+python tests/bottle_verb/sweep_per_variant.py 6
+
+<span class="c"># 视频抽帧质检</span>
+bash tools/extract_frames.sh &lt;video&gt;.mp4 6</pre>
+
+  <div class="foot">
+    bottle_verb · IF-Verb-Select v2 · 2026-09-01 · 自包含 report，与 <code>evidence/</code> 同目录，整个目录 copy 走即可离线打开。
+  </div>
+
+</div>
