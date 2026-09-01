@@ -1,0 +1,245 @@
+<!-- arm_select (IF-Arm-Select) report — self-contained, open in a browser. Any videos are relative refs into evidence/. -->
+<meta charset="utf-8">
+<title>arm_select — left vs right · report</title>
+<style>
+  :root{
+    --bg:#f6f7f9; --card:#fff; --ink:#1f2430; --muted:#5b6472; --line:#e4e7ec;
+    --accent:#4f46e5; --left:#2563eb; --leftbg:#e8f0fe; --right:#c2711c; --rightbg:#fdf3e7;
+    --ok:#177245; --okbg:#e8f5ee; --warn:#b42318; --warnbg:#fdecea; --code:#f2f3f6;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font:15px/1.62 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"PingFang SC","Microsoft YaHei",sans-serif}
+  .wrap{max-width:960px;margin:0 auto;padding:32px 22px 80px}
+  h1{font-size:30px;line-height:1.2;margin:0 0 6px}
+  h2{font-size:21px;margin:44px 0 14px;padding-bottom:8px;border-bottom:2px solid var(--line)}
+  h3{font-size:16px;margin:22px 0 8px}
+  p{margin:10px 0}
+  a{color:var(--accent)}
+  code,kbd{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.9em;background:var(--code);padding:1px 6px;border-radius:5px}
+  pre{background:#0f1524;color:#e6e9f2;padding:14px 16px;border-radius:10px;overflow-x:auto;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;line-height:1.55}
+  pre .c{color:#8b93a7}
+  .hero{background:linear-gradient(135deg,#2563eb 0%,#c2711c 100%);color:#fff;border-radius:16px;padding:26px 28px}
+  .hero h1{color:#fff}
+  .hero .sub{font-size:16px;opacity:.96;margin:6px 0 16px;max-width:74ch}
+  .badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+  .badge{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.32);color:#fff;padding:4px 11px;border-radius:999px;font-size:12.5px;font-weight:600}
+  .meta{display:flex;flex-wrap:wrap;gap:6px 22px;margin-top:16px;font-size:12.5px;opacity:.92}
+  .meta b{font-weight:600;opacity:.8}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin:14px 0}
+  .tldr{display:grid;grid-template-columns:120px 1fr;gap:6px 14px;align-items:baseline}
+  .tldr dt{font-weight:700;color:var(--accent)}
+  .tldr dd{margin:0}
+  .left{color:var(--left)} .right{color:var(--right)}
+  .pill{display:inline-block;padding:1px 8px;border-radius:6px;font-size:12px;font-weight:700}
+  .pill.left{background:var(--leftbg);color:var(--left)} .pill.right{background:var(--rightbg);color:var(--right)}
+  table{border-collapse:collapse;width:100%;margin:12px 0;font-size:14px}
+  th,td{border:1px solid var(--line);padding:8px 11px;text-align:left;vertical-align:top}
+  th{background:#eef0f4;font-weight:600}
+  .flow{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin:14px 0;font-size:13px}
+  .node{background:#fff;border:1.5px solid var(--line);border-radius:9px;padding:9px 12px;line-height:1.4}
+  .node b{display:block;font-size:13.5px}.node small{color:var(--muted)}
+  .arrow{color:var(--muted);font-weight:700}
+  .split{display:flex;gap:8px;flex-wrap:wrap}
+  .callout{border-left:4px solid var(--accent);background:#f0f1fb;border-radius:0 10px 10px 0;padding:12px 16px;margin:14px 0}
+  .callout.warn{border-color:var(--warn);background:var(--warnbg)}
+  .ok{color:var(--ok);font-weight:700}.no{color:var(--warn);font-weight:700}
+  ul{margin:10px 0;padding-left:22px}li{margin:4px 0}
+  .foot{margin-top:40px;color:var(--muted);font-size:12.5px;border-top:1px solid var(--line);padding-top:14px}
+  @media(max-width:680px){.tldr{grid-template-columns:1fr}}
+</style>
+
+<div class="wrap">
+
+  <div class="hero">
+    <h1>arm_select — left vs right</h1>
+    <div class="sub">IF-Arm-Select（左右臂指定）：同一个盒子、<b>固定在正中央 x=0</b>，指令里的<b>臂词</b>（<span style="color:#bcd4ff">用左臂</span> vs <span style="color:#ffd9a8">用右臂</span>）决定用哪只手抓。测 policy 是否服从指定臂，而不是"哪只手近用哪只 / 总用惯用手"。</div>
+    <div class="badges">
+      <span class="badge">✓ oracle 左臂 100% / 右臂 100%</span>
+      <span class="badge">✓ 反例(执行错臂) 0/15</span>
+      <span class="badge">✓ state-based 从末态推执行臂</span>
+      <span class="badge">✓ 两向都 in-repertoire(非 OOD)</span>
+      <span class="badge">◐ 未渲染视频 / 未评测 policy</span>
+    </div>
+    <div class="meta">
+      <span><b>branch</b> docs/if-ext-six-axis-benchmark</span>
+      <span><b>date</b> 2026-09-01</span>
+      <span><b>核心文件</b> tasks/envs/arm_select.py</span>
+      <span><b>asset</b> handover_block 的 long box</span>
+    </div>
+  </div>
+
+  <h2>TL;DR</h2>
+  <div class="card">
+    <dl class="tldr">
+      <dt>做了什么</dt><dd>一个 RoboTwin 任务 <code>arm_select</code>：盒子固定在正中央，指令臂词选 <span class="pill left">left=左臂抓起</span> 或 <span class="pill right">right=右臂抓起</span>。臂词是唯一区分量。</dd>
+      <dt>怎么验的</dt><dd>可达性探针（定位重叠区）+ spike N=15（左 100% / 右 100% / 反例 0%）+ IF 配线测试（seed→mode、种子对像素同一、<code>{a}</code> 匹配）。</dd>
+      <dt>结论</dt><dd>正统 IF 臂选择任务：left/right 抓取都是 native 演示过的动作 → zeroshot/native-ft 下都 in-distribution，0 分可归因于"没读臂词"而非"执行不出"。</dd>
+      <dt>最大的坑</dt><dd>两个都伪装成"x=0 够不到"：① tall box 侧抓握顶部 → 真实抓取盒中心离 TCP 天然 ~0.14m，初版阈值 0.12 全毙；② 初版盒子 y=-0.05 离机器人太近两臂全 miss——<b>是 y 深度不是 x</b>。</dd>
+    </dl>
+  </div>
+
+  <h2>★ 核心：seed / 场景 / instruction / success check 四者的关系</h2>
+  <p><b>seed 是唯一源头</b>，其余三者全从它派生。整个任务的骨架就是 <code>load_actors</code> 顶部这两行，把<b>场景</b>与<b>臂</b>用种子解耦：</p>
+  <pre>scene_seed = seed // 2                          <span class="c"># ← 决定「场景」</span>
+np.random.seed(scene_seed)                      <span class="c"># 重播种；但 box 位姿固定 ⇒ 每个场景其实都一样</span>
+mode = ["left","right"][seed % 2]               <span class="c"># ← 决定「臂」(偶=left 奇=right)</span></pre>
+
+  <div class="flow">
+    <div class="node"><b>seed</b><small>采集/评测迭代</small></div>
+    <span class="arrow">→</span>
+    <div class="split">
+      <div class="node"><b>场景 = seed // 2</b><small>box 固定 x=0/y=0.10 → 恒同一帧</small></div>
+      <div class="node"><b>臂 = seed % 2</b><small>偶=left · 奇=right</small></div>
+    </div>
+    <span class="arrow">⇒</span>
+    <div class="node" style="border-color:var(--accent)"><b>(2k,2k+1) = 同帧 · 相反臂</b><small>画面像素级相同，唯一区别是臂词</small></div>
+  </div>
+
+  <h3>① seed → 场景（本任务退化为"恒同一帧"）</h3>
+  <p><code>scene_seed=seed//2</code> 重播种，但 box 被<b>固定</b>在 <code>x=0, y=0.10, z=0.842（桌面）, identity yaw</code> → 不同 scene_seed 目前不产生画面差异。这是刻意的：x=0 是双臂的<b>臂选择判定边界</b>，geometry 完全不泄露答案（native <code>handover_block</code> 的先验是 <code>ArmTag("left" if box_x&lt;0 else "right")</code>——把 box 钉在 x=0 正好压在这个先验的边界上）。</p>
+
+  <h3>② seed → instruction（臂词是唯一信号）</h3>
+  <p><code>mode=seed%2</code> 经 <code>play_once</code> 写进 <code>info["{a}"]=str(arm_tag)</code>，框架把 <code>{a}</code> 渲染成 "the left/right arm"。指令池 <code>arm_select.json</code>（30 seen + 10 unseen）里 <b>每条模板都必含 <code>{a}</code></b>，left/right 共用同一套 → 句式分布一致、唯一变量是臂词。</p>
+  <table>
+    <tr><th class="left">left 渲染</th><th class="right">right 渲染</th></tr>
+    <tr>
+      <td>"Pick up the block with the left arm."<br>"Use the left arm to lift the block."<br>"With the left arm, grasp the block."</td>
+      <td>"Pick up the block with the right arm."<br>"Use the right arm to lift the block."<br>"With the right arm, grasp the block."</td>
+    </tr>
+  </table>
+  <p style="font-size:13px;color:var(--muted)">与 grasp_cube 的 <code>{D}</code>、laptop 的 <code>{V}</code> 同构：一个 mode 驱动的必填槽走 RoboTwin 原生 <code>filter_instructions</code> 精确匹配，不 hack 框架。</p>
+
+  <h3>③ seed → oracle 执行臂（按指令，不按几何）</h3>
+  <pre>arm_tag = ArmTag(self.mode)     <span class="c"># ← 指令臂，不是 x 由来的"近手先验"</span>
+grasp_actor(box, arm_tag, contact_point_id=[0,1,2,3])   <span class="c"># 两臂都用同一组上半侧抓面</span>
+move_by_displacement(arm_tag, z=0.1)                    <span class="c"># 直上抬</span></pre>
+
+  <h3>④ 末态 → success check（与 oracle 自报解耦）</h3>
+  <p>policy eval 时<b>不能信 oracle 自报的 <code>ArmTag</code></b>，只能从末态推"哪只臂握着"。<code>_compute_signals</code> 算两个<b>解耦</b>信号：</p>
+  <pre>lifted    = (box_z - init_z) &gt; 0.05                       <span class="c"># 执行信号</span>
+arm_match = d_cmd &lt; 0.20  AND  d_cmd &lt; d_other            <span class="c"># IF 信号（指令跟随）</span>
+   d_cmd   = |box_center - TCP[mode]|         <span class="c"># 指令臂到 box</span>
+   d_other = |box_center - TCP[opposite]|     <span class="c"># 闲置臂到 box</span></pre>
+  <ul>
+    <li><b>真判据是 <code>d_cmd &lt; d_other</code></b>（谁更近谁握着），与 box 高度无关；实测 <b>0.14 vs 0.51</b>，裕度极大。<code>NEAR_TCP=0.20</code> 只兜底"没有任何臂握住"（box 被撞飞 / 闲置臂在原点 ~0.5m）。</li>
+    <li><b>两个出口</b>：<code>check_success()=lifted AND arm_match</code>（<b>严格 AND</b>，采集用——完整 demo 必须又抬起又用对臂）；<code>eval_signals()</code> 把 <code>arm_match</code> 与 <code>lifted</code> <b>分开报</b>（policy eval 用——区分"用错臂"和"用对臂但没抓起"，避免二值 0 归因不清）。</li>
+  </ul>
+
+  <table>
+    <tr><th>seed</th><th>场景 = seed//2</th><th>臂 = seed%2</th><th>oracle 执行</th><th>success 判据</th></tr>
+    <tr><td>0</td><td>场景 0（同一帧）</td><td class="left">left（偶）</td><td class="left">左臂抓</td><td>d_cmd(左)&lt;d_other(右) ✓</td></tr>
+    <tr><td>1</td><td>场景 0（同一帧）</td><td class="right">right（奇）</td><td class="right">右臂抓</td><td>d_cmd(右)&lt;d_other(左) ✓</td></tr>
+    <tr><td><b>2k</b></td><td><b>同一帧</b></td><td class="left">left</td><td class="left">左臂</td><td>指定臂更近</td></tr>
+    <tr><td><b>2k+1</b></td><td><b>同一帧</b></td><td class="right">right</td><td class="right">右臂</td><td>指定臂更近</td></tr>
+  </table>
+  <p><b>一句话</b>：seed 同时选场景和臂，场景固定使种子对退化成"同帧只变臂词"；oracle 按指令臂执行；success 从末态 TCP-距离反推执行臂，与 oracle 自报解耦——所以同一套判据 policy eval 也能直接用。</p>
+
+  <h2>背景与目标</h2>
+  <p>IF-Ext §4：论文 5 任务集里"臂"和别的维度耦合，本任务把<b>臂选择单独隔离</b>。要打破的先验是 native <code>handover_block</code> 的<b>近手启发</b>——<code>ArmTag("left" if box_x&lt;0 else "right")</code>，哪只手方便用哪只。把 box 钉在 x=0 正中央（先验的判定边界），臂词成为唯一区分量，逼 policy 读指令而非靠几何猜。</p>
+  <div class="callout">
+    <b>检验优势（选型层面）：</b>left/right 抓取都是 <b>native 能力库内</b>的动作（native 双臂日常抓取，<code>handover_block</code> 两臂都用）→ <b>不塌成 action-OOD</b>（不同于 close-laptop 那种 native 从没演示的闭合动作）。所以 zeroshot / native-ft 下二值判定都干净，0 分可归因于"没读臂词"。见 <code>docs/task-design/被测行为须在能力库内-IF避免塌成OOD.md</code>。
+  </div>
+
+  <h2>实现要点</h2>
+  <table>
+    <tr><th>机制</th><th>做法</th><th>为什么</th></tr>
+    <tr><td>场景/臂解耦</td><td><code>scene=seed//2</code>、<code>arm=seed%2</code></td><td>同帧只变臂词，结构保证（同 laptop/grasp_cube 配线）</td></tr>
+    <tr><td>资产</td><td>复用 <code>handover_block</code> 的 <code>boxtype="long"</code> box（0.06×0.06×0.2m tall block）</td><td>native 已证明该 box 可抓；8 侧抓点，[0,1,2,3]=上半高度四面</td></tr>
+    <tr><td>几何锁定</td><td>x=0, y=0.10, 桌面, identity yaw；<b>无需架高</b></td><td>探针确认 cz 0.86→0.98、identity&amp;45° 均双臂可达，重叠区很宽</td></tr>
+    <tr><td>两臂抓取</td><td>都用 <code>contact_point_id=[0,1,2,3]</code>；<code>choose_grasp_pose</code> 为每只臂挑可达面</td><td>对称 → 左右镜像，无需分别配接触点</td></tr>
+    <tr><td class="left">/<span class="right">judge</span></td><td><code>arm_match = d_cmd&lt;0.20 且 d_cmd&lt;d_other</code></td><td>state-based；不信 oracle 自报臂，policy eval 也能用</td></tr>
+    <tr><td>测试钩子</td><td><code>ARM_OVERRIDE</code>（强制单臂）、<code>ORACLE_ARM</code>（执行臂≠指令臂）</td><td>仅 spike / 反例用；生产留 None，mode 由 seed 驱动</td></tr>
+  </table>
+
+  <h2>证据</h2>
+  <p>确定性数值（固定位姿 → 每局数字几乎逐位复现）+ 采集出的两条 demo 视频（种子对 seed0/seed1，画面像素同一、只有动作臂一左一右）。</p>
+
+  <h3>视频：同帧只变臂词，左右一眼可分</h3>
+  <div class="vgrid">
+    <figure>
+      <video src="evidence/left-ep0.mp4" controls muted playsinline preload="metadata"></video>
+      <figcaption><span class="tag left">episode0 · seed0 · LEFT</span> <b>证明</b>：中央盒子，夹爪从画面<b>左侧</b>接近、掐住上半侧面并抬起；右臂全程待机。</figcaption>
+    </figure>
+    <figure>
+      <video src="evidence/right-ep1.mp4" controls muted playsinline preload="metadata"></video>
+      <figcaption><span class="tag right">episode1 · seed1 · RIGHT</span> <b>证明</b>：同一盒子，夹爪从画面<b>右侧</b>接近（与 ep0 严格镜像）抓起；左臂待机。</figcaption>
+    </figure>
+  </div>
+
+  <h3>spike N=15（<code>tests/arm_select/spike_success_rate.py</code>）</h3>
+  <table>
+    <tr><th>阶段</th><th>结果</th><th>rise</th><th>d_cmd（指令臂）</th><th>d_other（闲置臂）</th><th>arm_match</th></tr>
+    <tr><td class="left">left arm</td><td class="ok">15/15 (100%)</td><td>+0.098</td><td>0.141</td><td>0.515</td><td>True</td></tr>
+    <tr><td class="right">right arm</td><td class="ok">15/15 (100%)</td><td>+0.098</td><td>0.141</td><td>0.509</td><td>True</td></tr>
+    <tr><td>counter-example<br>(指令左·执行右)</td><td class="ok">0/15（正确拒绝）</td><td>+0.099</td><td><b>0.509</b>（远）</td><td><b>0.141</b>（实握右臂）</td><td class="no">False</td></tr>
+  </table>
+  <p style="font-size:13px;color:var(--muted)">反例里 d_cmd/d_other <b>互换</b>：盒子确实被举起(+0.099)，但落在<b>错误的臂</b>旁 → <code>d_cmd(0.51) &gt; d_other(0.14)</code> → <code>arm_match=False</code>。这正是 state-based 判据的意义：抬起 ≠ 成功，必须<b>用对臂</b>。</p>
+
+  <h3>IF 配线（<code>tests/arm_select/check_if_wiring.py</code>）</h3>
+  <table>
+    <tr><th>seed</th><th>mode</th><th>expect</th><th>{a}</th><th>check_success</th><th>种子对 box 位姿</th></tr>
+    <tr><td>0 / 2 / 4</td><td class="left">left</td><td>left</td><td>left</td><td class="ok">True</td><td rowspan="2">|Δpose| = <b>0.00e+00</b><br>（像素同一）</td></tr>
+    <tr><td>1 / 3 / 5</td><td class="right">right</td><td>right</td><td>right</td><td class="ok">True</td></tr>
+  </table>
+
+  <h3>可达性探针（定位重叠区，已删 scratch 脚本）</h3>
+  <p>x=0 中央 box × 双臂 × box-center 高度 {0.86,0.90,0.94,0.98} × yaw {identity,45°} → <b>全部 3/3</b>。证明重叠区很宽、<b>不需架高</b>，且 <code>handover</code> 的 z=0.9 中央抓只是其中一个可行点、非必需。</p>
+
+  <h2>关键决策 / 教训</h2>
+  <div class="card">
+    <h3>① NEAR_TCP 校准：tall box 侧抓握顶部（踩坑）</h3>
+    <p>"long" box 高 0.2m，侧抓握在<b>顶部</b>，即使抓得完美，<code>box.get_pose().p</code>（盒<b>中心</b>）也离 TCP 天然 ~0.14m。初版 <code>NEAR_TCP=0.12</code> 把每个好抓取都判失败 → 一度误以为"x=0 够不到"。改到 0.20，并把主判据换成与高度无关的 <code>d_cmd&lt;d_other</code>。</p>
+    <h3>② 是 y 深度不是 x（踩坑）</h3>
+    <p>初版 box 放 <code>y=-0.05</code>（离机器人太近），两臂都 miss，第二次误判"x=0 不可达"。挪到 <code>y=0.10</code>（handover 证明的 <code>ylim=[0,0.25]</code> 带内）→ 两臂各 15/15。<b>x=0 从来不是问题</b>。</p>
+    <h3>③ handover 并没有证明"中央桌面 box 双臂可抓"</h3>
+    <p>它证明的是：左臂抓<b>左区</b>桌面 box、右臂抓<b>抬到 z=0.9 悬空</b>的 box。中央桌面 box 的双臂可达性得单独 spike——探针确认后才敢锁 Propose A、去掉架高。</p>
+    <h3>④ state-based 而非 oracle 自报臂</h3>
+    <p>成功从末态 TCP-距离反推执行臂（<code>d_cmd&lt;d_other</code>），不信 oracle 的 <code>ArmTag</code>——因为 policy rollout 只能看末态。这个模式适用于任何"执行体身份"判定：别硬编与物体高度绑定的绝对 TCP 距离。</p>
+  </div>
+
+  <h2>现状与边界</h2>
+  <table>
+    <tr><th>项</th><th>状态</th><th>依据</th></tr>
+    <tr><td>两臂各自 oracle 成功率</td><td><span class="ok">已验</span></td><td>spike N=15：左 100% / 右 100%</td></tr>
+    <tr><td>反例（执行错臂，Layer-B）</td><td><span class="ok">已验</span></td><td>counter-example 0/15，arm_match 正确拒绝</td></tr>
+    <tr><td>IF 配线（seed→mode/同帧/<code>{a}</code>）</td><td><span class="ok">已验</span></td><td>check_if_wiring：|Δpose|=0、{a} 匹配、两向 check True</td></tr>
+    <tr><td>中央 box 双臂可达</td><td><span class="ok">已验</span></td><td>探针 cz 0.86–0.98 × 2 yaw 全 3/3</td></tr>
+    <tr><td>渲染视频质检</td><td><span class="no">未做</span></td><td>目前只有数值证据，未抽帧/录制 demo</td></tr>
+    <tr><td>policy 端到端诊断价值</td><td><span class="no">未验</span></td><td>还没训练/评测任何 policy</td></tr>
+    <tr><td>合并评测清单接入</td><td><span class="no">待做</span></td><td><code>all_tasks_plus_if.yml</code> 待其余 IF-Ext 齐了一起加</td></tr>
+  </table>
+  <div class="callout warn">
+    <b>这份 report 不证明什么：</b>
+    <ul>
+      <li>不证明任何 policy 会读臂词——<b>还没 policy 在这批数据上评测过</b>，诊断价值是设计上的。</li>
+      <li>oracle 100% 是<b>固定位姿</b>下的确定性结果；固定位姿=零场景多样性（可按需给 box 加 y/yaw 变化而不泄露 x 轴答案，但当前刻意关掉以求最纯的臂词对比）。</li>
+      <li>视频已渲染并抽帧核对（episode0=左臂、episode1=右臂，见上"证据·视频"）；左右动作臂严格镜像、一眼可分。</li>
+    </ul>
+  </div>
+
+  <div class="callout">
+    <b>已知观感局限 + 未来改进（红方块看着假）：</b>物体用的是 <code>handover_block</code> 的 red long box——它是 native 训练见过的同一 asset（不 OOD），但观感偏"假"。曾试图换成真实物体（<code>071_can</code> 横躺/竖立、<code>001_bottle</code> 竖立），全部撞同一堵墙：<b>urdf 库存资产的抓取接触点只标注在单一方位</b>（不绕瓶身/罐身对称复制）→ 中央 x=0 处只有一只臂够得到那个面，另一只必崩（bottle 实测左 3/3 / 右 0/3，转 yaw 也救不了）。box 能双臂 100% 恰因它是 <code>create_box</code> primitive、四面接触点程序化对称。<b>结论</b>：真实感 vs 双臂中央对称可抓在库存资产上结构性对立；要换真实物体，唯一路径是<b>给竖立圆瓶自注入绕身对称侧抓接触点</b>（仿 grasp_cube，处理逐变体半径），~半天且有不确定性——<b>本轮暂缓，保持红方块，日后再 improve</b>。
+  </div>
+
+
+  <h2>怎么复现</h2>
+  <pre><span class="c"># 桥接 env/指令到 submodule</span>
+bash bridge_tasks.sh
+
+<span class="c"># 双臂 oracle spike + 反例（gate 90%）</span>
+conda activate RoboTwin
+python tests/arm_select/spike_success_rate.py 15
+
+<span class="c"># IF 配线：seed→mode、种子对同帧、{a} 匹配</span>
+python tests/arm_select/check_if_wiring.py 3
+
+<span class="c"># 采集（原生 collect_data；episode_num 用偶数拿成对）</span>
+conda run -n RoboTwin python script/collect_data.py arm_select arm_select</pre>
+  <p style="font-size:13px;color:var(--muted)">深读：设计文档 <code>docs/features/09-IF-Ext-六轴扩展任务设计.md</code> §4；env <code>tasks/envs/arm_select.py</code>；指令池 <code>tasks/task_instruction/arm_select.json</code>。</p>
+
+  <div class="foot">
+    arm_select · IF-Arm-Select · 2026-09-01 · 自包含 report，与 <code>evidence/</code> 同目录，整个目录 copy 走即可离线打开。
+  </div>
+
+</div>

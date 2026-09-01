@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Place-Relative v2 — 五方位单场景 · RoboTwin-IF</title>
+<style>
+  :root{
+    --ink:#1a1d24; --muted:#5b6470; --line:#e6e9ef; --bg:#f6f7f9; --card:#fff;
+    --brand:#4f46e5; --brand-soft:#eef0fe;
+    /* 五方位配色，全文一致（同一方位全篇同色） */
+    --left:#0e7490;   --left-soft:#e0f2f7;
+    --right:#2563eb;  --right-soft:#e6edfd;
+    --front:#7c3aed;  --front-soft:#f0e9fe;
+    --back:#be185d;   --back-soft:#fbe6ef;
+    --ontop:#c2410c;  --ontop-soft:#fbeee6;
+    --ok:#15803d; --ok-soft:#e7f5ec; --warn:#b45309; --warn-soft:#fbf1e3;
+    --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB",sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.65;
+       -webkit-font-smoothing:antialiased}
+  .wrap{max-width:940px;margin:0 auto;padding:0 20px 80px}
+  h1,h2,h3{line-height:1.25;font-weight:700}
+  h2{margin:48px 0 16px;font-size:1.5rem;padding-bottom:8px;border-bottom:2px solid var(--line)}
+  h3{margin:26px 0 10px;font-size:1.12rem}
+  p{margin:10px 0}
+  code{font-family:var(--mono);font-size:.86em;background:#eef0f3;padding:1px 6px;border-radius:5px}
+  a{color:var(--brand);text-decoration:none} a:hover{text-decoration:underline}
+  .badge{display:inline-block;font-size:.78rem;font-weight:600;padding:3px 10px;border-radius:999px;
+         border:1px solid transparent;white-space:nowrap}
+  .b-ok{background:var(--ok-soft);color:var(--ok);border-color:#bfe3ca}
+  .b-warn{background:var(--warn-soft);color:var(--warn);border-color:#e2cfa8}
+  .b-brand{background:var(--brand-soft);color:var(--brand)}
+  .b-left{background:var(--left-soft);color:var(--left)}
+  .b-right{background:var(--right-soft);color:var(--right)}
+  .b-front{background:var(--front-soft);color:var(--front)}
+  .b-back{background:var(--back-soft);color:var(--back)}
+  .b-ontop{background:var(--ontop-soft);color:var(--ontop)}
+
+  header.hero{background:linear-gradient(135deg,#0e7490 0%,#4f46e5 55%,#c2410c 100%);color:#fff;
+    margin:0 -20px 0;padding:44px 20px 40px;border-radius:0 0 20px 20px}
+  header.hero .wrap2{max-width:900px;margin:0 auto}
+  header.hero .kicker{font-size:.8rem;letter-spacing:.12em;text-transform:uppercase;opacity:.9;font-weight:600}
+  header.hero h1{font-size:2.15rem;margin:8px 0 6px}
+  header.hero p.lede{font-size:1.06rem;opacity:.96;margin:8px 0 18px;max-width:700px}
+  header.hero .badges{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px}
+  header.hero .badge{background:rgba(255,255,255,.18);color:#fff;border-color:rgba(255,255,255,.28)}
+  header.hero .meta{display:flex;flex-wrap:wrap;gap:6px 22px;font-size:.85rem;opacity:.92;border-top:1px solid rgba(255,255,255,.2);padding-top:14px}
+  header.hero .meta b{font-weight:400;opacity:.72}
+  header.hero code{background:rgba(255,255,255,.2);color:#fff}
+
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px 22px;margin:16px 0;
+        box-shadow:0 1px 2px rgba(20,25,40,.03)}
+  .tldr{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .tldr .cell{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+  .tldr .cell h4{margin:0 0 4px;font-size:.82rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+  .tldr .cell p{margin:0;font-size:.96rem}
+  @media(max-width:640px){.tldr{grid-template-columns:1fr}}
+
+  table{border-collapse:collapse;width:100%;margin:14px 0;font-size:.92rem}
+  th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{background:#fafbfc;font-weight:600;font-size:.85rem;color:var(--muted)}
+  td.num{font-family:var(--mono);white-space:nowrap}
+  .rate-new{color:var(--ok);font-weight:700} .rate-old{color:var(--muted)}
+
+  .videos{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin:16px 0}
+  @media(max-width:900px){.videos{grid-template-columns:1fr 1fr}}
+  @media(max-width:600px){.videos{grid-template-columns:1fr}}
+  figure{margin:0;background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+  figure video{width:100%;display:block;background:#000}
+  figure figcaption{padding:10px 13px;font-size:.86rem}
+  figure figcaption .t{font-weight:600;display:block;margin-bottom:2px}
+  figure figcaption .d{color:var(--muted);font-size:.82rem}
+
+  .diagram{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:22px;margin:16px 0}
+  .flow{display:flex;align-items:stretch;gap:0;flex-wrap:wrap}
+  .flow .node{flex:1;min-width:150px;text-align:center;padding:12px 10px;border-radius:10px;font-size:.86rem}
+  .flow .arrow{display:flex;align-items:center;padding:0 8px;color:var(--muted);font-size:1.3rem}
+  .n-scene{background:#f1f3f7;border:1px solid var(--line)}
+  .n-mode{background:var(--brand-soft);border:1px solid #cfd4fb}
+  .flow .node b{display:block;margin-bottom:3px}
+  .flow .node code{font-size:.8em}
+
+  /* 桌面俯视示意（纯 CSS，机器人在下方 / +y 近端） */
+  .topdown{position:relative;background:#f8f9fb;border:1px solid var(--line);border-radius:12px;
+           height:230px;margin:16px 0;overflow:hidden}
+  .topdown .lab{position:absolute;font-size:.72rem;color:var(--muted)}
+  .topdown .B{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+     width:52px;height:40px;background:#d8c3a5;border:1px solid #b9a074;border-radius:5px;
+     display:flex;align-items:center;justify-content:center;font-size:.68rem;color:#6b5a3e;font-weight:700}
+  .topdown .dot{position:absolute;width:34px;height:26px;border-radius:5px;font-size:.66rem;font-weight:700;
+     display:flex;align-items:center;justify-content:center;transform:translate(-50%,-50%)}
+  .d-left{left:34%;top:50%;background:var(--left-soft);color:var(--left);border:1px solid #a9d6e2}
+  .d-right{left:66%;top:50%;background:var(--right-soft);color:var(--right);border:1px solid #b6c9f7}
+  .d-front{left:50%;top:76%;background:var(--front-soft);color:var(--front);border:1px solid #d3c1f7}
+  .d-back{left:50%;top:24%;background:var(--back-soft);color:var(--back);border:1px solid #f2b9d3}
+  .d-top{left:50%;top:50%;background:var(--ontop-soft);color:var(--ontop);border:1px dashed #ecbfa6;
+     transform:translate(-50%,-50%) scale(.82)}
+  .robot{position:absolute;left:50%;bottom:6px;transform:translateX(-50%);font-size:.72rem;color:var(--muted);
+     background:#eceff3;border:1px solid var(--line);border-radius:8px;padding:2px 12px}
+
+  ul{margin:8px 0;padding-left:22px} li{margin:5px 0}
+  .callout{border-left:4px solid var(--brand);background:var(--brand-soft);padding:12px 16px;border-radius:0 10px 10px 0;margin:14px 0}
+  .callout.warn{border-color:var(--warn);background:var(--warn-soft)}
+  .callout.ok{border-color:var(--ok);background:var(--ok-soft)}
+  .callout .h{font-weight:700;margin-bottom:3px}
+  pre{background:#1e222b;color:#e6e9ef;padding:14px 16px;border-radius:10px;overflow-x:auto;font-family:var(--mono);
+      font-size:.82rem;line-height:1.5;margin:12px 0}
+  pre .c{color:#7f8a9a}
+  .tick{color:var(--ok);font-weight:700} .cross{color:#b91c1c;font-weight:700}
+  .foot{margin-top:40px;padding-top:18px;border-top:1px solid var(--line);color:var(--muted);font-size:.85rem}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap2">
+    <div class="kicker">RoboTwin-IF · IF-Ext §6 · Place-Relative v2</div>
+    <h1>Place-Relative → 五方位单场景</h1>
+    <p class="lede">把 v1 的「beside / on-top 二选一」改造成 <b>左 / 右 / 前 / 后 / 上</b> 五方位——
+       同一套物体、同一帧初始画面，<b>只有指令方位词变</b>，逼 policy 真读方位而不是靠几何猜。</p>
+    <div class="badges">
+      <span class="badge">5 方位 · 同场景 ✓</span>
+      <span class="badge">Layer B 23/23 ✓</span>
+      <span class="badge">oracle 95%（8/8 采集 0 fail）✓</span>
+      <span class="badge">FRONT_SIGN 已定 ✓</span>
+      <span class="badge">5 段视频眼见为实 ✓</span>
+    </div>
+    <div class="meta">
+      <span><b>状态</b>&nbsp; 实现+验证完成，未提交</span>
+      <span><b>日期</b>&nbsp; 2026-09-01</span>
+      <span><b>分支</b>&nbsp; <code>docs/if-ext-six-axis-benchmark</code></span>
+      <span><b>核心文件</b>&nbsp; <code>tasks/envs/place_relative.py</code></span>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+<h2>TL;DR</h2>
+<div class="tldr">
+  <div class="cell"><h4>做了什么</h4><p>把 <code>place_relative</code> 从「关系二选一（beside/on-top，且两关系场景不同）」重写为
+     <b>五方位单场景</b>：<span class="badge b-left">左</span><span class="badge b-right">右</span><span class="badge b-front">前</span><span class="badge b-back">后</span><span class="badge b-ontop">上</span>，同一场景跑 5 条指令。</p></div>
+  <div class="cell"><h4>怎么验证</h4><p>Layer B teleport 判定 <b>23/23</b>（含全部错方位反例 + 错参照 + 同场景结构）；oracle 逐方位成功率
+     <b>95%</b>（left 92 / right 100 / front 83 / back 100 / on-top 100）；真实采集 8/8、<b>0 fail</b>，5 段视频逐方位复核。</p></div>
+  <div class="cell"><h4>结论</h4><p>方位词是<b>唯一</b>被打分的轴。<code>scene_seed=seed//5</code> 定场景、<code>seed%5</code> 定方位 →
+     连续 5 个种子是<b>像素级同一场景</b>、只有 <code>{D}</code> 方位短语不同；判定改成<b>带符号轴偏移 + 正交轴锁死</b>。</p></div>
+  <div class="cell"><h4>最大的坑</h4><p>① <b>「前」(+y) 一开始规划不出来</b>——实测可达带只有 <code>y∈[−0.28,−0.01]</code>，B 太靠前把「前」目标顶到不可达的 +y；把 B 往里挪、offset 收到 0.11 后解决。
+     ② 侧向抓取<b>跨身体失败</b>——抓必须用 mover 侧手臂，不是目标侧。</p></div>
+</div>
+
+<h2>背景与目标：为什么要改 v1</h2>
+<p>v1（<a href="report.html">见 v1 报告</a>）已经能测「beside vs on-top」，但它有两个和 IF-Ext §6「单轴诊断」定位不合的地方：</p>
+<ul>
+  <li><b>只有 2 个方位</b>，覆盖不了「左/右/前/后」这套完整相对方位轴；</li>
+  <li><b>两关系的场景其实不同</b>（干扰物数量由混合种子决定、每关系一套），没有做到「同一帧只变指令」——而
+     <a href="../../docs/task-design/IF任务实现流水线-SOP.md">IF 实现 SOP</a> 明确要求单轴任务必须让场景在所有 mode 值上<b>逐像素相同</b>，
+     policy 唯一能区分的只能是指令。参照 <code>laptop_verb</code>（<code>{V}</code>）/ <code>grasp_cube_approach</code>（<code>{D}</code>）已落地的同场景配对范式。</li>
+</ul>
+<p><b>本次目标</b>：把 beside 拆成 <b>左/右/前/后</b> 四个带符号方位 + 保留 <b>上</b> = 5 方位；判定逻辑跟着改成方向性；
+   减少干扰物腾空间；让 5 个方位共用一个初始场景，只有指令不同。</p>
+
+<h2>从 v1 到 v2：改了什么</h2>
+<table>
+  <thead><tr><th>维度</th><th>v1（beside / on-top）</th><th>v2（五方位单场景）</th></tr></thead>
+  <tbody>
+    <tr><td>方位取值</td><td class="rate-old">2：beside / on-top</td><td class="rate-new">5：左 / 右 / 前 / 后 / 上</td></tr>
+    <tr><td>场景 ↔ 方位</td><td class="rate-old">关系由 <code>seed%2</code> 定，但干扰物两关系不同 → 场景不完全一致</td><td class="rate-new"><code>scene_seed=seed//5</code> 定场景、<code>seed%5</code> 定方位 → 5-元组同一场景</td></tr>
+    <tr><td>指令路由</td><td class="rate-old"><code>{B}</code>/<code>{C}</code> 两个键按关系分族</td><td class="rate-new">单一 <code>{D}</code> 方位短语族，5 方位同一族、占位符集合完全相同</td></tr>
+    <tr><td>check_success</td><td class="rate-old">planar 距离二分（beside 带内 / on-top 抬升）</td><td class="rate-new">带符号轴偏移 + 正交轴锁 <code>&lt;0.05</code>（左右=x、前后=y）；上=抬升</td></tr>
+    <tr><td>干扰物</td><td class="rate-old">1–3 个（混合种子）</td><td class="rate-new">1 个，且离 B <code>&gt;0.26</code> → 四个方位带全程留空</td></tr>
+  </tbody>
+</table>
+
+<h2>核心机制：同一场景，只有 {D} 变</h2>
+
+<div class="diagram">
+  <div class="flow">
+    <div class="node n-scene"><b>seed</b><code>0,1,2,3,4</code></div>
+    <div class="arrow">→</div>
+    <div class="node n-scene"><b>scene_seed = seed // 5</b>同一场景<br><span class="kv">gray mouse + brown coffee-box + 1 干扰物</span></div>
+    <div class="arrow">×</div>
+    <div class="node n-mode"><b>direction = seed % 5</b><code>[left,right,front,back,on_top]</code></div>
+    <div class="arrow">→</div>
+    <div class="node n-mode"><b>{D} 短语</b>注入指令<br><span class="kv">唯一变量</span></div>
+  </div>
+</div>
+
+<p>连续 5 个种子 <code>(5k … 5k+4)</code> 得到同一个物理场景，各跑一次五方位，初始画面逐像素相同——policy 看到的唯一差别就是 <code>{D}</code> 方位短语。
+   评测按连续 5 元组读，就能拿到「仅方位不同」的一组对照局。</p>
+
+<h3>轴映射与「前」的参考系（本次实测定死）</h3>
+<div class="topdown">
+  <span class="lab" style="left:12px;top:8px;">桌面俯视（+y 朝机器人 = 前）</span>
+  <div class="B">B</div>
+  <div class="dot d-back">后</div>
+  <div class="dot d-left">左</div>
+  <div class="dot d-right">右</div>
+  <div class="dot d-front">前</div>
+  <div class="dot d-top">上</div>
+  <div class="robot">机器人（+y 侧）</div>
+</div>
+<ul>
+  <li><b>左 / 右 = 带符号世界 x</b>（沿用 native <code>place_a2b_left</code>：左 = <code>object_x &lt; target_x</code>、<code>|Δy|&lt;0.05</code>、planar∈[0.08,0.20]）。</li>
+  <li><b>前 / 后 = 带符号世界 y</b>（对称新增，锁 <code>|Δx|&lt;0.05</code>）。设计约定「靠近机器人一侧 = 前」。</li>
+  <li><b>上 = 抬升</b>（planar≈0 且明显抬高，沿用 v1 <code>placed_on_top</code>）。</li>
+  <li><b><code>FRONT_SIGN=+1</code> 已实测定死</b>：两臂静息末端在 <code>y≈−0.31</code>（向外伸），故机器人身体在 <b>+y</b> 侧 → 前 = +y = 近机器人侧。与设计约定一致。</li>
+</ul>
+
+<h2>证据</h2>
+<div class="callout ok"><div class="h">同一场景（gray mouse + brown coffee-box + red tea-box 干扰物），5 段仅指令方位不同</div>
+  下列 5 段是种子 0–4（同一 <code>scene_seed=0</code>）的 oracle 采集视频。每段末态请对照方位词——mouse 落在 coffee-box 的对应方位。</div>
+<div class="videos">
+  <figure><video src="evidence/videos/v2_left_mouse_coffeebox.mp4" controls muted playsinline preload="metadata"></video>
+    <figcaption><span class="t"><span class="badge b-left">左 left</span></span><span class="d">seed 0 · mouse 落在 coffee-box 左侧</span></figcaption></figure>
+  <figure><video src="evidence/videos/v2_right_mouse_coffeebox.mp4" controls muted playsinline preload="metadata"></video>
+    <figcaption><span class="t"><span class="badge b-right">右 right</span></span><span class="d">seed 1 · mouse 落在右侧</span></figcaption></figure>
+  <figure><video src="evidence/videos/v2_front_mouse_coffeebox.mp4" controls muted playsinline preload="metadata"></video>
+    <figcaption><span class="t"><span class="badge b-front">前 front</span></span><span class="d">seed 2 · mouse 落在近端（画面下方，机器人侧）</span></figcaption></figure>
+  <figure><video src="evidence/videos/v2_back_mouse_coffeebox.mp4" controls muted playsinline preload="metadata"></video>
+    <figcaption><span class="t"><span class="badge b-back">后 back</span></span><span class="d">seed 3 · mouse 送到远端后释放（末帧被手臂遮挡，判定确认远端）</span></figcaption></figure>
+  <figure><video src="evidence/videos/v2_ontop_mouse_coffeebox.mp4" controls muted playsinline preload="metadata"></video>
+    <figcaption><span class="t"><span class="badge b-ontop">上 on-top</span></span><span class="d">seed 4 · mouse 叠在 coffee-box 顶上</span></figcaption></figure>
+</div>
+
+<h3>指令路由：同场景、只有方位短语变（采集时真实落盘的指令）</h3>
+<table>
+  <thead><tr><th>episode / seed</th><th>方位</th><th>落盘指令（节选）</th></tr></thead>
+  <tbody>
+    <tr><td class="num">ep0 / 0</td><td><span class="badge b-left">左</span></td><td>Carefully place the gray mouse <b>to the left of</b> the brown coffee-box</td></tr>
+    <tr><td class="num">ep1 / 1</td><td><span class="badge b-right">右</span></td><td>… lift the gray mouse and put it <b>to the right of</b> the brown coffee-box</td></tr>
+    <tr><td class="num">ep2 / 2</td><td><span class="badge b-front">前</span></td><td>… put it <b>in front of</b> the brown coffee-box</td></tr>
+    <tr><td class="num">ep3 / 3</td><td><span class="badge b-back">后</span></td><td>Place the gray mouse <b>behind</b> the brown coffee-box</td></tr>
+    <tr><td class="num">ep4 / 4</td><td><span class="badge b-ontop">上</span></td><td>… place it <b>on top of</b> the brown coffee-box</td></tr>
+  </tbody>
+</table>
+<p class="kv">同一 <code>the gray mouse</code> + <code>the brown coffee-box</code> 贯穿 5 局，只有方位短语变 —— 端到端 <code>filter_instructions</code> 精确匹配一族模板成立。</p>
+
+<h3>判定正反例（Layer B，teleport 驱动 23/23）</h3>
+<p>正例只证「做对→True」，不证「做错→False」。用 teleport 直接摆末态、断言布尔值，覆盖：</p>
+<ul>
+  <li><span class="tick">✓</span> 5 方位<b>正例</b>各自 True；空操作（没动）5 方位全 False。</li>
+  <li><span class="cross">✗</span> <b>错方位反例（关键）</b>：该左却放右 → False；该前却放后 → False；侧向却叠在顶上 → False；该上却放旁边 → False。</li>
+  <li><span class="cross">✗</span> <b>错参照</b>：方位对但相对<b>干扰物</b>而非 B → False。</li>
+  <li><span class="tick">✓</span> <b>结构</b>：连续 5 元组同一场景（A/B/干扰物位姿一致）、方位按序循环 <code>[左,右,前,后,上]</code>。</li>
+</ul>
+
+<h3>oracle 逐方位成功率（每方位 12 场景）</h3>
+<table>
+  <thead><tr><th>方位</th><th class="num">成功率</th><th>说明</th></tr></thead>
+  <tbody>
+    <tr><td><span class="badge b-left">左</span></td><td class="num rate-new">11/12 · 92%</td><td rowspan="5">未过的零星几条是<b>基础抓取</b> AssertionError（与方位无关，随物体变体分布），不是方位特异失败。总 <b>57/60 = 95%</b>。前=83% 是因为「前」落点最贴近可达前沿（−0.02 附近），留有小余量。</td></tr>
+    <tr><td><span class="badge b-right">右</span></td><td class="num rate-new">12/12 · 100%</td></tr>
+    <tr><td><span class="badge b-front">前</span></td><td class="num">10/12 · 83%</td></tr>
+    <tr><td><span class="badge b-back">后</span></td><td class="num rate-new">12/12 · 100%</td></tr>
+    <tr><td><span class="badge b-ontop">上</span></td><td class="num rate-new">12/12 · 100%</td></tr>
+  </tbody>
+</table>
+
+<h2>关键决策 / 教训</h2>
+
+<div class="callout warn"><div class="h">坑 ①「前」(+y) 规划不出来 → 实测可达带，把 B 往里挪 + offset 收窄</div>
+  首轮 oracle 前=0%：<code>plan_ok=False</code>，手臂根本够不到 +y。探针实测<b>可达放置带只有 <code>y∈[−0.28,−0.01]</code></b>（+y 在机器人身后不可达）。
+  原 B 在 <code>y≈−0.07</code> 太靠前，把「前」目标（+0.13）顶到 +0.06 不可达。
+  <b>解</b>：B 下沉到 <code>ylim=[−0.15,−0.13]</code>、<code>OFFSET 0.13→0.11</code> → 前≈−0.03、后≈−0.25，双双落在可达带内。</div>
+
+<div class="callout warn"><div class="h">坑 ② 侧向抓取跨身体失败 → 抓永远用 mover 侧手臂</div>
+  一度按「目标侧」选臂以避免放置跨身体，反而让<b>抓取</b>跨身体（mover 在右、指令要放左 → 用左臂去抓右侧物体 → 规划失败）。
+  实测：抓必须同侧才规划得出；而放置只需跨过中线 ~0.11（在双臂包络内）。<b>解</b>：所有方位一律用 <b>mover 侧手臂</b>，左右 oracle 从 50% → 92/100%。</div>
+
+<div class="callout"><div class="h">决策 · 单 {D} 族取代 {B}/{C} 路由 hack</div>
+  <code>filter_instructions</code> 要求模板占位符集合与 episode 完全相等。5 方位都提供 <code>{A} {D} {B} {a}</code> → 一族模板通吃，
+  方位短语（<code>to the left of</code> / <code>in front of</code> / <code>behind</code> / <code>on top of</code>）注入 <code>{D}</code>，比 v1 的 <code>{B}</code>/<code>{C}</code> 分族更干净。</div>
+
+<div class="callout"><div class="h">决策 · 不做 5 路 pair-gate</div>
+  <code>laptop_verb</code> 有「配对不可演则两局都丢」的 gate；5 方位版每局要试跑 4 个伙伴方位，太贵。
+  改为<b>用固定留空场景</b>保证 5 方位都可演（B 居中、四侧带全程留空），先不 gate；若量产暴露 scene 特异不可演再补。</div>
+
+<h2>现状与边界</h2>
+<table>
+  <thead><tr><th>项</th><th>状态</th><th>说明</th></tr></thead>
+  <tbody>
+    <tr><td>Layer B 判定正反例</td><td><span class="badge b-ok">已验 23/23</span></td><td>错方位/错参照/空操作全 False；同场景结构成立</td></tr>
+    <tr><td>oracle 逐方位可靠性</td><td><span class="badge b-ok">已验 95%（60 局）</span></td><td>五方位 ≥83%，未过为基础抓取抖动、非方位特异</td></tr>
+    <tr><td>端到端采集 + 路由</td><td><span class="badge b-ok">已验 8/8 · 0 fail</span></td><td>同场景 5 方位指令逐条对齐，5 视频复核</td></tr>
+    <tr><td>FRONT_SIGN 参考系</td><td><span class="badge b-ok">已定 +1</span></td><td>据机器人几何（EE 静息 y≈−0.31）+ 渲染确认，符合「近机器人=前」</td></tr>
+    <tr><td>「前」落点余量</td><td><span class="badge b-warn">偏紧</span></td><td>贴可达前沿（−0.02~−0.04），前=83% 最低；如需再稳可微调 B.y</td></tr>
+    <tr><td>真实 policy 跑分</td><td><span class="badge b-warn">未做</span></td><td>只有 oracle；「读方位 vs 瞎猜」的实测区分未验</td></tr>
+    <tr><td>判定阈值</td><td><span class="badge b-warn">自定</span></td><td>带宽/锁死阈值类推自 place_a2b，论文未确认</td></tr>
+    <tr><td>接入 all_tasks_plus_if.yml</td><td><span class="badge b-warn">未做</span></td><td>本次只重写 env/判定/指令/测试，未注册合并清单</td></tr>
+  </tbody>
+</table>
+<div class="callout warn"><div class="h">不证明什么</div>
+  <b>不</b>证明任何 policy 效果——所有成功率都是<b>脚本 oracle</b>；只证明「任务可采、判定分得清方位、同场景只变指令」这条 pipeline 成立。
+  「前=83%」是 N=12 的小样本 + 落点贴可达边沿，<b>不</b>等于「前一定难」。视频只逐方位各看了 1 个场景，<b>不</b>是全覆盖。</div>
+
+<h2>怎么复现</h2>
+<pre><span class="c"># 1. 把 robotwin-if 下的 env/判定/指令 软链进 submodule（解掉断链）</span>
+./bridge_tasks.sh
+
+<span class="c"># 2. Layer B 判定正反例（teleport，23/23）</span>
+conda activate RoboTwin
+python tests/place_relative/test_check_success.py
+
+<span class="c"># 3. oracle 逐方位成功率（每方位 12 场景，≈95%）—— 见对话历史内联脚本</span>
+<span class="c">#    scene*5+idx 遍历，setup_demo→play_once→check_success</span>
+
+<span class="c"># 4. 真实采集 8 局 + 出视频（seeds 0-7 覆盖 5 方位）</span>
+cd third_party/robotwin
+sed 's/^episode_num:.*/episode_num: 8/' task_config/demo_clean.yml &gt; task_config/demo_p5.yml
+bash collect_data.sh place_relative demo_p5 1
+<span class="c"># 视频：data/place_relative/demo_p5/video/episode0-7.mp4</span></pre>
+
+<div class="foot">
+  <p>核心文件：<code>tasks/envs/place_relative.py</code>（env，5 方位同场景）· <code>tasks/envs/_if_relative.py</code>（<code>placed_in_direction</code> + <code>FRONT_SIGN</code>）·
+     <code>tasks/task_instruction/place_relative.json</code>（<code>{D}</code> 单族指令池）· <code>tests/place_relative/test_check_success.py</code>（Layer B 23/23）。</p>
+  <p>深读：<a href="understanding.md">understanding.md</a> · <a href="decisions.md">decisions.md</a> · <a href="report.html">v1 报告</a> ·
+     设计文档 <code>docs/features/09-IF-Ext-六轴扩展任务设计.md §6</code> · SOP <code>docs/task-design/IF任务实现流水线-SOP.md</code>。</p>
+  <p class="kv">report-v2.html + evidence/ 一起走；<code>just vibe-notes-push</code> 一并提交到 notes 独立仓库，浏览器直接打开即可（视频随目录）。</p>
+</div>
+
+</div>
+</body>
+</html>

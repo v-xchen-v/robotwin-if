@@ -1,0 +1,4 @@
+newmtl decal
+Ka 1 1 1
+Kd 1 1 1
+map_Kd _head_dog.png
