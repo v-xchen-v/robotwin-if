@@ -3,7 +3,7 @@ status: sop
 area: robotics / benchmark-design
 created: 2026-09-01
 tags: [instruction-following, task-design, sop, workflow, if-ext]
-parent: "[[09-IF-Ext-六轴扩展任务设计]]"
+parent: "[[09-IF-Ext-单轴扩展任务集设计]]"
 ---
 
 # IF 任务实现流水线 SOP（设计 → 接线 → 验证 → 量产 → eval）
@@ -72,5 +72,5 @@ parent: "[[09-IF-Ext-六轴扩展任务设计]]"
 
 ## 参考
 - 设计原则前提：[[被测行为须在能力库内-IF避免塌成OOD]]
-- 主设计：[[09-IF-Ext-六轴扩展任务设计]]
+- 主设计：[[09-IF-Ext-单轴扩展任务集设计]]
 - 接线模板任务：`tasks/envs/laptop_verb.py` + `tasks/task_instruction/laptop_verb.json`

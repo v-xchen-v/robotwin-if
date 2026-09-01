@@ -153,4 +153,4 @@ IF-Ext 反过来做**单轴拆分**：每个任务里，只有一个"指令槽�
 - **接入**：追加进 `all_tasks_plus_if.yml`（原 50 + 论文 5 + IF-Ext 7 = 62）；每任务 10 seen / 2 unseen 指令，借 native description-gen 管线。
 - **Task names**：`if_ext_verb_select` / `if_ext_noun_grounding` / `if_ext_attribute_ladder` / `if_ext_arm_select` / `if_ext_sequence_container` / `if_ext_spatial_direction` / `if_ext_grasp_approach`。
 
-*源设计文档：`docs/features/09-IF-Ext-六轴扩展任务设计.md`*
+*源设计文档：`docs/features/09-IF-Ext-单轴扩展任务集设计.md`*

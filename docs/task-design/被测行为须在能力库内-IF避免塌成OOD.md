@@ -3,7 +3,7 @@ status: principle
 area: robotics / benchmark-design
 created: 2026-08-31
 tags: [instruction-following, task-design, ood, if-ext]
-parent: "[[09-IF-Ext-六轴扩展任务设计]]"
+parent: "[[09-IF-Ext-单轴扩展任务集设计]]"
 ---
 
 # IF 任务设计原则：被测行为必须在模型"能力库"内
@@ -60,4 +60,4 @@ verb-select 这类任务，价值来自"指令去命令一个**非默认**动词
 - [ ] **把 action-OOD 检查前移到任务选型**，别等 oracle 建完——用 `/task-design-review <task>` 的第 5、8 维度。
 
 ---
-相关：本仓库 `.claude/commands/task-design-review.md`（review 命令）· `docs/features/09-IF-Ext-六轴扩展任务设计.md`（IF-Verb-Select 设计）· 私有笔记 `notes/2026-08-31-laptop-verb/design-review.md`（laptop_verb 逐维度评审）。
+相关：本仓库 `.claude/commands/task-design-review.md`（review 命令）· `docs/features/09-IF-Ext-单轴扩展任务集设计.md`（IF-Verb-Select 设计）· 私有笔记 `notes/2026-08-31-laptop-verb/design-review.md`（laptop_verb 逐维度评审）。
