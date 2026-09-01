@@ -71,7 +71,8 @@
       <span class="badge b-top">顶抓 100%</span>
       <span class="badge b-side">侧抓 100%</span>
       <span class="badge b-ok">反例拒绝 0%</span>
-      <span class="badge b-warn">⑤ 指令渲染 / 接 yml 待做</span>
+      <span class="badge b-ok">✓ 指令渲染</span>
+      <span class="badge b-warn">接 yml / eval 待做</span>
     </div>
     <div class="meta">
       <span><b>Branch</b> docs/if-ext-six-axis-benchmark</span>
@@ -152,6 +153,17 @@
     <tr><td>1</td><td>1</td><td class="sidec">side</td><td>from the side</td><td>right</td><td>✓</td><td>0.1</td><td>✓</td></tr>
   </table>
 
+  <h3>渲染出的实际指令（<code>gen_episode_instructions</code> → <code>instructions/episodeN.json</code>）</h3>
+  <p>每条 demo 的 token（<code>{A}/{a}/{D}</code>）填进模板池，确定性替换出自然语言指令——<strong>方向词随 mode 切换，是唯一区分信号</strong>：</p>
+  <div class="grid2">
+    <div class="card"><h3><span class="dot t"></span>episode 0 · top（seed 0）</h3>
+      <div class="kv">“Pick up the block <span style="color:var(--top);font-weight:600">from the top</span> carefully.”<br>
+      “Grasp the block <span style="color:var(--top);font-weight:600">from the top</span> steadily.”</div></div>
+    <div class="card"><h3><span class="dot s"></span>episode 1 · side（seed 1）</h3>
+      <div class="kv">“Use the right arm to grasp the block <span style="color:var(--side);font-weight:600">from the side</span>.”<br>
+      “Lift the block <span style="color:var(--side);font-weight:600">from the side</span> with the right arm.”</div></div>
+  </div>
+
   <h3>数值验证汇总</h3>
   <table>
     <tr><th>检查</th><th>结果</th><th>脚本</th></tr>
@@ -183,7 +195,7 @@
     <tr><td>机制 + 朝向判据 + 双抓法 oracle</td><td>✓ 已验（100/100/0）</td></tr>
     <tr><td>seed→mode→instruction→check 同源接线</td><td>✓ 已验（wiring + diag + scene_info）</td></tr>
     <tr><td>反例（用错抓法即使举起也判失败）</td><td>✓ 0% 通过</td></tr>
-    <tr><td>指令文本 LLM 渲染（模板→自然语言）</td><td>✗ 未做（⑤）</td></tr>
+    <tr><td>逐 episode 指令渲染（模板填槽 → 自然语言）</td><td>✓ 已验（top→“from the top” / side→“from the side”）</td></tr>
     <tr><td>接入 <code>all_tasks_plus_if.yml</code></td><td>✗ 未做（⑤）</td></tr>
     <tr><td>policy eval</td><td>✗ 未做（⑥）</td></tr>
   </table>
@@ -203,7 +215,10 @@ python tests/grasp_cube_approach/check_if_wiring.py 3
 python tools/task_diag.py grasp_cube_approach 20 demo_clean
 
 # 实采（一次出双模式：seed0=top, seed1=side）
-bash collect_data.sh grasp_cube_approach demo_clean 0   # 在 submodule 内</code></pre>
+bash collect_data.sh grasp_cube_approach demo_clean 0   # 在 submodule 内
+
+# 指令渲染（token 填模板 → instructions/episodeN.json）
+cd description && bash gen_episode_instructions.sh grasp_cube_approach demo_clean 2</code></pre>
   <p class="muted">深读：同目录 <a href="design-review.md">design-review.md</a>（基准有效性 8 维校验）· 跨会话记忆 <code>grasp-approach-spike</code> · 流水线 SOP <code>docs/task-design/IF任务实现流水线-SOP.md</code>。</p>
 
 </div>
