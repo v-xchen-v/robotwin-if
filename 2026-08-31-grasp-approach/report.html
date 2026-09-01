@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>IF-Grasp-Approach — grasp_cube_approach</title>
+<style>
+  :root{
+    --bg:#f6f7f9; --card:#fff; --ink:#1a1f29; --muted:#5b6472; --line:#e4e8ee;
+    --top:#2563eb; --side:#e0533d; --ok:#1a9d6b; --warn:#c8871a; --code:#0f172a; --codebg:#f1f5f9;
+    --accent:#6d5bd0;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;
+    line-height:1.65;font-size:15.5px}
+  .wrap{max-width:960px;margin:0 auto;padding:32px 22px 80px}
+  h1{font-size:29px;margin:0 0 6px;letter-spacing:-.5px}
+  h2{font-size:21px;margin:44px 0 14px;padding-bottom:8px;border-bottom:2px solid var(--line)}
+  h3{font-size:16px;margin:22px 0 8px}
+  p{margin:10px 0}
+  code,kbd{font-family:"SF Mono",Menlo,Consolas,monospace;font-size:.88em;background:var(--codebg);
+    padding:1.5px 6px;border-radius:5px;color:var(--code)}
+  pre{background:var(--code);color:#e6edf3;padding:14px 16px;border-radius:9px;overflow-x:auto;font-size:13px;line-height:1.55}
+  pre code{background:none;color:inherit;padding:0}
+  .muted{color:var(--muted)}
+  .hero{background:linear-gradient(135deg,#fff,#eef1f7);border:1px solid var(--line);
+    border-radius:16px;padding:26px 28px;margin-top:6px}
+  .badges{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 4px}
+  .badge{font-size:12.5px;font-weight:600;padding:4px 11px;border-radius:999px;border:1px solid transparent}
+  .b-ok{background:#e5f5ee;color:var(--ok);border-color:#bfe6d4}
+  .b-top{background:#e8f0fe;color:var(--top);border-color:#c6dafc}
+  .b-side{background:#fdece8;color:var(--side);border-color:#f6cabf}
+  .b-warn{background:#fbf1de;color:var(--warn);border-color:#f0dcb4}
+  .meta{display:flex;flex-wrap:wrap;gap:6px 20px;margin-top:16px;font-size:13px;color:var(--muted)}
+  .meta b{color:var(--ink);font-weight:600}
+  table{border-collapse:collapse;width:100%;margin:14px 0;font-size:14px}
+  th,td{border:1px solid var(--line);padding:8px 11px;text-align:left;vertical-align:top}
+  th{background:#f0f3f8;font-weight:600}
+  td.top,th.top{color:var(--top)} td.side,td.sidec{color:var(--side)}
+  .tl{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--accent);
+    border-radius:10px;padding:16px 20px;margin:14px 0}
+  .tl b{color:var(--accent)}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:16px 0}
+  @media(max-width:680px){.grid2{grid-template-columns:1fr}}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;overflow:hidden}
+  .card h3{margin:0 0 8px;display:flex;align-items:center;gap:8px}
+  .dot{width:11px;height:11px;border-radius:50%;display:inline-block}
+  .dot.t{background:var(--top)} .dot.s{background:var(--side)}
+  .card img,.card video{width:100%;border-radius:8px;display:block;background:#eef}
+  .cap{font-size:12.5px;color:var(--muted);margin-top:7px}
+  .flow{background:var(--code);color:#e6edf3;border-radius:11px;padding:18px 20px;margin:16px 0;
+    font-family:"SF Mono",Menlo,Consolas,monospace;font-size:13px;line-height:1.7;overflow-x:auto}
+  .flow .k{color:#7ee0b8} .flow .v{color:#9ec5ff} .flow .c{color:#8b97a8}
+  .note{background:#fbf1de;border:1px solid #f0dcb4;border-radius:10px;padding:13px 16px;margin:14px 0;font-size:14px}
+  .note b{color:var(--warn)}
+  .kv{font-size:14px}
+  ul{margin:10px 0;padding-left:22px} li{margin:5px 0}
+  .why{border-left:3px solid var(--accent);padding-left:14px;margin:12px 0;color:#38414f}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="hero">
+    <h1>IF-Grasp-Approach</h1>
+    <div class="muted"><code>grasp_cube_approach</code> · 同一个方块，指令里的<strong>接近方向词</strong>（“从顶部” vs “从侧面”）是唯一变量——测 policy 是否服从指定的抓取构型，而不是默认用自己最省力的顶抓。</div>
+    <div class="badges">
+      <span class="badge b-ok">✓ Spike 完成</span>
+      <span class="badge b-ok">✓ IF 接线 (seed→mode→instruction→check)</span>
+      <span class="badge b-top">顶抓 100%</span>
+      <span class="badge b-side">侧抓 100%</span>
+      <span class="badge b-ok">反例拒绝 0%</span>
+      <span class="badge b-warn">⑤ 指令渲染 / 接 yml 待做</span>
+    </div>
+    <div class="meta">
+      <span><b>Branch</b> docs/if-ext-six-axis-benchmark</span>
+      <span><b>日期</b> 2026-09-01</span>
+      <span><b>协议</b> zeroshot / native-ft（无 ifext-ft）</span>
+    </div>
+    <div class="meta">
+      <span><b>核心文件</b> <code>tasks/envs/grasp_cube_approach.py</code> · <code>tasks/task_instruction/grasp_cube_approach.json</code> · <code>tests/grasp_cube_approach/</code></span>
+    </div>
+  </div>
+
+  <div class="tl">
+    <b>TL;DR</b>
+    <ul style="margin-bottom:0">
+      <li><b>做了什么</b>：一个单轴指令跟随诊断任务——同一方块、同一固定位姿，指令的方向词选择「顶抓（夹爪竖直下压）」还是「侧抓（夹爪水平侧入）」，并同时决定成功判据。</li>
+      <li><b>怎么验证</b>：oracle spike（顶 100% / 侧 100% / 反例 0%，N=30）+ IF 接线检查（seed 偶→top、奇→side 全 PASS）+ 预采集诊断（20/20，top/side 各 10 平衡）+ 视频抽帧（下方）。</li>
+      <li><b>结论</b>：机制、朝向判据、双抓法都稳；任务已从「能跑对的 oracle」升级为真正的 IF 任务（seed 驱动 mode + 指令 + 判据同源）。</li>
+      <li><b>最大的坑</b>：侧抓初始只有 73%——根因<strong>不是</strong>撞桌（riser 已解决），而是 <code>choose_grasp_pose</code> 在 4 个侧面里乱选、常选中机械臂够不到的面。锁定可达的 face 6 → 100%。</li>
+    </ul>
+  </div>
+
+  <h2>背景与目标</h2>
+  <p>论文 RoboTwin-IF 里「动词」和「目标物体」是耦合的。IF-Ext 要把各能力轴<strong>解耦</strong>，单独诊断。本任务测的轴是<strong>抓取接近方向</strong>：物体固定、两种抓法都物理可行、动词都是「抓」，唯一区分量是指令里的<strong>抓法词</strong>。真正要暴露的失败模式是：policy 学到「小方块→顶抓」的惯性先验，无视指令里的「从侧面」。</p>
+  <div class="why">为什么用<strong>方块</strong>：cube 几何最大中性——不像杯子（把手→侧抓）、盘子（→顶抓）自带抓取 affordance。顶/侧都不被视觉偏向，所以唯一能区分两种抓法的信号只有指令词本身。这是单轴隔离的前提。</div>
+
+  <h2>★ 核心设计：seed / mode / instruction / 场景 四者的关系</h2>
+  <p>这是把 spike 变成真 IF 任务的关键一步。四件事<strong>同源</strong>——都锁在 seed 上：<code>mode</code> 由 seed 生，指令方向短语由 <code>mode</code> 渲染，<code>check_success</code> 读同一个 seed 派生的 <code>mode</code>。缺任何一环，任务就悄悄不再测「指令跟随」。</p>
+
+  <div class="flow">
+<span class="c"># tasks/envs/grasp_cube_approach.py — load_actors()</span>
+<span class="k">scene_seed</span> = seed <span class="v">// 2</span>              <span class="c"># 配对：(2k, 2k+1) 共享同一场景</span>
+<span class="k">mode</span>       = [<span class="v">"top"</span>, <span class="v">"side"</span>][seed <span class="v">% 2</span>]   <span class="c"># seed 奇偶选抓法</span>
+
+<span class="c"># 指令方向短语 {D} —— 唯一的 top/side 信号，由 mode 派生</span>
+<span class="k">{D}</span> = (TOP_PHRASES if mode=="top" else SIDE_PHRASES)[scene_seed <span class="v">% len</span>]
+
+<span class="c"># check_success 读 seed 派生的 mode（不是环境变量、不是全局常量）</span>
+<span class="k">oriented</span> = |approach_axis.z| ≥ 0.7 (top, 竖直)  /  ≤ 0.3 (side, 水平)
+  </div>
+
+  <h3>逐 seed 展开（<code>tests/grasp_cube_approach/check_if_wiring.py</code> 实测）</h3>
+  <table>
+    <tr><th>seed</th><th>mode</th><th>指令 <code>{D}</code></th><th>oracle 抓法</th><th>朝向 <code>|az|</code></th><th>check</th></tr>
+    <tr><td>0</td><td class="top">top</td><td>“from the top”</td><td class="top">竖直下压（接触组 0-3）</td><td>1.00 竖直</td><td>✓</td></tr>
+    <tr><td>1</td><td class="sidec">side</td><td>“from the side”</td><td class="sidec">水平侧入（face 6）</td><td>0.10 水平</td><td>✓</td></tr>
+    <tr><td>2</td><td class="top">top</td><td>“from above”</td><td class="top">竖直下压</td><td>1.00 竖直</td><td>✓</td></tr>
+    <tr><td>3</td><td class="sidec">side</td><td>“from the side”</td><td class="sidec">水平侧入</td><td>0.10 水平</td><td>✓</td></tr>
+    <tr><td>…</td><td class="muted">交替</td><td class="muted">按 scene_seed 轮换措辞</td><td class="muted">…</td><td class="muted">…</td><td>✓</td></tr>
+  </table>
+
+  <h3>场景：固定位姿 → 单场景、成对出现在两个 mode 下</h3>
+  <p><code>POSE_JITTER=False</code>（spec 要求「放中央固定」），所以所有 seed 的场景<strong>逐像素相同</strong>。预采集诊断（N=20）观测到：<strong>1 个场景 / 20 seed</strong>，且该场景同时挂 <code>modes=['side','top']</code>——正是配对结构。policy 看到的初始画面完全一样，唯一差别是指令方向词。</p>
+  <div class="why">为什么这样设计：<strong>IF 单轴隔离</strong>。要诊断「读没读指令」，就必须让指令词成为<strong>唯一</strong>能区分正确行为的信号。同场景成对出现在 top/side 两条指令下 → 几何不泄答案 → policy 无法靠初始画面猜抓法，只能读指令。</div>
+  <div class="note"><b>边界（已文档化的张力）</b>：固定位姿也意味着<strong>零感知变化</strong>——20 条 demo 只有 1 个场景，数据集同质。纯 IF 隔离没问题；若要同时测感知/泛化，需引入位姿抖动，但那会<strong>重开 face-locking</strong>（<code>SIDE_FACE=6</code> 绑定 x=0/右臂，抖动下 x 变号换臂就失效，需按臂动态选面）。</div>
+
+  <h2>证据</h2>
+  <p>同一个红方块架在灰 riser 上，初始画面一致；只有指令方向词不同 → 末态夹爪朝向一眼可分。</p>
+  <div class="grid2">
+    <div class="card">
+      <h3><span class="dot t"></span>seed 0 · “from the top”</h3>
+      <video controls preload="metadata" src="evidence/top_seed0.mp4"></video>
+      <img src="evidence/top_grasp.png" alt="top grasp still" style="margin-top:8px">
+      <div class="cap">夹爪<strong>竖直下压</strong>方块顶面 → 抬离。<code>approach_axis_z=1.0</code>（竖直）。</div>
+    </div>
+    <div class="card">
+      <h3><span class="dot s"></span>seed 1 · “from the side”</h3>
+      <video controls preload="metadata" src="evidence/side_seed1.mp4"></video>
+      <img src="evidence/side_grasp.png" alt="side grasp still" style="margin-top:8px">
+      <div class="cap">夹爪<strong>水平侧入</strong>夹住方块中段 → 抬离。<code>approach_axis_z=0.1</code>（水平）。</div>
+    </div>
+  </div>
+  <p class="cap">这两段证明了核心设计跑通：<strong>同一 seed 序列、同一场景，seed 0 出竖直顶抓、seed 1 出水平侧抓</strong>，且每条数据的 <code>mode / {D} / 朝向</code> 都由 seed 正确派生（见下 <code>scene_info.json</code>）。</p>
+
+  <h3>采集落地的每条元数据（<code>scene_info.json</code>）</h3>
+  <table>
+    <tr><th>episode</th><th>seed</th><th>mode</th><th><code>{D}</code></th><th>arm</th><th>orientation_match</th><th>approach_axis_z</th><th>lifted</th></tr>
+    <tr><td>0</td><td>0</td><td class="top">top</td><td>from the top</td><td>right</td><td>✓</td><td>1.0</td><td>✓</td></tr>
+    <tr><td>1</td><td>1</td><td class="sidec">side</td><td>from the side</td><td>right</td><td>✓</td><td>0.1</td><td>✓</td></tr>
+  </table>
+
+  <h3>数值验证汇总</h3>
+  <table>
+    <tr><th>检查</th><th>结果</th><th>脚本</th></tr>
+    <tr><td>Oracle spike（固定位姿 N=30）</td><td>顶 <b>100%</b> / 侧 <b>100%</b> / 反例 <b>0%</b></td><td><code>spike_success_rate.py</code></td></tr>
+    <tr><td>逐面可达率扫描</td><td>face6=<b>100%</b> · face4=87% · face5/7=0% · auto=73%</td><td><code>sweep_side.py</code></td></tr>
+    <tr><td>IF 接线（seed→mode→instruction→check）</td><td>seed 偶→top / 奇→side <b>全 PASS</b></td><td><code>check_if_wiring.py</code></td></tr>
+    <tr><td>预采集诊断（N=20）</td><td>overall <b>20/20</b>；top 10/10、side 10/10；1 场景挂两 mode</td><td><code>tools/task_diag.py</code></td></tr>
+  </table>
+
+  <h2>实现要点</h2>
+  <ul>
+    <li><b>接触点注入</b>：<code>create_box</code> 后直接改 <code>self.cube.config["contact_points_pose"]</code>——顶抓复用默认 box 的 top_down 组 [0-3]，侧抓用 create_actor 里注释掉的水平接触组 [4-7]。<strong>不动 submodule native 文件</strong>。</li>
+    <li><b>riser（方案 C）</b>：cube 架在一个矮 static riser 上（<code>RISER_HALF=(0.02,0.02,0.012)</code>），把整个方块抬离桌面，侧抓下指清桌面——解决了原设计担心的撞桌。</li>
+    <li><b>侧抓锁 face 6</b>：auto 选面会选中不可达面（右/后=0%），锁定可达的 left 面 → 100%。</li>
+    <li><b>拆分度量</b>：<code>check_success</code> 保持严格 <code>lifted AND oriented</code> 供采集门控；新增 <code>eval_signals()</code> 把 <code>orientation_match</code>（IF 信号）和 <code>lifted</code>（执行）分开输出，eval 主报<strong>朝向 + 顶/侧 gap</strong>。</li>
+    <li><b><code>APPROACH</code> 降级</b>：从「env 变量」降为 harness 专用 override（默认 None→按 seed 派生）。</li>
+  </ul>
+
+  <h2>关键决策 / 教训</h2>
+  <ul>
+    <li><b>73%→100% 的根因换了</b>：原设计假设侧抓风险=撞桌；实测 riser 解决了撞桌，真瓶颈是<strong>水平接近的 IK 可达性</strong>——auto 选面在 4 个侧面里乱选。教训：先逐面扫描再下结论，别在 riser 高度/cube 尺寸上空调。</li>
+    <li><b>拆分度量是必需，不是可选</b>：IF-Ext 是<strong>纯测试集、无 ifext-ft 兜底</strong>，只有 zeroshot/native-ft——而侧抓在这两个协议下轻度 OOD，二元 <code>lifted AND oriented</code> 会让侧抓的 0 分歧义（没读指令 vs 读了但没夹住）。方向性判据把「读懂了」和「执行成功」分开，才让任务在唯一在场的协议下成立。</li>
+    <li><b>IF 四件事必须同源</b>：mode 由 seed 生、指令由 mode 渲染、check 读同一 mode。改名前的旧版本 check 读 env 变量、无指令池，就是「能跑对的 oracle」但还不是 IF 任务的典型征兆。</li>
+  </ul>
+
+  <h2>现状与边界</h2>
+  <table>
+    <tr><th>项</th><th>状态</th></tr>
+    <tr><td>机制 + 朝向判据 + 双抓法 oracle</td><td>✓ 已验（100/100/0）</td></tr>
+    <tr><td>seed→mode→instruction→check 同源接线</td><td>✓ 已验（wiring + diag + scene_info）</td></tr>
+    <tr><td>反例（用错抓法即使举起也判失败）</td><td>✓ 0% 通过</td></tr>
+    <tr><td>指令文本 LLM 渲染（模板→自然语言）</td><td>✗ 未做（⑤）</td></tr>
+    <tr><td>接入 <code>all_tasks_plus_if.yml</code></td><td>✗ 未做（⑤）</td></tr>
+    <tr><td>policy eval</td><td>✗ 未做（⑥）</td></tr>
+  </table>
+  <div class="note"><b>不证明什么</b>：这份 report 证明的是 <strong>oracle + 任务接线跑通</strong>，<strong>不是</strong>任何 policy 的效果。固定位姿下只验了单一场景（zero 感知变化）。侧抓 100% 是 oracle 在<strong>锁定 face 6 + 固定右臂</strong>几何下的结果，不代表任意位姿都可达。协议依赖已明写：结论在 zeroshot/native-ft 下成立，需配方向性判据。</div>
+
+  <h2>怎么复现</h2>
+  <pre><code>./bridge_tasks.sh                 # 把任务符号链接注入 submodule
+conda activate RoboTwin
+
+# oracle spike（固定位姿，顶/侧/反例）
+GRASP_CUBE_FIXED=1 python tests/grasp_cube_approach/spike_success_rate.py 30
+
+# IF 接线检查（seed 偶→top / 奇→side）
+python tests/grasp_cube_approach/check_if_wiring.py 3
+
+# 预采集诊断（成功率 + 模式平衡 + seed→scene）
+python tools/task_diag.py grasp_cube_approach 20 demo_clean
+
+# 实采（一次出双模式：seed0=top, seed1=side）
+bash collect_data.sh grasp_cube_approach demo_clean 0   # 在 submodule 内</code></pre>
+  <p class="muted">深读：同目录 <a href="design-review.md">design-review.md</a>（基准有效性 8 维校验）· 跨会话记忆 <code>grasp-approach-spike</code> · 流水线 SOP <code>docs/task-design/IF任务实现流水线-SOP.md</code>。</p>
+
+</div>
+</body>
+</html>
