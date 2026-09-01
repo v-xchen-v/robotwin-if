@@ -204,10 +204,20 @@ class grasp_cube_approach(Base_Task):
 
         sig = self.eval_signals()
         self.info["mode"] = self.mode
+        # info["info"] must contain ONLY the instruction template placeholders --
+        # the renderer requires the template's {..} set to exactly match these
+        # keys, so any extra field here filters out every template. Diagnostic
+        # signals therefore live under a separate key.
         self.info["info"] = {
-            "{A}": "block",
+            # {A} is a plain string (not an object-description json path), so the
+            # renderer substitutes it literally -- carry the article here ("the
+            # block"), since it only auto-prepends "the" for json-path or arm
+            # ({a}) values. {a}="right"/"left" renders as "the right arm".
+            "{A}": "the block",
             "{a}": str(arm_tag),
             "{D}": self._approach_phrase(),
+        }
+        self.info["signals"] = {
             "orientation_match": sig["orientation_match"],
             "lifted": sig["lifted"],
             "approach_axis_z": round(sig["approach_axis_z"], 3),
