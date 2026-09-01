@@ -95,26 +95,34 @@
 - **top-face-only + 单刚体**：一个 actor = 灰蓝 cube 本体（box collision+visual）+ 顶面 quad 贴片（本体色与贴片解耦，贴片只在顶面）→ 整体可抓，正是生产配方。
 - **猫/狗可辨**：程序画（无联网/无版权）——猫=橙、**尖三角耳**；狗=棕、**两侧垂耳**+浅口鼻。轮廓（尖 vs 垂）+ 颜色双重可分，最终 `spike_decal_top.png` 单头居中、方向正、cube 蓝灰不撞白背景。
 
-### 7c. 生产配方（decal mode 直接用）
+### 7c. 生产配方（decal mode 直接用）——**纯内存、零文件为首选**
+
+资产管理决策（讨论后定）：**decal 走程序生成 + 纯内存构造，不落任何磁盘资产**。动机是 [howto-decal-on-cube.md](howto-decal-on-cube.md) §5.5 的抗嵌套考量——若 robotwin-if 被别的 repo 当 submodule，文件路径解析（CWD 相对 / symlink 被拷成实体 / `realpath(__file__)` 反解）都有失效面；**内存版没有任何路径 → 全免疫**，env 也退回纯代码、自包含（和 laptop_verb/arm_select 一样，`bridge_tasks.sh` 无需新增 assets 注入点）。
+
+SAPIEN 两个类都有"吃 numpy 数组"的重载，是这条路的关键：
 ```
-actor = builder:
-  add_box_collision(half)            # 抓取用
-  add_box_visual(half, body_color)   # 灰蓝本体，四 cube 同色（不构成 color 混淆）
-  add_visual_from_file(quad.obj,     # 顶面单头 decal
-      pose=[0,0,half+0.002], scale=[2*half*0.9, 2*half*0.9, 1])
-# quad.obj: XY 平面单位方片，法线 +z，vt 用 (0,0)(1,0)(1,1)(0,1) 正立
-# mtl: map_Kd <cat|dog>.png（绝对/同目录路径，不碰 submodule assets）
+ent = Entity():
+  PhysxRigidDynamicComponent + PhysxCollisionShapeBox(half)     # 碰撞（抓取用）
+  RenderBodyComponent:
+    RenderShapeBox(half, 灰蓝本体色)                             # 四 cube 同色，不构成 color 混淆
+    RenderShapeTriangleMesh(verts, tris, normals, uvs, mat)     # 顶面 decal：quad 来自数组、UV 写死[0,1]（v 翻转正立）
+      mat.set_base_color_texture(RenderTexture2D(rgba_arr, "R8G8B8A8Unorm", srgb=True))  # 纹理来自数组
+      mesh.set_local_pose([0,0,half+0.002])                     # 抬到顶面
 ```
-真实猫狗照片（CC0/生成图）后续换 `_head_cat.png`/`_head_dog.png` 即可，机制不变。
+- **抓取元数据**：手动 entity 没有 `create_box` 的 contact_points → 真 env 里改成**用 `create_box` 建本体（拿 Actor+抓取点），再把 decal mesh attach 到它的 RenderBodyComponent**。
+- **上真实照片仍零文件**：照片 base64 内嵌 .py（或 `.npy`）解码成数组，走同一条内存路径；授权在模块里记一行。
+- **备选（讲原理用）**：文件版 = quad.obj+mtl+png + `add_visual_from_file`（`spike_decal_top.py`），直观但引入路径解析，不作首选。
 
 ### 7d. 证据
 - `evidence/spike_shape_size.png` —— shape+size 四 primitive。
 - `evidence/spike_decal_color.png` —— 初版 box 面贴图（暴露 UV 半窗裁切）+ 纯色 box。
 - `evidence/spike_uv_cal.png` —— UV 窗口标定（证半窗偏心）。
-- `evidence/spike_decal_top.png` —— **定稿**：顶面单头猫/狗、quad mesh。
-- 脚本：`tests/attribute_select/spike_decal_render.py`、`spike_decal_top.py`。
+- `evidence/spike_decal_top.png` —— 文件版定稿：顶面单头猫/狗、quad mesh。
+- `evidence/spike_inmem.png` —— **纯内存版定稿（首选配方）**：猫+狗，全程零文件。
+- 脚本：`tests/attribute_select/{spike_decal_render,spike_decal_top,spike_decal_inmem}.py`。
 
 ### 7e. 仍未做（进阶段③前）
 - 抓取 oracle 未在本 env 实跑（借 §4/§7 结论）；env 接线后补一个 4-mode 抓取成功率 spike。
-- 真实 decal 图 + 授权；size 两档尺寸最终值；shape/color/size 的干扰物 builder。
+- decal mode 用 `create_box` 本体 + attach decal mesh 的整合（保留抓取点）；size 两档尺寸最终值；shape/color/size 的干扰物 builder。
 - 阶段③：seed→mode→instruction→check 四者同源（`MODES=[color,decal,shape,size]`、`k=4`）。
+- 资产管理已定（7c：纯内存、零文件），**无 bridge/submodule 改动**。

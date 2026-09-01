@@ -14,6 +14,10 @@
 PIL 画的 PNG  →  带 UV 的 quad 小方片(mtl 指向 PNG)  →  add_visual_from_file 挂到 cube 本体  →  build 成一个刚体
 ```
 
+> **两种实现，先说结论**：
+> - **§3–§5 文件版**（quad.obj + mtl + png）——用来**讲清 UV / mesh 原理**，最直观。
+> - **§5.5 纯内存版（推荐落地）**——`RenderTexture2D(数组)` + `RenderShapeTriangleMesh(顶点,UV,...)`，**一个文件都不写**。因为没有任何路径要解，天然**抗嵌套/抗拷贝/抗 CWD**（若 robotwin-if 被别的 repo 当 submodule，文件版的路径解析要小心，内存版则完全无所谓）。生产就用这个。
+
 ## 1. 先补三个概念（看懂后面全靠这三个）
 
 - **贴图 / 纹理（texture）**：一张 2D 图片，"糊"到 3D 物体表面当颜色。在 SAPIEN 里是 `RenderMaterial.set_base_color_texture(RenderTexture2D(png))`，或经 `.mtl` 的 `map_Kd`。
@@ -137,6 +141,55 @@ arr = (np.clip(cam.get_picture("Color")[...,:3],0,1)*255).astype(np.uint8)
 Image.fromarray(arr).save("out.png")
 ```
 跑：`conda run -n RoboTwin python thisfile.py`（CWD 无所谓，贴图用相对/绝对路径都行）。
+
+## 5.5 推荐实现：纯内存（零文件、抗嵌套）
+
+§3–§5 把贴图/UV 落成磁盘文件是为了讲原理。**真正落地更推荐纯内存**——SAPIEN 的两个类都有"吃 numpy 数组"的重载，于是从头到尾不写任何文件：
+
+- `RenderTexture2D(array, "R8G8B8A8Unorm", srgb=True)` —— 纹理直接来自 **RGBA 数组**（不是 PNG 路径）。
+- `RenderShapeTriangleMesh(verts, tris, normals, uvs, material)` —— quad 直接来自 **顶点+UV 数组**（不是 OBJ）。
+
+因为**没有任何路径**，前面 §2/§6 里所有"路径怎么解"的坑（CWD 相对、symlink 被拷成实体、robotwin-if 被嵌成子 submodule）**全部消失**。env 退回纯代码、完全自包含（和 `create_box` 那批 IF 任务一样）。
+
+```python
+import numpy as np
+from PIL import Image, ImageDraw
+import sapien.core as sapien
+import sapien.render as R
+
+def head_arr(S=512):                      # (a) 画到 RGBA 数组，不落盘
+    img = Image.new("RGBA", (S, S), (248, 240, 229, 255)); d = ImageDraw.Draw(img)
+    d.ellipse([S*0.2, S*0.2, S*0.8, S*0.8], fill=(238, 150, 60, 255))
+    return np.asarray(img, dtype=np.uint8)
+
+def decal_cube_inmem(scene, x, arr, half=0.05, body=(0.42, 0.44, 0.5)):
+    ent = sapien.Entity()
+    rc = sapien.physx.PhysxRigidDynamicComponent()      # (b) 碰撞
+    rc.attach(sapien.physx.PhysxCollisionShapeBox(half_size=[half]*3,
+              material=scene.default_physical_material))
+    rb = R.RenderBodyComponent()                        # (c) 外观：本体 + decal
+    rb.attach(R.RenderShapeBox([half]*3, R.RenderMaterial(base_color=[*body, 1])))
+    tex = R.RenderTexture2D(arr, "R8G8B8A8Unorm", srgb=True)   # ← 纹理来自数组
+    mat = R.RenderMaterial(); mat.set_base_color_texture(tex)
+    mat.base_color = [1, 1, 1, 1]; mat.roughness = 0.7
+    q = half * 0.9
+    verts = np.array([[-q,-q,0],[q,-q,0],[q,q,0],[-q,q,0]], dtype=np.float32)
+    tris  = np.array([[0,1,2],[0,2,3]], dtype=np.uint32)
+    norms = np.tile([0,0,1], (4,1)).astype(np.float32)
+    uvs   = np.array([[0,1],[1,1],[1,0],[0,0]], dtype=np.float32)   # ← UV 写死[0,1]，v 翻转正立
+    mesh = R.RenderShapeTriangleMesh(verts, tris, norms, uvs, mat) # ← quad 来自数组
+    mesh.set_local_pose(sapien.Pose([0, 0, half + 0.002]))         # 抬到顶面
+    rb.attach(mesh)
+    ent.add_component(rc); ent.add_component(rb)
+    ent.set_pose(sapien.Pose([x, 0, half])); scene.add_entity(ent)
+    return ent
+```
+跑通的完整脚本：`tests/attribute_select/spike_decal_inmem.py`；输出 `evidence/spike_inmem.png`（猫+狗，全程零文件）。
+
+**要点/差异**：
+- 用**手动建 entity**（`RenderBodyComponent.attach(shape)`），不是 `ActorBuilder`——因为要塞自定义 mesh，走的是 `create_sphere`/`create_cylinder` 那条低层路子。
+- **抓取元数据**：手动 entity 没有 `create_box` 的 `contact_points`。真 env 里更稳的是**用 `create_box` 建本体（拿到 Actor + 抓取点），再把 decal mesh attach 到它的 `RenderBodyComponent`**——既有贴图又保留抓取参数。
+- **将来上真实照片仍想零文件**：把照片 base64 内嵌进 .py（或存 `.npy`）解码成数组，走同一条内存路径。
 
 ## 6. 常见坑（都踩过）
 
