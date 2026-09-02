@@ -1,0 +1,186 @@
+<!-- IF-Ext vs paper RoboTwin-IF — high-level explainer, self-contained share page. Companion to tasks.html. -->
+<meta charset="utf-8">
+<title>IF-Ext vs RoboTwin-IF</title>
+<style>
+  :root{
+    --bg:#f6f7f9; --card:#fff; --ink:#1f2430; --muted:#5b6472; --line:#e4e7ec;
+    --accent:#4f46e5; --accent2:#0ea5a4;
+    --ok:#177245; --okbg:#e8f5ee; --warn:#b42318; --warnbg:#fdecea;
+    --paper:#8a6d3b; --paperbg:#f7f0e3; --ext:#0e7490; --extbg:#e5f4f7;
+    --code:#f2f3f6; --th:#eef0f4;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font:15px/1.62 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"PingFang SC","Microsoft YaHei",sans-serif}
+  .wrap{max-width:1000px;margin:0 auto;padding:30px 22px 80px}
+  h1{font-size:29px;line-height:1.2;margin:0 0 6px}
+  h2{font-size:21px;margin:46px 0 12px;padding-bottom:8px;border-bottom:2px solid var(--line)}
+  h2 .num{color:var(--accent);font-weight:800;margin-right:8px}
+  p{margin:11px 0}
+  a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
+  code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.86em;background:var(--code);padding:1px 6px;border-radius:5px}
+  b{color:var(--ink)}
+  .hero{background:linear-gradient(135deg,#8a6d3b 0%,#0e7490 100%);color:#fff;border-radius:16px;padding:28px 30px}
+  .hero h1{color:#fff}
+  .hero .sub{font-size:16px;opacity:.97;margin:10px 0 0;max-width:74ch}
+  .hero .tag{display:inline-block;margin-top:16px;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.32);
+    padding:5px 13px;border-radius:999px;font-size:12.5px;font-weight:600}
+
+  .tldr{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:12px;padding:16px 20px;margin:18px 0}
+  .tldr p{margin:6px 0}
+
+  .scroll{overflow-x:auto;border:1px solid var(--line);border-radius:12px;margin:16px 0;background:var(--card)}
+  table{border-collapse:collapse;width:100%;min-width:640px;font-size:14px}
+  th,td{text-align:left;padding:11px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+  thead th{background:var(--th);font-size:12px;text-transform:uppercase;letter-spacing:.03em;color:var(--muted)}
+  tbody tr:last-child td{border-bottom:none}
+  .col-paper{color:var(--paper);font-weight:700}
+  .col-ext{color:var(--ext);font-weight:700}
+  th.paper{color:var(--paper)} th.ext{color:var(--ext)}
+  .dim{display:inline-block;background:#eef2ff;color:#3730a3;border-radius:6px;padding:1px 7px;margin:1px 3px 1px 0;font-size:12px;font-weight:600}
+  .plus{display:inline-block;background:var(--extbg);color:var(--ext);border-radius:6px;padding:1px 7px;font-size:11.5px;font-weight:700}
+  .newbadge{display:inline-block;background:var(--okbg);color:var(--ok);border-radius:6px;padding:1px 7px;font-size:11.5px;font-weight:700}
+
+  .callout{background:var(--paperbg);border:1px solid #e7dcc4;border-radius:12px;padding:16px 20px;margin:16px 0}
+  .callout h3{margin:0 0 6px;font-size:15px;color:var(--paper)}
+
+  .cards{display:grid;grid-template-columns:1fr;gap:14px;margin:14px 0}
+  .fc{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 20px}
+  .fc .k{display:inline-block;background:var(--extbg);color:var(--ext);font-weight:800;border-radius:8px;padding:2px 10px;font-size:13px;margin-bottom:6px}
+  .fc h3{margin:4px 0 6px;font-size:17px}
+  .fc p{margin:6px 0}
+
+  /* localize-the-dip mini diagram */
+  .bars{display:grid;grid-template-columns:150px 1fr 44px;gap:7px 10px;align-items:center;margin:12px 0 2px;font-size:12.5px}
+  .bars .lbl{color:var(--muted);text-align:right;white-space:nowrap}
+  .track{background:#eef0f4;border-radius:6px;height:16px;overflow:hidden}
+  .fill{height:100%;background:var(--ext);border-radius:6px}
+  .fill.low{background:var(--warn)}
+  .pct{color:var(--muted)}
+  .pct.low{color:var(--warn);font-weight:700}
+  .paperbar{display:flex;align-items:center;gap:12px;margin:10px 0}
+  .paperbar .track{flex:1;height:20px}
+  .paperbar .fill{background:var(--paper)}
+
+  .split{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:14px 0}
+  @media(max-width:680px){.split{grid-template-columns:1fr}}
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px}
+  .panel h4{margin:0 0 4px;font-size:14px}
+  .panel.p{border-top:3px solid var(--paper)} .panel.e{border-top:3px solid var(--ext)}
+  .panel .cap{color:var(--muted);font-size:12.5px;margin:8px 0 0}
+
+  .foot{color:var(--muted);font-size:12.5px;margin-top:34px}
+  .btnrow{display:flex;flex-wrap:wrap;gap:10px;margin:16px 0}
+  .btn{display:inline-block;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:9px 15px;font-weight:600;color:var(--ink)}
+  .btn:hover{border-color:var(--accent);text-decoration:none}
+</style>
+
+<div class="wrap">
+  <div class="hero">
+    <h1>IF-Ext vs. RoboTwin-IF（论文）</h1>
+    <p class="sub">论文的 5 个任务测「指令跟随」时，把多个能力维度<b>混在一个任务里</b>——给你一个综合分，但掉分了说不清是哪项能力掉了。IF-Ext 把维度<b>一根一根拆开</b>，每个任务只测一个轴，于是能直接定位 policy 在指令跟随的哪一段退化。</p>
+    <span class="tag">定位：诊断工具 · 与论文 5 任务<b>互补，不替代</b></span>
+  </div>
+
+  <div class="tldr">
+    <p><b>一句话：</b>论文是一把<b>综合体温计</b>（一个 IF 总分）；IF-Ext 是一套<b>单项化验</b>（逐轴读数）。同一个 policy，论文告诉你「指令跟随行不行」，IF-Ext 告诉你「具体<b>哪个轴</b>不行」。</p>
+  </div>
+
+  <div class="scroll">
+    <table>
+      <thead><tr><th>对比项</th><th class="paper">论文 RoboTwin-IF</th><th class="ext">IF-Ext（我们）</th></tr></thead>
+      <tbody>
+        <tr><td>一个任务测几个维度</td><td class="col-paper">多个，混合</td><td class="col-ext">一个，隔离</td></tr>
+        <tr><td>输出</td><td class="col-paper">一个综合 IF 分</td><td class="col-ext">逐轴成功率 + 偏向哪个取值</td></tr>
+        <tr><td>失败能否定位到具体能力</td><td class="col-paper">难（维度纠缠）</td><td class="col-ext">能（单轴直接读出）</td></tr>
+        <tr><td>场景与答案的关系</td><td class="col-paper">目标位置随答案变</td><td class="col-ext">同场景成对、只翻转指令</td></tr>
+        <tr><td>覆盖的轴</td><td class="col-paper">5 个混合任务</td><td class="col-ext">7 个单轴（含 3 个净新增）</td></tr>
+        <tr><td>角色</td><td class="col-paper">综合基准</td><td class="col-ext">诊断手术刀（互补）</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2><span class="num">1</span>论文的 5 个任务：维度是混在一起的</h2>
+  <p>论文 §6.2.1 的 5 个任务集，每个都同时考验 <b>≥2 个</b>能力维度。它们衡量的是「综合指令跟随能力」，但一旦失败，很难归因到某一项：</p>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>论文任务</th><th>指令内容</th><th>混在一起的维度</th></tr></thead>
+      <tbody>
+        <tr><td class="col-paper">Pick-Diverse-Object</td><td>「颜色 + 名词」点名 1 个目标</td><td><span class="dim">目标名词</span><span class="dim">颜色特征</span></td></tr>
+        <tr><td class="col-paper">Place-Relative</td><td>把 A 放到 B「旁边 / 上面」</td><td><span class="dim">空间关系</span>（仅 2 值）</td></tr>
+        <tr><td class="col-paper">Operate-Mic-Drawer</td><td>开抽屉 → 放麦克风，部分指定用哪只手</td><td><span class="dim">多步序列</span><span class="dim">双臂协调</span></td></tr>
+        <tr><td class="col-paper">Operate-Stapler</td><td>「按订书机」或「移到垫子上」</td><td><span class="dim">动词判别</span><span class="dim">物体角色翻转</span></td></tr>
+        <tr><td class="col-paper">Operate-Tabletop</td><td>三选一：摇铃 / 按订书机 / 拿指定物</td><td><span class="dim">动词</span><span class="dim">目标物体</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="callout">
+    <h3>为什么「混合」是个问题——一个具体例子</h3>
+    <p>在 <b>Operate-Tabletop</b> 里，选「摇铃」这个动词就<b>等于</b>选了铃铛这个物体——动词和目标物体是焊死的。如果 policy 做错了，你分不清它是<b>没读懂动词</b>，还是<b>没 ground 对物体</b>。综合分只会告诉你「错了」，不会告诉你「错在哪根轴」。IF-Ext 的整个出发点，就是把这种纠缠拆开。</p>
+  </div>
+
+  <h2><span class="num">2</span>IF-Ext 有什么不一样</h2>
+  <div class="cards">
+    <div class="fc">
+      <span class="k">① 一个任务只测一个轴</span>
+      <h3>把纠缠的维度拆成独立的轴</h3>
+      <p>物体、几何、场景全部固定，<b>只让指令里的一个槽位变</b>。比如同一个瓶子，只有动词在「拿起 / 摇」之间切；同一个方块，只有颜色/形状/贴图/大小其中<b>一类</b>特征是区分量。某个轴的成功率骤降，就是 policy 在那个轴上退化的直接证据。</p>
+    </div>
+    <div class="fc">
+      <span class="k">② 同一场景，只翻转指令</span>
+      <h3>从结构上逼 policy 读指令</h3>
+      <p>相邻两局用<b>像素完全相同</b>的场景，只有指令不同（比如一局「左臂」、一局「右臂」，方块位置一模一样）。这样 policy 没法靠「物体在左边所以用左手」这类位置先验蒙对——<b>不读指令就必然一对一错</b>。论文里目标位置会随答案变，留了走捷径的空间。</p>
+    </div>
+    <div class="fc">
+      <span class="k">③ 读出「在哪一段掉」而不只是「总分」</span>
+      <h3>逐轴读数 + 偏向</h3>
+      <p>不止报一个总成功率，还报<b>每个轴 / 每种取值</b>的表现。例如 Attribute-Select 会分别报 color / decal / shape / size 四档——若 color 高、shape 低，就直接读出「policy 靠颜色、用不上形状」。这是综合分给不了的诊断分辨率。</p>
+    </div>
+  </div>
+
+  <div class="split">
+    <div class="panel p">
+      <h4 style="color:var(--paper)">论文：综合分，掉了看不出哪掉</h4>
+      <div class="paperbar"><span style="font-size:12.5px;color:var(--muted)">IF 总分</span><div class="track"><div class="fill" style="width:62%"></div></div><span style="font-size:12.5px;color:var(--muted)">62%</span></div>
+      <p class="cap">一个数字。62% 里，是动词没读懂、还是物体没 ground 对、还是顺序错了？无从知道。</p>
+    </div>
+    <div class="panel e">
+      <h4 style="color:var(--ext)">IF-Ext：逐轴读数，一眼看到那根短板</h4>
+      <div class="bars">
+        <span class="lbl">Verb</span><div class="track"><div class="fill" style="width:88%"></div></div><span class="pct">88%</span>
+        <span class="lbl">Color</span><div class="track"><div class="fill" style="width:91%"></div></div><span class="pct">91%</span>
+        <span class="lbl">Shape</span><div class="track"><div class="fill low" style="width:34%"></div></div><span class="pct low">34%</span>
+        <span class="lbl">Arm</span><div class="track"><div class="fill" style="width:83%"></div></div><span class="pct">83%</span>
+        <span class="lbl">Direction</span><div class="track"><div class="fill" style="width:79%"></div></div><span class="pct">79%</span>
+      </div>
+      <p class="cap">同一个 policy——问题定位到 <b>shape 轴</b>：能用颜色、却用不上形状。（示意数字）</p>
+    </div>
+  </div>
+
+  <h2><span class="num">3</span>七个轴从哪来：拆自论文 + 净新增</h2>
+  <p>IF-Ext 的轴，有的是从论文某个混合任务里<b>拆</b>出来单独测，有的是论文没覆盖、<b>净新增</b>的能力：</p>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>IF-Ext 轴</th><th>取值</th><th>来源</th></tr></thead>
+      <tbody>
+        <tr><td class="col-ext">Verb-Select</td><td>pick / shake</td><td>从 Operate-Tabletop/Stapler 的动词判别里<b>解绑物体</b>、单独测动词</td></tr>
+        <tr><td class="col-ext">Noun-Grounding</td><td>类别名词</td><td>从 Pick-Diverse-Object 里<b>去掉颜色</b>、只留纯名词（作对照基线）</td></tr>
+        <tr><td class="col-ext">Attribute-Select</td><td>color / decal / shape / size</td><td>从 Pick-Diverse 的「颜色+名词」里拆出<b>视觉特征</b>，并细分 4 类</td></tr>
+        <tr><td class="col-ext">Arm-Select</td><td>left / right</td><td>从 Operate-Mic-Drawer 的双臂协调里拆出<b>指定臂</b></td></tr>
+        <tr><td class="col-ext">Sequence</td><td>bottom→top 顺序</td><td>从 Operate-Mic-Drawer 拆出<b>纯序列</b>（去掉双臂，更聚焦）</td></tr>
+        <tr><td class="col-ext">Spatial-Direction</td><td>左 / 右 / 前 / 后 / 上</td><td>在 Place-Relative（旁边/上面）上<b>补齐 5 方位</b> <span class="plus">扩展</span></td></tr>
+        <tr><td class="col-ext">Grasp-Approach</td><td>从顶 / 从侧</td><td>论文没有「抓取构型」这个轴 <span class="newbadge">净新增</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2><span class="num">4</span>关系与边界</h2>
+  <p><b>互补，不替代。</b>IF-Ext 不改、不删论文的 5 个任务，而是作为一个<b>并列的新任务组</b>接在后面——原生 50 + 论文复刻 5 + IF-Ext 7 = 62 个任务同一套评测跑。论文的综合分回答「这个 policy 指令跟随行不行」；IF-Ext 的逐轴读数回答「如果不行，是<b>哪一段</b>不行」。两者一起用，才既有整体水位、又有故障定位。</p>
+  <p style="color:var(--muted);font-size:13px">一个前提：IF-Ext 刻意让被测行为的<b>两个取值都是模型见过的动作</b>（如瓶子的拿/摇、左/右臂），这样失败一定归因于「没读指令」而不是「做不出这个动作」——否则单轴诊断会退化成另一种 OOD 测试。</p>
+
+  <div class="btnrow">
+    <a class="btn" href="tasks.html">→ 看每个任务的设计与视频（tasks.html）</a>
+    <a class="btn" href="../../docs/features/09-IF-Ext-单轴扩展任务集设计.md">→ 完整设计文档</a>
+  </div>
+  <p class="foot">本页面向外部读者的高层介绍；判定阈值、反例验证、评测协议等实现细节见上面两个链接。示意柱状图为说明用途的虚构数字，非实测结果。</p>
+</div>
