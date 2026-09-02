@@ -1,0 +1,21 @@
+{
+  "full_description": "use one arm to pick up the single target object named by the instruction; the scene holds two objects that differ on exactly one visual feature (color, a top decal image, shape, or size) and the instruction names the target by that feature -- the paired episode keeps the SAME scene and only flips which object is named, so the feature phrase is the only signal of which to grab",
+  "schema": "{ADJ} is the FULL referring phrase for the single target object (e.g. 'red block', 'block with a cat on it', 'cube', 'big block'); the env fills it per episode with whichever object the instruction commands. It is the ONLY signal of which of the two objects to pick. Every template MUST contain {ADJ} and name exactly that one object to grasp. Do NOT add any color/shape/size/decal words of your own around {ADJ} (it already carries them), and do NOT reference the other (distractor) object. There is no arm slot -- the task does not specify which arm. Templates render with a leading article already present in the sentence (write 'the {ADJ}'), so do not double it.",
+  "preference": "num of words should not exceed 10. Degree of detail avg 3. Keep it a plain single-object pick request; vary only the verb/framing, never add extra attributes.",
+  "seen": [
+    "Pick up the {ADJ}.",
+    "Grab the {ADJ}.",
+    "Lift the {ADJ} off the table.",
+    "Take the {ADJ}.",
+    "Please pick up the {ADJ}.",
+    "Get the {ADJ} for me.",
+    "Pick the {ADJ} up.",
+    "Grasp the {ADJ}.",
+    "Raise the {ADJ}.",
+    "Pick up the {ADJ} from the table."
+  ],
+  "unseen": [
+    "Reach for the {ADJ} and lift it.",
+    "Fetch the {ADJ}."
+  ]
+}
