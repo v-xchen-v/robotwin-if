@@ -1,0 +1,85 @@
+# RoboTwin-IF · merged task list = native 50 + RoboTwin-IF
+#
+# The 50 native RoboTwin 2.0 tasks (verbatim from the submodule's envs/, locked commit
+# 0aeea2d) plus the RoboTwin-IF instruction-following tasks appended at the end.
+# Format: a plain `tasks:` list; each name resolves to envs/<name>.py (native tasks live
+# in the submodule; IF tasks are symlinked in by scripts/bridge_tasks.sh).
+#
+# operate_mic_drawer is SHELVED — see if_tasks.yml / feature-06. Listed commented below.
+#
+# NOTE: this locked commit has NO native multitask runner (collect_data.py / collect_data.sh
+# are single-task). This file is a data artifact. To collect the whole list, loop over the
+# RAW collect_data.sh — no bespoke wrapper needed:
+#
+#   bash scripts/bridge_tasks.sh
+#   cd third_party/robotwin
+#   for t in $(python3 -c "import yaml;print(' '.join(yaml.safe_load(open('../../eval_cfg/all_tasks_plus_if.yml'))['tasks']))"); do
+#     bash collect_data.sh "$t" demo_clean 0   # <task> <config> <gpu_id>
+#   done
+#
+# Eval — same bridge + loop, but eval is per-(policy, task) and REQUIRES a policy module
+# under policy/<X>/ (get_model/eval/reset_model; there is NO oracle-only eval mode).
+# instruction_type defaults to `unseen` in every deploy_policy.yml (IF-correct; override to
+# `seen` for a sanity pass). Once a policy exists:
+#   for t in $(python3 -c "import yaml;print(' '.join(yaml.safe_load(open('../../eval_cfg/all_tasks_plus_if.yml'))['tasks']))"); do
+#     bash policy/<X>/eval.sh "$t" demo_clean <ckpt_setting> <expert_data_num> <seed> 0
+#   done
+
+tasks:
+  # ---- native RoboTwin 2.0 (50) ----
+  - adjust_bottle
+  - beat_block_hammer
+  - blocks_ranking_rgb
+  - blocks_ranking_size
+  - click_alarmclock
+  - click_bell
+  - dump_bin_bigbin
+  - grab_roller
+  - handover_block
+  - handover_mic
+  - hanging_mug
+  - lift_pot
+  - move_can_pot
+  - move_pillbottle_pad
+  - move_playingcard_away
+  - move_stapler_pad
+  - open_laptop
+  - open_microwave
+  - pick_diverse_bottles
+  - pick_dual_bottles
+  - place_a2b_left
+  - place_a2b_right
+  - place_bread_basket
+  - place_bread_skillet
+  - place_burger_fries
+  - place_can_basket
+  - place_cans_plasticbox
+  - place_container_plate
+  - place_dual_shoes
+  - place_empty_cup
+  - place_fan
+  - place_mouse_pad
+  - place_object_basket
+  - place_object_scale
+  - place_object_stand
+  - place_phone_stand
+  - place_shoe
+  - press_stapler
+  - put_bottles_dustbin
+  - put_object_cabinet
+  - rotate_qrcode
+  - scan_object
+  - shake_bottle
+  - shake_bottle_horizontally
+  - stack_blocks_three
+  - stack_blocks_two
+  - stack_bowls_three
+  - stack_bowls_two
+  - stamp_seal
+  - turn_switch
+  # ---- RoboTwin-IF (new) ----
+  - pick_diverse_object
+  - place_relative
+  - operate_stapler
+  - operate_tabletop
+  # - operate_mic_drawer   # shelved: asset geometry mismatch (feature-06)

@@ -14,7 +14,7 @@ set -euo pipefail
 # Idempotent: re-running just refreshes the symlinks (ln -srf).
 ##############################################
 
-REPO_ROOT="$(cd "$(dirname "$0")" && pwd)"
+REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 RT="$REPO_ROOT/third_party/robotwin"
 
 if [ ! -d "$RT" ] || [ -z "$(ls -A "$RT" 2>/dev/null)" ]; then

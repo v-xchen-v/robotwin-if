@@ -5,6 +5,23 @@
 notes_branch := "notes/vibe-coding"
 notes_dir := "notes"
 
+# 启动 object gallery 可视化 web app（先扫描生成 manifest，再从 repo 根起静态服务）
+gallery port="8891":
+    #!/usr/bin/env bash
+    set -euo pipefail
+    python tools/object-gallery/gen_manifest.py
+    echo "打开 http://localhost:{{port}}/tools/object-gallery/"
+    python -m http.server {{port}}
+
+# 启动 dataset viewer：并排检查每个 task 的 episode video 和它的 instruction 是否对得上
+dataset-viewer port="8892":
+    #!/usr/bin/env bash
+    set -euo pipefail
+    python tools/dataset-viewer/gen_manifest.py
+    echo "打开 http://localhost:{{port}}/tools/dataset-viewer/"
+    python -m http.server {{port}}
+
+
 # 幂等初始化：远端没有 notes/vibe-coding 分支就建，.gitignore 没排除 notes/ 就加，
 # 然后拉取本地笔记仓库。已经初始化过的项目重复运行是安全的，会跳过已完成的步骤。
 vibe-notes-init:
