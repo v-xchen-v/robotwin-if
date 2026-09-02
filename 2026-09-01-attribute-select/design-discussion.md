@@ -126,3 +126,28 @@ ent = Entity():
 - decal mode 用 `create_box` 本体 + attach decal mesh 的整合（保留抓取点）；size 两档尺寸最终值；shape/color/size 的干扰物 builder。
 - 阶段③：seed→mode→instruction→check 四者同源（`MODES=[color,decal,shape,size]`、`k=4`）。
 - 资产管理已定（7c：纯内存、零文件），**无 bridge/submodule 改动**。
+
+## 8. 阶段③ 接线（2026-09-01）+ 一个关键 IF-correctness bug
+
+### 8a. env 落地
+`tasks/envs/attribute_select.py`：4 轴一个 env，`create_box` 建 color/shape/size 物体，decal 走**手工建刚体**（纯内存 texture+quad mesh，见 §7c；不能用 create_box 事后 attach——"adding shape to render body that is already part of an entity is not implemented"，故 build 前 attach 再 `scene.add_entity`，并手配默认 box top-down 抓取点让 grasp_actor 照常工作）。
+
+seed 结构（细化母文档，见下 8b）：`axis = MODES[(seed//2)%4]`、`value = seed%2`、`scene_seed = seed//2`。wiring spike `tests/attribute_select/spike_wiring.py` N 局×4轴×正例/Layer-B：**四轴正例 100% / Layer-B（抓 distractor）0%**。shape 轴的 bar 一开始因长边 0.11m 超夹爪开度偶发抓不住，改到 `BAR_HALF=(0.04,0.02,0.03)`（长边 0.08 ≤ 夹爪跨度）后 100%。
+
+### 8b. ⚠ 关键 bug：对比对不是"同场景"（用户 2026-09-01 抓到）
+
+**症状**：color 轴里，`(2k,2k+1)` 两局的场景不一样——红/蓝盒位置互换了。
+
+**根因**：初版 `load_actors` 把 **target 放在一个 value-无关的固定 slot**（由 `scene_seed` 的 `slot_flip` 定、pair 内不变）。于是：
+1. `value` 翻转时，被命名的颜色跟着 target 换了位置 → 场景不再相同；
+2. **更致命**：target **永远在同一个 slot** → policy 只要"抓固定位置那个"就 100% 正确，**根本不用读指令/看属性** → IF 诊断被完全击穿（假阳性上天花板）。
+
+**修复**：`scene_seed` 固定的应是**特征值→slot 的映射**（`v0@SLOTS[flip]`、`v1@SLOTS[1-flip]`），pair 内**像素级同场景**；只让 `value` 决定**命名哪个值当 target**（target 的位置随之变，但场景不变）。这样位置不再和答案相关，policy 只能靠读指令赢。
+
+**验证**：`evidence/ep_0_color0_ok.png`（target=red）与 `ep_1_color1_ok.png`（target=blue）初始帧**完全相同**（蓝左红右），只有抓走的 cube 不同。修复对 4 轴同时生效（共用 `load_actors`）。
+
+### 8c. 教训（可推广到所有单轴 IF 任务）
+**IF 对比对必须像素级同场景；任何与答案相关的位置/几何都是泄露。** 单轴隔离不只是"只变一个属性"，还要求"**除被命名的目标外，一切**（含物体摆位）在对比对内不变"——否则 policy 能走位置/几何捷径拿假阳性。落地防线：Layer A 里加**同场景结构断言**（断言 `(2k,2k+1)` 两局物体位姿集合相同、仅 target 标签翻），像 laptop_verb/stack_sequence 的"种子对同场景零违例"。→ 已排进阶段③ Layer A（§7e 之后）。
+
+### 8d. 视频/采集
+补了 per-task config `task_config/attribute_select.yml`（mirror stack_sequence，`episode_num=4`）。`collect_data.py attribute_select attribute_select` **能跑通并出 head/wrist mp4**（`data/.../video/episodeN.mp4`）；末尾 `gen_episode_instructions.sh` 因指令池未写而报 FileNotFound——**预期**，视频在该步之前已生成。注意：首批视频是 8b **修复前**采的（场景会互换），已过时，收尾后重采。

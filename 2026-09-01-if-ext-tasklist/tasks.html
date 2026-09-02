@@ -1,0 +1,344 @@
+<!-- IF-Ext task list — self-contained, open in a browser. Visuals live in ./assets (curated copies from each task's evidence/). -->
+<meta charset="utf-8">
+<title>IF-Ext Task List</title>
+<style>
+  :root{
+    --bg:#f6f7f9; --card:#fff; --ink:#1f2430; --muted:#5b6472; --line:#e4e7ec;
+    --accent:#4f46e5; --accent2:#0ea5a4;
+    --ok:#177245; --okbg:#e8f5ee; --warn:#b42318; --warnbg:#fdecea;
+    --wip:#b7791f; --wipbg:#fdf6e3; --code:#f2f3f6; --th:#eef0f4;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font:15px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"PingFang SC","Microsoft YaHei",sans-serif}
+  .wrap{max-width:1120px;margin:0 auto;padding:30px 22px 80px}
+  h1{font-size:29px;line-height:1.2;margin:0 0 6px}
+  h2{font-size:20px;margin:44px 0 12px;padding-bottom:8px;border-bottom:2px solid var(--line)}
+  p{margin:10px 0;color:var(--ink)}
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline}
+  code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.86em;background:var(--code);padding:1px 6px;border-radius:5px}
+  .hero{background:linear-gradient(135deg,#4f46e5 0%,#0ea5a4 100%);color:#fff;border-radius:16px;padding:26px 28px}
+  .hero h1{color:#fff}
+  .hero .sub{font-size:15.5px;opacity:.96;margin:8px 0 0;max-width:82ch}
+  .meta{display:flex;flex-wrap:wrap;gap:6px 22px;margin-top:16px;font-size:12.5px;opacity:.94}
+  .meta b{font-weight:600;opacity:.8}
+
+  /* index chips */
+  .index{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 4px}
+  .index a{display:inline-flex;align-items:center;gap:7px;background:var(--card);border:1px solid var(--line);
+    border-radius:999px;padding:5px 13px;font-size:13px;font-weight:600;color:var(--ink)}
+  .index a:hover{border-color:var(--accent);text-decoration:none}
+  .index .n{color:var(--accent);font-weight:800}
+
+  .pill{display:inline-block;padding:2px 9px;border-radius:999px;font-size:11.5px;font-weight:700;white-space:nowrap}
+  .pill.ok{background:var(--okbg);color:var(--ok)}
+  .pill.wip{background:var(--wipbg);color:var(--wip)}
+  .pill.warn{background:var(--warnbg);color:var(--warn)}
+  .pill.hold{background:#eef0f4;color:var(--muted)}
+
+  /* task card */
+  .tc{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px 22px;margin:16px 0;scroll-margin-top:16px}
+  .tc-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}
+  .tc-ax{color:var(--accent);font-size:12.5px;font-weight:700;letter-spacing:.02em}
+  .tc-head h3{margin:2px 0 3px;font-size:19px}
+  .tc-head .env{color:var(--muted);font-size:12.5px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+  .tc-desc{margin:12px 0 4px;max-width:88ch}
+  .tc-desc b{color:var(--ink)}
+
+  .grid{display:grid;gap:14px;margin:14px 0 4px}
+  .g2{grid-template-columns:repeat(2,1fr)}
+  .g3{grid-template-columns:repeat(3,1fr)}
+  @media(max-width:720px){.g2,.g3{grid-template-columns:1fr}}
+  figure{margin:0;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#0e1320}
+  figure video,figure img{display:block;width:100%;height:auto;background:#0e1320}
+  figcaption{background:var(--card);padding:8px 11px;font-size:12.5px;color:var(--ink);border-top:1px solid var(--line)}
+  figcaption .val{display:inline-block;background:#eef2ff;color:#3730a3;border-radius:6px;padding:1px 8px;margin-right:6px;font-size:11.5px;font-weight:700}
+  figcaption .say{font-style:italic;color:var(--muted)}
+
+  .facts{display:grid;grid-template-columns:110px 1fr;gap:5px 14px;margin-top:14px;
+    background:#fafbfc;border:1px solid var(--line);border-radius:10px;padding:12px 14px;font-size:13px}
+  .facts dt{font-weight:700;color:var(--accent)}
+  .facts dd{margin:0}
+
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 20px;margin:14px 0}
+  .card h3{margin:0 0 6px;font-size:15px}
+  ul{margin:8px 0;padding-left:20px} li{margin:5px 0}
+  .scroll{overflow-x:auto;border:1px solid var(--line);border-radius:12px;margin:16px 0;background:var(--card)}
+  table{border-collapse:collapse;width:100%;min-width:620px;font-size:13.5px}
+  th,td{text-align:left;padding:11px 13px;border-bottom:1px solid var(--line);vertical-align:top}
+  thead th{background:var(--th);font-size:12px;text-transform:uppercase;letter-spacing:.03em;color:var(--muted)}
+  tbody tr:last-child td{border-bottom:none}
+  .task{font-weight:700}.task .ax{display:block;color:var(--accent);font-size:12.5px}
+  .env{color:var(--muted);font-size:12px}
+  .foot{color:var(--muted);font-size:12.5px;margin-top:30px}
+</style>
+
+<div class="wrap">
+  <div class="hero">
+    <h1>IF-Ext — 单轴指令跟随任务集</h1>
+    <p class="sub">论文 RoboTwin-IF 的 5 个任务集是「任务内混合多维度」；IF-Ext 反过来做<b>单维度拆分</b>——每个任务只隔离测一个能力轴，方便定位 policy 具体在哪个轴上退化。同一场景成对生成（相邻种子像素同帧、只有指令变），使命名槽位成为唯一区分量。</p>
+    <div class="meta">
+      <span><b>分支</b> docs/if-ext-six-axis-benchmark</span>
+      <span><b>轴数</b> 7（6 就绪/开发中 + 1 复用规划）</span>
+      <span><b>桥接</b> tasks/envs/{name}.py + tasks/task_instruction/{name}.json</span>
+      <span><b>验证</b> Layer A 结构 · Layer B oracle 正例/反例</span>
+    </div>
+  </div>
+
+  <div class="index">
+    <a href="#verb"><span class="n">1</span> Verb-Select</a>
+    <a href="#noun"><span class="n">2</span> Noun-Grounding</a>
+    <a href="#attr"><span class="n">3</span> Attribute-Select</a>
+    <a href="#arm"><span class="n">4</span> Arm-Select</a>
+    <a href="#seq"><span class="n">5</span> Sequence</a>
+    <a href="#dir"><span class="n">6</span> Spatial-Direction</a>
+    <a href="#grasp"><span class="n">7</span> Grasp-Approach</a>
+  </div>
+  <p style="color:var(--muted);font-size:12.5px;margin:6px 0 0">下方每个卡片：<b>核心描述</b> + 每个取值的<b>真实指令</b> + <b>对照视频</b>（同一场景，只变指令）。视频静音循环，点击可控制。</p>
+
+  <!-- 1 VERB -->
+  <section class="tc" id="verb">
+    <div class="tc-head">
+      <div>
+        <div class="tc-ax">IF-Verb-Select · 轴 1</div>
+        <h3>Verb-Select — pick vs shake</h3>
+        <span class="env">tasks/envs/bottle_verb.py</span>
+      </div>
+      <span class="pill ok">就绪</span>
+    </div>
+    <p class="tc-desc"><b>核心：</b>同一个瓶子、同一套几何，<b>只有指令里的动词变</b>。诊断的失败模式是动词被「物体→惯用动作」先验盖掉（policy 学到 bottle→拿起，就无视「摇」）。两个动词都是 <code>001_bottle</code> 的 native 动作 → 都在能力库内，不会塌成 OOD。</p>
+    <div class="grid g2">
+      <figure><video src="assets/verb_pick.mp4" muted loop autoplay playsinline controls></video>
+        <figcaption><span class="val">pick</span><span class="say">"Pick up the bottle with the left arm"</span></figcaption></figure>
+      <figure><video src="assets/verb_shake.mp4" muted loop autoplay playsinline controls></video>
+        <figcaption><span class="val">shake</span><span class="say">"Shake the bottle with the left arm"</span></figcaption></figure>
+    </div>
+    <dl class="facts">
+      <dt>唯一信号</dt><dd>指令动词 <code>{V}</code>（pick-族 / shake-族）</dd>
+      <dt>成功判据</dt><dd>做出被命令的动作：pick = 瓶子离地过阈值；shake = 末端往复振荡。<b>非</b>「碰到瓶子就算」</dd>
+      <dt>反例(Layer B)</dt><dd>该 pick 却 shake / 该 shake 却 pick → 必判失败</dd>
+    </dl>
+  </section>
+
+  <!-- 2 NOUN -->
+  <section class="tc" id="noun">
+    <div class="tc-head">
+      <div>
+        <div class="tc-ax">IF-Noun-Grounding · 轴 2</div>
+        <h3>Noun-Grounding — 纯名词 grounding（对照基线）</h3>
+        <span class="env">复用 pick_diverse_object（去形容词 + 干扰物改跨类别）</span>
+      </div>
+      <span class="pill hold">计划·复用</span>
+    </div>
+    <p class="tc-desc"><b>核心：</b>唯一区分量是<b>类别名词</b>，干扰物是<b>不同类别</b>。它是 Attribute-Select 的<b>对照基线</b>——policy 连这都挂，说明是最基础的名词 grounding 问题，而非「用不上视觉特征」。价值是比较性的。直接复用原 <code>pick_diverse_object</code> 的物体池与抓取参数。</p>
+    <div class="grid g3">
+      <figure><video src="assets/noun_cup.mp4" muted loop autoplay playsinline controls></video>
+        <figcaption><span class="val">cup</span><span class="say">"Pick up the cup"</span></figcaption></figure>
+      <figure><video src="assets/noun_bottle.mp4" muted loop autoplay playsinline controls></video>
+        <figcaption><span class="val">bottle</span><span class="say">"Pick up the bottle"</span></figcaption></figure>
+      <figure><video src="assets/noun_shoe.mp4" muted loop autoplay playsinline controls></video>
+        <figcaption><span class="val">shoe</span><span class="say">"Pick up the shoe"</span></figcaption></figure>
+    </div>
+    <p style="color:var(--muted);font-size:12px;margin:8px 0 0">↑ 每局点名一个类别、其余同框物体是<b>跨类别</b>干扰物；clip 取自复用的 <code>pick_diverse_object</code> 基座（现成物体池 + 抓取参数）。</p>
+    <figure style="margin-top:14px"><img src="assets/noun_pool.png" alt="pick_diverse_object 物体池">
+      <figcaption>复用的跨类别物体池（<code>pick_diverse_object</code> 快照）—— Noun-Grounding 从中抽不同类别做目标/干扰</figcaption></figure>
+    <dl class="facts">
+      <dt>唯一信号</dt><dd>类别名词 <code>{A}</code>；干扰物必须跨类别、被点名类别场景里只有一个</dd>
+      <dt>成功判据</dt><dd>抓取物<b>类别标签 == 指令名词</b> 且离地过阈值。<b>非</b>「抓到东西就算」</dd>
+      <dt>反例(Layer B)</dt><dd>oracle 故意抓干扰物（错名词）→ 必判失败</dd>
+    </dl>
+  </section>
+
+  <!-- 3 ATTRIBUTE -->
+  <section class="tc" id="attr">
+    <div class="tc-head">
+      <div>
+        <div class="tc-ax">IF-Attribute-Select · 轴 3</div>
+        <h3>Attribute-Select — 单一视觉特征 grounding（4 mode）</h3>
+        <span class="env">tasks/envs/attribute_select.py</span>
+      </div>
+      <span class="pill wip">开发中</span>
+    </div>
+    <p class="tc-desc"><b>核心：</b>物体其余特征全固定，<b>只有一种视觉特征</b>是区分量。按特征型分 4 个独立 mode，<b>分 mode 统计成功率</b>：某 mode 骤降 = policy 用不上那一类特征。全部用 primitive（<code>create_box/sphere/cylinder</code>）生成，特征是写死的、不用反推 → 自包含。</p>
+    <div class="grid g2">
+      <figure><video src="assets/attr_color.mp4" muted loop autoplay playsinline controls></video>
+        <figcaption><span class="val">color</span><span class="say">"Pick up the red block"（另有蓝方块）</span></figcaption></figure>
+      <figure><video src="assets/attr_decal.mp4" muted loop autoplay playsinline controls></video>
+        <figcaption><span class="val">decal</span><span class="say">"Pick up the block with a cat on it"（另有印狗方块）</span></figcaption></figure>
+      <figure><video src="assets/attr_shape.mp4" muted loop autoplay playsinline controls></video>
+        <figcaption><span class="val">shape</span><span class="say">"Pick up the cube"（另有 long bar）</span></figcaption></figure>
+      <figure><video src="assets/attr_size.mp4" muted loop autoplay playsinline controls></video>
+        <figcaption><span class="val">size</span><span class="say">"Pick up the big block"（另有小方块）</span></figcaption></figure>
+    </div>
+    <figure style="margin-top:14px"><img src="assets/attr_grid.png" alt="四 mode 初始场景网格">
+      <figcaption>四 mode 初始场景（同一 primitive 脚手架，只有被测特征不同）</figcaption></figure>
+    <dl class="facts">
+      <dt>唯一信号</dt><dd>形容词短语 <code>{ADJ}</code>；<code>seed%4</code> 定 mode（color/decal/shape/size）、<code>seed//4</code> 定场景</dd>
+      <dt>成功判据</dt><dd>抓取物在<b>当前 mode 特征</b>上匹配目标；分 mode 报成功率 + value-0/1 gap</dd>
+      <dt>反例(Layer B)</dt><dd>每 mode 分别测：抓「本特征不匹配、其余全对」的干扰物 → 必判失败</dd>
+    </dl>
+  </section>
+
+  <!-- 4 ARM -->
+  <section class="tc" id="arm">
+    <div class="tc-head">
+      <div>
+        <div class="tc-ax">IF-Arm-Select · 轴 4</div>
+        <h3>Arm-Select — 左臂 vs 右臂</h3>
+        <span class="env">tasks/envs/arm_select.py</span>
+      </div>
+      <span class="pill ok">完成 · N=15 各 100%</span>
+    </div>
+    <p class="tc-desc"><b>核心：</b>指令显式指定「用左臂/右臂」，物体落在<b>双臂重叠区、固定 x=0</b>（几何完全不泄露答案）。测 policy 是否服从指定臂，而不是「哪只手方便用哪只 / 总用惯用手」。臂词是唯一区分量。</p>
+    <div class="grid g2">
+      <figure><video src="assets/arm_left.mp4" muted loop autoplay playsinline controls></video>
+        <figcaption><span class="val">left</span><span class="say">"Pick up the block with the left arm"</span></figcaption></figure>
+      <figure><video src="assets/arm_right.mp4" muted loop autoplay playsinline controls></video>
+        <figcaption><span class="val">right</span><span class="say">"Pick up the block with the right arm"</span></figcaption></figure>
+    </div>
+    <dl class="facts">
+      <dt>唯一信号</dt><dd>臂词 <code>{a}</code>（the left / right arm）</dd>
+      <dt>成功判据</dt><dd>state-based：末态盒子离<b>指定臂 TCP</b> 更近（实测 0.14 vs 0.51）且离地。<b>非</b> oracle 自报臂</dd>
+      <dt>反例(Layer B)</dt><dd>指令左臂、强制右臂执行 → 0/15 全判失败</dd>
+    </dl>
+  </section>
+
+  <!-- 5 SEQUENCE -->
+  <section class="tc" id="seq">
+    <div class="tc-head">
+      <div>
+        <div class="tc-ax">IF-Sequence · 轴 5</div>
+        <h3>Sequence — 按指令顺序堆叠</h3>
+        <span class="env">tasks/envs/stack_sequence.py</span>
+      </div>
+      <span class="pill ok">完成</span>
+    </div>
+    <p class="tc-desc"><b>核心：</b>三块彩色积木堆成一塔，<b>bottom→top 顺序由指令给定</b>；填顺序槽位的颜色每局都变，所以顺序词是唯一信号。诊断的失败模式：policy 把三块都堆上去了但<b>无视顺序</b>（「顺序盲假阳性」）。</p>
+    <div class="grid g2">
+      <figure><video src="assets/seq_ep0.mp4" muted loop autoplay playsinline controls></video>
+        <figcaption>示例局 A<span class="say" style="margin-left:6px">"Stack blue on green, and green on red"</span></figcaption></figure>
+      <figure><video src="assets/seq_ep2.mp4" muted loop autoplay playsinline controls></video>
+        <figcaption>示例局 B<span class="say" style="margin-left:6px">另一指令顺序（颜色/顺序每局随指令变）</span></figcaption></figure>
+    </div>
+    <dl class="facts">
+      <dt>唯一信号</dt><dd>指令给的 bottom→middle→top 顺序（<code>{A}</code>/<code>{B}</code>/<code>{C}</code> 是位置，非固定颜色）</dd>
+      <dt>成功判据</dt><dd>轨迹/时间戳-based：按「首次到位」先后排序须逐位匹配；任一相邻颠倒即 fail。<b>非</b>「三块都在塔里就算」</dd>
+      <dt>反例(Layer B)</dt><dd>oracle 故意倒序堆 → 即使最终成塔也必判失败</dd>
+    </dl>
+  </section>
+
+  <!-- 6 DIRECTION -->
+  <section class="tc" id="dir">
+    <div class="tc-head">
+      <div>
+        <div class="tc-ax">IF-Spatial-Direction · 轴 6</div>
+        <h3>Spatial-Direction — 放置方位（5 值）</h3>
+        <span class="env">tasks/envs/place_relative.py</span>
+      </div>
+      <span class="pill ok">完成</span>
+    </div>
+    <p class="tc-desc"><b>核心：</b>把 mover A 放到 reference B 的指定方位；<b>同一物理场景可容纳全部 5 个方位</b>，锚点/被放物固定，只有方位词决定正确落点。左右=带符号 x 轴、前后=带符号 y 轴（以机器人朝向为准）、上方=z/align。下面 5 段是同一 mouse+coffee-box 场景。</p>
+    <div class="grid g3">
+      <figure><video src="assets/dir_left.mp4" muted loop autoplay playsinline controls></video>
+        <figcaption><span class="val">left</span><span class="say">"…to the left of the coffee box"</span></figcaption></figure>
+      <figure><video src="assets/dir_right.mp4" muted loop autoplay playsinline controls></video>
+        <figcaption><span class="val">right</span><span class="say">"…to the right of the coffee box"</span></figcaption></figure>
+      <figure><video src="assets/dir_front.mp4" muted loop autoplay playsinline controls></video>
+        <figcaption><span class="val">front</span><span class="say">"…in front of the coffee box"</span></figcaption></figure>
+      <figure><video src="assets/dir_back.mp4" muted loop autoplay playsinline controls></video>
+        <figcaption><span class="val">back</span><span class="say">"…behind the coffee box"</span></figcaption></figure>
+      <figure><video src="assets/dir_ontop.mp4" muted loop autoplay playsinline controls></video>
+        <figcaption><span class="val">on top</span><span class="say">"…on top of the coffee box"</span></figcaption></figure>
+    </div>
+    <dl class="facts">
+      <dt>唯一信号</dt><dd>方位词 <code>{D}</code>（left / right / front / back / on top）</dd>
+      <dt>成功判据</dt><dd>指令轴上带符号偏移过阈值 + 正交轴锁住（&lt;0.05）+ 距离落带内。左右/前后分轴</dd>
+      <dt>反例(Layer B)</dt><dd>放到相反方位 → 必判失败；左右、前后<b>分开测</b>（不同轴，极易一对一错）</dd>
+    </dl>
+  </section>
+
+  <!-- 7 GRASP -->
+  <section class="tc" id="grasp">
+    <div class="tc-head">
+      <div>
+        <div class="tc-ax">IF-Grasp-Approach · 轴 7</div>
+        <h3>Grasp-Approach — 顶部抓 vs 侧面抓</h3>
+        <span class="env">tasks/envs/grasp_cube_approach.py</span>
+      </div>
+      <span class="pill ok">完成 · top/side 各 100%</span>
+    </div>
+    <p class="tc-desc"><b>核心：</b>物体固定、同一初始位姿，动词都是「抓」，<b>唯一区分量是抓法词</b>（从顶部 / 从侧面）。测 policy 是否服从指定接近方向，而不是默认用自己最省力的抓法。两种抓法末态夹爪朝向一眼可分。</p>
+    <div class="grid g2">
+      <figure><video src="assets/grasp_top.mp4" muted loop autoplay playsinline controls></video>
+        <figcaption><span class="val">from top</span><span class="say">"Pick up the block from the top"（夹爪竖直）</span></figcaption></figure>
+      <figure><video src="assets/grasp_side.mp4" muted loop autoplay playsinline controls></video>
+        <figcaption><span class="val">from side</span><span class="say">"Pick up the block from the side"（夹爪水平）</span></figcaption></figure>
+    </div>
+    <dl class="facts">
+      <dt>唯一信号</dt><dd>接近方向短语 <code>{D}</code>（top-族 / side-族）</dd>
+      <dt>成功判据</dt><dd>orientation-based：离地 + 夹爪 approach 轴匹配（竖直 vs 水平，角度阈值卡）。<b>非</b>「抓起就算」</dd>
+      <dt>反例(Layer B)</dt><dd>用错抓法（该顶却侧）→ 即使举起也必判失败</dd>
+    </dl>
+  </section>
+
+  <h2>备选 / 受限</h2>
+  <section class="tc" id="laptop">
+    <div class="tc-head">
+      <div>
+        <div class="tc-ax">Verb-Select 早期版</div>
+        <h3>laptop open / close</h3>
+        <span class="env">tasks/envs/laptop_verb.py</span>
+      </div>
+      <span class="pill warn">备选 / 受限</span>
+    </div>
+    <p class="tc-desc"><code>015_laptop</code> 开/关，从 50% 共用中间态起验，N=20 开/关各 90%（可靠子集变体 {1,9}）。<b>已被 bottle_verb 取代为 Verb-Select 主版</b>：<code>close</code> 是全 native 里唯一没演示过的闭合动作 → 对 zeroshot/native-ft 是 <b>action-OOD</b>，二值判据下 close=0 无法归因（「没读动词」vs「执行不出」）。仅 <code>ifext-ft</code> 协议下有效。</p>
+    <div class="grid g2">
+      <figure><video src="assets/laptop_open.mp4" muted loop autoplay playsinline controls></video>
+        <figcaption><span class="val">open</span><span class="say">"Open the laptop with the left arm"</span></figcaption></figure>
+      <figure><video src="assets/laptop_close.mp4" muted loop autoplay playsinline controls></video>
+        <figcaption><span class="val">close</span><span class="say">"Close the laptop with the left arm"（OOD）</span></figcaption></figure>
+    </div>
+  </section>
+
+  <h2>共用设计（评审要点）</h2>
+  <div class="card">
+    <h3>同场景成对生成 —— 单轴隔离的结构性保证</h3>
+    <p><code>scene_seed = seed // k</code> 定场景、<code>mode = MODES[seed % k]</code> 定该轴取值 → 相邻种子对是<b>同一物理场景</b>（同变体/位姿），只有指令不同。评测跑连续种子即拿到像素同帧、仅指令变的对照局。这直接落实「单轴对照对必须同场景」——物体位置若与答案相关，policy 不读指令也能刷满分。</p>
+  </div>
+  <div class="card">
+    <h3>成功判据都对准「被测轴」，拒绝末态假阳性</h3>
+    <ul>
+      <li>动词类看<b>动作是否发生</b>（pick/shake、开/关方向），不看「碰到物体」。</li>
+      <li>臂 / 接近方向看<b>末态 state / 夹爪朝向</b>，不信 oracle 自报。</li>
+      <li>序列看<b>轨迹时间戳</b>，不看最后一帧（末态编码不了顺序）。</li>
+      <li>方位看<b>带符号偏移 + 正交轴锁定</b>，左右 / 前后分轴测反例。</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h3>被测行为须在能力库内（避免塌成 OOD）</h3>
+    <p>IF 诊断的前提是被测行为对模型<b>可执行</b>；否则二值判据下失败无法归因，IF 塌成 OOD 泛化。Arm / Grasp / Sequence / Spatial / bottle-Verb 均为 native 能力库内行为；laptop <code>close</code> 是例外（见上「备选 / 受限」）。</p>
+  </div>
+
+  <h2>速览表</h2>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>#</th><th>轴 / env</th><th>取值</th><th>状态</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td class="task">Verb-Select<span class="ax">bottle_verb.py</span></td><td>pick / shake</td><td><span class="pill ok">就绪</span></td></tr>
+        <tr><td>2</td><td class="task">Noun-Grounding<span class="ax">复用 pick_diverse_object</span></td><td>类别名词</td><td><span class="pill hold">计划·复用</span></td></tr>
+        <tr><td>3</td><td class="task">Attribute-Select<span class="ax">attribute_select.py</span></td><td>color / decal / shape / size</td><td><span class="pill wip">开发中</span></td></tr>
+        <tr><td>4</td><td class="task">Arm-Select<span class="ax">arm_select.py</span></td><td>left / right</td><td><span class="pill ok">完成</span></td></tr>
+        <tr><td>5</td><td class="task">Sequence<span class="ax">stack_sequence.py</span></td><td>bottom→top 顺序</td><td><span class="pill ok">完成</span></td></tr>
+        <tr><td>6</td><td class="task">Spatial-Direction<span class="ax">place_relative.py</span></td><td>left / right / front / back / on top</td><td><span class="pill ok">完成</span></td></tr>
+        <tr><td>7</td><td class="task">Grasp-Approach<span class="ax">grasp_cube_approach.py</span></td><td>from top / from side</td><td><span class="pill ok">完成</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="foot">
+    视频为各任务 <code>evidence/</code> 的精选副本（存于 <code>./assets</code>，本文件夹自包含、可整体分享）。
+    单任务完整 spike / Layer-B 证据见对应 <code>notes/…/report.html</code>；
+    设计全文：<a href="../../docs/features/09-IF-Ext-单轴扩展任务集设计.md">docs/features/09-IF-Ext-单轴扩展任务集设计.md</a>。
+  </p>
+</div>

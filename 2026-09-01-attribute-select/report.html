@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>IF-Attribute-Select — 单轴视觉特征 grounding 任务</title>
+<style>
+  :root{
+    --bg:#f6f7f9; --card:#ffffff; --ink:#1c2230; --muted:#5c6675; --line:#e4e8ee;
+    --accent:#3b5bdb; --ok:#1a7f4b; --warn:#b5730a; --bad:#c0392b;
+    --color:#d64545; --decal:#c8871a; --shape:#4a6076; --size:#128176;
+    --code:#f0f2f6;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"PingFang SC","Microsoft YaHei",sans-serif;
+    line-height:1.6;font-size:16px}
+  .wrap{max-width:980px;margin:0 auto;padding:0 20px 80px}
+  code,pre{font-family:"SF Mono",SFMono-Regular, Menlo,Consolas,"Liberation Mono",monospace}
+  code{background:var(--code);padding:1px 5px;border-radius:4px;font-size:.9em}
+  pre{background:#1e2430;color:#dfe6f2;padding:14px 16px;border-radius:8px;overflow-x:auto;font-size:13.5px;line-height:1.5}
+  pre code{background:none;padding:0;color:inherit}
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline}
+  h2{font-size:1.5rem;margin:2.4em 0 .6em;padding-bottom:.3em;border-bottom:2px solid var(--line)}
+  h3{font-size:1.13rem;margin:1.6em 0 .4em}
+  /* hero */
+  .hero{background:linear-gradient(135deg,#28324a,#3b5bdb);color:#fff;border-radius:0 0 16px 16px;
+    padding:38px 34px 30px;margin-bottom:8px}
+  .hero h1{margin:0 0 6px;font-size:2rem;letter-spacing:.3px}
+  .hero .sub{font-size:1.05rem;opacity:.92;margin-bottom:16px;max-width:70ch}
+  .badges{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+  .badge{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.28);
+    padding:4px 11px;border-radius:20px;font-size:.82rem;font-weight:600}
+  .badge.ok{background:rgba(46,204,113,.24);border-color:rgba(46,204,113,.5)}
+  .meta{display:flex;flex-wrap:wrap;gap:18px;font-size:.83rem;opacity:.9;border-top:1px solid rgba(255,255,255,.2);padding-top:14px}
+  .meta b{opacity:.7;font-weight:500}
+  /* cards / callouts */
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px 22px;margin:14px 0;
+    box-shadow:0 1px 2px rgba(20,30,60,.04)}
+  .tldr{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px}
+  .tldr .t{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+  .tldr .t h4{margin:0 0 4px;font-size:.78rem;text-transform:uppercase;letter-spacing:.5px;color:var(--muted)}
+  .tldr .t p{margin:0;font-size:.95rem}
+  .note{border-left:4px solid var(--accent);background:#eef2ff;padding:12px 16px;border-radius:0 8px 8px 0;margin:14px 0}
+  .note.warn{border-color:var(--warn);background:#fff6e9}
+  .note.bad{border-color:var(--bad);background:#fdeeec}
+  .note.ok{border-color:var(--ok);background:#ecf8f1}
+  .note b{font-weight:700}
+  /* tables */
+  table{border-collapse:collapse;width:100%;margin:12px 0;font-size:.92rem}
+  th,td{border:1px solid var(--line);padding:8px 11px;text-align:left;vertical-align:top}
+  th{background:#eef1f6;font-weight:600}
+  td.ok{color:var(--ok);font-weight:600}
+  td.no{color:var(--muted)}
+  .tag{display:inline-block;padding:1px 8px;border-radius:6px;font-size:.78rem;font-weight:700;color:#fff}
+  .tag.color{background:var(--color)}.tag.decal{background:var(--decal)}
+  .tag.shape{background:var(--shape)}.tag.size{background:var(--size)}
+  /* video grid */
+  .vids{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px;margin:16px 0}
+  .vid{border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#000}
+  .vid video{width:100%;display:block;background:#eceff3}
+  .vid .cap{background:var(--card);color:var(--ink);padding:8px 11px;font-size:.85rem;display:flex;align-items:center;gap:8px}
+  figure{margin:16px 0}
+  figure img{width:100%;border:1px solid var(--line);border-radius:10px;display:block}
+  figcaption{font-size:.85rem;color:var(--muted);margin-top:7px}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media(max-width:640px){.two{grid-template-columns:1fr}}
+  /* flow diagram */
+  .flow{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin:14px 0;font-size:.86rem}
+  .flow .b{background:var(--card);border:1.5px solid var(--line);border-radius:8px;padding:9px 12px;text-align:center}
+  .flow .b b{display:block;font-size:.9rem}
+  .flow .b small{color:var(--muted)}
+  .flow .arr{color:var(--muted);font-weight:700}
+  .k{color:var(--accent);font-weight:700}
+  ul.tight{margin:.4em 0;padding-left:1.3em}
+  ul.tight li{margin:.25em 0}
+  .foot{color:var(--muted);font-size:.85rem;text-align:center;margin-top:40px;border-top:1px solid var(--line);padding-top:18px}
+</style>
+</head>
+<body>
+<div class="hero">
+  <h1>IF-Attribute-Select</h1>
+  <div class="sub">RoboTwin-IF 扩展任务集（IF-Ext §3）：单轴 <b>视觉特征 grounding</b> 诊断——同一场景里两个物体只差一个特征，指令按该特征点名，测 VLA policy 是否真读了指令而非走捷径。四个特征轴（颜色 / 顶面贴图 / 形状 / 大小）合在<b>一个 primitive env</b>里。</div>
+  <div class="badges">
+    <span class="badge ok">✓ 阶段③ 接线完成</span>
+    <span class="badge ok">wiring N=20 · 4轴 20/20 正例 / 0/20 反例</span>
+    <span class="badge ok">Layer A 路由 8/8</span>
+    <span class="badge ok">Layer B + 同场景 5/5</span>
+    <span class="badge">demo 视频 · 4轴×2值</span>
+  </div>
+  <div class="meta">
+    <span><b>branch</b> docs/if-ext-six-axis-benchmark</span>
+    <span><b>date</b> 2026-09-01</span>
+    <span><b>核心</b> tasks/envs/attribute_select.py</span>
+    <span><b>env</b> RoboTwin · sapien 3.0.0b1 · 2×A6000</span>
+  </div>
+</div>
+<div class="wrap">
+
+<h2 id="tldr">TL;DR</h2>
+<div class="tldr">
+  <div class="t"><h4>做了什么</h4><p>一个 env 装下 4 个特征轴（color/decal/shape/size），全用 primitive 生成，指令用单 <code>{ADJ}</code> 槽点名目标物体。</p></div>
+  <div class="t"><h4>怎么验证的</h4><p>oracle spike N=20/轴：正例（抓命令的目标）+ Layer-B（抓干扰物必拒）；Layer A 指令路由 + Layer B/同场景结构测试；采出 head 相机 demo 视频。</p></div>
+  <div class="t"><h4>结论</h4><p>任务搭好并<b>oracle 层面全绿</b>：4 轴各 20/20 正例、0/20 反例、value 平衡 10-10。可进采集/eval。</p></div>
+  <div class="t"><h4>最大的坑</h4><p>初版目标物体位置固定 → policy 抓固定位置就 100%、<b>不用读指令</b>，IF 诊断被击穿。改成 pair 内同场景、只翻命名目标。</p></div>
+</div>
+
+<h2 id="bg">背景与目标</h2>
+<div class="card">
+<p>RoboTwin-IF 的论文任务把多个能力<b>耦合</b>在一起，难定位 policy 到底在哪个轴退化。IF-Ext 做<b>单维度拆分</b>——每个任务只主测一个能力轴。本任务测「<b>形容词/视觉特征</b>」：物体其余特征全固定，只有<b>一种</b>是区分量，指令按它点名，看 policy 能否 ground 对。</p>
+<p>原设计是「优先级阶梯」（color&gt;texture&gt;shape&gt;size 累积干扰物），可信度最低、风险最高。本轮把它整个翻新成 <b>primitive 版四特征 mode</b>，经四个决策转折收敛（见<a href="#decisions">关键决策</a>）。诊断的核心失败模式：policy <b>不读指令、靠先验/捷径</b>选物体。</p>
+<div class="note">为什么这样测才算 IF：同一场景里放两个只差一个特征的物体，相邻种子对 <span class="k">(2k, 2k+1)</span> 是<b>像素级同一场景</b>，只有指令点名的目标翻转。policy 想赢只能读指令——这是 laptop_verb 已验证的「同帧对比」思路。</div>
+</div>
+
+<h2 id="arch">实现 / 架构</h2>
+<p>单个 <code>attribute_select(Base_Task)</code>，seed 决定一切，四件事同源（RoboTwin IF 接线的核心）：</p>
+<div class="flow">
+  <div class="b"><b>seed</b><small>采集/eval 给</small></div>
+  <span class="arr">→</span>
+  <div class="b"><b>axis / value / scene_seed</b><small>axis=MODES[(seed//2)%4]<br>value=seed%2 · scene=seed//2</small></div>
+  <span class="arr">→</span>
+  <div class="b"><b>load_actors</b><small>两 primitive 建入<br>同场景、只翻命名目标</small></div>
+  <span class="arr">→</span>
+  <div class="b"><b>play_once</b><small>oracle 抓目标<br>指令渲染 {ADJ}</small></div>
+  <span class="arr">→</span>
+  <div class="b"><b>check_success</b><small>抬起的是否=目标</small></div>
+</div>
+<ul class="tight">
+  <li><b>4 轴同一 env</b>：<span class="tag color">color</span> 红/蓝盒 · <span class="tag decal">decal</span> 顶面猫/狗贴图 · <span class="tag shape">shape</span> 方块/细长条 · <span class="tag size">size</span> 大/小盒。全 <code>create_box</code>（自包含，无外部资产、无物体池依赖）。</li>
+  <li><b>指令</b>：单 <code>{ADJ}</code> 槽承载完整指代短语（"red block" / "block with a cat on it" / "long bar" / "big block"），模板只 "Pick up the {ADJ}."——4 轴占位符集合统一、框架标准路由直接通。</li>
+  <li><b>decal 走纯内存刚体</b>：<code>RenderTexture2D(数组)</code> + <code>RenderShapeTriangleMesh(顶点+UV)</code> 焊到 cube 顶面，<b>零磁盘文件</b>（抗嵌套，见 <a href="howto-decal-on-cube.md">howto-decal-on-cube.md</a>）。</li>
+  <li><b>成功判定</b>：state-based——抬离桌面的那个物体是不是命令的目标（<code>_raw_success</code>）；抓干扰物即使抬起也判失败（Layer-B）。</li>
+  <li><b>Pair-gate（对齐 laptop_verb/stack_sequence）</b>：<code>check_success</code> 在 raw 成功之上再要求「同 scene 的<b>另一个值</b>也 oracle 可行」——用 throwaway buddy 试跑 partner 种子、按 scene_seed 缓存。任一半失败 → 两局都判 False → native collect_data <b>只产出完整对</b>，oracle 不可行/半采的 scene 不进采集与 eval（同一套定义，避免 orphan）。</li>
+</ul>
+
+<h2 id="evidence">证据</h2>
+<p>oracle 每轴都抓对命令的目标（head/wrist 近距相机，decal 的猫/狗看得清）。每对 <code>(ep偶, ep奇)</code> = 同场景、只换指令目标。</p>
+<div class="vids">
+  <div class="vid"><video controls preload="metadata" src="evidence/videos/ep0_color0_red.mp4"></video><div class="cap"><span class="tag color">color</span> 指令「红」→ 抓红盒</div></div>
+  <div class="vid"><video controls preload="metadata" src="evidence/videos/ep1_color1_blue.mp4"></video><div class="cap"><span class="tag color">color</span> 同场景 · 指令「蓝」→ 抓蓝盒</div></div>
+  <div class="vid"><video controls preload="metadata" src="evidence/videos/ep2_decal0_cat.mp4"></video><div class="cap"><span class="tag decal">decal</span> 指令「猫」→ 抓猫盒</div></div>
+  <div class="vid"><video controls preload="metadata" src="evidence/videos/ep3_decal1_dog.mp4"></video><div class="cap"><span class="tag decal">decal</span> 同场景 · 指令「狗」→ 抓狗盒</div></div>
+  <div class="vid"><video controls preload="metadata" src="evidence/videos/ep4_shape0_cube.mp4"></video><div class="cap"><span class="tag shape">shape</span> 指令「方块」→ 抓方块</div></div>
+  <div class="vid"><video controls preload="metadata" src="evidence/videos/ep5_shape1_bar.mp4"></video><div class="cap"><span class="tag shape">shape</span> 同场景 · 指令「长条」→ 抓细长条</div></div>
+  <div class="vid"><video controls preload="metadata" src="evidence/videos/ep6_size0_big.mp4"></video><div class="cap"><span class="tag size">size</span> 指令「大」→ 抓大盒</div></div>
+  <div class="vid"><video controls preload="metadata" src="evidence/videos/ep7_size1_small.mp4"></video><div class="cap"><span class="tag size">size</span> 同场景 · 指令「小」→ 抓小盒</div></div>
+</div>
+<div class="note ok">视频为<b>最终版</b>采集：bug 修复 + 细长 bar + 位置/yaw 抖动。每对 <code>(ep偶, ep奇)</code> 同场景、只翻指令目标。</div>
+
+<h3>同场景对比 —— 这就是 IF 的关键（也是那个 bug 的修复证据）</h3>
+<div class="two">
+  <figure><img src="evidence/ep_0_color0_ok.png" alt="color v0"><figcaption><b>seed 0</b>（指令=红）：左=初始 蓝左红右，右=抓走<b>红</b></figcaption></figure>
+  <figure><img src="evidence/ep_1_color1_ok.png" alt="color v1"><figcaption><b>seed 1</b>（指令=蓝）：初始<b>完全相同</b>，抓走<b>蓝</b></figcaption></figure>
+</div>
+<div class="note ok">证明：<code>(2k,2k+1)</code> 初始帧像素级相同，只有抓走的物体随指令变 → 位置不泄露答案，policy 只能靠读指令。结构测试 <code>test_check_success.py</code> 断言两局物体位姿集合相同、命名目标翻到另一位置（5/5 通过）。</div>
+
+<h3>场景多样性（位置 + yaw 抖动，pair 内仍不变）</h3>
+<figure><img src="evidence/init_scenes_grid.png" alt="init scenes grid">
+<figcaption>seeds 8–15 初始场景：位置与朝向按 <code>scene_seed</code> 抖动（不同场景各异），但同一对内两局仍完全一致 → 既有多样性、又保同场景对比。</figcaption></figure>
+
+<h3>decal 深挖：从踩坑到纯内存配方</h3>
+<div class="two">
+  <figure><img src="evidence/spike_uv_cal.png" alt="uv calibration"><figcaption><b>踩坑</b>：<code>create_box(texture_id)</code> 的 box 面 UV 不是 [0,1]，只采样偏心半窗（标定图四角/边框全丢、中心点被推到边缘）→ 单张头像被裁。</figcaption></figure>
+  <figure><img src="evidence/spike_inmem.png" alt="in-memory decal"><figcaption><b>定稿</b>：改用显式 [0,1] UV 的 quad mesh + 纯内存纹理，顶面单头居中、方向正、cube 蓝灰不撞背景，全程零文件。</figcaption></figure>
+</div>
+<figure><img src="evidence/spike_shape_size.png" alt="shape size primitives"><figcaption>shape / size 的 primitive sanity：方块/球/柱可分、大盒 vs 小盒可分。</figcaption></figure>
+
+<h2 id="decisions">关键决策 / 教训</h2>
+<h3>四个设计转折</h3>
+<table>
+  <tr><th>从</th><th>到</th><th>为什么</th></tr>
+  <tr><td>优先级<b>累积阶梯</b></td><td>按属性型<b>分独立 mode</b></td><td>累积升档同时动「属性种类+个数」，失败分不清哪层挂；分 mode 隔离掉 count 混淆，退化照样从 per-mode 成功率读得出，更干净。</td></tr>
+  <tr><td>多物体<b>抓取池</b></td><td><b>primitive</b>(create_box)</td><td>一刀消掉三大风险（池盘点 / 属性标注 noisy / per-object 抓取参数）+ 脱离断链的池 infra → 任务自包含。代价：更合成，是「干净下界」。</td></tr>
+  <tr><td>抽象 <b>texture</b></td><td><b>decal 贴图</b>(猫/狗)</td><td>材质纹理最大风险是「同色不同材质相机分不清」；换成猫/狗贴图后视觉可分免费+强先验。诚实标注：decal 是表面图像语义，不是材质、不是形容词。</td></tr>
+  <tr><td>size 预留</td><td>正式<b>第四 mode</b></td><td>effort 极低（缩放同 cube），四档正好收齐 color&gt;texture&gt;shape&gt;size 全类。</td></tr>
+</table>
+
+<div class="note bad">
+<b>⚠ 关键 IF-correctness bug（用户 review 时抓到）。</b> 初版 <code>load_actors</code> 把目标物体放在一个 <b>value-无关的固定 slot</b> → 目标永远在同一位置，policy「抓固定位置那个」就能 100% 正确、<b>根本不用读指令或看属性</b>，IF 诊断被完全击穿（假阳性上天花板）。<br>
+<b>修复</b>：<code>scene_seed</code> 固定的应是<b>特征值→slot 的映射</b>（pair 内像素级同场景），只让 <code>value</code> 决定<b>命名哪个当目标</b>。<br>
+<b>可推广的教训</b>：单轴隔离不只是「只变一个属性」——还要求<b>除被命名的目标外，一切（含物体摆位）在对比对内不变</b>，否则 policy 走位置/几何捷径拿假阳性。已加 Layer 同场景结构断言防守，并存进项目 memory 供其它 IF 任务复用。
+</div>
+
+<h3>两个实现坑</h3>
+<ul class="tight">
+  <li><b>decal 不能事后 attach</b>：<code>create_box</code> 已把 entity 加进场景，再 attach mesh 报 <code>adding shape to render body that is already part of an entity is not implemented</code> → 改成手工建刚体（build 前 attach decal mesh），并手配默认 box top-down 抓取点让 <code>grasp_actor</code> 照常工作。</li>
+  <li><b>细长 bar 抓不起</b>：bar 长轴超夹爪开度。做成明显细长（长 0.12）后，锁定「夹短轴」的接触点子集 <code>BAR_GRASP_IDS=[1,3]</code>（等效转 90° 夹窄边）→ shape 轴回到 100%。</li>
+</ul>
+
+<h2 id="status">现状与边界</h2>
+<table>
+  <tr><th>项</th><th>状态</th><th>证据 / 说明</th></tr>
+  <tr><td>4 轴 oracle 正例</td><td class="ok">✓ 20/20（固定版）</td><td>wiring spike N=20，val0/val1 各 10/10 平衡</td></tr>
+  <tr><td>Layer-B 反例（抓干扰物）</td><td class="ok">✓ 0/20 全拒</td><td>同 spike + <code>test_check_success.py</code></td></tr>
+  <tr><td>指令路由 Layer A</td><td class="ok">✓ 8/8</td><td><code>test_instruction_routing.py</code>（RoboTwin 原生 filter/replace）</td></tr>
+  <tr><td>同场景结构 + check 谓词</td><td class="ok">✓ 5/5</td><td><code>test_check_success.py</code></td></tr>
+  <tr><td>位置+yaw 抖动（多样性）</td><td class="ok">✓ 抖动版 N=20 已验</td><td>color/decal/size 100%、shape 95%（bar 某 yaw 偶失 1/10，过 90% 闸）；结构测试 5/5 仍过（pair 同场景保持）</td></tr>
+  <tr><td>demo 视频</td><td class="ok">✓ 4轴×2值</td><td>抖动前采集；抖动版待重采</td></tr>
+  <tr><td>接入 all_tasks_plus_if.yml</td><td class="no">未做</td><td>该合并清单本仓尚不存在（同 laptop/stack）</td></tr>
+  <tr><td>policy eval</td><td class="no">未做</td><td>只 zeroshot/native-ft 协议，方向性/分 mode 指标（见母文档）</td></tr>
+</table>
+
+<div class="note warn">
+<b>这份 report 不证明什么：</b>
+<ul class="tight">
+  <li>证明的是 <b>oracle + 任务机制正确</b>（脚本能按指令抓对物体、反例被拒、同场景成立），<b>不是</b>某个 VLA policy 在这任务上表现好——policy eval 还没跑。</li>
+  <li>猫/狗贴图是<b>程序画的占位图标</b>，非真实照片；真实图后续按同一内存路径替换（授权待办）。</li>
+  <li>N=20 是 oracle 可行性规模，<b>不是</b>统计意义上的大样本。加位置+yaw 抖动后 shape 轴的 bar 有 ~5% 边缘失手（某些朝向下夹取偏难），仍在 90% 闸之上但非满分。</li>
+  <li>size 是四轴里视觉可分性最弱的（连续量、依赖相机），shape 的「形状词≈名词」与纯名词任务有轻微语义贴边——都已在设计里诚实标注。</li>
+</ul>
+</div>
+
+<h2 id="repro">怎么复现</h2>
+<pre><code># 1. 把 env/指令池 symlink 进 submodule
+./bridge_tasks.sh
+
+# 2. oracle 接线诊断（4 轴 × 正例/Layer-B，含 val 平衡）
+conda run -n RoboTwin python tests/attribute_select/spike_wiring.py 20
+
+# 3. Layer A 指令路由（无需 sim）
+conda run -n RoboTwin python tests/attribute_select/test_instruction_routing.py
+
+# 4. Layer B + 同场景结构
+conda run -n RoboTwin python tests/attribute_select/test_check_success.py
+
+# 5. 采集 demo（出 head/wrist mp4 到 data/.../video/）
+conda run -n RoboTwin python script/collect_data.py attribute_select attribute_select
+
+# 6. 看初始场景多样性
+conda run -n RoboTwin python tests/attribute_select/render_init.py 8 9 10 11 12 13 14 15</code></pre>
+<p>深读：设计决策链与踩坑全过程见 <a href="design-discussion.md">design-discussion.md</a>（§1–8）；给 cube 贴图的通用技法（UV 坑 + 纯内存配方 + 最小可跑例）见 <a href="howto-decal-on-cube.md">howto-decal-on-cube.md</a>。母设计 <a href="../../docs/features/09-IF-Ext-六轴扩展任务设计.md">IF-Ext §3</a>。</p>
+
+<div class="foot">
+  IF-Attribute-Select · RoboTwin-IF 复刻 · 2026-09-01 ·
+  核心文件 <code>tasks/envs/attribute_select.py</code> + <code>tasks/task_instruction/attribute_select.json</code> + <code>tests/attribute_select/</code>
+</div>
+</div>
+</body>
+</html>
