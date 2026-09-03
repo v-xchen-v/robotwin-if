@@ -1,68 +1,113 @@
-# Pick-Diverse-Object — 理解文档
+# Pick-Diverse-Object：当前理解
 
-> feature-04，RoboTwin-IF 复刻的阶段3新建型任务。本文档基于 2026-08-21~24 的实现会话重建。
+> 更新于 2026-09-03。当前 production task 已从历史 color+noun baseline 扩展为 object-familiarity evaluation。
 
-## 当前理解
+## 一句话定义
 
-### 实际解决的问题
-在 RoboTwin 2.0 上实现 IF 基准的 **target-object grounding** 任务：桌上 4 个物体（从 12 品类池采样），指令用"颜色+名词"点名 1 个目标（如 "the blue cup"），单臂把它拿起，其余 3 个是干扰项。产出可跑 oracle 专家演示 + 评测任意 policy 的 harness——诊断 policy 是否真读指令选对物体，而非退化成"看图做默认动作"。
+每个 episode 放 4 个不同 noun 的物体，指令只点名目标 noun。偶数 raw seed 是 `Seen target / all-Seen scene`，奇数 raw seed 是 `Unseen target / all-Unseen scene`。
 
-**最终代码实际做的事**（倒推自实现，非最初那句话）：
-- **12 品类池**（bottle/cup/shoe/mug/can/toycar/phone/soap/hamburg/bread/coffee-box/mouse），颜色贴图眼验锁定（16 变体）。
-- **12 品类等概率目标**：目标 noun = `品类[seed % 12]`、颜色 = `seed // 12` 轮转（确定性、连续 seed 严格均匀）；3 干扰从 12 品类均匀抽不同名词；只保证目标 (颜色,名词) 在 4 个里唯一。
-- **受控指令**：`info["info"]={"{A}":"the {color} {noun}","{a}":arm}`，字面量走 native `replace_placeholders`（不走 objects_description 随机描述）→ 颜色+名词受控、每条必含；seen/unseen 隔离在句式模板层（借 adjust_bottle orientation-free 子集 12/4）。
-- **bottle 50/50 站/躺**：站立 `[0.66,0.66,-0.25,-0.25]`（pick_dual_bottles）、躺 `[0.707,0,0,±0.707]`（adjust_bottle，x 符号朝向抓取臂）。
-- **逐物体抓取参数** + **世界系抬起**（`move_by_displacement(z=0.12)`，非 `move_axis="arm"`）。
-- **判定** `check_success` = 目标 z 抬离 >0.02 且仍被夹爪接触（`_if_grounding.py` 共用 helper，operate_tabletop 也重构为调它）。
-- **reporter** 按目标 noun/color 拆成功率（从 seed 确定性反推目标，无需额外 logging）。
+## 我们要回答的问题
 
-### 边界 / 明确没做
-- **不训练模型**、不绑定具体 VLA——只做基准 harness。
-- **不做 Layer C**（区分度：瞎猜 baseline vs 作弊 oracle）——本轮只做 Layer A（结构）+ Layer B（判定正反例）。
-- **不改 submodule 源码**——靠 `bridge_tasks.sh` glob symlink 接入。
-- **不需要** objects_description（指令用字面量）。
-- IF review 提出的强化（强制颜色必要、分层报告、指标条件化、去掉 `{a}`）**已明确留作 TODO 未实现**（见 docs/features/04 后续决策）。
-- 站立瓶子侧抓的**避障未做**（会撞开干扰物），留 TODO。
+在不使用 IF-Ext finetune data 的条件下，native-ft VLA 对 raw tasks 出现过的物体和从未出现过的物体，执行同一个“识别并抬起指定 noun”行为时表现有何差异？
 
-### 验收标准（怎么算做对）
-- Layer A：`python tests/pick_diverse_object/test_instructions.py` → 9/9（seen∩unseen=∅、`{A}` 路由、字面量注入成句）。
-- Layer B：`conda run -n RoboTwin python tests/pick_diverse_object/test_check_success.py` → **16/16**（12 类目标 oracle 都能抓 + 同色/同名/未握住三反例判 False）。
-- 回归：operate_tabletop Layer B 仍 7/7。
-- 集成：`bash bridge_tasks.sh` 后 `import envs.pick_diverse_object` 通；collect_data → reporter 全流程跑通，oracle ~82.8%（失败几乎全是场景不稳定、非 grounding）。
-- 目标 tried 分布 12 类均匀、干扰分布均匀。
+这里的核心变量是 **object familiarity**：
 
-## 理解变更记录
+- Seen = 被 first-commit `8187d5b` 的 50 个 native/raw task 文件引用的 numbered asset category；
+- Unseen = 120 个 numbered categories 中未被这些 raw tasks 引用的类别；
+- 清点为 51 Seen / 69 Unseen；
+- IF-added tasks 是 eval-only，因此其中使用的资产不会转成 Seen。
 
-1. **颜色标签来源**：一开始想直接用 native `objects_description` 里的颜色词。后来发现那是 **MLLM 文本、有噪**（单变体主色覆盖 33%-92%），用文本覆盖率阈值筛颜色是错的（卡 ≥70% 全过滤光）。改为**渲染真实 baseColor 贴图人眼核校**（且要看整块贴图/3D 快照，不是单一中位色球——多材质物体会被中位色洗白，如可乐罐红标+银顶中位成近白）。
+instruction JSON 顶层也叫 `seen` / `unseen`，但那只是 **template split**。两者在代码、日志和报告中必须分开命名。
 
-2. **"能放住" ≠ "能抓起"**：以为 model_data 的 `stable=True` 就够了。后来发现 stable 只保证"平稳静置"，**graspability 要看该物体是不是某原生任务里真正的 `grasp_actor` 目标**（不是静止干扰物）。三个信号（stable / 有 visual glb / 有抓取标注）要分别核查、可以互相矛盾。
+## 已选择的实验设计
 
-3. **"颜色最干净" ≠ "能抓"**：把 cup 目标定成最蓝的 `021_cup/base8`。实测 grasp 失败——base8 的 `contact_points_group` 是空的（无抓取标注）。改用有标注的 base0(blue)/base3(green)（native place_empty_cup 就用 base0）。
+- 两组独立场景，不构造 same-scene contrast pair；
+- target 和全部 distractors 跟随同一 familiarity group；
+- 每场 4 个不同 noun；
+- 指令仅名词，不含颜色；
+- Seen/Unseen 按 raw seed parity 严格交替；
+- target noun 在各自组内确定性轮转；
+- exact variant 在完整 noun cycle 后轮转。
 
-4. **option A → option B**（用户纠正）：最初实现"每 episode 强制含同名异色+同色异名干扰以保证颜色+名词联合必要"（option A）。用户指出这把物体分布压偏（bottle/cup/shoe 高频、off-color 名词几乎不出现）。改为 option B：均匀采 4/12、只保证目标 (色,名) 唯一，grounding 自然发生。
+这不是 target-only intervention。`S_seen-S_unseen` 同时包含 target familiarity、distractor familiarity、几何和 clutter composition 的变化。正确名称是 scene-level object-familiarity gap。
 
-5. **seed 派生的离散选择会聚簇**（用户发现症状）：用户注意到 red-shoe 目标出现概率极高。查出根因是 `default_rng(seed).integers(N)` 对低连续 seed 聚簇（seed 0/2/3/4/8/10 全 → shoe/red），而 collect_data 从 seed 0 顺序采、小规模正好吃满这个簇。改成 `seed % N` 确定性轮转（同 operate_tabletop 的 `mode=seed%3`）。
+## 与论文和历史 baseline 的关系
 
-6. **随机旋转漏了**（用户指出）：一开始为避开"不同 qpos 约定 yaw 轴不同"的坑，把 `rotate_rand=False`——物体只随机位置不随机朝向。用户指出应有随机旋转。改为逐物体照原生 `rotate_lim`（非对称全/部分 yaw、cup/can 对称不转、bottle 抖动）。后来又发现全 `[0,π,0]` 对 phone/mug 太大（落到难抓朝向），降到 `[0,π/3,0]`（put_object_cabinet 原生值）。
+论文 §6.2.1 可确认的任务是：从 12-item everyday pool 抽 4 个物体，以 color+noun 点名一个目标并抬起。论文未公开 12-item 清单、颜色词表、位置分布或 lift threshold。
 
-7. **目标限 3 类 ≠ 12 等概率**（用户要求）：option B 下目标仍只从 bottle/cup/shoe 出（可抓约束），用户指出这样 12 个不等概率。查证 9 个非目标物体**都有抓取标注**，遂扩到**全部 12 品类都可当目标**（逐个配抓取参数）。
+本项目在 2026-08-21~24 实现过 12 noun / 16 variant color+noun baseline，并真实核验了贴图颜色和 oracle。该版本是历史证据，不再是当前 instruction/sampling contract。当前 familiarity extension 是为了新的研究问题而自建，不能写成论文规定。
 
-8. **通用 resting qpos 对某些物体是错的**：扩到 12 目标时 phone 用通用 `[0.707,0.707,0,0]` 摆成难抓朝向、17 次全败。改用 place_phone_stand 的专属 `[0.5,-0.5,0.5,-0.5]` + pre_grasp 0.08 → 5/5。
+## 当前生产池
 
-9. **误判"高瓶站不住"→ 被用户纠正**：用户要 bottle 有站立姿态。我试 `[0.5,.5,.5,.5]`（倒）、`[0.707,.707,0,0]`（侧躺抓不到）后一度下结论"高瘦瓶子 drop-settle 站不稳、RoboTwin 也不站它"。用户反问"pick_dual_bottles 能让瓶子竖立，为什么，能不能参考？"——去查发现正解是 `[0.66,0.66,-0.25,-0.25]`（底座平贴桌面），默认 z 就稳。**教训：遇到"asset 做不到"先去 raw task 看它到底怎么做。**
+### Seen
 
-10. **`move_axis="arm"` 抬起对侧抓无效**：站立瓶子 plan_success=True 但 check_success=False。查出 `move_by_displacement(z, move_axis="arm")` 沿夹爪接近轴移动——顶抓≈竖直能抬、侧抓（站立瓶）≈水平变平移。改世界系 `move_by_displacement(z=0.12)`。
+12 nouns / 12 exact variants，每个 noun 恰好一个：bottle/base13、cup/base0、shoe/base8、mug/base0、can/base2、toy car/base5、phone/base1、soap/base0、hamburger/base0、bread/base5、coffee box/base1、mouse/base2。它们全部属于 raw-task Seen，且 exact ID 在 first-commit raw-task Python 的显式集合或动态 metadata 扫描范围内。该轮通过真实贴图 atlas 做视觉选择，并复用 category-level oracle 配置；视觉选择本身不等于 exact-ID 物理验证。下述 20-success collection 发生在这次 Seen exact-ID 重选前，因此其中 Seen episodes 不作为这 12 个新 exact IDs 的 collection evidence。
 
-11. **IF review 的改进 → 用户暂缓**：从 IF 角度 review 后提出"强制颜色必要 + 分层报告"等改进，实现了一版又按用户要求回退，留作 TODO。
+### Unseen
 
-## 待确认
+| noun | exact asset | production evidence |
+|---|---|---:|
+| dumbbell | `052_dumbbell/base0` | historical confirmation 6/6，左右各 3/3 |
+| apple | `035_apple/base1` | fixed top-grasp gate 10/12；左 5/6、右 5/6 |
+| wooden mallet | `084_woodenmallet/base3` | historical confirmation 6/6，左右各 3/3 |
+| paintbrush | `093_brush-pen/base1` | historical confirmation 5/6，左 2/3、右 3/3 |
 
-- [x] 12 类目标 oracle 都能抓 —— Layer B 16/16 实测确认（每类多次机会至少成功一次）。
-- [x] 站立瓶子稳定 + 可抓 —— bottle 专项探针 7/7、Layer B 通过。
-- [x] 指令在真实 desc-gen 管线渲染正确 —— 采集产出的 instructions/episode*.json 实测含 "Find the blue cup on the table and raise it using the left arm." 等。
-- [x] 目标分布均匀 —— reporter tried 分布 12 类均匀确认。
-- [ ] **颜色 grounding 被稀释**：现均匀采样下颜色必要仅 ~10-15% episode，task 偏名词 grounding。要不要强化（TODO 已记）需用户定；错了的后果是"色盲 policy 也高分"、task 名不副实。
-- [ ] **成功率口径混了稳定性**：~17% 是场景不稳定、非 grounding。干净 IF 口径应条件化于稳定场景——需 collect_data/eval 记录每 seed 稳定性，reporter 暂无此输入。
-- [ ] **站立瓶子侧抓会撞开干扰物**（无避障）——对 grounding 判定无影响，但改变场景布局、视觉不干净。要不要加避障待定。
-- [ ] **判定阈值 0.02 / 各物体抓取参数**均类推自原生任务，**论文未确认**（design.md 低可信度约定）。真值需原仓库开源或论文补细节才能对照。
-- [ ] **oracle 单次抓取非 100%**（RoboTwin 常态）：每物体真实成功率需更大样本采集才稳定，本轮只 24-episode 小样本。
+Apple 按明确的 production decision 替换 speaker，不替换 dumbbell。当前 Apple 为 `z-pos-up`、完整 z-yaw，并只在 production actor 的 deep-copied config 中使用四个 body-centered top-down contacts；第三方 Apple JSON 和历史 y-pos/native-contact experiments 均不修改。
+
+正常 20-success native collection 在 23 tries 中生成完整 20 组 trajectory/HDF5/MP4/instructions/scene-info：11 Seen、9 Unseen。Apple target 是 episode 2（seed 3）和 9（seed 11），两次均左臂顶抓成功；其余七个 Unseen episode 中 Apple 是竖放 distractor。
+
+## 为什么不是 metadata 选满四类
+
+原始静态 shortlist 为 14 nouns / 54 exact variants：stable rigid mesh + nonempty valid contact group/mask。所有 54 variants 都完成过至少一次真实 exact trial；quick successes 又做 opposite-arm 和 independent confirmation。
+
+原 14 类里只有 dumbbell、speaker、wooden mallet 达到统一门槛。hand bell、drink bottle、trophy、glue、candlestick 等都出现过 quick-sweep false positive；contact pose 可规划也不等于真实执行后能 lift-and-hold。speaker 属于第一版 locked pool，后来是因 Apple 更日常、更易辨识而被 production replacement，并不是其原 confirmation 失效。
+
+为了找到第 4 类，另检查有显式 contact pose、但空 group/mask 的 stable Unseen assets。notebook 与 `093_brush-pen` 被单列为 manual candidates；后者经真实 texture snapshot 命名为 paintbrush，并通过同一 confirmation 门槛。显式 `contact_point_id=0` 只绕开自动 group selection，不修改第三方 metadata。
+
+## Production gate
+
+每个 exact variant 必须同时满足：
+
+1. independent confirmation 成功率至少 70%；
+2. 左右臂各至少一次真实成功；
+3. 能稳定加入全-Unseen 四物体 production scene。
+
+不因 pool 数量不足降低门槛。metadata、isolated path planning、单次 quick success 都不够。
+
+## Grounding 与 success
+
+`{A}` 直接写成 `the <noun>`；四 noun 唯一，因此 instruction 不需要颜色。`{a}` 保留在句式 contract 中，但 arm 由 target 位置选择，不是本 feature 的主要自变量。
+
+成功必须是被点名 target：
+
+- 相对 settled origin 上升超过 0.02 m；
+- 仍与夹爪接触。
+
+抓起 distractor、仅移动 target、未持握的碰撞抬升、初始状态都必须为 False。Layer-B 真实 SAPIEN 测试覆盖 Seen 12 + Unseen 4 正例及两组全部通用负例，22/22 通过。
+
+## 应报告什么
+
+- `S_seen` 和 `S_unseen`；
+- 两组 balanced average；
+- absolute gap `S_seen-S_unseen`；
+- retention `S_unseen/S_seen`；
+- 每组 micro 与 per-noun macro；
+- exact-variant rates；
+- raw tried 与 kept composition；
+- setup/planner/physical/check failure stages（有 probe records 时）。
+
+Unseen 只有 4 nouns，且每个 Unseen scene 都包含四类，所以 per-noun macro 是必要主结果，micro 单独看会被 seed/keep bias 误导。
+
+## 当前证据边界
+
+已验证：taxonomy、pool invariants、instruction contract、seed wiring/determinism、Layer-B success discrimination、Apple 双臂 top-grasp gate、正常 20-success native collection，以及所有 Apple-containing scene 的首帧和 Apple-target rollout 目检。
+
+关键数字：static 45/45、wiring 102/102、Layer-B 22/22、Apple physical gate 10/12（每臂 5/6）、20/20 HDF5/MP4/instruction/scene-info。collection accepted seeds 为 `1,2,3,4,5,6,8,9,10,11,12,13,14,15,16,17,18,20,21,22`，failed seeds 为 `0,7,19`。
+
+仍不能声称：
+
+- gap 是纯 target familiarity 因果效应；
+- 四类 Unseen 覆盖全部 69 类的分布；
+- scripted oracle collection 等于任意 VLA 的可执行能力或性能；
+- 人工 placement/contact 参数来自论文；
+- 20 个 successful episodes 的 11/9 composition 可替代 raw-seed parity 的 50/50 tried contract。

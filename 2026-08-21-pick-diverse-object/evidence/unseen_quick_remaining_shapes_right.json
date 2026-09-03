@@ -1,0 +1,814 @@
+{
+  "args": {
+    "phase": "grasp",
+    "nouns": null,
+    "model_id": null,
+    "variants": [
+      "candlestick:1",
+      "candlestick:2",
+      "candlestick:3",
+      "trophy:1",
+      "trophy:4",
+      "hydrating oil:5"
+    ],
+    "first_id_per_noun": false,
+    "arms": [
+      "right"
+    ],
+    "repeats": 1,
+    "base_seed": 19000,
+    "output": "/home/xichen6/Documents/repos/robotwin-if/notes/2026-08-21-pick-diverse-object/evidence/unseen_quick_remaining_shapes_right.json",
+    "overwrite": true
+  },
+  "summary": {
+    "trials": 6,
+    "setup_ok": 6,
+    "settle_ok": 6,
+    "oracle_ok": 2,
+    "failures": {
+      "check_success": 4
+    }
+  },
+  "records": [
+    {
+      "noun": "candlestick",
+      "asset": "051_candlestick",
+      "model_id": 1,
+      "arm": "right",
+      "seed": 19000,
+      "phase": "grasp",
+      "setup_ok": true,
+      "settle_ok": true,
+      "oracle_ok": false,
+      "failure": "check_success",
+      "objects": [
+        {
+          "noun": "candlestick",
+          "asset": "051_candlestick",
+          "model_id": 1,
+          "role": "target",
+          "position": [
+            0.13005591928958893,
+            0.042206548154354095,
+            0.7416927814483643
+          ],
+          "quaternion": [
+            0.6651767492294312,
+            0.6655538082122803,
+            0.23943322896957397,
+            0.2392694354057312
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "noun": "hydrating oil",
+          "asset": "109_hydrating-oil",
+          "model_id": 0,
+          "role": "distractor",
+          "position": [
+            -0.05602125823497772,
+            -0.1596880704164505,
+            0.7413434982299805
+          ],
+          "quaternion": [
+            0.6932160258293152,
+            0.6955038905143738,
+            -0.13278643786907196,
+            -0.13451305031776428
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "noun": "pencil cup",
+          "asset": "059_pencup",
+          "model_id": 3,
+          "role": "distractor",
+          "position": [
+            0.20547302067279816,
+            -0.17161917686462402,
+            0.7410048842430115
+          ],
+          "quaternion": [
+            0.6487193703651428,
+            0.6592319011688232,
+            0.27099159359931946,
+            0.2667212188243866
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "noun": "speaker",
+          "asset": "055_small-speaker",
+          "model_id": 1,
+          "role": "distractor",
+          "position": [
+            -0.24162383377552032,
+            0.04849955067038536,
+            0.7404549717903137
+          ],
+          "quaternion": [
+            0.7020556926727295,
+            0.7020297050476074,
+            0.0844569206237793,
+            0.08449416607618332
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "min_xy_separation": 0.22673592538664203,
+      "max_linear_speed": 0.0,
+      "max_angular_speed": 0.0,
+      "workspace_ok": true,
+      "motion_ok": true,
+      "actual_arm": "right",
+      "target_z_rise": 1.7881393432617188e-07,
+      "instruction_target": "the candlestick"
+    },
+    {
+      "noun": "candlestick",
+      "asset": "051_candlestick",
+      "model_id": 2,
+      "arm": "right",
+      "seed": 19001,
+      "phase": "grasp",
+      "setup_ok": true,
+      "settle_ok": true,
+      "oracle_ok": true,
+      "failure": null,
+      "objects": [
+        {
+          "noun": "candlestick",
+          "asset": "051_candlestick",
+          "model_id": 2,
+          "role": "target",
+          "position": [
+            0.2555650770664215,
+            0.048722926527261734,
+            0.7416418194770813
+          ],
+          "quaternion": [
+            0.6978791356086731,
+            0.6977459788322449,
+            -0.11422097682952881,
+            -0.11431904882192612
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "noun": "hydrating oil",
+          "asset": "109_hydrating-oil",
+          "model_id": 0,
+          "role": "distractor",
+          "position": [
+            -0.1927793025970459,
+            -0.025127757340669632,
+            0.74134361743927
+          ],
+          "quaternion": [
+            0.6724376082420349,
+            0.6749130487442017,
+            -0.21412253379821777,
+            -0.21557246148586273
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "noun": "speaker",
+          "asset": "055_small-speaker",
+          "model_id": 1,
+          "role": "distractor",
+          "position": [
+            0.049218371510505676,
+            -0.18800699710845947,
+            0.7404550909996033
+          ],
+          "quaternion": [
+            0.6364188194274902,
+            0.6364048719406128,
+            0.30816933512687683,
+            0.30820685625076294
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "noun": "pencil cup",
+          "asset": "059_pencup",
+          "model_id": 6,
+          "role": "distractor",
+          "position": [
+            0.016199128702282906,
+            0.021397065371274948,
+            0.7408632636070251
+          ],
+          "quaternion": [
+            0.6845864057540894,
+            0.6845347285270691,
+            -0.17708207666873932,
+            -0.1771879643201828
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "min_xy_separation": 0.21199134835800465,
+      "max_linear_speed": 0.0,
+      "max_angular_speed": 0.0,
+      "workspace_ok": true,
+      "motion_ok": true,
+      "actual_arm": "right",
+      "target_z_rise": 0.11982381343841553,
+      "instruction_target": "the candlestick"
+    },
+    {
+      "noun": "candlestick",
+      "asset": "051_candlestick",
+      "model_id": 3,
+      "arm": "right",
+      "seed": 19002,
+      "phase": "grasp",
+      "setup_ok": true,
+      "settle_ok": true,
+      "oracle_ok": false,
+      "failure": "check_success",
+      "objects": [
+        {
+          "noun": "candlestick",
+          "asset": "051_candlestick",
+          "model_id": 3,
+          "role": "target",
+          "position": [
+            0.16279804706573486,
+            -0.17343369126319885,
+            0.741722047328949
+          ],
+          "quaternion": [
+            0.7001482844352722,
+            0.7001540064811707,
+            -0.09897219389677048,
+            -0.09890004992485046
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "noun": "hydrating oil",
+          "asset": "109_hydrating-oil",
+          "model_id": 1,
+          "role": "distractor",
+          "position": [
+            -0.24966305494308472,
+            -0.06306909024715424,
+            0.7413436770439148
+          ],
+          "quaternion": [
+            0.7034559845924377,
+            0.7028900980949402,
+            -0.07409807294607162,
+            -0.07486420124769211
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "noun": "speaker",
+          "asset": "055_small-speaker",
+          "model_id": 2,
+          "role": "distractor",
+          "position": [
+            -0.12976482510566711,
+            -0.19762642681598663,
+            0.7407196760177612
+          ],
+          "quaternion": [
+            0.7017430067062378,
+            0.691507875919342,
+            -0.1203271821141243,
+            -0.12204508483409882
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "noun": "pencil cup",
+          "asset": "059_pencup",
+          "model_id": 6,
+          "role": "distractor",
+          "position": [
+            0.058297015726566315,
+            0.04794745519757271,
+            0.7408624291419983
+          ],
+          "quaternion": [
+            0.6947279572486877,
+            0.6947086453437805,
+            -0.1317356675863266,
+            -0.13182763755321503
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "min_xy_separation": 0.18022558736939728,
+      "max_linear_speed": 0.0,
+      "max_angular_speed": 0.0,
+      "workspace_ok": true,
+      "motion_ok": true,
+      "actual_arm": "right",
+      "target_z_rise": 0.03570413589477539,
+      "instruction_target": "the candlestick"
+    },
+    {
+      "noun": "trophy",
+      "asset": "090_trophy",
+      "model_id": 1,
+      "arm": "right",
+      "seed": 19003,
+      "phase": "grasp",
+      "setup_ok": true,
+      "settle_ok": true,
+      "oracle_ok": false,
+      "failure": "check_success",
+      "objects": [
+        {
+          "noun": "trophy",
+          "asset": "090_trophy",
+          "model_id": 1,
+          "role": "target",
+          "position": [
+            0.17903940379619598,
+            -0.13374893367290497,
+            0.7416929602622986
+          ],
+          "quaternion": [
+            0.6953271627426147,
+            0.6949853897094727,
+            0.13036493957042694,
+            0.1285324990749359
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "noun": "hydrating oil",
+          "asset": "109_hydrating-oil",
+          "model_id": 5,
+          "role": "distractor",
+          "position": [
+            -0.03502567112445831,
+            -0.1702781319618225,
+            0.7413709163665771
+          ],
+          "quaternion": [
+            0.706444263458252,
+            0.7071934342384338,
+            -0.020334264263510704,
+            -0.020016813650727272
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "noun": "speaker",
+          "asset": "055_small-speaker",
+          "model_id": 1,
+          "role": "distractor",
+          "position": [
+            -0.1982758492231369,
+            -0.14011937379837036,
+            0.7404549717903137
+          ],
+          "quaternion": [
+            0.7067998647689819,
+            0.706749677658081,
+            0.021643076092004776,
+            0.021689854562282562
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "noun": "pencil cup",
+          "asset": "059_pencup",
+          "model_id": 0,
+          "role": "distractor",
+          "position": [
+            -0.026920102536678314,
+            0.05027792602777481,
+            0.7410057783126831
+          ],
+          "quaternion": [
+            0.615075945854187,
+            0.6155620813369751,
+            0.34849661588668823,
+            0.3483031094074249
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "min_xy_separation": 0.16601256381133286,
+      "max_linear_speed": 0.0,
+      "max_angular_speed": 0.0,
+      "workspace_ok": true,
+      "motion_ok": true,
+      "actual_arm": "right",
+      "target_z_rise": 0.010184049606323242,
+      "instruction_target": "the trophy"
+    },
+    {
+      "noun": "trophy",
+      "asset": "090_trophy",
+      "model_id": 4,
+      "arm": "right",
+      "seed": 19004,
+      "phase": "grasp",
+      "setup_ok": true,
+      "settle_ok": true,
+      "oracle_ok": true,
+      "failure": null,
+      "objects": [
+        {
+          "noun": "trophy",
+          "asset": "090_trophy",
+          "model_id": 4,
+          "role": "target",
+          "position": [
+            0.09669621288776398,
+            -0.04509161785244942,
+            0.7416879534721375
+          ],
+          "quaternion": [
+            0.7038365006446838,
+            0.7040352821350098,
+            0.06705532968044281,
+            0.0667262077331543
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "noun": "speaker",
+          "asset": "055_small-speaker",
+          "model_id": 2,
+          "role": "distractor",
+          "position": [
+            0.25924286246299744,
+            -0.17694614827632904,
+            0.7407196760177612
+          ],
+          "quaternion": [
+            0.6932329535484314,
+            0.6821351051330566,
+            -0.16320128738880157,
+            -0.16578660905361176
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "noun": "pencil cup",
+          "asset": "059_pencup",
+          "model_id": 3,
+          "role": "distractor",
+          "position": [
+            -0.19275657832622528,
+            -0.2200053632259369,
+            0.7409777641296387
+          ],
+          "quaternion": [
+            0.700915515422821,
+            0.7106283903121948,
+            0.04343492537736893,
+            0.04287602752447128
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "noun": "hydrating oil",
+          "asset": "109_hydrating-oil",
+          "model_id": 5,
+          "role": "distractor",
+          "position": [
+            -0.13037995994091034,
+            -0.0385601669549942,
+            0.7413707375526428
+          ],
+          "quaternion": [
+            0.7066832780838013,
+            0.7075299620628357,
+            0.00015104889462236315,
+            0.0004626802110578865
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "min_xy_separation": 0.19186766734129052,
+      "max_linear_speed": 0.0,
+      "max_angular_speed": 0.0,
+      "workspace_ok": true,
+      "motion_ok": true,
+      "actual_arm": "right",
+      "target_z_rise": 0.13031792640686035,
+      "instruction_target": "the trophy"
+    },
+    {
+      "noun": "hydrating oil",
+      "asset": "109_hydrating-oil",
+      "model_id": 5,
+      "arm": "right",
+      "seed": 19005,
+      "phase": "grasp",
+      "setup_ok": true,
+      "settle_ok": true,
+      "oracle_ok": false,
+      "failure": "check_success",
+      "objects": [
+        {
+          "noun": "hydrating oil",
+          "asset": "109_hydrating-oil",
+          "model_id": 5,
+          "role": "target",
+          "position": [
+            0.1637791395187378,
+            -0.17211154103279114,
+            0.7413707971572876
+          ],
+          "quaternion": [
+            0.6788212060928345,
+            0.6794742345809937,
+            -0.19711901247501373,
+            -0.19662338495254517
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "noun": "glue bottle",
+          "asset": "095_glue",
+          "model_id": 2,
+          "role": "distractor",
+          "position": [
+            0.019091252237558365,
+            -0.10587428510189056,
+            0.7412582635879517
+          ],
+          "quaternion": [
+            0.6563943028450012,
+            0.6561050415039062,
+            0.2635897696018219,
+            0.26304617524147034
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "noun": "speaker",
+          "asset": "055_small-speaker",
+          "model_id": 1,
+          "role": "distractor",
+          "position": [
+            -0.20157067477703094,
+            -0.06276827305555344,
+            0.7404550909996033
+          ],
+          "quaternion": [
+            0.6615394353866577,
+            0.6615221500396729,
+            0.2497359812259674,
+            0.24977199733257294
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "noun": "pencil cup",
+          "asset": "059_pencup",
+          "model_id": 4,
+          "role": "distractor",
+          "position": [
+            0.14755655825138092,
+            0.03615756332874298,
+            0.7413644194602966
+          ],
+          "quaternion": [
+            0.6400271058082581,
+            0.6399940252304077,
+            -0.3006851375102997,
+            -0.30060189962387085
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "min_xy_separation": 0.15912874912832975,
+      "max_linear_speed": 0.0,
+      "max_angular_speed": 0.0,
+      "workspace_ok": true,
+      "motion_ok": true,
+      "actual_arm": "right",
+      "target_z_rise": -2.1457672119140625e-06,
+      "instruction_target": "the hydrating oil"
+    }
+  ]
+}

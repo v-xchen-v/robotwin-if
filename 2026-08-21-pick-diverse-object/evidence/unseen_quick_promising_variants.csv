@@ -1,0 +1,18 @@
+noun,asset,model_id,arm,seed,phase,setup_ok,settle_ok,oracle_ok,actual_arm,target_z_rise,min_xy_separation,max_linear_speed,max_angular_speed,failure
+pencil cup,059_pencup,0,left,1000,grasp,True,True,True,left,0.11894524097442627,0.18458686555338566,0.0,0.0,
+pencil cup,059_pencup,0,right,1001,grasp,True,True,False,right,0.0,0.17318050752099257,0.0,0.0,check_success
+pencil cup,059_pencup,1,left,1002,grasp,True,True,False,left,0.0,0.1648693127738171,0.0,0.0,check_success
+pencil cup,059_pencup,1,right,1003,grasp,True,True,True,right,0.12817078828811646,0.21529661188360233,0.0,0.0,
+pencil cup,059_pencup,2,left,1004,grasp,True,True,False,left,0.03705894947052002,0.15581855156053334,0.0,0.0,check_success
+pencil cup,059_pencup,2,right,1005,grasp,True,True,False,right,0.0,0.19025923024970398,0.0,0.0,check_success
+pencil cup,059_pencup,3,left,1006,grasp,True,True,False,left,-3.933906555175781e-06,0.16826781771346194,0.0,0.0,check_success
+pencil cup,059_pencup,3,right,1007,grasp,True,True,False,right,0.0,0.18409582626990373,0.0,0.0,check_success
+pencil cup,059_pencup,4,left,1008,grasp,True,True,True,left,0.12028777599334717,0.16767303417149912,0.0,0.0,
+pencil cup,059_pencup,4,right,1009,grasp,True,True,False,right,-5.960464477539063e-08,0.17425157228088098,0.0,0.0,check_success
+pencil cup,059_pencup,5,left,1010,grasp,True,True,True,left,0.12080246210098267,0.18087596997435845,0.0,0.0,
+pencil cup,059_pencup,5,right,1011,grasp,True,True,False,right,-0.7054389305412769,0.1901073037014259,0.0,0.0,check_success
+pencil cup,059_pencup,6,left,1012,grasp,True,True,False,left,0.0,0.19934125529401023,0.0,0.0,check_success
+pencil cup,059_pencup,6,right,1013,grasp,True,True,False,right,0.0294722318649292,0.23528624643158547,0.0,0.0,check_success
+drink carton,068_boxdrink,2,left,1014,grasp,True,True,True,left,0.1199871301651001,0.16729559188400747,0.0,0.0,
+drink carton,068_boxdrink,2,right,1015,grasp,True,True,True,right,0.1178368330001831,0.16606003315180998,0.0,0.0,
+drink carton,068_boxdrink,3,left,1016,grasp,True,True,False,left,2.980232238769531e-07,0.15779501085585573,0.0,0.0,check_success

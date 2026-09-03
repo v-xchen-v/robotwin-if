@@ -1,0 +1,7 @@
+noun,asset,model_id,arm,seed,phase,setup_ok,settle_ok,oracle_ok,actual_arm,target_z_rise,min_xy_separation,max_linear_speed,max_angular_speed,failure
+drink bottle,068_boxdrink,2,left,13000,grasp,True,True,True,left,0.12414336204528809,0.17970551557095635,0.0,0.0,
+drink bottle,068_boxdrink,2,right,13001,grasp,True,True,True,right,0.11958432197570801,0.16638207027235044,0.0,0.0,
+drink bottle,068_boxdrink,2,left,13002,grasp,True,True,False,left,0.0,0.18155210345484193,0.0,0.0,check_success
+drink bottle,068_boxdrink,2,right,13003,grasp,True,True,False,right,0.05784112215042114,0.167884136716286,0.0,0.0,check_success
+drink bottle,068_boxdrink,2,left,13004,grasp,True,True,False,left,0.0,0.1955298227752185,0.0,0.0,check_success
+drink bottle,068_boxdrink,2,right,13005,grasp,True,True,False,right,-9.953975677490234e-06,0.16137057280505612,0.0,0.0,check_success

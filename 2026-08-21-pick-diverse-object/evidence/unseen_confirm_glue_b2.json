@@ -1,0 +1,810 @@
+{
+  "args": {
+    "phase": "grasp",
+    "nouns": [
+      "glue bottle"
+    ],
+    "model_id": 2,
+    "variants": null,
+    "first_id_per_noun": false,
+    "arms": [
+      "left",
+      "right"
+    ],
+    "repeats": 3,
+    "base_seed": 16000,
+    "output": "/home/xichen6/Documents/repos/robotwin-if/notes/2026-08-21-pick-diverse-object/evidence/unseen_confirm_glue_b2.json",
+    "overwrite": true
+  },
+  "summary": {
+    "trials": 6,
+    "setup_ok": 6,
+    "settle_ok": 6,
+    "oracle_ok": 2,
+    "failures": {
+      "check_success": 4
+    }
+  },
+  "records": [
+    {
+      "noun": "glue bottle",
+      "asset": "095_glue",
+      "model_id": 2,
+      "arm": "left",
+      "seed": 16000,
+      "phase": "grasp",
+      "setup_ok": true,
+      "settle_ok": true,
+      "oracle_ok": true,
+      "failure": null,
+      "objects": [
+        {
+          "noun": "glue bottle",
+          "asset": "095_glue",
+          "model_id": 2,
+          "role": "target",
+          "position": [
+            -0.21105322241783142,
+            -0.017653364688158035,
+            0.7412585616111755
+          ],
+          "quaternion": [
+            0.6924506425857544,
+            0.6922374963760376,
+            0.1440209150314331,
+            0.14344830811023712
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "noun": "pencil cup",
+          "asset": "059_pencup",
+          "model_id": 2,
+          "role": "distractor",
+          "position": [
+            0.23244750499725342,
+            -0.2179398387670517,
+            0.741388738155365
+          ],
+          "quaternion": [
+            0.6400973796844482,
+            0.6396583318710327,
+            -0.300818532705307,
+            -0.30103302001953125
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "noun": "speaker",
+          "asset": "055_small-speaker",
+          "model_id": 1,
+          "role": "distractor",
+          "position": [
+            0.15241551399230957,
+            -0.02935270220041275,
+            0.7404547929763794
+          ],
+          "quaternion": [
+            0.7009532451629639,
+            0.7009115815162659,
+            -0.09325800836086273,
+            -0.09322280436754227
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "noun": "hydrating oil",
+          "asset": "109_hydrating-oil",
+          "model_id": 1,
+          "role": "distractor",
+          "position": [
+            -0.10730086266994476,
+            -0.2100827395915985,
+            0.7413435578346252
+          ],
+          "quaternion": [
+            0.6535318493843079,
+            0.6526777148246765,
+            0.27122876048088074,
+            0.2708190083503723
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "min_xy_separation": 0.20486636537660236,
+      "max_linear_speed": 0.0,
+      "max_angular_speed": 0.0,
+      "workspace_ok": true,
+      "motion_ok": true,
+      "actual_arm": "left",
+      "target_z_rise": 0.11885780096054077,
+      "instruction_target": "the glue bottle"
+    },
+    {
+      "noun": "glue bottle",
+      "asset": "095_glue",
+      "model_id": 2,
+      "arm": "right",
+      "seed": 16001,
+      "phase": "grasp",
+      "setup_ok": true,
+      "settle_ok": true,
+      "oracle_ok": false,
+      "failure": "check_success",
+      "objects": [
+        {
+          "noun": "glue bottle",
+          "asset": "095_glue",
+          "model_id": 2,
+          "role": "target",
+          "position": [
+            0.22699034214019775,
+            -0.14065203070640564,
+            0.7412585616111755
+          ],
+          "quaternion": [
+            0.6815658807754517,
+            0.6816330552101135,
+            -0.187904492020607,
+            -0.188510924577713
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "noun": "pencil cup",
+          "asset": "059_pencup",
+          "model_id": 1,
+          "role": "distractor",
+          "position": [
+            0.08155260980129242,
+            0.027215000241994858,
+            0.7406930327415466
+          ],
+          "quaternion": [
+            0.6810124516487122,
+            0.6810610294342041,
+            -0.19024303555488586,
+            -0.19022521376609802
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "noun": "hydrating oil",
+          "asset": "109_hydrating-oil",
+          "model_id": 0,
+          "role": "distractor",
+          "position": [
+            -0.1740279644727707,
+            -0.09976440668106079,
+            0.7413429021835327
+          ],
+          "quaternion": [
+            0.610993504524231,
+            0.6137794256210327,
+            -0.3530982434749603,
+            -0.35395413637161255
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "noun": "speaker",
+          "asset": "055_small-speaker",
+          "model_id": 1,
+          "role": "distractor",
+          "position": [
+            -0.01923096925020218,
+            -0.16746489703655243,
+            0.7404555678367615
+          ],
+          "quaternion": [
+            0.7063601016998291,
+            0.7063034176826477,
+            -0.03310966119170189,
+            -0.03308669850230217
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "min_xy_separation": 0.16895403553721325,
+      "max_linear_speed": 0.0,
+      "max_angular_speed": 0.0,
+      "workspace_ok": true,
+      "motion_ok": true,
+      "actual_arm": "right",
+      "target_z_rise": 0.006990611553192139,
+      "instruction_target": "the glue bottle"
+    },
+    {
+      "noun": "glue bottle",
+      "asset": "095_glue",
+      "model_id": 2,
+      "arm": "left",
+      "seed": 16002,
+      "phase": "grasp",
+      "setup_ok": true,
+      "settle_ok": true,
+      "oracle_ok": false,
+      "failure": "check_success",
+      "objects": [
+        {
+          "noun": "glue bottle",
+          "asset": "095_glue",
+          "model_id": 2,
+          "role": "target",
+          "position": [
+            -0.2158220261335373,
+            -0.08757635205984116,
+            0.7412592172622681
+          ],
+          "quaternion": [
+            0.6159324049949646,
+            0.616314709186554,
+            -0.34671732783317566,
+            -0.3472329080104828
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "noun": "speaker",
+          "asset": "055_small-speaker",
+          "model_id": 2,
+          "role": "distractor",
+          "position": [
+            0.06941523402929306,
+            -0.073755644261837,
+            0.7407194972038269
+          ],
+          "quaternion": [
+            0.7132459878921509,
+            0.7008613348007202,
+            0.005983917508274317,
+            0.00614562351256609
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "noun": "hydrating oil",
+          "asset": "109_hydrating-oil",
+          "model_id": 5,
+          "role": "distractor",
+          "position": [
+            0.1888839304447174,
+            0.051194142550230026,
+            0.7413709163665771
+          ],
+          "quaternion": [
+            0.7006508708000183,
+            0.7013713717460632,
+            -0.0928424671292305,
+            -0.09245014190673828
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "noun": "pencil cup",
+          "asset": "059_pencup",
+          "model_id": 2,
+          "role": "distractor",
+          "position": [
+            0.1727398782968521,
+            -0.21153512597084045,
+            0.7413887977600098
+          ],
+          "quaternion": [
+            0.6246520280838013,
+            0.6242289543151855,
+            0.3316670358181,
+            0.33188116550445557
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "min_xy_separation": 0.172218372112325,
+      "max_linear_speed": 0.0,
+      "max_angular_speed": 0.0,
+      "workspace_ok": true,
+      "motion_ok": true,
+      "actual_arm": "left",
+      "target_z_rise": 0.0,
+      "instruction_target": "the glue bottle"
+    },
+    {
+      "noun": "glue bottle",
+      "asset": "095_glue",
+      "model_id": 2,
+      "arm": "right",
+      "seed": 16003,
+      "phase": "grasp",
+      "setup_ok": true,
+      "settle_ok": true,
+      "oracle_ok": false,
+      "failure": "check_success",
+      "objects": [
+        {
+          "noun": "glue bottle",
+          "asset": "095_glue",
+          "model_id": 2,
+          "role": "target",
+          "position": [
+            0.08513462543487549,
+            -0.20985592901706696,
+            0.7412591576576233
+          ],
+          "quaternion": [
+            0.6142732501029968,
+            0.6146608591079712,
+            -0.3496522903442383,
+            -0.35014840960502625
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "noun": "pencil cup",
+          "asset": "059_pencup",
+          "model_id": 4,
+          "role": "distractor",
+          "position": [
+            0.25986379384994507,
+            -0.06263545155525208,
+            0.7413648366928101
+          ],
+          "quaternion": [
+            0.7007692456245422,
+            0.7007454037666321,
+            -0.09452331066131592,
+            -0.09457165002822876
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "noun": "speaker",
+          "asset": "055_small-speaker",
+          "model_id": 2,
+          "role": "distractor",
+          "position": [
+            -0.16870418190956116,
+            -0.038221992552280426,
+            0.7407195568084717
+          ],
+          "quaternion": [
+            0.6918565630912781,
+            0.6798548698425293,
+            0.17040669918060303,
+            0.17347431182861328
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "noun": "hydrating oil",
+          "asset": "109_hydrating-oil",
+          "model_id": 5,
+          "role": "distractor",
+          "position": [
+            -0.15768581628799438,
+            -0.2188708484172821,
+            0.7413709163665771
+          ],
+          "quaternion": [
+            0.698852002620697,
+            0.6996853947639465,
+            0.10489987581968307,
+            0.10508359968662262
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "min_xy_separation": 0.1809845670390287,
+      "max_linear_speed": 0.0,
+      "max_angular_speed": 0.0,
+      "workspace_ok": true,
+      "motion_ok": true,
+      "actual_arm": "right",
+      "target_z_rise": 0.0,
+      "instruction_target": "the glue bottle"
+    },
+    {
+      "noun": "glue bottle",
+      "asset": "095_glue",
+      "model_id": 2,
+      "arm": "left",
+      "seed": 16004,
+      "phase": "grasp",
+      "setup_ok": true,
+      "settle_ok": true,
+      "oracle_ok": false,
+      "failure": "check_success",
+      "objects": [
+        {
+          "noun": "glue bottle",
+          "asset": "095_glue",
+          "model_id": 2,
+          "role": "target",
+          "position": [
+            -0.2231682986021042,
+            -0.1447553038597107,
+            0.7412586212158203
+          ],
+          "quaternion": [
+            0.6971267461776733,
+            0.6972708702087402,
+            -0.1176411509513855,
+            -0.11827217787504196
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "noun": "pencil cup",
+          "asset": "059_pencup",
+          "model_id": 2,
+          "role": "distractor",
+          "position": [
+            0.09833316504955292,
+            0.019593680277466774,
+            0.741388738155365
+          ],
+          "quaternion": [
+            0.6729211211204529,
+            0.6724749207496643,
+            -0.21781612932682037,
+            -0.21796996891498566
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "noun": "hydrating oil",
+          "asset": "109_hydrating-oil",
+          "model_id": 5,
+          "role": "distractor",
+          "position": [
+            -0.0645541176199913,
+            -0.07109163701534271,
+            0.7413709163665771
+          ],
+          "quaternion": [
+            0.6293278336524963,
+            0.6301702260971069,
+            0.3216279149055481,
+            0.3215395510196686
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "noun": "speaker",
+          "asset": "055_small-speaker",
+          "model_id": 2,
+          "role": "distractor",
+          "position": [
+            0.12337887287139893,
+            -0.15541298687458038,
+            0.7407195568084717
+          ],
+          "quaternion": [
+            0.7049390077590942,
+            0.6927078366279602,
+            0.10677020996809006,
+            0.10870671272277832
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "min_xy_separation": 0.17488508861988347,
+      "max_linear_speed": 0.0,
+      "max_angular_speed": 0.0,
+      "workspace_ok": true,
+      "motion_ok": true,
+      "actual_arm": "left",
+      "target_z_rise": 0.02968364953994751,
+      "instruction_target": "the glue bottle"
+    },
+    {
+      "noun": "glue bottle",
+      "asset": "095_glue",
+      "model_id": 2,
+      "arm": "right",
+      "seed": 16005,
+      "phase": "grasp",
+      "setup_ok": true,
+      "settle_ok": true,
+      "oracle_ok": true,
+      "failure": null,
+      "objects": [
+        {
+          "noun": "glue bottle",
+          "asset": "095_glue",
+          "model_id": 2,
+          "role": "target",
+          "position": [
+            0.09980230033397675,
+            0.02763250470161438,
+            0.7412592172622681
+          ],
+          "quaternion": [
+            0.7069830894470215,
+            0.7070743441581726,
+            0.01081875991076231,
+            0.010194171220064163
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "noun": "hydrating oil",
+          "asset": "109_hydrating-oil",
+          "model_id": 5,
+          "role": "distractor",
+          "position": [
+            -0.04640233516693115,
+            -0.08750869333744049,
+            0.7413709759712219
+          ],
+          "quaternion": [
+            0.7026651501655579,
+            0.7034987211227417,
+            0.07522743195295334,
+            0.07544723153114319
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "noun": "speaker",
+          "asset": "055_small-speaker",
+          "model_id": 2,
+          "role": "distractor",
+          "position": [
+            0.10831250995397568,
+            -0.21475018560886383,
+            0.7407195568084717
+          ],
+          "quaternion": [
+            0.7072107791900635,
+            0.696552038192749,
+            -0.08501824736595154,
+            -0.08625659346580505
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "noun": "pencil cup",
+          "asset": "059_pencup",
+          "model_id": 4,
+          "role": "distractor",
+          "position": [
+            0.2697218954563141,
+            -0.009860146790742874,
+            0.7413649559020996
+          ],
+          "quaternion": [
+            0.7069819569587708,
+            0.7069641351699829,
+            -0.013714822940528393,
+            -0.013792581856250763
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "min_xy_separation": 0.17400680366717391,
+      "max_linear_speed": 0.0,
+      "max_angular_speed": 0.0,
+      "workspace_ok": true,
+      "motion_ok": true,
+      "actual_arm": "right",
+      "target_z_rise": 0.12168413400650024,
+      "instruction_target": "the glue bottle"
+    }
+  ]
+}

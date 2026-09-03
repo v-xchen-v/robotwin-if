@@ -1,0 +1,9 @@
+noun,asset,model_id,arm,seed,phase,setup_ok,settle_ok,oracle_ok,actual_arm,target_z_rise,min_xy_separation,max_linear_speed,max_angular_speed,failure
+hydrating oil,109_hydrating-oil,0,left,3000,grasp,True,True,False,left,0.0,0.17989833640816721,0.0,0.0,check_success
+hydrating oil,109_hydrating-oil,0,right,3001,grasp,True,True,False,right,0.0,0.1862342128381231,0.0,0.0,check_success
+hydrating oil,109_hydrating-oil,0,left,3002,grasp,True,True,False,left,0.0,0.16783538425295957,0.0,0.0,check_success
+hydrating oil,109_hydrating-oil,0,right,3003,grasp,True,True,False,right,0.0,0.15407838132450463,0.0,0.0,check_success
+call bell,111_callbell,1,left,3004,grasp,True,True,False,left,-1.1920928955078125e-07,0.18798992351579508,0.0,0.0,check_success
+call bell,111_callbell,1,right,3005,grasp,True,True,False,right,0.0,0.163537000417026,0.0,0.0,check_success
+call bell,111_callbell,1,left,3006,grasp,True,True,True,left,0.11975276470184326,0.17597965298753418,0.0,0.0,
+call bell,111_callbell,1,right,3007,grasp,True,True,False,right,0.0,0.1979415584031288,0.0,0.0,check_success

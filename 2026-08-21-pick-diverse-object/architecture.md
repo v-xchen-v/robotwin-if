@@ -1,94 +1,172 @@
-# Pick-Diverse-Object — 架构文档
+# Pick-Diverse-Object：实现架构
 
-> feature-04。跟 `understanding.md`（做什么/为什么）不同维度——这里讲**代码架构**：这个 task 在 RoboTwin 系统里的位置、跟哪些模块打交道、我们的实现动了哪里。
+> 更新于 2026-09-03。本文只描述当前 object-familiarity production path 与保留的通用 probe；旧 color+noun 实现和已淘汰的一次性候选实验仅作为历史结论。
 
-## 系统位置一句话
+## 模块边界
 
-RoboTwin 的采集/评测驱动（`collect_data.py` / `eval_policy.py`）靠 **`importlib.import_module(f"envs.{task_name}")`** 按名字发现任务。我们把一个 `pick_diverse_object.py`（继承 `Base_Task`）+ 一份指令模板 json **symlink 进 submodule** 的对应目录，就"插"进了这条既有流水线——不改 submodule 一行源码。本 feature 的全部新增都在 `robotwin-if` 自己的目录里。
+| 模块 | 职责 |
+|---|---|
+| `tasks/envs/_pick_diverse_object_pool.py` | simulator-free taxonomy、production/candidate manifests、Apple top-contact builder、seed schedule |
+| `tasks/envs/pick_diverse_object.py` | 真实 scene setup、sampling、placement、instruction info、oracle |
+| `tasks/envs/_if_grounding.py` | target-specific lift-and-held success helper |
+| `tasks/task_instruction/pick_diverse_object.json` | noun-only templates；顶层 keys 仅表示 template split |
+| `tools/probe_pick_diverse_unseen.py` | retained exact-candidate trials 与真实 production-seed trials，增量写 JSON/CSV |
+| `tools/_pick_diverse_probe_logic.py` | simulator-free fail-closed qualification 与 video-path helpers |
+| `tools/render_pick_pool_snapshots.py` | 真实贴图 exact-variant contact sheets |
+| `tools/report_pick_diverse_object.py` | 从 production pools/schedule 重建 familiarity 并聚合指标 |
+| `tests/pick_diverse_object/` | static contract、instruction、real wiring、Apple grasp、success semantics、reporter |
 
-## 高层流程图（黑盒视角）
+共享 pool module 不 import SAPIEN，因此 static tests 和 reporter 可直接复用生产定义，不复制 pool 表。
 
-```mermaid
-flowchart TB
-    bridge["bridge_tasks.sh<br/>glob symlink（既有，无需改）"]
+## Pool entry schema
 
-    subgraph ours["robotwin-if 维护（本 feature 新增/改动）"]
-        env["pick_diverse_object.py<br/>NEW: task env"]
-        helper["_if_grounding.py<br/>NEW: 共用 grounding 判定"]
-        json["pick_diverse_object.json<br/>NEW: 指令模板池"]
-        reporter["report_pick_diverse_object.py<br/>NEW: 成功率报告"]
-        tests["tests/pick_diverse_object/<br/>NEW: Layer A/B"]
-        tabletop["operate_tabletop.py<br/>CHANGED: 改调 helper"]
-    end
+每个 noun 对应一个现役 entry：
 
-    subgraph rt["third_party/robotwin submodule（黑盒，未改源码）"]
-        collect["collect_data.py<br/>黑盒: 采集/评测驱动"]
-        base["Base_Task + envs/utils<br/>黑盒: create_actor / rand_pose /<br/>grasp_actor / move_by_displacement"]
-        gen["generate_episode_instructions.py<br/>黑盒: filter/replace_placeholders"]
-        sapien["SAPIEN 仿真<br/>黑盒"]
-    end
-
-    scene["scene_info.json + seed.txt<br/>每 episode 存 info：<br/>target/color/distractors + {A}/{a}"]
-    instr["instructions/episode*.json<br/>'Find the blue cup ...'"]
-    report["成功率报告<br/>by 目标 noun / color"]
-
-    bridge -->|"symlink *.py → envs/"| env
-    bridge -->|"symlink *.json → description/task_instruction/"| json
-
-    collect -->|"import_module('envs.pick_diverse_object')"| env
-    collect -->|"调 setup_demo/play_once/check_success"| env
-    env -->|"继承 + 调仿真/运动 API"| base
-    env -->|"check_success 委托"| helper
-    helper -->|"get_gripper_actor_contact_position"| base
-    base -->|"物理/渲染"| sapien
-
-    collect -->|"每 episode 写 info + 轨迹"| scene
-    collect -->|"末尾 bash gen_episode_instructions.sh"| gen
-    json -->|"seen/unseen 模板"| gen
-    scene -->|"episode info（含 {A} 字面量）"| gen
-    gen -->|"字面替换渲染"| instr
-
-    scene -->|"读 info"| reporter
-    seed2["seed.txt（kept seeds）"] -.-> reporter
-    reporter -->|"kept/tried 分桶"| report
-
-    tabletop -->|"pick 分支也调"| helper
-
-    classDef new fill:#d6f5d6,stroke:#2a2,stroke-width:2px;
-    classDef changed fill:#fff3cd,stroke:#e0a800,stroke-width:2px;
-    classDef box fill:#eee,stroke:#999,stroke-dasharray:4 3;
-    class env,helper,json,reporter,tests new;
-    class tabletop changed;
-    class collect,base,gen,sapien box;
+```python
+{
+    "asset": str,
+    "model_ids": tuple[int, ...],
+    "rest_qpos": tuple[float, float, float, float],
+    "rotate_rand": bool,
+    "rotate_lim": tuple[float, float, float],
+    "grasp_strategy": str,
+    "grasp_kwargs": dict,
+    "placement_radius": float,
+}
 ```
 
-## 高层实现说明
+当前 schema 不含 generic actor config、scale override 或 per-arm kwargs。paintbrush 通过 generic `grasp_kwargs={"contact_point_id": 0, ...}` 选择已有 contact pose。
 
-### 1. 我们改了哪些框
+Production Apple 使用 `grasp_strategy="apple_top_down"`。`_apple_top_down_actor_config()` deep-copy actor 已加载的 native config，只将 contact poses 替换为四个已验证的 top-down wrist-roll rotations，并把 translation 设为 native metadata `center`。它不 import simulator，也不修改 source JSON。
 
-**只新增了 5 个 robotwin-if 侧的框 + 改了 1 个既有框，submodule 的框全没碰：**
+## Final production manifests
 
-- **`pick_diverse_object.py`（NEW，核心）**：继承 `Base_Task`，实现 3 个被驱动调用的接口——
-  - `setup_demo(seed)` → 捕获 seed → `load_actors()`：`seed % 12` 确定性选目标 + 从 12 品类均匀抽 3 干扰 + 逐物体 qpos/旋转/bottle 站躺，全部靠 submodule 的 `create_actor`/`rand_pose` 落到桌上。
-  - `play_once()`：逐物体分派 `grasp_actor` 参数 + 世界系 `move_by_displacement` 抬起（都是 submodule API），并把 `info["info"]={"{A}":"the {color} {noun}","{a}":arm}` 等写进 `self.info`。
-  - `check_success()`：委托给 `_if_grounding`。
-- **`_if_grounding.py`（NEW，共用）**：`named_object_lifted_and_held()`——目标 z 抬离 >0.02 且仍被夹爪接触。被 pick_diverse_object 和 operate_tabletop 共享。
-- **`pick_diverse_object.json`（NEW）**：借 adjust_bottle 的 orientation-free 句式（12 seen / 4 unseen），占位符 `{A}`/`{a}`。
-- **`report_pick_diverse_object.py`（NEW）**：读 `scene_info.json` + `seed.txt`，从 seed 确定性反推目标，按 noun/color 分桶算成功率。
-- **`operate_tabletop.py`（CHANGED）**：pick 分支原本内联判定，改成调 `_if_grounding`（DRY，回归 7/7 未变）。
+- Seen：12 nouns / 12 exact variants。
+- Unseen（固定顺序）：
+  1. dumbbell — `052_dumbbell/base0`
+  2. apple — `035_apple/base1`
+  3. wooden mallet — `084_woodenmallet/base3`
+  4. paintbrush — `093_brush-pen/base1`
 
-### 2. 数据/调用怎么流动（进→出）
+原 14 nouns / 54 exact variants 的 `UNSEEN_CANDIDATES` 与 notebook/paintbrush manual inventory 继续作为 reusable shortlist；它们不是 production admission 的自动来源。
 
-1. **接入**：`bridge_tasks.sh`（既有 glob 脚本，无需改）把 `tasks/envs/*.py`、`tasks/task_instruction/*.json` symlink 进 submodule 的 `envs/`、`description/task_instruction/`——从此 `envs.pick_diverse_object` 可被 import。
-2. **采集**：`collect_data.py` import 我们的 env → 循环 `setup_demo(seed)`→`play_once()`→`check_success()`。场景搭建/抓取/判定全经由 `Base_Task`+utils 打到 SAPIEN。成功的 episode：seed 记入 `seed.txt`、`self.info` 记入 `scene_info.json`、轨迹存 hdf5。
-3. **指令渲染**：采集末尾 `collect_data` 调 `gen_episode_instructions.sh`→`generate_episode_instructions.py`，读我们的 json 模板 + scene_info 里每个 episode 的 `info["info"]`，把 `{A}`（字面量 "the blue cup"，不含 `/` 故走**字面替换**而非随机描述）渲成 `instructions/episode*.json`。
-4. **报告**：`report_pick_diverse_object.py` 读 scene_info + seed.txt 出成功率。
+## Production setup flow
 
-### 3. 为什么其余框是黑盒
+```text
+raw seed
+  ├─ familiarity_for_seed(seed) -> even Seen / odd Unseen
+  ├─ select production pool; Unseen pool < 4 nouns 时 fail closed
+  ├─ target_for_seed(seed, pool)
+  │    ├─ group_index = seed // 2
+  │    ├─ noun cycles in manifest order
+  │    └─ exact ID cycles after a full noun cycle
+  ├─ sample 3 distinct distractor nouns from the same pool
+  ├─ place four actors by decreasing footprint radius
+  ├─ production Apple only: deep-copy native config and inject top contacts
+  ├─ settle and record target_origin_z
+  └─ log target + scene familiarity/noun/asset/model IDs
+```
 
-- **`collect_data.py` / `eval_policy.py`**：配置驱动、按 `task_name` import——我们只要提供符合 `Base_Task` 接口的类，它就能调，**接口没变、逻辑不用碰**。
-- **`Base_Task` + utils / SAPIEN**：是"平台能力"（建 actor、运动规划、物理）。我们只是**调用方**，`create_actor`/`grasp_actor`/`move_by_displacement` 等签名照原生用，没改其内部。
-- **`generate_episode_instructions.py`**：native 的占位符替换引擎。我们靠**约定**接入（`{A}` 填字面量 → 走它既有的"非路径即字面替换"分支），没改它——这也是为什么不需要 `objects_description`。
-- **`bridge_tasks.sh`**：glob 通配，丢文件进去自动 symlink，新增 task 无需改脚本。
+### Placement
 
-**一句话**：我们是往一条既有的、按名字发现任务的流水线上**挂了一个新任务节点**，所有交互都走既有接口，故 submodule 侧全部可当黑盒。
+Production 的排序 key 为负 `placement_radius` 加 seed-driven tie breaker。任意 pair 必须满足：
+
+```python
+xy_distance > radius_a + radius_b + 0.025
+```
+
+Forced exact-candidate probe 固定 target-first；production 固定 radius-first。环境不再暴露任意 placement-policy override。
+
+## Retained overrides
+
+以下 class hooks 仅供 exact candidate probe/semantic isolation，定义时全部为 `None`：
+
+```python
+FAMILIARITY_OVERRIDE
+TARGET_NOUN_OVERRIDE
+TARGET_MODEL_ID_OVERRIDE
+TARGET_SIDE_OVERRIDE
+POOL_OVERRIDE
+DISTRACTOR_NOUNS_OVERRIDE
+```
+
+真实 production-seed probe 首先清空全部 hooks。wiring test 不为 setup failure 换 seed，因为替换 raw seed 会掩盖 parity、schedule、placement 或 determinism regression。
+
+## Instruction flow
+
+环境只提供：
+
+```python
+self.info["info"] = {
+    "{A}": f"the {self.target_noun}",
+    "{a}": str(arm_tag),
+}
+```
+
+四个 scene nouns 强制不同，故 `{A}` 单靠 noun 唯一定位目标。JSON 顶层 `seen`/`unseen` 只选择 sentence template，不控制 object familiarity。
+
+## Oracle 与 success
+
+1. target x 位置决定 left/right arm，probe 可显式覆盖。
+2. 从 target entry 复制 `grasp_kwargs`。
+3. 按 `grasp_strategy` 执行既有 bottle/cup/shoe/mug/phone 特例、default grasp 或 Apple top-down grasp。
+4. Apple 仍复用 `Base_Task.grasp_actor()` / `choose_grasp_pose()`，planner 在四个 vertical wrist rolls 中选择可达者。
+5. close 后、lift 前记录 end-effector approach-axis world-z 分量，仅作诊断。
+6. 所有目标统一 world-frame `z=0.12` lift。
+7. `check_success()` 只检查 named target。
+
+`named_object_lifted_and_held(task, actor, modelname, origin_z)` 的语义是：
+
+```text
+(actor.z - settled_origin_z > 0.02)
+AND actor remains in gripper contact
+```
+
+抬起 distractor、只撞起 target 或 target 未被保持都不能成功。
+
+## Probe architecture
+
+### Candidate mode
+
+`--nouns`、`--model-id`、`--variants`、`--first-id-per-noun` 选择 retained shortlist/manual exact variants；`--arms` 和 `--repeats` 控制覆盖。每个 trial 强制一个 Unseen candidate target，加三个不同 noun 的 retained candidate distractors。
+
+记录 setup、settle、actual arm、workspace/motion、oracle、target z-rise、instruction target、placement sequence 与 failure stage。每个 trial 后立即写 JSON/CSV；相对 output/video path 按 invocation cwd 解析。generic settle failure 在 `play_once()` 前 fail closed，保留原 seed denominator。
+
+可选 `--video-dir` 只用于 grasp phase。已有 MP4 默认拒绝覆盖；`--overwrite` 必须显式给出。
+
+### Production mode
+
+`--production-seeds` 只接受 odd seeds，且不能与 candidate selectors 混用。它清空 overrides 后使用真实 locked pool 和 target schedule，用于验证 coexistence、routing 与 oracle，不提供失败 seed replacement。
+
+### 已删除的实验接口
+
+Closeout 删除了 098 speaker、旧 Apple pose-family/radius-first、perfume、toothpaste、whiteboard eraser 与 tissue-box 的 one-off manifests、stability metadata、policy registries及 raw/debug artifacts。这些实验的 aggregate outcomes 留在 decisions/selection notes，但不再承诺用当前 runtime 逐项复现。
+
+## Reporter flow
+
+Reporter import 同一 manifests/schedule，根据 raw seed 重建 expected familiarity 与 target，并输出：
+
+```text
+Seen micro + noun macro
+Unseen micro + noun macro
+balanced average
+absolute gap
+retention
+per-noun and per-exact-variant tables
+tried/kept composition
+```
+
+若 production Unseen pool 少于四类则拒绝运行。标题和解释固定使用 all-Seen/all-Unseen scene；不得生成 target-only causal 文案。
+
+## Verification layers
+
+1. `test_pool.py`：taxonomy、14/54 shortlist、manual inventory、final exact manifests、seed cycles、override defaults、Apple top-contact geometry/config isolation。
+2. `test_probe_logic.py`：generic fail-closed qualification 与 video naming/overwrite。
+3. `test_instructions.py`：template split、placeholder routing、noun-only grammar。
+4. `test_wiring.py`：real-SAPIEN seeds 0–7 production wiring、determinism、Apple target/distractor config isolation、source JSON immutability。
+5. `test_apple_top_grasp.py`：12 个冻结双臂场景；失败不换 seed，成功 grasp 必须满足 vertical approach diagnostic。
+6. `test_check_success.py`：negative semantics + Seen 12 / current Unseen 4 oracle positives。
+7. `test_reporter.py`：aggregation 与 exact-target mapping。
+8. normal `collect_data.sh`：20-success native pipeline、HDF5、MP4、instruction 与 scene-info integrity。
+
+实际 closeout test counts 以 `report.html` verification matrix 和最终运行记录为准。normal collection 为 20/23 raw seeds，Apple target episodes 2/9 的 ordered review 均通过；它是 scripted-oracle pipeline evidence，不是 VLA evaluation。

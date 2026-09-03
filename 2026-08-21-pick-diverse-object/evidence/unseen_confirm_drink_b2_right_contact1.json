@@ -1,0 +1,809 @@
+{
+  "args": {
+    "phase": "grasp",
+    "nouns": [
+      "drink bottle"
+    ],
+    "model_id": 2,
+    "first_id_per_noun": false,
+    "arms": [
+      "left",
+      "right"
+    ],
+    "repeats": 3,
+    "base_seed": 13000,
+    "output": "/home/xichen6/Documents/repos/robotwin-if/notes/2026-08-21-pick-diverse-object/evidence/unseen_confirm_drink_b2_right_contact1.json",
+    "overwrite": true
+  },
+  "summary": {
+    "trials": 6,
+    "setup_ok": 6,
+    "settle_ok": 6,
+    "oracle_ok": 2,
+    "failures": {
+      "check_success": 4
+    }
+  },
+  "records": [
+    {
+      "noun": "drink bottle",
+      "asset": "068_boxdrink",
+      "model_id": 2,
+      "arm": "left",
+      "seed": 13000,
+      "phase": "grasp",
+      "setup_ok": true,
+      "settle_ok": true,
+      "oracle_ok": true,
+      "failure": null,
+      "objects": [
+        {
+          "noun": "drink bottle",
+          "asset": "068_boxdrink",
+          "model_id": 2,
+          "role": "target",
+          "position": [
+            -0.09704558551311493,
+            -0.1771751344203949,
+            0.742119550704956
+          ],
+          "quaternion": [
+            0.6634409427642822,
+            0.6627839803695679,
+            -0.24494178593158722,
+            -0.24610388278961182
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "noun": "speaker",
+          "asset": "055_small-speaker",
+          "model_id": 2,
+          "role": "distractor",
+          "position": [
+            0.22964374721050262,
+            -0.1968856006860733,
+            0.7407196760177612
+          ],
+          "quaternion": [
+            0.7033020257949829,
+            0.6918856501579285,
+            -0.11454295367002487,
+            -0.11636446416378021
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "noun": "hydrating oil",
+          "asset": "109_hydrating-oil",
+          "model_id": 5,
+          "role": "distractor",
+          "position": [
+            0.026115717366337776,
+            0.004284691531211138,
+            0.7413709163665771
+          ],
+          "quaternion": [
+            0.7036741971969604,
+            0.7044620513916016,
+            0.06537029147148132,
+            0.06559497863054276
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "noun": "pencil cup",
+          "asset": "059_pencup",
+          "model_id": 2,
+          "role": "distractor",
+          "position": [
+            -0.24776743352413177,
+            -0.0793130025267601,
+            0.7413887977600098
+          ],
+          "quaternion": [
+            0.7063541412353516,
+            0.7058836221694946,
+            0.03735608235001564,
+            0.03737245500087738
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "min_xy_separation": 0.17970551557095635,
+      "max_linear_speed": 0.0,
+      "max_angular_speed": 0.0,
+      "workspace_ok": true,
+      "motion_ok": true,
+      "actual_arm": "left",
+      "target_z_rise": 0.12414336204528809,
+      "instruction_target": "the drink bottle"
+    },
+    {
+      "noun": "drink bottle",
+      "asset": "068_boxdrink",
+      "model_id": 2,
+      "arm": "right",
+      "seed": 13001,
+      "phase": "grasp",
+      "setup_ok": true,
+      "settle_ok": true,
+      "oracle_ok": true,
+      "failure": null,
+      "objects": [
+        {
+          "noun": "drink bottle",
+          "asset": "068_boxdrink",
+          "model_id": 2,
+          "role": "target",
+          "position": [
+            0.09202604740858078,
+            -0.06855441629886627,
+            0.7421199083328247
+          ],
+          "quaternion": [
+            0.7075225114822388,
+            0.7064445614814758,
+            0.013596831820905209,
+            0.0127776600420475
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "noun": "speaker",
+          "asset": "055_small-speaker",
+          "model_id": 2,
+          "role": "distractor",
+          "position": [
+            -0.08236725628376007,
+            0.020766189321875572,
+            0.7407196760177612
+          ],
+          "quaternion": [
+            0.7131895422935486,
+            0.7008045315742493,
+            0.010690205730497837,
+            0.010930151678621769
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "noun": "hydrating oil",
+          "asset": "109_hydrating-oil",
+          "model_id": 1,
+          "role": "distractor",
+          "position": [
+            0.2557983100414276,
+            -0.09790810942649841,
+            0.7413437366485596
+          ],
+          "quaternion": [
+            0.6782597899436951,
+            0.6778640151023865,
+            -0.20015226304531097,
+            -0.20100511610507965
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "noun": "pencil cup",
+          "asset": "059_pencup",
+          "model_id": 0,
+          "role": "distractor",
+          "position": [
+            -0.20691323280334473,
+            -0.16927583515644073,
+            0.7410063147544861
+          ],
+          "quaternion": [
+            0.6745638251304626,
+            0.6750208139419556,
+            -0.2114233523607254,
+            -0.21121248602867126
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "min_xy_separation": 0.16638207027235044,
+      "max_linear_speed": 0.0,
+      "max_angular_speed": 0.0,
+      "workspace_ok": true,
+      "motion_ok": true,
+      "actual_arm": "right",
+      "target_z_rise": 0.11958432197570801,
+      "instruction_target": "the drink bottle"
+    },
+    {
+      "noun": "drink bottle",
+      "asset": "068_boxdrink",
+      "model_id": 2,
+      "arm": "left",
+      "seed": 13002,
+      "phase": "grasp",
+      "setup_ok": true,
+      "settle_ok": true,
+      "oracle_ok": false,
+      "failure": "check_success",
+      "objects": [
+        {
+          "noun": "drink bottle",
+          "asset": "068_boxdrink",
+          "model_id": 2,
+          "role": "target",
+          "position": [
+            -0.19850869476795197,
+            -0.09167259931564331,
+            0.7421214580535889
+          ],
+          "quaternion": [
+            0.6501016616821289,
+            0.6497374176979065,
+            0.2790515422821045,
+            0.2780999541282654
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "noun": "speaker",
+          "asset": "055_small-speaker",
+          "model_id": 2,
+          "role": "distractor",
+          "position": [
+            0.24993327260017395,
+            0.017158176749944687,
+            0.7407198548316956
+          ],
+          "quaternion": [
+            0.6609300374984741,
+            0.6494729518890381,
+            0.26349350810050964,
+            0.26819339394569397
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "noun": "hydrating oil",
+          "asset": "109_hydrating-oil",
+          "model_id": 5,
+          "role": "distractor",
+          "position": [
+            -0.034869126975536346,
+            -0.01303890347480774,
+            0.7413709163665771
+          ],
+          "quaternion": [
+            0.6951614022254944,
+            0.6958565711975098,
+            -0.12775692343711853,
+            -0.12732833623886108
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "noun": "pencil cup",
+          "asset": "059_pencup",
+          "model_id": 3,
+          "role": "distractor",
+          "position": [
+            0.11811968684196472,
+            -0.21375145018100739,
+            0.7409563660621643
+          ],
+          "quaternion": [
+            0.6609201431274414,
+            0.6688962578773499,
+            -0.24208718538284302,
+            -0.23907403647899628
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "min_xy_separation": 0.18155210345484193,
+      "max_linear_speed": 0.0,
+      "max_angular_speed": 0.0,
+      "workspace_ok": true,
+      "motion_ok": true,
+      "actual_arm": "left",
+      "target_z_rise": 0.0,
+      "instruction_target": "the drink bottle"
+    },
+    {
+      "noun": "drink bottle",
+      "asset": "068_boxdrink",
+      "model_id": 2,
+      "arm": "right",
+      "seed": 13003,
+      "phase": "grasp",
+      "setup_ok": true,
+      "settle_ok": true,
+      "oracle_ok": false,
+      "failure": "check_success",
+      "objects": [
+        {
+          "noun": "drink bottle",
+          "asset": "068_boxdrink",
+          "model_id": 2,
+          "role": "target",
+          "position": [
+            0.22314386069774628,
+            -0.15300817787647247,
+            0.7422643899917603
+          ],
+          "quaternion": [
+            0.7088868618011475,
+            0.7053190469741821,
+            -0.0016526163090020418,
+            0.0013288313057273626
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "noun": "speaker",
+          "asset": "055_small-speaker",
+          "model_id": 2,
+          "role": "distractor",
+          "position": [
+            -0.23598572611808777,
+            0.013263518922030926,
+            0.7407194375991821
+          ],
+          "quaternion": [
+            0.708699107170105,
+            0.6970990896224976,
+            -0.0762014389038086,
+            -0.0774068534374237
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "noun": "pencil cup",
+          "asset": "059_pencup",
+          "model_id": 5,
+          "role": "distractor",
+          "position": [
+            0.0019897723104804754,
+            -0.03848918527364731,
+            0.7408685684204102
+          ],
+          "quaternion": [
+            0.6518675684928894,
+            0.6518597602844238,
+            -0.27400457859039307,
+            -0.27398738265037537
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "noun": "hydrating oil",
+          "asset": "109_hydrating-oil",
+          "model_id": 2,
+          "role": "distractor",
+          "position": [
+            -0.18715056777000427,
+            -0.1473609209060669,
+            0.7413564324378967
+          ],
+          "quaternion": [
+            0.6426730155944824,
+            0.6421244740486145,
+            0.2969081401824951,
+            0.2940976619720459
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "min_xy_separation": 0.167884136716286,
+      "max_linear_speed": 0.0,
+      "max_angular_speed": 0.0,
+      "workspace_ok": true,
+      "motion_ok": true,
+      "actual_arm": "right",
+      "target_z_rise": 0.05784112215042114,
+      "instruction_target": "the drink bottle"
+    },
+    {
+      "noun": "drink bottle",
+      "asset": "068_boxdrink",
+      "model_id": 2,
+      "arm": "left",
+      "seed": 13004,
+      "phase": "grasp",
+      "setup_ok": true,
+      "settle_ok": true,
+      "oracle_ok": false,
+      "failure": "check_success",
+      "objects": [
+        {
+          "noun": "drink bottle",
+          "asset": "068_boxdrink",
+          "model_id": 2,
+          "role": "target",
+          "position": [
+            -0.1531398594379425,
+            -0.14917299151420593,
+            0.7421199083328247
+          ],
+          "quaternion": [
+            0.703541100025177,
+            0.7025603652000427,
+            -0.07515594363212585,
+            -0.07609503716230392
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "noun": "hydrating oil",
+          "asset": "109_hydrating-oil",
+          "model_id": 2,
+          "role": "distractor",
+          "position": [
+            -0.18503062427043915,
+            0.04373862221837044,
+            0.7413565516471863
+          ],
+          "quaternion": [
+            0.6851195096969604,
+            0.6851009130477905,
+            0.17641718685626984,
+            0.17356614768505096
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "noun": "speaker",
+          "asset": "055_small-speaker",
+          "model_id": 1,
+          "role": "distractor",
+          "position": [
+            0.12094922363758087,
+            -0.20252744853496552,
+            0.7404557466506958
+          ],
+          "quaternion": [
+            0.6775049567222595,
+            0.6774523854255676,
+            -0.20253223180770874,
+            -0.2025490254163742
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "noun": "pencil cup",
+          "asset": "059_pencup",
+          "model_id": 6,
+          "role": "distractor",
+          "position": [
+            0.23949313163757324,
+            0.012262992560863495,
+            0.7408628463745117
+          ],
+          "quaternion": [
+            0.6553583145141602,
+            0.6552712321281433,
+            0.26567745208740234,
+            0.26559460163116455
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "min_xy_separation": 0.1955298227752185,
+      "max_linear_speed": 0.0,
+      "max_angular_speed": 0.0,
+      "workspace_ok": true,
+      "motion_ok": true,
+      "actual_arm": "left",
+      "target_z_rise": 0.0,
+      "instruction_target": "the drink bottle"
+    },
+    {
+      "noun": "drink bottle",
+      "asset": "068_boxdrink",
+      "model_id": 2,
+      "arm": "right",
+      "seed": 13005,
+      "phase": "grasp",
+      "setup_ok": true,
+      "settle_ok": true,
+      "oracle_ok": false,
+      "failure": "check_success",
+      "objects": [
+        {
+          "noun": "drink bottle",
+          "asset": "068_boxdrink",
+          "model_id": 2,
+          "role": "target",
+          "position": [
+            0.14804844558238983,
+            -0.0012069118674844503,
+            0.7421233654022217
+          ],
+          "quaternion": [
+            0.7005351781845093,
+            0.699213445186615,
+            -0.10044775903224945,
+            -0.10129790008068085
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "noun": "speaker",
+          "asset": "055_small-speaker",
+          "model_id": 1,
+          "role": "distractor",
+          "position": [
+            -0.12355739623308182,
+            -0.005151706747710705,
+            0.7404561638832092
+          ],
+          "quaternion": [
+            0.6680259108543396,
+            0.6679578423500061,
+            -0.2319122850894928,
+            -0.23192758858203888
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "noun": "hydrating oil",
+          "asset": "109_hydrating-oil",
+          "model_id": 5,
+          "role": "distractor",
+          "position": [
+            -0.07822562754154205,
+            -0.16002421081066132,
+            0.7413709163665771
+          ],
+          "quaternion": [
+            0.6967372298240662,
+            0.6975378394126892,
+            0.11823580414056778,
+            0.11840056627988815
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "noun": "pencil cup",
+          "asset": "059_pencup",
+          "model_id": 2,
+          "role": "distractor",
+          "position": [
+            0.13229987025260925,
+            -0.1972150057554245,
+            0.7413887977600098
+          ],
+          "quaternion": [
+            0.6905681490898132,
+            0.6901041865348816,
+            0.15304112434387207,
+            0.1531350016593933
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "min_xy_separation": 0.16137057280505612,
+      "max_linear_speed": 0.0,
+      "max_angular_speed": 0.0,
+      "workspace_ok": true,
+      "motion_ok": true,
+      "actual_arm": "right",
+      "target_z_rise": -9.953975677490234e-06,
+      "instruction_target": "the drink bottle"
+    }
+  ]
+}

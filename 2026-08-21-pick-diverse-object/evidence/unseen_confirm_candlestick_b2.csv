@@ -1,0 +1,7 @@
+noun,asset,model_id,arm,seed,phase,setup_ok,settle_ok,oracle_ok,actual_arm,target_z_rise,min_xy_separation,max_linear_speed,max_angular_speed,failure
+candlestick,051_candlestick,2,left,20000,grasp,True,True,True,left,0.11935144662857056,0.16765668814980716,0.0,0.0,
+candlestick,051_candlestick,2,right,20001,grasp,True,True,False,right,0.0,0.18096786671056878,0.0,0.0,check_success
+candlestick,051_candlestick,2,left,20002,grasp,True,True,True,left,0.1207461953163147,0.17456352348395637,0.0,0.0,
+candlestick,051_candlestick,2,right,20003,grasp,False,False,,,,,,,setup:UnStableError: pick_diverse_object: no free spot for 059_pencup (placement radius 0.070)
+candlestick,051_candlestick,2,left,20004,grasp,True,True,False,left,0.0,0.1551427353776115,0.0,0.0,check_success
+candlestick,051_candlestick,2,right,20005,grasp,True,True,False,right,1.1920928955078125e-07,0.20570994268810688,0.0,0.0,check_success

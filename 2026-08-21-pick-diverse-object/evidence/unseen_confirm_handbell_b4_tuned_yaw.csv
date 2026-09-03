@@ -1,0 +1,7 @@
+noun,asset,model_id,arm,seed,phase,setup_ok,settle_ok,oracle_ok,actual_arm,target_z_rise,min_xy_separation,max_linear_speed,max_angular_speed,failure
+call bell,111_callbell,4,left,10000,grasp,True,True,True,left,0.11883503198623657,0.17410523610978235,0.0,0.0,
+call bell,111_callbell,4,right,10001,grasp,True,True,False,right,0.0,0.16036004472673895,0.0,0.0,check_success
+call bell,111_callbell,4,left,10002,grasp,True,True,True,left,0.11860418319702148,0.2063534984112882,0.0,0.0,
+call bell,111_callbell,4,right,10003,grasp,True,True,False,right,0.0,0.16503798717852827,0.0,0.0,check_success
+call bell,111_callbell,4,left,10004,grasp,True,True,True,left,0.11879009008407593,0.2032523200299239,0.0,0.0,
+call bell,111_callbell,4,right,10005,grasp,True,True,True,right,0.11918133497238159,0.19779323483745334,0.0,0.0,

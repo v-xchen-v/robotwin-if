@@ -1,0 +1,7 @@
+noun,asset,model_id,arm,seed,phase,setup_ok,settle_ok,oracle_ok,actual_arm,target_z_rise,min_xy_separation,max_linear_speed,max_angular_speed,failure
+dumbbell,052_dumbbell,0,left,2000,grasp,True,True,True,left,0.1200704574584961,0.22098228507746054,0.0,0.0,
+dumbbell,052_dumbbell,0,right,2001,grasp,True,True,True,right,0.12320959568023682,0.15893907428180226,0.0,0.0,
+speaker,055_small-speaker,1,left,2002,grasp,True,True,True,left,0.11842614412307739,0.1837454341273969,0.0,0.0,
+speaker,055_small-speaker,1,right,2003,grasp,True,True,True,right,0.11846721172332764,0.19505035445334032,0.0,0.0,
+wooden mallet,084_woodenmallet,3,left,2004,grasp,True,True,True,left,0.12133467197418213,0.17139482562909575,0.0,0.0,
+wooden mallet,084_woodenmallet,3,right,2005,grasp,True,True,True,right,0.12757372856140137,0.18955071867529125,0.0,0.0,

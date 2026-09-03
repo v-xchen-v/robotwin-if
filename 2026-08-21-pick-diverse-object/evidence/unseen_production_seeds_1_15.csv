@@ -1,0 +1,9 @@
+noun,asset,model_id,arm,seed,phase,setup_ok,settle_ok,oracle_ok,actual_arm,target_z_rise,min_xy_separation,max_linear_speed,max_angular_speed,failure
+dumbbell,052_dumbbell,0,right,1,grasp,True,True,True,right,0.12093311548233032,0.22221364540078184,0.0,0.0,
+speaker,055_small-speaker,1,left,3,grasp,True,True,True,left,0.1186327338218689,0.19440235562467906,0.0,0.0,
+wooden mallet,084_woodenmallet,3,right,5,grasp,True,True,True,right,0.11889594793319702,0.26742873653697363,0.0,0.0,
+paintbrush,093_brush-pen,1,left,7,grasp,True,True,False,left,-1.7881393432617188e-07,0.18468675111610872,0.0,0.0,check_success
+dumbbell,052_dumbbell,0,right,9,grasp,True,True,True,right,0.1297178864479065,0.20932598711916203,0.0,0.0,
+speaker,055_small-speaker,1,left,11,grasp,True,True,True,left,0.11859214305877686,0.19891295676986817,0.0,0.0,
+wooden mallet,084_woodenmallet,3,right,13,grasp,True,True,True,right,0.1194148063659668,0.23702917965588577,0.0,0.0,
+paintbrush,093_brush-pen,1,right,15,grasp,True,True,True,right,0.12894892692565918,0.20704212430980298,0.0,0.0,

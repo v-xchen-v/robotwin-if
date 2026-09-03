@@ -1,0 +1,7 @@
+noun,asset,model_id,arm,seed,phase,setup_ok,settle_ok,oracle_ok,actual_arm,target_z_rise,min_xy_separation,max_linear_speed,max_angular_speed,failure
+glue bottle,095_glue,2,left,16000,grasp,True,True,True,left,0.11885780096054077,0.20486636537660236,0.0,0.0,
+glue bottle,095_glue,2,right,16001,grasp,True,True,False,right,0.006990611553192139,0.16895403553721325,0.0,0.0,check_success
+glue bottle,095_glue,2,left,16002,grasp,True,True,False,left,0.0,0.172218372112325,0.0,0.0,check_success
+glue bottle,095_glue,2,right,16003,grasp,True,True,False,right,0.0,0.1809845670390287,0.0,0.0,check_success
+glue bottle,095_glue,2,left,16004,grasp,True,True,False,left,0.02968364953994751,0.17488508861988347,0.0,0.0,check_success
+glue bottle,095_glue,2,right,16005,grasp,True,True,True,right,0.12168413400650024,0.17400680366717391,0.0,0.0,

@@ -1,0 +1,11 @@
+noun,asset,model_id,arm,seed,phase,setup_ok,settle_ok,oracle_ok,actual_arm,target_z_rise,min_xy_separation,max_linear_speed,max_angular_speed,failure
+call bell,111_callbell,1,left,5000,grasp,True,True,True,left,0.11908996105194092,0.17873786737734879,0.0,0.0,
+call bell,111_callbell,1,right,5001,grasp,True,True,False,right,0.0,0.1829124599961385,0.0,0.0,check_success
+call bell,111_callbell,2,left,5002,grasp,True,True,False,left,0.0,0.17800661112770447,0.0,0.0,check_success
+call bell,111_callbell,2,right,5003,grasp,True,True,True,right,0.12253093719482422,0.17762899750692976,0.0,0.0,
+call bell,111_callbell,3,left,5004,grasp,True,True,True,left,0.1193053126335144,0.1777056639093959,0.0,0.0,
+call bell,111_callbell,3,right,5005,grasp,True,True,False,right,0.004258334636688232,0.1740097127184917,0.0,0.0,check_success
+call bell,111_callbell,4,left,5006,grasp,True,True,True,left,0.1187402606010437,0.1902247207547054,0.0,0.0,
+call bell,111_callbell,4,right,5007,grasp,True,True,True,right,0.11876261234283447,0.18780929587024214,0.0,0.0,
+call bell,111_callbell,5,left,5008,grasp,True,True,True,left,0.12133586406707764,0.22156564576055335,0.0,0.0,
+call bell,111_callbell,5,right,5009,grasp,True,True,False,right,0.0,0.18029859941836465,0.0,0.0,check_success

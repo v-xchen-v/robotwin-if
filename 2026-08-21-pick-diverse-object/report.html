@@ -1,269 +1,661 @@
 <!doctype html>
-<html lang="zh">
+<html lang="zh-CN">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Pick-Diverse-Object · RoboTwin-IF</title>
+<title>Pick-Diverse Familiarity</title>
 <style>
-  :root{
-    --bg:#f7f8fa; --card:#fff; --ink:#1f2430; --mut:#5b6472; --line:#e4e8ee;
-    --accent:#0e9f6e; --accentbg:#e7f7f0; --warn:#b7791f; --warnbg:#fdf6e7;
-    --danger:#c0392b; --box:#eceff3; --code:#2d333b;
+:root {
+  color-scheme: light;
+  --page: #f9f9f7;
+  --surface: #fcfcfb;
+  --surface-2: #f1f1ed;
+  --ink: #0b0b0b;
+  --ink-2: #52514e;
+  --muted: #74726d;
+  --line: #e1e0d9;
+  --line-strong: #c3c2b7;
+  --seen: #2a78d6;
+  --seen-soft: #e9f2fd;
+  --unseen: #eb6834;
+  --unseen-soft: #fff0e9;
+  --good: #0ca30c;
+  --good-soft: #eaf7e8;
+  --warn: #9a6200;
+  --warn-soft: #fff4d6;
+  --critical: #d03b3b;
+  --code-bg: #202124;
+  --code-ink: #f4f4ef;
+  --shadow: 0 12px 36px rgba(11, 11, 11, .07);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --page: #0d0d0d;
+    --surface: #1a1a19;
+    --surface-2: #232321;
+    --ink: #ffffff;
+    --ink-2: #c3c2b7;
+    --muted: #a6a49e;
+    --line: #2c2c2a;
+    --line-strong: #4b4a46;
+    --seen: #3987e5;
+    --seen-soft: #172c45;
+    --unseen: #d95926;
+    --unseen-soft: #3b2118;
+    --good: #0ca30c;
+    --good-soft: #183517;
+    --warn: #fab219;
+    --warn-soft: #382d13;
+    --critical: #e66767;
+    --code-bg: #080808;
+    --code-ink: #f4f4ef;
+    --shadow: 0 12px 36px rgba(0, 0, 0, .28);
   }
-  *{box-sizing:border-box}
-  body{margin:0;background:var(--bg);color:var(--ink);
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue","PingFang SC","Microsoft YaHei",sans-serif;
-    line-height:1.65;font-size:16px}
-  .wrap{max-width:900px;margin:0 auto;padding:0 20px 80px}
-  code,pre,.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
-  a{color:var(--accent)}
-  /* hero */
-  header.hero{background:linear-gradient(135deg,#0e9f6e 0%,#0b7a75 100%);color:#fff;
-    margin-bottom:28px;padding:38px 0 30px}
-  header.hero .wrap{padding-bottom:0}
-  .kicker{font-size:13px;letter-spacing:.08em;text-transform:uppercase;opacity:.85;margin:0 0 6px}
-  h1{font-size:30px;margin:0 0 10px;line-height:1.2}
-  .lede{font-size:17px;opacity:.95;margin:0 0 16px;max-width:680px}
-  .badges{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 4px}
-  .badge{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);
-    color:#fff;border-radius:20px;padding:4px 12px;font-size:13px;font-weight:600}
-  .meta{display:flex;flex-wrap:wrap;gap:18px;margin-top:16px;font-size:13px;opacity:.9}
-  .meta b{font-weight:600}
-  /* cards & sections */
-  section{background:var(--card);border:1px solid var(--line);border-radius:12px;
-    padding:22px 24px;margin:18px 0;box-shadow:0 1px 2px rgba(20,30,50,.03)}
-  h2{font-size:21px;margin:2px 0 14px;padding-bottom:8px;border-bottom:2px solid var(--accentbg)}
-  h3{font-size:16px;margin:18px 0 8px}
-  p{margin:8px 0}
-  ul{margin:8px 0;padding-left:22px}
-  li{margin:4px 0}
-  .mut{color:var(--mut)}
-  /* tl;dr grid */
-  .tldr{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-top:6px}
-  .tldr .c{background:var(--box);border-radius:10px;padding:14px 16px}
-  .tldr .c h4{margin:0 0 6px;font-size:13px;text-transform:uppercase;letter-spacing:.05em;color:var(--mut)}
-  .tldr .c p{margin:0;font-size:15px}
-  /* callouts */
-  .note{border-left:4px solid var(--accent);background:var(--accentbg);
-    padding:10px 14px;border-radius:0 8px 8px 0;margin:12px 0}
-  .warnbox{border-left:4px solid var(--warn);background:var(--warnbg);
-    padding:10px 14px;border-radius:0 8px 8px 0;margin:12px 0}
-  /* evidence */
-  .ev{margin:20px 0}
-  .ev video,.ev img{width:100%;border:1px solid var(--line);border-radius:10px;background:#fff;display:block}
-  .ev .cap{font-size:14px;color:var(--mut);margin-top:8px}
-  .ev .cap b{color:var(--ink)}
-  .vgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px}
-  /* pipeline diagram (pure CSS/HTML, no JS) */
-  .flow{display:flex;flex-direction:column;gap:10px;margin:8px 0}
-  .frow{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
-  .node{border-radius:8px;padding:8px 12px;font-size:13.5px;border:1.5px solid}
-  .n-new{background:#e7f7f0;border-color:var(--accent);color:#0a6b4a;font-weight:600}
-  .n-chg{background:#fdf6e7;border-color:var(--warn);color:#8a5a10;font-weight:600}
-  .n-box{background:var(--box);border-color:#c8cfd8;border-style:dashed;color:#48505c}
-  .arr{color:var(--mut);font-size:13px;white-space:nowrap}
-  .legend{display:flex;gap:16px;flex-wrap:wrap;font-size:13px;margin-top:10px;color:var(--mut)}
-  .legend span{display:inline-flex;align-items:center;gap:6px}
-  .sw{width:14px;height:14px;border-radius:4px;border:1.5px solid}
-  /* tables */
-  table{width:100%;border-collapse:collapse;margin:10px 0;font-size:14.5px}
-  th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
-  th{color:var(--mut);font-weight:600;font-size:13px;text-transform:uppercase;letter-spacing:.03em}
-  .ok{color:var(--accent);font-weight:700}
-  .no{color:var(--danger);font-weight:700}
-  .todo{color:var(--warn);font-weight:700}
-  /* code */
-  pre{background:var(--code);color:#e6edf3;border-radius:10px;padding:14px 16px;overflow-x:auto;font-size:13.5px;line-height:1.55}
-  pre .c{color:#8b98a5}
-  code.inl{background:var(--box);padding:1px 6px;border-radius:5px;font-size:14px}
-  .foot{color:var(--mut);font-size:13px;text-align:center;margin-top:26px}
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --page: #0d0d0d;
+  --surface: #1a1a19;
+  --surface-2: #232321;
+  --ink: #ffffff;
+  --ink-2: #c3c2b7;
+  --muted: #a6a49e;
+  --line: #2c2c2a;
+  --line-strong: #4b4a46;
+  --seen: #3987e5;
+  --seen-soft: #172c45;
+  --unseen: #d95926;
+  --unseen-soft: #3b2118;
+  --good: #0ca30c;
+  --good-soft: #183517;
+  --warn: #fab219;
+  --warn-soft: #382d13;
+  --critical: #e66767;
+  --code-bg: #080808;
+  --code-ink: #f4f4ef;
+  --shadow: 0 12px 36px rgba(0, 0, 0, .28);
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--page);
+  color: var(--ink);
+  font: 16px/1.68 system-ui, -apple-system, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  overflow-wrap: anywhere;
+}
+a { color: var(--seen); text-underline-offset: 3px; }
+a:hover { text-decoration-thickness: 2px; }
+a:focus-visible { outline: 3px solid var(--unseen); outline-offset: 3px; border-radius: 2px; }
+code, pre, .mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+}
+.shell {
+  width: min(1160px, calc(100% - 2rem));
+  margin: 0 auto;
+}
+.hero {
+  border-bottom: 1px solid var(--line);
+  background:
+    linear-gradient(90deg, var(--seen) 0 49.6%, var(--page) 49.6% 50.4%, var(--unseen) 50.4% 100%) top / 100% 7px no-repeat,
+    var(--surface);
+}
+.hero-inner { padding: clamp(3.8rem, 8vw, 7rem) 0 3.2rem; }
+.eyebrow {
+  margin: 0 0 1rem;
+  color: var(--muted);
+  font-size: .77rem;
+  font-weight: 760;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+h1 {
+  max-width: 920px;
+  margin: 0;
+  font-size: clamp(2.5rem, 7vw, 5.6rem);
+  line-height: .98;
+  letter-spacing: -.055em;
+  text-wrap: balance;
+}
+.hero-deck {
+  max-width: 760px;
+  margin: 1.5rem 0 0;
+  color: var(--ink-2);
+  font-size: clamp(1.05rem, 2vw, 1.32rem);
+}
+.identity-pair { display: inline-flex; flex-wrap: wrap; gap: .5rem; margin-top: 1.5rem; }
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+  border: 1px solid var(--line-strong);
+  border-radius: 99px;
+  padding: .36rem .75rem;
+  background: var(--surface);
+  color: var(--ink-2);
+  font-size: .78rem;
+  font-weight: 720;
+}
+.tag::before { content: ""; width: .65rem; height: .65rem; border-radius: 2px; background: var(--line-strong); }
+.tag.seen::before { background: var(--seen); }
+.tag.unseen::before { background: var(--unseen); }
+.tag.good::before { background: var(--good); border-radius: 50%; }
+.meta {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1px;
+  margin-top: 3rem;
+  border: 1px solid var(--line);
+  background: var(--line);
+}
+.meta-item { min-width: 0; padding: 1rem; background: var(--surface); }
+.meta-label { display: block; color: var(--muted); font-size: .7rem; font-weight: 720; letter-spacing: .08em; text-transform: uppercase; }
+.meta-value { display: block; margin-top: .25rem; font-size: .9rem; font-weight: 650; }
+.report-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 230px;
+  gap: 2.5rem;
+  padding: 2.5rem 0 5rem;
+}
+main { min-width: 0; }
+.toc { position: sticky; top: 1rem; align-self: start; border-left: 1px solid var(--line); padding-left: 1rem; }
+.toc-title { margin: 0 0 .55rem; color: var(--muted); font-size: .7rem; font-weight: 750; letter-spacing: .09em; text-transform: uppercase; }
+.toc a { display: block; padding: .26rem 0; color: var(--ink-2); font-size: .82rem; text-decoration: none; }
+.toc a:hover { color: var(--ink); }
+section { padding: 2.7rem 0; border-top: 1px solid var(--line); }
+main section:first-child { padding-top: 0; border-top: 0; }
+h2 { margin: 0 0 1rem; font-size: clamp(1.65rem, 3vw, 2.4rem); line-height: 1.12; letter-spacing: -.032em; text-wrap: balance; }
+h3 { margin: 1.8rem 0 .6rem; font-size: 1.05rem; line-height: 1.3; }
+p { max-width: 74ch; margin: .7rem 0; }
+ul, ol { max-width: 76ch; padding-left: 1.4rem; }
+li + li { margin-top: .38rem; }
+.lead { color: var(--ink-2); font-size: 1.1rem; }
+.tldr-grid, .metric-grid, .asset-grid, .decision-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+.card, .metric, .decision {
+  border: 1px solid var(--line);
+  background: var(--surface);
+  padding: 1.1rem;
+}
+.card h3, .decision h3 { margin: 0 0 .45rem; }
+.card p, .decision p { margin: 0; color: var(--ink-2); font-size: .92rem; }
+.metric { min-height: 128px; display: flex; flex-direction: column; justify-content: space-between; }
+.metric-label { color: var(--muted); font-size: .73rem; font-weight: 750; letter-spacing: .08em; text-transform: uppercase; }
+.metric-value { margin: .6rem 0 .15rem; font-size: clamp(2rem, 5vw, 3.25rem); line-height: 1; font-weight: 790; letter-spacing: -.05em; font-variant-numeric: tabular-nums; }
+.metric-note { color: var(--ink-2); font-size: .8rem; }
+.metric.seen { border-top: 4px solid var(--seen); }
+.metric.unseen { border-top: 4px solid var(--unseen); }
+.metric.pass { border-top: 4px solid var(--good); }
+.split-contract {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border: 1px solid var(--line);
+  background: var(--surface);
+}
+.contract { padding: 1.25rem; }
+.contract + .contract { border-left: 1px solid var(--line); }
+.contract.seen { box-shadow: inset 0 5px 0 var(--seen); }
+.contract.unseen { box-shadow: inset 0 5px 0 var(--unseen); }
+.contract h3 { margin-top: .35rem; }
+.contract p { color: var(--ink-2); font-size: .92rem; }
+.callout {
+  margin: 1.25rem 0;
+  border-left: 5px solid var(--warn);
+  background: var(--warn-soft);
+  padding: 1rem 1.1rem;
+}
+.callout strong { display: block; margin-bottom: .2rem; }
+.callout p { margin: 0; }
+.callout.good { border-color: var(--good); background: var(--good-soft); }
+.flow {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr auto 1fr;
+  align-items: stretch;
+  gap: .7rem;
+  margin: 1.3rem 0;
+}
+.flow-node { display: flex; flex-direction: column; justify-content: center; min-height: 105px; border: 1px solid var(--line-strong); background: var(--surface); padding: .9rem; }
+.flow-node b { font-size: .9rem; }
+.flow-node small { margin-top: .25rem; color: var(--muted); }
+.arrow { display: grid; place-items: center; color: var(--muted); font-size: 1.4rem; }
+.table-wrap { max-width: 100%; overflow-x: auto; border: 1px solid var(--line); background: var(--surface); }
+table { width: 100%; border-collapse: collapse; font-size: .88rem; font-variant-numeric: tabular-nums; }
+th, td { padding: .78rem .9rem; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; white-space: nowrap; }
+th { color: var(--muted); background: var(--surface-2); font-size: .68rem; letter-spacing: .07em; text-transform: uppercase; }
+tr:last-child td { border-bottom: 0; }
+.status { display: inline-flex; align-items: center; gap: .38rem; font-weight: 720; }
+.status::before { content: ""; width: .58rem; height: .58rem; border-radius: 50%; background: var(--line-strong); }
+.status.pass::before { background: var(--good); }
+.status.warn::before { background: var(--warn); }
+.status.open::before { background: var(--critical); }
+.figure {
+  margin: 1.2rem 0 1.8rem;
+  border: 1px solid var(--line);
+  background: var(--surface);
+}
+.figure img, .figure video { display: block; width: 100%; max-width: 100%; background: var(--surface-2); }
+.figure figcaption { padding: .85rem 1rem 1rem; color: var(--ink-2); font-size: .87rem; }
+.figure figcaption strong { color: var(--ink); }
+.asset-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.asset-card { margin: 0; border: 1px solid var(--line); background: var(--surface); }
+.asset-card img { display: block; width: 100%; aspect-ratio: 1; object-fit: contain; background: #fff; }
+.asset-card figcaption { padding: .72rem; }
+.asset-name { display: block; font-weight: 760; font-size: .87rem; }
+.asset-id { display: block; color: var(--muted); font: .7rem/1.35 ui-monospace, SFMono-Regular, Menlo, monospace; }
+.evidence-links { display: flex; flex-wrap: wrap; gap: .6rem; margin-top: 1rem; }
+.evidence-links a { border: 1px solid var(--line-strong); padding: .45rem .65rem; background: var(--surface); font-size: .78rem; text-decoration: none; }
+.evidence-links a:hover { border-color: var(--seen); }
+pre { margin: 1rem 0; max-width: 100%; overflow-x: auto; border-radius: 3px; padding: 1rem 1.15rem; background: var(--code-bg); color: var(--code-ink); font-size: .8rem; line-height: 1.58; }
+.inline-code { padding: .1rem .3rem; background: var(--surface-2); border: 1px solid var(--line); font: .86em/1.4 ui-monospace, SFMono-Regular, Menlo, monospace; }
+.timeline { border-left: 2px solid var(--line-strong); margin: 1.3rem 0 0 .4rem; padding-left: 1.3rem; }
+.timeline-item { position: relative; padding: 0 0 1.3rem; }
+.timeline-item::before { content: ""; position: absolute; left: -1.68rem; top: .38rem; width: .65rem; height: .65rem; border: 2px solid var(--surface); border-radius: 50%; background: var(--line-strong); }
+.timeline-item.pass::before { background: var(--good); }
+.timeline-item.reject::before { background: var(--critical); }
+.timeline-item h3 { margin: 0 0 .25rem; }
+.timeline-item p { margin: 0; color: var(--ink-2); font-size: .9rem; }
+.history { opacity: .92; }
+.history-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+footer { border-top: 1px solid var(--line); padding: 1.5rem 0 3rem; color: var(--muted); font-size: .78rem; }
+@media (max-width: 850px) {
+  .report-grid { grid-template-columns: 1fr; }
+  .toc { position: static; order: -1; display: grid; grid-template-columns: repeat(2, 1fr); border: 1px solid var(--line); padding: .8rem; }
+  .toc-title { grid-column: 1 / -1; }
+  .meta { grid-template-columns: repeat(2, 1fr); }
+  .flow { grid-template-columns: 1fr; }
+  .arrow { transform: rotate(90deg); min-height: 20px; }
+  .asset-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 580px) {
+  .shell { width: min(100% - 1.1rem, 1160px); }
+  .tldr-grid, .metric-grid, .decision-grid, .history-grid, .split-contract { grid-template-columns: 1fr; }
+  .contract + .contract { border-left: 0; border-top: 1px solid var(--line); }
+  .meta { grid-template-columns: 1fr; }
+  .asset-grid { grid-template-columns: 1fr 1fr; gap: .5rem; }
+}
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+@media print {
+  :root { color-scheme: light; --page: #fff; --surface: #fff; --surface-2: #f3f3f0; --ink: #000; --ink-2: #333; --muted: #555; --line: #ccc; --line-strong: #999; }
+  body { font-size: 11pt; }
+  .hero-inner { padding: 2rem 0; }
+  .report-grid { display: block; }
+  .toc { display: none; }
+  section { break-inside: avoid; }
+  .figure, .card, .metric, .decision { box-shadow: none; break-inside: avoid; }
+  a { color: inherit; }
+}
 </style>
 </head>
 <body>
-
 <header class="hero">
-  <div class="wrap">
-    <p class="kicker">RoboTwin-IF 复刻 · feature-04</p>
-    <h1>Pick-Diverse-Object</h1>
-    <p class="lede">指令用「颜色 + 名词」点名桌上一个物体，机器人单臂把它拿起——诊断 VLA policy 是否真的<b>读指令选对物体</b>，而不是看图做默认动作。</p>
-    <div class="badges">
-      <span class="badge">✓ Layer A 9/9</span>
-      <span class="badge">✓ Layer B 16/16</span>
-      <span class="badge">✓ 12 品类等概率目标</span>
-      <span class="badge">✓ oracle 采集跑通 82.8%</span>
-      <span class="badge">TODO 若干（见边界）</span>
+  <div class="shell hero-inner">
+    <p class="eyebrow">RoboTwin-IF · Feature 04 · Engineering report</p>
+    <h1>Pick-Diverse<br>Object Familiarity</h1>
+    <p class="hero-deck">用同一个“识别并抬起指定名词”行为，比较 raw-task 已见物体与未见物体；当前实现采用两个独立、组内同质的四物体场景。</p>
+    <div class="identity-pair" aria-label="Report status">
+      <span class="tag seen">Seen target / all-Seen scene</span>
+      <span class="tag unseen">Unseen target / all-Unseen scene</span>
+      <span class="tag good">Production pool locked</span>
     </div>
     <div class="meta">
-      <span><b>状态</b> 实现完成 · 已验证</span>
-      <span><b>日期</b> 2026-08-21 ～ 08-24</span>
-      <span><b>核心文件</b> tasks/envs/pick_diverse_object.py</span>
-      <span><b>验证具身</b> aloha-agilex</span>
+      <div class="meta-item"><span class="meta-label">状态</span><span class="meta-value">Implemented &amp; validated</span></div>
+      <div class="meta-item"><span class="meta-label">证据日期</span><span class="meta-value">2026-09-03</span></div>
+      <div class="meta-item"><span class="meta-label">Branch</span><span class="meta-value mono">docs/if-ext-six-axis-benchmark</span></div>
+      <div class="meta-item"><span class="meta-label">具身</span><span class="meta-value">aloha-agilex · SAPIEN</span></div>
     </div>
   </div>
 </header>
 
-<div class="wrap">
-
-  <section>
-    <h2>TL;DR</h2>
-    <div class="tldr">
-      <div class="c"><h4>做了什么</h4><p>在 RoboTwin 2.0 上新建一个「颜色+名词 grounding」IF 任务：12 品类池采 4 个、指令点名 1 个、单臂拿起。含 oracle 专家演示 + 评测 harness。</p></div>
-      <div class="c"><h4>怎么验证</h4><p>Layer A（指令路由，纯 python 9/9）+ Layer B（判定正反例，仿真 16/16）+ collect_data→reporter 全流程跑通。</p></div>
-      <div class="c"><h4>结论</h4><p>核心 IF 诊断成立（位置随机、判定 target-specific）；12 品类等概率目标；瓶子 50/50 站/躺。oracle 成功率 82.8%。</p></div>
-      <div class="c"><h4>最大的坑</h4><p>「颜色最干净的变体未必能抓」；「站立瓶子」一度误判做不到，参考原生 <code class="inl">pick_dual_bottles</code> 才解决。</p></div>
+<div class="shell report-grid">
+<main>
+  <section id="tldr">
+    <h2>30 秒结论</h2>
+    <div class="tldr-grid">
+      <article class="card"><h3>做了什么</h3><p>把旧的 12-item color+noun task 改造成 object-familiarity evaluation：偶数 seed 全 Seen，奇数 seed 全 Unseen，指令仅名词。</p></article>
+      <article class="card"><h3>怎么锁池</h3><p>从 69 个 raw-task-Unseen categories 静态筛出 14 类/54 variants，逐 exact-variant 真实 probe；不足四类后另做 2 类 manual follow-up。</p></article>
+      <article class="card"><h3>最后结果</h3><p>当前 Unseen pool 是 dumbbell、Apple、wooden mallet、paintbrush。Apple 替换 speaker，并改为 z-up、body-centered top grasp；固定双臂 gate 为 10/12，正常 collection 生成 20/20 完整 episodes。</p></article>
+      <article class="card"><h3>最重要边界</h3><p>这是两个独立场景的 scene-level familiarity split。Seen−Unseen 同时包含 target、distractor、geometry 与 clutter 差异，不是 target-only causal gap。</p></article>
     </div>
   </section>
 
-  <section>
-    <h2>背景与目标</h2>
-    <p>RoboTwin-IF 基准诊断 VLA policy 是否真按语言指令控制动作，而非退化成「看图选默认动作」。<b>Pick-Diverse-Object</b> 专测 <b>target-object grounding</b>：场景里 4 个物体，指令用「颜色+名词」（如 "the blue cup"）点名 1 个，其余 3 个是真实可抓的干扰项——policy 必须读懂指令才能选对。</p>
-    <div class="note">论文（§6.2.1）只说「12 物品池采 4、颜色+名词点名、3 干扰、单臂、测 grounding」，<b>没给</b>具体 12 个物体、颜色词表、成功判据。这些都是本项目<b>自建</b>并显式标注「非论文确认」。</div>
-    <p class="mut">深读：<code class="inl">understanding.md</code>（问题/需求维度）。</p>
+  <section id="question">
+    <p class="eyebrow">Research contract</p>
+    <h2>测量问题与两个“Seen/Unseen”</h2>
+    <p class="lead">研究问题是：native-ft VLA 对 raw tasks 里接触过和从未接触过的物体，执行同一个 pick-by-noun 行为时，性能保持多少？</p>
+    <div class="split-contract">
+      <article class="contract seen">
+        <h3>Object familiarity</h3>
+        <p><strong>Raw-task Seen</strong> 指 numbered asset category 被 first-commit <span class="inline-code">8187d5b</span> 的 50 个 native/raw task 文件引用。清点为 <strong>51 Seen / 69 Unseen</strong>，覆盖 120 categories。</p>
+      </article>
+      <article class="contract unseen">
+        <h3>Instruction template split</h3>
+        <p>JSON 顶层 <span class="inline-code">seen</span> / <span class="inline-code">unseen</span> 仅切分句式模板，不决定 scene asset。两套概念在代码、日志与报告中分开命名。</p>
+      </article>
+    </div>
+    <div class="callout"><strong>IF-added usage 不会改变 familiarity。</strong><p>IF-Ext 是 eval-only，不生成也不消费 IF-specific finetune data；一个资产在其他 IF task 出现过，仍然是 raw-task Unseen。</p></div>
   </section>
 
-  <section>
-    <h2>架构：往既有流水线挂一个任务节点</h2>
-    <p>RoboTwin 的采集/评测驱动靠 <code class="inl">importlib.import_module(f"envs.{task_name}")</code> 按名字发现任务。我们把一个继承 <code class="inl">Base_Task</code> 的 env + 指令 json <b>symlink 进 submodule</b>，就接进了这条流水线——<b>零改 submodule 源码</b>。</p>
-
-    <div class="flow">
-      <div class="frow">
-        <span class="node n-new">pick_diverse_object.py</span>
-        <span class="arr">← import_module / setup_demo·play_once·check_success ←</span>
-        <span class="node n-box">collect_data.py（黑盒·驱动）</span>
-      </div>
-      <div class="frow">
-        <span class="arr">继承 + 调 API ↓</span>
-        <span class="arr">&nbsp;&nbsp;check_success 委托 ↓</span>
-      </div>
-      <div class="frow">
-        <span class="node n-box">Base_Task + utils（黑盒）<br><span class="mut">create_actor / rand_pose / grasp_actor / move_by_displacement</span></span>
-        <span class="node n-new">_if_grounding.py<br><span class="mut">named_object_lifted_and_held</span></span>
-      </div>
-      <div class="frow"><span class="arr">物理/渲染 ↓</span></div>
-      <div class="frow"><span class="node n-box">SAPIEN 仿真（黑盒）</span></div>
-      <div class="frow">
-        <span class="node n-box">scene_info.json + seed.txt<br><span class="mut">每 episode 存 info（target/color/distractors + {A}/{a}）</span></span>
-      </div>
-      <div class="frow">
-        <span class="node n-new">pick_diverse_object.json<br><span class="mut">指令模板</span></span>
-        <span class="arr">→ 模板 + info 字面替换 →</span>
-        <span class="node n-box">generate_episode_instructions.py（黑盒）</span>
-        <span class="arr">→</span>
-        <span class="node n-box">instructions/episode*.json<br><span class="mut">"Find the blue cup ..."</span></span>
-      </div>
-      <div class="frow">
-        <span class="node n-box">scene_info + seed.txt</span>
-        <span class="arr">→ 读 →</span>
-        <span class="node n-new">report_pick_diverse_object.py</span>
-        <span class="arr">→ 成功率 by noun/color</span>
-      </div>
+  <section id="design">
+    <p class="eyebrow">Current production design</p>
+    <h2>两组独立、组内同质的四物体场景</h2>
+    <div class="metric-grid">
+      <article class="metric seen"><span class="metric-label">Seen taxonomy</span><span class="metric-value">51</span><span class="metric-note">raw-task referenced categories</span></article>
+      <article class="metric unseen"><span class="metric-label">Unseen taxonomy</span><span class="metric-value">69</span><span class="metric-note">no raw-task reference</span></article>
+      <article class="metric"><span class="metric-label">Original probe shortlist</span><span class="metric-value">14 / 54</span><span class="metric-note">nouns / exact variants</span></article>
+      <article class="metric pass"><span class="metric-label">Locked Unseen production pool</span><span class="metric-value">4</span><span class="metric-note">distinct nouns · exact IDs</span></article>
     </div>
-
-    <div class="legend">
-      <span><span class="sw" style="background:#e7f7f0;border-color:#0e9f6e"></span>本 feature 新增</span>
-      <span><span class="sw" style="background:#fdf6e7;border-color:#b7791f"></span>改动（operate_tabletop 也改调共用 helper）</span>
-      <span><span class="sw" style="background:#eceff3;border-color:#c8cfd8;border-style:dashed"></span>submodule 黑盒（未改）</span>
+    <div class="flow" role="img" aria-label="Raw seed to object-familiarity scene flow">
+      <div class="flow-node"><b>raw seed</b><small>parity determines familiarity<br>group index = seed // 2</small></div>
+      <div class="arrow" aria-hidden="true">→</div>
+      <div class="flow-node"><b>shared manifest</b><small>target noun cycles<br>one locked exact ID per noun</small></div>
+      <div class="arrow" aria-hidden="true">→</div>
+      <div class="flow-node"><b>homogeneous scene</b><small>1 target + 3 distinct nouns<br>all from the active group</small></div>
     </div>
-    <p class="mut" style="margin-top:12px">深读：<code class="inl">architecture.md</code>（含 mermaid 图 + 逐框说明）。</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Raw seed</th><th>Target</th><th>Scene</th><th>Instruction target</th><th>Interpretation</th></tr></thead>
+        <tbody>
+          <tr><td>even</td><td><span class="tag seen">Seen</span></td><td>4 Seen nouns</td><td><span class="inline-code">the &lt;noun&gt;</span></td><td>Seen target / all-Seen scene</td></tr>
+          <tr><td>odd</td><td><span class="tag unseen">Unseen</span></td><td>4 Unseen nouns</td><td><span class="inline-code">the &lt;noun&gt;</span></td><td>Unseen target / all-Unseen scene</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>四 noun 强制唯一，因此 noun-only 指令足以唯一定位目标。placement 按 footprint 从大到小，pairwise separation 为 <span class="inline-code">radius_a + radius_b + 0.025</span>；production 不使用 probe 的 target-first override。</p>
+
+    <h3>Raw seed 同时驱动 familiarity、target cycle 与 scene 随机量</h3>
+    <pre><code>familiarity = ("seen", "unseen")[seed % 2]
+group_index = seed // 2
+noun_index = group_index % len(active_pool)
+variant_cycle = group_index // len(active_pool)</code></pre>
+    <div class="flow" role="img" aria-label="Raw seed controls scene familiarity, target schedule, and seeded scene randomization">
+      <div class="flow-node"><b>seed parity</b><small>even → all-Seen<br>odd → all-Unseen</small></div>
+      <div class="arrow" aria-hidden="true">→</div>
+      <div class="flow-node"><b>group index</b><small>target noun cycles inside<br>its own familiarity pool</small></div>
+      <div class="arrow" aria-hidden="true">→</div>
+      <div class="flow-node"><b>seeded scene RNG</b><small>distractors · position · yaw<br>tie-break · target side → arm</small></div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Raw seed</th><th>Object scene</th><th>Scheduled target</th><th>Exact target variant</th><th><span class="inline-code">pdo_closeout8</span></th></tr></thead>
+        <tbody>
+          <tr><td>0</td><td>all-Seen</td><td>bottle</td><td><span class="inline-code">001_bottle/base13</span></td><td><span class="status open">failed</span></td></tr>
+          <tr><td>1</td><td>all-Unseen</td><td>dumbbell</td><td><span class="inline-code">052_dumbbell/base0</span></td><td><span class="status pass">episode 0</span></td></tr>
+          <tr><td>2</td><td>all-Seen</td><td>cup</td><td><span class="inline-code">021_cup/base0</span></td><td><span class="status pass">episode 1</span></td></tr>
+          <tr><td>3</td><td>all-Unseen</td><td>apple</td><td><span class="inline-code">035_apple/base1</span></td><td><span class="status pass">episode 2</span></td></tr>
+          <tr><td>4</td><td>all-Seen</td><td>shoe</td><td><span class="inline-code">041_shoe/base8</span></td><td><span class="status pass">episode 3</span></td></tr>
+          <tr><td>5</td><td>all-Unseen</td><td>wooden mallet</td><td><span class="inline-code">084_woodenmallet/base3</span></td><td><span class="status pass">episode 4</span></td></tr>
+          <tr><td>6</td><td>all-Seen</td><td>mug</td><td><span class="inline-code">039_mug/base0</span></td><td><span class="status open">failed</span></td></tr>
+          <tr><td>7</td><td>all-Unseen</td><td>paintbrush</td><td><span class="inline-code">093_brush-pen/base1</span></td><td><span class="status open">failed</span></td></tr>
+          <tr><td>8</td><td>all-Seen</td><td>can</td><td><span class="inline-code">071_can/base2</span></td><td><span class="status pass">episode 5</span></td></tr>
+          <tr><td>9</td><td>all-Unseen</td><td>dumbbell</td><td><span class="inline-code">052_dumbbell/base0</span></td><td><span class="status pass">episode 6</span></td></tr>
+          <tr><td>10</td><td>all-Seen</td><td>toy car</td><td><span class="inline-code">057_toycar/base5</span></td><td><span class="status pass">episode 7</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p><span class="inline-code">pdo_closeout8</span> 是当前锁定 Seen/Unseen exact pools 的正常采集：按 raw seeds 0–10 共尝试 11 次，成功保留 seeds 1、2、3、4、5、8、9、10，失败 seeds 0、6、7 不从 tried denominator 删除。seed 7 对应的 paintbrush target 失败，因此八个 kept outputs 中没有 paintbrush-target episode；seed 9 已按 Unseen 四-noun cycle 回到 dumbbell。</p>
+    <p>同一个 raw seed 还初始化 scene RNG，因此决定 Seen distractor sampling、actor position/yaw、同 radius placement tie-break，以及 target 最终落在左侧还是右侧；oracle arm 由 settled target 的 x 位置选择，而不是由 seed 奇偶直接指定。相同代码、配置和 assets 下，重复 setup 同一 seed 必须得到相同 scene signature。当前 production 每个 noun 只有一个 exact ID，所以 <span class="inline-code">variant_cycle</span> 不改变实际 model；它只为将来 multi-ID entry 保留完整 noun cycle 后换 ID 的通用语义。</p>
+
+    <h3>Instruction mode 与 object familiarity 正交</h3>
+    <p>Scene setup 只把当前 target 写成 <span class="inline-code">{A} = "the &lt;noun&gt;"</span>，并根据 target x 位置写入 vestigial arm tag <span class="inline-code">{a}</span>。Instruction JSON 顶层 <span class="inline-code">seen</span>/<span class="inline-code">unseen</span> 只选择语言句式，不选择物体 pool；一个 seed 3 的 all-Unseen Apple scene 可以同时生成 template-Seen 和 template-Unseen 两组说法，它们都指向同一个 Apple。</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Scene axis ↓ / language axis →</th><th>Template Seen</th><th>Template Unseen</th></tr></thead>
+        <tbody>
+          <tr><td><span class="tag seen">Object Seen scene</span></td><td>Seen objects + familiar wording</td><td>Seen objects + held-out wording</td></tr>
+          <tr><td><span class="tag unseen">Object Unseen scene</span></td><td>Unseen objects + familiar wording</td><td>Unseen objects + held-out wording</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="callout"><strong>不要把两条 Seen/Unseen 轴绑定。</strong><p><span class="inline-code">S_seen</span>/<span class="inline-code">S_unseen</span> 按 object scene familiarity 分组；如果同时研究 instruction wording generalization，应单独报告上面的 2×2 matrix。否则“没认出 Unseen object”和“没泛化到 Unseen wording”会混成一个变量。</p></div>
   </section>
 
-  <section>
-    <h2>证据：眼见为实</h2>
-    <p class="mut">以下视频是 <code class="inl">collect_data</code> 采集出的 oracle 专家演示（aloha-agilex），随 notes 目录离线可放。</p>
+  <section id="selected-pools">
+    <p class="eyebrow">Final production selection</p>
+    <h2>最终 Seen / Unseen objects 缩略图</h2>
+    <p>每张卡片代表一个 production noun，并直接显示共享 manifest 当前唯一锁定的 exact model ID；缩略图使用该 exact variant 的真实贴图渲染。</p>
 
-    <div class="ev">
-      <div class="vgrid">
-        <div>
-          <video controls muted loop preload="metadata" src="evidence/videos/cup_green_color-grounding.mp4"></video>
-          <div class="cap"><b>颜色 grounding：</b>目标「green cup」，场景里<b>另有一个异色 cup</b> 当干扰——光靠名词分不清，必须读颜色才能选对。这正是本 task 要考的点。</div>
-        </div>
-        <div>
-          <video controls muted loop preload="metadata" src="evidence/videos/bottle_green.mp4"></video>
-          <div class="cap"><b>瓶子拿取：</b>目标 green bottle。瓶子 50/50 站立/躺放——站立用 <code class="inl">[0.66,0.66,-0.25,-0.25]</code>（参考 pick_dual_bottles）+ 世界系抬起。</div>
-        </div>
-        <div>
-          <video controls muted loop preload="metadata" src="evidence/videos/shoe_red_color-grounding.mp4"></video>
-          <div class="cap"><b>颜色 grounding：</b>目标「red shoe」，干扰含另一只<b>异色 shoe</b>——同样逼读颜色。</div>
-        </div>
-        <div>
-          <video controls muted loop preload="metadata" src="evidence/videos/cup_blue.mp4"></video>
-          <div class="cap"><b>基本拾取：</b>目标 blue cup，干扰为 hamburg/can/mouse（4 个不同名词，名词即可辨——多数 episode 是这种）。</div>
-        </div>
-      </div>
+    <h3><span class="tag seen">Seen</span> 12 nouns / 12 exact variants</h3>
+    <div class="asset-grid">
+      <figure class="asset-card"><img src="evidence/pool/current-seen/snap_001_bottle_b13.png" alt="Seen bottle base13"><figcaption><span class="asset-name">Bottle</span><span class="asset-id">001_bottle · base13</span></figcaption></figure>
+      <figure class="asset-card"><img src="evidence/pool/current-seen/snap_021_cup_b0.png" alt="Seen cup base0"><figcaption><span class="asset-name">Cup</span><span class="asset-id">021_cup · base0</span></figcaption></figure>
+      <figure class="asset-card"><img src="evidence/pool/current-seen/snap_041_shoe_b8.png" alt="Seen shoe base8"><figcaption><span class="asset-name">Shoe</span><span class="asset-id">041_shoe · base8</span></figcaption></figure>
+      <figure class="asset-card"><img src="evidence/pool/current-seen/snap_039_mug_b0.png" alt="Seen mug base0"><figcaption><span class="asset-name">Mug</span><span class="asset-id">039_mug · base0</span></figcaption></figure>
+      <figure class="asset-card"><img src="evidence/pool/current-seen/snap_071_can_b2.png" alt="Seen can base2"><figcaption><span class="asset-name">Can</span><span class="asset-id">071_can · base2</span></figcaption></figure>
+      <figure class="asset-card"><img src="evidence/pool/current-seen/snap_057_toycar_b5.png" alt="Seen toy car base5"><figcaption><span class="asset-name">Toy car</span><span class="asset-id">057_toycar · base5</span></figcaption></figure>
+      <figure class="asset-card"><img src="evidence/pool/current-seen/snap_077_phone_b1.png" alt="Seen phone base1"><figcaption><span class="asset-name">Phone</span><span class="asset-id">077_phone · base1</span></figcaption></figure>
+      <figure class="asset-card"><img src="evidence/pool/current-seen/snap_107_soap_b0.png" alt="Seen soap base0"><figcaption><span class="asset-name">Soap</span><span class="asset-id">107_soap · base0</span></figcaption></figure>
+      <figure class="asset-card"><img src="evidence/pool/current-seen/snap_006_hamburg_b0.png" alt="Seen hamburger base0"><figcaption><span class="asset-name">Hamburger</span><span class="asset-id">006_hamburg · base0</span></figcaption></figure>
+      <figure class="asset-card"><img src="evidence/pool/current-seen/snap_075_bread_b5.png" alt="Seen bread base5"><figcaption><span class="asset-name">Bread</span><span class="asset-id">075_bread · base5</span></figcaption></figure>
+      <figure class="asset-card"><img src="evidence/pool/current-seen/snap_113_coffee-box_b1.png" alt="Seen coffee box base1"><figcaption><span class="asset-name">Coffee box</span><span class="asset-id">113_coffee-box · base1</span></figcaption></figure>
+      <figure class="asset-card"><img src="evidence/pool/current-seen/snap_047_mouse_b2.png" alt="Seen mouse base2"><figcaption><span class="asset-name">Mouse</span><span class="asset-id">047_mouse · base2</span></figcaption></figure>
     </div>
 
-    <div class="ev">
-      <img src="evidence/pool/snapshots.png" alt="12 物体池真实贴图快照">
-      <div class="cap"><b>12 品类 / 16 变体池</b>（SAPIEN 真实贴图 3D 快照）。颜色全部人眼核校锁定——native 描述里的颜色词是 MLLM 文本、有噪，不可信，最终以贴图为准。</div>
+    <h3><span class="tag unseen">Unseen</span> 4 nouns / 4 exact variants</h3>
+    <div class="asset-grid">
+      <figure class="asset-card"><img src="evidence/pool/unseen-candidates/snap_052_dumbbell_b0.png" alt="Unseen dumbbell base0"><figcaption><span class="asset-name">Dumbbell</span><span class="asset-id">052_dumbbell · base0</span></figcaption></figure>
+      <figure class="asset-card"><img src="evidence/pool/snap_035_apple_b1_zup.png" alt="Unseen Apple base1 upright in the final production scene"><figcaption><span class="asset-name">Apple</span><span class="asset-id">035_apple · base1 · z-up top grasp</span></figcaption></figure>
+      <figure class="asset-card"><img src="evidence/pool/unseen-candidates/snap_084_woodenmallet_b3.png" alt="Unseen wooden mallet base3"><figcaption><span class="asset-name">Wooden mallet</span><span class="asset-id">084_woodenmallet · base3</span></figcaption></figure>
+      <figure class="asset-card"><img src="evidence/pool/manual-candidates/snap_093_brush-pen_b1.png" alt="Unseen paintbrush base1"><figcaption><span class="asset-name">Paintbrush</span><span class="asset-id">093_brush-pen · base1</span></figcaption></figure>
     </div>
-
-    <div class="ev">
-      <img src="evidence/pool/bottle_orient2.png" alt="瓶子站立朝向对比">
-      <div class="cap"><b>站立瓶子的破解：</b>带 scale 渲染后看清——<code class="inl">[0.66,0.66,-0.25,-0.25]</code>（右三格）让高瘦瓶子<b>真·直立</b>站住，而我最初试的 qpos 会倒。左一是躺放（端面朝外）。</div>
-    </div>
+    <div class="callout"><strong>缩略图只代表外观，不等于 admission evidence。</strong><p>Unseen 四类的 production 资格来自左右臂 confirmation 和 all-Unseen coexistence probe；完整数据在下一节。</p></div>
   </section>
 
-  <section>
-    <h2>关键决策 / 教训</h2>
-    <ul>
-      <li><b>指令颜色+名词 = 字面量注入</b>：<code class="inl">{A}="the blue cup"</code>（不含 <code class="inl">/</code>）走 native 的字面替换分支，而非随机物体描述——因为随机描述<b>不保证含颜色、不保证能区分目标</b>。</li>
-      <li><b>采样策略 churn 三版</b>（诚实记）：option A（强制颜色必要，但分布偏斜）→ option B（均匀，但目标仅 3 类）→ <b>12 品类等概率目标</b>。根因是实现前没把「分布均匀」和「颜色 grounding 强度」这对张力想清楚，走了两轮返工。</li>
-      <li><b>目标用 <code class="inl">seed % 12</code> 而非 rng 抽取</b>：<code class="inl">default_rng(seed).integers</code> 对低连续 seed <b>聚簇</b>（seed 0/2/3/4/8/10 全 → shoe/red），小规模采集直接偏斜。<code class="inl">seed%N</code> 又轻又对。</li>
-      <li><b>「颜色最干净」≠「能抓」≠「放得住」</b>：最蓝的 <code class="inl">021_cup/base8</code> 没有抓取标注、grasp 失败——三个信号（stable / 有 mesh / 有抓取标注）要分别核查。</li>
-      <li><b>站立瓶子：别轻易下「asset 做不到」的结论</b>。一度误判高瓶站不住，用户提示参考 <code class="inl">pick_dual_bottles</code>，去查发现正解 qpos + 世界系抬起（<code class="inl">move_axis="arm"</code> 对侧抓无效，会平移不升起）。</li>
-    </ul>
-    <p class="mut">深读：<code class="inl">decisions.md</code>（轻量 ADR + 改动量级批判 + 设计模式）。</p>
-  </section>
+  <section id="pool">
+    <p class="eyebrow">Evidence · asset level</p>
+    <h2>从 metadata shortlist 到当前 4 个 production objects</h2>
+    <figure class="figure">
+      <img src="evidence/pool/snapshots_unseen-candidates.png" alt="14 raw-task-Unseen candidate nouns and 54 exact variants rendered with real textures">
+      <figcaption><strong>原始 metadata shortlist：14 nouns / 54 exact variants。</strong>每个 variant 有 rigid visual/collision mesh、<span class="inline-code">stable=True</span> 和有效 contact group/mask。图像只证明 geometry/texture 可审阅，不证明可抓。</figcaption>
+    </figure>
+    <figure class="figure">
+      <img src="evidence/pool/snapshots_manual-candidates.png" alt="Notebook and paintbrush manual follow-up candidate variants">
+      <figcaption><strong>Manual follow-up：notebook 与 paintbrush，共 8 variants。</strong>两类 stable 且存在 contact pose，但 group/mask 为空；显式 contact ID 使其可 probe，仍须通过同一 production gate。</figcaption>
+    </figure>
 
-  <section>
-    <h2>现状与边界</h2>
-    <table>
-      <tr><th>项</th><th>状态</th><th>说明</th></tr>
-      <tr><td>Layer A 指令路由</td><td class="ok">✓ 9/9</td><td>seen∩unseen=∅、{A} 路由、字面量注入成句（纯 python）</td></tr>
-      <tr><td>Layer B 判定正反例</td><td class="ok">✓ 16/16</td><td>12 类目标 oracle 都能抓 + 同色/同名/未握住三反例判 False</td></tr>
-      <tr><td>operate_tabletop 回归</td><td class="ok">✓ 7/7</td><td>共用 helper 重构后无退化</td></tr>
-      <tr><td>collect_data → reporter</td><td class="ok">✓ 跑通</td><td>oracle 82.8%（24 kept / 29 tries）；指令真实渲染正确</td></tr>
-      <tr><td>目标 & 干扰分布</td><td class="ok">✓ 均匀</td><td>12 品类 tried 均匀、干扰均匀</td></tr>
-      <tr><td>颜色 grounding 强度</td><td class="todo">⚠ TODO</td><td>均匀采样下颜色必要仅 ~10-15% episode，偏名词 grounding</td></tr>
-      <tr><td>站立瓶子避障</td><td class="todo">⚠ TODO</td><td>侧抓不避障，会撞开干扰物</td></tr>
-      <tr><td>Layer C 区分度</td><td class="no">✗ 未做</td><td>本轮不含瞎猜/作弊 baseline 对照</td></tr>
-    </table>
+    <h3>最终 exact assets</h3>
+    <div class="asset-grid">
+      <figure class="asset-card"><img src="evidence/pool/unseen-candidates/snap_052_dumbbell_b0.png" alt="Dumbbell base0"><figcaption><span class="asset-name">Dumbbell</span><span class="asset-id">052_dumbbell/base0 · 6/6</span></figcaption></figure>
+      <figure class="asset-card"><img src="evidence/pool/snap_035_apple_b1_zup.png" alt="Apple base1 in final z-up pose"><figcaption><span class="asset-name">Apple</span><span class="asset-id">035_apple/base1 · top gate 10/12</span></figcaption></figure>
+      <figure class="asset-card"><img src="evidence/pool/unseen-candidates/snap_084_woodenmallet_b3.png" alt="Wooden mallet base3"><figcaption><span class="asset-name">Wooden mallet</span><span class="asset-id">084_woodenmallet/base3 · 6/6</span></figcaption></figure>
+      <figure class="asset-card"><img src="evidence/pool/manual-candidates/snap_093_brush-pen_b1.png" alt="Paintbrush base1"><figcaption><span class="asset-name">Paintbrush</span><span class="asset-id">093_brush-pen/base1 · 5/6</span></figcaption></figure>
+    </div>
 
-    <div class="warnbox">
-      <b>这份 report 不证明什么（诚实声明）：</b>
-      <ul style="margin-bottom:0">
-        <li>82.8% 是 <b>oracle 脚本专家</b>的成功率，<b>不是任何训练过的 VLA policy</b>——不代表某个模型 grounding 能力好。</li>
-        <li>只 <b>24-episode 小样本</b>，每物体真实成功率有噪。</li>
-        <li>该成功率<b>混了场景稳定性</b>（~17% 是瓶子/mug 翻倒，非 grounding），完美 grounding 也超不过 ~83%。</li>
-        <li>颜色维度目前<b>基本没压力</b>——一个「色盲但懂名词」的 policy 仍能拿高分（见颜色 grounding TODO）。</li>
-        <li>判定阈值 <code class="inl">0.02</code> / 各物体抓取参数<b>类推自原生任务，论文未确认</b>。</li>
-      </ul>
+    <div class="table-wrap" style="margin-top:1rem">
+      <table>
+        <thead><tr><th>Noun</th><th>Exact asset</th><th>Confirmation</th><th>Arm evidence</th><th>Config</th></tr></thead>
+        <tbody>
+          <tr><td>dumbbell</td><td class="mono">052_dumbbell/base0</td><td>6/6 · 100%</td><td>L 3/3 · R 3/3</td><td>radius .105</td></tr>
+          <tr><td>apple</td><td class="mono">035_apple/base1</td><td>10/12 · 83.3%</td><td>L 5/6 · R 5/6</td><td>z-up · 4 body-centered top contacts · radius .055</td></tr>
+          <tr><td>wooden mallet</td><td class="mono">084_woodenmallet/base3</td><td>6/6 · 100%</td><td>L 3/3 · R 3/3</td><td>radius .100</td></tr>
+          <tr><td>paintbrush</td><td class="mono">093_brush-pen/base1</td><td>5/6 · 83.3%</td><td>L 2/3 · R 3/3</td><td>contact ID 0 · radius .080</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="evidence-links">
+      <a href="evidence/object-familiarity.md">Evidence ledger</a>
+      <a href="evidence/unseen_confirm_round3.json">Core confirmation JSON</a>
+      <a href="evidence/unseen_confirm_paintbrush_b1.json">Paintbrush confirmation JSON</a>
+      <a href="evidence/unseen_production_seeds_1_15.json">First-lock coexistence JSON</a>
+      <a href="evidence/videos/apple-zup-topgrasp/seed3-episode2-left.mp4">Final Apple episode 2</a>
+      <a href="evidence/videos/apple-zup-topgrasp/seed11-episode9-left.mp4">Final Apple episode 9</a>
     </div>
   </section>
 
-  <section>
-    <h2>怎么复现</h2>
-    <pre><span class="c"># 1. 桥接（把 task 文件 symlink 进 submodule）</span>
-bash bridge_tasks.sh
-
-<span class="c"># 2. Layer A（纯 python，秒级）</span>
-conda run -n RoboTwin python tests/pick_diverse_object/test_instructions.py      <span class="c"># → 9/9</span>
-
-<span class="c"># 3. Layer B（仿真，~10 分钟）</span>
-conda run -n RoboTwin python tests/pick_diverse_object/test_check_success.py     <span class="c"># → 16/16</span>
-
-<span class="c"># 4. 数据采集 + 成功率报告</span>
-cd third_party/robotwin && python script/collect_data.py pick_diverse_object pdo_bench
-cd - && python tools/report_pick_diverse_object.py --collection \
-    third_party/robotwin/data/pick_diverse_object/pdo_bench
-
-<span class="c"># 渲染 12 物体池快照（颜色核校证据）</span>
-conda run -n RoboTwin python tools/render_pick_pool_snapshots.py</pre>
-    <p class="mut">更深的实现/决策细节见同目录 <code class="inl">understanding.md</code> · <code class="inl">architecture.md</code> · <code class="inl">decisions.md</code>；权威设计文档见主仓库 <code class="inl">docs/features/04-Pick-Diverse-Object.md</code>。</p>
+  <section id="gate">
+    <p class="eyebrow">Selection discipline</p>
+    <h2>门槛没有为“凑够四类”而降低</h2>
+    <div class="callout good"><strong>Production admission gate</strong><p>Independent confirmation ≥70%；左右臂各至少一次真实成功；能稳定参与最终全-Unseen 四物体 production scene。</p></div>
+    <div class="timeline">
+      <article class="timeline-item"><h3>静态筛选</h3><p>69 个 Unseen categories → 14 nouns / 54 exact variants。metadata 只决定“值得 probe”，不决定“可用于 production”。</p></article>
+      <article class="timeline-item"><h3>Quick + cross-arm screen</h3><p>所有 54 variants 至少做一次真实 exact trial；quick success 者再测 opposite arm。</p></article>
+      <article class="timeline-item reject"><h3>Independent confirmation 淘汰 false positives</h3><p>Trophy base3 从 quick 3/4 降到 confirmation 0/4；glue、candlestick、hand bell、drink bottle 的调参也未跨过门槛。</p></article>
+      <article class="timeline-item pass"><h3>Manual follow-up 找到第 4 类</h3><p>Paintbrush base1 使用已有 contact pose 的 ID 0，confirmation 5/6，左右臂均成功；没有改写 third-party metadata。</p></article>
+      <article class="timeline-item pass"><h3>第一版 production coexistence</h3><p>历史 speaker pool 在 odd seeds 1–15 达到 8/8 setup、8/8 settle、7/8 oracle；保留 JSON 用于审计首次四物体 lock，但 runtime 不再保留该旧 pool。</p></article>
+      <article class="timeline-item pass"><h3>Apple 替换 speaker</h3><p>当前 Apple 不是 metadata 自动晋级：经明确 replacement decision、z-up/top-contact redesign、双臂 10/12 gate 和 normal 20-success collection 后进入 production。</p></article>
+    </div>
+    <p><strong>关键教训：</strong>contact pose 可规划不等于执行可靠。hand bell 与 drink bottle 都曾在 isolated planning 或 quick trials 中显得可行，但 fresh confirmation 回归；这正是不能让 metadata 自动落入 production pool 的原因。</p>
   </section>
 
-  <p class="foot">RoboTwin-IF · Pick-Diverse-Object · 生成于 2026-08-24 · 证据随 notes/ 目录离线可放</p>
+  <section id="apple-evidence">
+    <p class="eyebrow">Evidence · final production rollout</p>
+    <h2>Apple 现在是竖放、顶抓，并且左右臂都有固定门槛证据</h2>
+    <p class="lead">当前 production Apple 使用 <span class="inline-code">035_apple/base1</span>、<span class="inline-code">z-pos-up</span> 和四个 body-centered top-down contacts。源 JSON 与历史 native-contact experiments 均未修改。</p>
+    <div class="metric-grid">
+      <article class="metric pass"><span class="metric-label">Fixed physical gate</span><span class="metric-value">10 / 12</span><span class="metric-note">left 5/6 · right 5/6 · no replacement seeds</span></article>
+      <article class="metric unseen"><span class="metric-label">Normal collection</span><span class="metric-value">20 / 20</span><span class="metric-note">HDF5 · MP4 · instruction · scene-info</span></article>
+      <article class="metric"><span class="metric-label">Apple target rollouts</span><span class="metric-value">2 / 2</span><span class="metric-note">episodes 2 and 9 · both lift-and-held</span></article>
+      <article class="metric"><span class="metric-label">Apple scene pose</span><span class="metric-value">9 / 9</span><span class="metric-note">all Unseen initial frames visibly z-up</span></article>
+    </div>
+    <figure class="figure">
+      <img src="evidence/videos/apple-zup-topgrasp/all-unseen-apple-initials.png" alt="Initial frames from all nine Unseen episodes showing Apple upright as target or distractor">
+      <figcaption><strong>9 个 Unseen scene 的首帧。</strong>Apple 在两次 target 与七次 distractor 情况下都以果梗朝上的 z-up 姿态出现；这张图只证明初始视觉姿态，不单独证明抓取。</figcaption>
+    </figure>
+    <div class="history-grid">
+      <figure class="figure"><video controls muted preload="metadata" poster="evidence/videos/apple-zup-topgrasp/seed3-episode2-frames16.png" src="evidence/videos/apple-zup-topgrasp/seed3-episode2-left.mp4"></video><figcaption><strong>Episode 2 · raw seed 3 · left arm。</strong>从上方进入、在果体中部闭合、抬离桌面并保持到末帧。16-frame ordered review：<a href="evidence/videos/apple-zup-topgrasp/seed3-episode2-frames16.png">contact sheet</a>。</figcaption></figure>
+      <figure class="figure"><video controls muted preload="metadata" poster="evidence/videos/apple-zup-topgrasp/seed11-episode9-frames16.png" src="evidence/videos/apple-zup-topgrasp/seed11-episode9-left.mp4"></video><figcaption><strong>Episode 9 · raw seed 11 · left arm。</strong>第二个独立 production target rollout，同样完成 top-down closure、lift 与 final hold；未碰撞另外三件物体。<a href="evidence/videos/apple-zup-topgrasp/seed11-episode9-frames16.png">contact sheet</a>。</figcaption></figure>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Collection item</th><th>Result</th><th>Detail</th></tr></thead>
+        <tbody>
+          <tr><td>Raw seed search</td><td><span class="status pass">20 / 23 kept</span></td><td>accepted 1,2,3,4,5,6,8,9,10,11,12,13,14,15,16,17,18,20,21,22; failed 0,7,19</td></tr>
+          <tr><td>Successful composition</td><td>11 Seen / 9 Unseen</td><td>Unseen Apple pool 与当前相同；11 个 Seen episodes 先于后续 12/12 exact-ID 重选</td></tr>
+          <tr><td>Video/HDF5 integrity</td><td><span class="status pass">20 / 20</span></td><td>all MP4s decode as H.264 320×240; all HDF5 files open</td></tr>
+          <tr><td>Approach diagnostic</td><td><span class="status pass">20 / 20 vertical</span></td><td>every recorded <span class="inline-code">abs(approach_axis_z) ≥ 0.90</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="callout"><strong>这不是 VLA 分数，也不是当前 Seen exact pool 的 collection regression。</strong><p>20-success run 验证当时的 parity scheduling 与 native data pipeline；其 Unseen pool 与当前 Apple production 一致，所以两段 Apple target 证据仍适用。之后 Seen 侧重选为 12/12 exact IDs，旧 run 的 11 个 Seen episodes 不验证这些新 IDs。右臂 Apple 能力另来自固定 gate 的 5/6。</p></div>
+  </section>
 
+  <section id="architecture">
+    <p class="eyebrow">Implementation</p>
+    <h2>单一 manifest 驱动 env、probe、tests 与 reporter</h2>
+    <div class="flow" role="img" aria-label="Shared pool module architecture">
+      <div class="flow-node"><b>_pick_diverse_object_pool.py</b><small>taxonomy · manifests<br>seed schedule · grasp config</small></div>
+      <div class="arrow" aria-hidden="true">→</div>
+      <div class="flow-node"><b>pick_diverse_object.py</b><small>SAPIEN setup · placement<br>noun info · oracle</small></div>
+      <div class="arrow" aria-hidden="true">→</div>
+      <div class="flow-node"><b>_if_grounding.py</b><small>named target<br>lifted AND held</small></div>
+    </div>
+    <p>纯数据 pool module 不 import SAPIEN，static tests 和 reporter 可直接复用生产表。每个 entry 只保存 exact IDs、rest pose、rotation、grasp strategy、generic kwargs 与 placement radius；现役 schema 不含 per-arm kwargs、generic actor-config 或 scale override。</p>
+    <p>Apple 是唯一的 production-only actor-config specialization：actor 创建后，以 native metadata 的 deep copy 构造四个 body-centered vertical contacts；共享 <span class="inline-code">grasp_actor()</span> 仍负责按当前 arm 选择可达 wrist roll。<span class="inline-code">approach_axis_z</span> 只记录方向诊断，不改变 lifted-and-held success 定义。已淘汰候选的 one-off manifests 与 stability/policy interfaces 已在 closeout 删除。</p>
+    <pre><code>familiarity = ("seen", "unseen")[seed % 2]
+group_index = seed // 2
+
+self.info["info"] = {
+    "{A}": f"the {self.target_noun}",
+    "{a}": str(arm_tag),
+}</code></pre>
+    <p><span class="inline-code">check_success()</span> 只在 named target 相对 settled origin 上升超过 0.02 m 且仍与夹爪接触时返回 True。抬起 distractor、只移动 target、碰撞导致未持握抬升都必须为 False。</p>
+  </section>
+
+  <section id="verification">
+    <p class="eyebrow">Verification matrix</p>
+    <h2>已验证的是 task contract，不是 VLA 分数</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Layer</th><th>Result</th><th>证明什么</th></tr></thead>
+        <tbody>
+          <tr><td>Pool / taxonomy / schedule</td><td><span class="status pass">33/33</span></td><td>51/69 taxonomy、14/54 shortlist、12/12 Seen lock、final four、seed cycles、retained schema 与 top-contact geometry/isolation</td></tr>
+          <tr><td>Probe control logic</td><td><span class="status pass">6/6</span></td><td>generic settle fail-closed qualification、video naming 与 overwrite protection</td></tr>
+          <tr><td>Instruction contract</td><td><span class="status pass">11/11</span></td><td>Noun-only placeholders；template split 与 familiarity 不混用</td></tr>
+          <tr><td>Real-SAPIEN wiring</td><td><span class="status pass">54/54</span></td><td>Seeds 0–7 parity、4 unique nouns、radius-first、determinism、Apple target/distractor top config 与 source JSON immutability</td></tr>
+          <tr><td>Apple fixed physical gate</td><td><span class="status pass">10/12</span></td><td>left 5/6、right 5/6；所有成功 grasp 的 approach axis 均 vertical；失败不换 seed</td></tr>
+          <tr><td>Layer-B semantics</td><td><span class="status pass">22/22</span></td><td>Seen 12 + current Unseen 4 positives；untouched/wrong-object/teleported-not-held negatives</td></tr>
+          <tr><td>Reporter synthetic math</td><td><span class="status pass">10/10</span></td><td>balanced、gap、retention、group composition 与 exact-target mapping regression</td></tr>
+          <tr><td>Normal native collection</td><td><span class="status pass">20/20</span></td><td>20 trajectories/HDF5/MP4/instructions/scene-info；current Unseen Apple pool，Seen exact-ID 重选前</td></tr>
+          <tr><td>Current-pool closeout collection</td><td><span class="status pass">8 kept / 11 tried</span></td><td><span class="inline-code">pdo_closeout8</span>：current Seen + Unseen exact pools；4 Seen / 4 Unseen kept；failed raw seeds 0、6、7；8/8 MP4 full-decode 与 HDF5 open</td></tr>
+          <tr><td>Apple video review</td><td><span class="status pass">2/2 target</span></td><td>16-frame review confirms z-up start、top approach、body grasp、lift and final hold；9/9 Unseen initials upright</td></tr>
+          <tr><td>Historical first-lock sweep</td><td><span class="status pass">7/8 oracle</span></td><td>Retained JSON records 8/8 setup/settle for the former speaker pool；runtime manifest 已删除，不作为当前 Apple pool claim</td></tr>
+          <tr><td>Operate-Tabletop shared-helper regression</td><td><span class="status open">本轮未执行</span></td><td>当前正式 bridge 不维护该 task；import 前置停止，未把历史结果冒充当前 run</td></tr>
+          <tr><td>VLA evaluation</td><td><span class="status open">未运行</span></td><td>本 report 不含任何 policy 的 S_seen/S_unseen</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Reporter 的 synthetic fixture 是 aggregation regression，不是实验结果。真正评测时应同时给出 <strong>S_seen、S_unseen、balanced average、absolute gap、retention、group micro、per-noun macro、exact variants 与 tried/kept composition</strong>。</p>
+  </section>
+
+  <section id="limits">
+    <p class="eyebrow">Interpretation boundary</p>
+    <h2>这份报告不证明什么</h2>
+    <div class="decision-grid">
+      <article class="decision"><h3>不是 target-only 因果效应</h3><p>Seen 与 Unseen scene 的 target、distractors、geometry 和 clutter composition 都不同；差值只能称为 scene-level object-familiarity gap。</p></article>
+      <article class="decision"><h3>不是 69 类 Unseen 的代表性估计</h3><p>最终 pool 是经过物理可执行性筛选的 4 类 survivors，而且每个 Unseen episode 都包含这四类；必须同时报告 per-noun macro。</p></article>
+      <article class="decision"><h3>不是 policy performance</h3><p>10/12 physical gate 与 20-success collection 都由 scripted oracle 执行；尚未运行 CogACT/X-VLA 等 VLA inference。</p></article>
+      <article class="decision"><h3>不是论文原始规格</h3><p>Noun-only、51/69 taxonomy、task-local contacts、placement radii 与 0.02 m threshold 都是本项目设计，不是论文公开真值。</p></article>
+      <article class="decision"><h3>20-success 不是预固定成功率</h3><p>native collection 会继续搜索 raw seeds 直到收满 20 个成功 episode；因此 20/20 是 kept outputs 的完整性，不应当报告成 raw-seed oracle success rate。tried composition 是 20/23。</p></article>
+      <article class="decision"><h3>Apple 右臂证据来自 fixed gate</h3><p>自然 collection 中两次 Apple target 都由左臂执行；右臂 5/6 来自另外六个冻结场景，不能把左臂视频当作双臂动作证据。</p></article>
+    </div>
+  </section>
+
+  <section id="history" class="history">
+    <p class="eyebrow">Historical baseline · not current contract</p>
+    <h2>旧的 12-item color+noun 实现仍保留为历史证据</h2>
+    <p>论文 §6.2.1 可确认的是“12 everyday items 抽 4 个，以 color+noun 点名目标”。本项目在 2026-08-21~24 实现并验证过 12 nouns / 16 variants baseline。当前版本为了 object familiarity 研究问题移除了颜色；下面视频只证明旧 baseline 的 color grounding 与 oracle，不证明新 Seen/Unseen scenes。</p>
+    <div class="history-grid">
+      <figure class="figure"><video controls muted preload="metadata" src="evidence/videos/cup_green_color-grounding.mp4"></video><figcaption><strong>历史 color grounding：</strong>目标 green cup，场景含异色 cup。与当前 noun-only contract 分开解释。</figcaption></figure>
+      <figure class="figure"><video controls muted preload="metadata" src="evidence/videos/shoe_red_color-grounding.mp4"></video><figcaption><strong>历史 color grounding：</strong>目标 red shoe，场景含异色 shoe。保留用于追溯，不计入 familiarity validation。</figcaption></figure>
+    </div>
+  </section>
+
+  <section id="reproduce">
+    <p class="eyebrow">Reproduction</p>
+    <h2>复现实验与回归</h2>
+    <pre><code># Bridge local task files into the RoboTwin submodule
+bash scripts/bridge_tasks.sh
+bash scripts/bridge_tasks.sh --check
+
+# Simulator-free contracts
+python tests/pick_diverse_object/test_pool.py
+python tests/pick_diverse_object/test_probe_logic.py
+python tests/pick_diverse_object/test_instructions.py
+python tests/pick_diverse_object/test_reporter.py
+
+# Real SAPIEN wiring, fixed Apple gate, and success semantics
+conda run --no-capture-output -n RoboTwin \
+  python tests/pick_diverse_object/test_wiring.py
+conda run --no-capture-output -n RoboTwin \
+  python tests/pick_diverse_object/test_apple_top_grasp.py
+conda run --no-capture-output -n RoboTwin \
+  python tests/pick_diverse_object/test_check_success.py
+
+# Exact native collection invocation used for the archived 20-success run.
+# pdo_apple20/ already exists: use a copied YAML with a fresh config name
+# for a new run rather than overwriting this evidence.
+(cd third_party/robotwin && \
+  conda run --no-capture-output -n RoboTwin \
+  bash collect_data.sh pick_diverse_object pdo_apple20 0)
+
+# Report a policy evaluation log (not yet run in this report)
+python tools/report_pick_diverse_object.py --eval-log /path/to/eval.log</code></pre>
+    <p>深读材料：<a href="understanding.md">understanding.md</a>（问题与证据边界）、<a href="selection-process.md">selection-process.md</a>（完整物体挑选过程）、<a href="architecture.md">architecture.md</a>（数据流与模块）、<a href="decisions.md">decisions.md</a>（方案取舍）、<a href="evidence/object-familiarity.md">object-familiarity.md</a>（probe ledger）。主仓库规范在 <span class="inline-code">docs/features/04-Pick-Diverse-Object.md</span>。</p>
+  </section>
+</main>
+
+<nav class="toc" aria-label="Report contents">
+  <p class="toc-title">Contents</p>
+  <a href="#tldr">30 秒结论</a>
+  <a href="#question">测量问题</a>
+  <a href="#design">实验设计</a>
+  <a href="#selected-pools">最终物体缩略图</a>
+  <a href="#pool">生产池证据</a>
+  <a href="#gate">Admission gate</a>
+  <a href="#apple-evidence">Apple 最终证据</a>
+  <a href="#architecture">实现架构</a>
+  <a href="#verification">验证矩阵</a>
+  <a href="#limits">解释边界</a>
+  <a href="#history">历史 baseline</a>
+  <a href="#reproduce">复现命令</a>
+</nav>
 </div>
+
+<footer>
+  <div class="shell">RoboTwin-IF · Pick-Diverse-Object · Evidence through 2026-09-03 · Keep <span class="mono">report.html</span> and <span class="mono">evidence/</span> together for offline use.</div>
+</footer>
 </body>
 </html>

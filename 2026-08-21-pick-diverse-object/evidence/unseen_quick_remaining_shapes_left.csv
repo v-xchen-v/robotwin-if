@@ -1,0 +1,11 @@
+noun,asset,model_id,arm,seed,phase,setup_ok,settle_ok,oracle_ok,actual_arm,target_z_rise,min_xy_separation,max_linear_speed,max_angular_speed,failure
+candlestick,051_candlestick,1,left,18000,grasp,True,True,True,left,0.1203804612159729,0.16234670541891516,0.0,0.0,
+candlestick,051_candlestick,2,left,18001,grasp,True,True,True,left,0.11969006061553955,0.1972271334645945,0.0,0.0,
+candlestick,051_candlestick,3,left,18002,grasp,True,True,True,left,0.12188929319381714,0.17279504359093548,0.0,0.0,
+globe,089_globe,3,left,18003,grasp,True,True,False,left,-2.9206275939941406e-06,0.16532324602541035,0.0,0.0,check_success
+trophy,090_trophy,1,left,18004,grasp,True,True,True,left,0.12163829803466797,0.16365500232226984,0.0,0.0,
+trophy,090_trophy,2,left,18005,grasp,True,True,False,left,-0.6634494960308075,0.15621290339503915,0.0,0.0,check_success
+trophy,090_trophy,4,left,18006,grasp,True,True,True,left,0.10887867212295532,0.20074866567772806,0.0,0.0,
+hydrating oil,109_hydrating-oil,1,left,18007,grasp,True,True,False,left,0.0,0.23247860741543253,0.0,0.0,check_success
+hydrating oil,109_hydrating-oil,2,left,18008,grasp,True,True,False,left,0.0,0.17830613658754355,0.0,0.0,check_success
+hydrating oil,109_hydrating-oil,5,left,18009,grasp,True,True,True,left,0.12063062191009521,0.19022197321900472,0.0,0.0,

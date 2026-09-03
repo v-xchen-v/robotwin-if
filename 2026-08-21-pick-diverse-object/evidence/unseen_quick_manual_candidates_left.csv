@@ -1,0 +1,9 @@
+noun,asset,model_id,arm,seed,phase,setup_ok,settle_ok,oracle_ok,actual_arm,target_z_rise,min_xy_separation,max_linear_speed,max_angular_speed,failure
+notebook,092_notebook,0,left,22000,grasp,True,True,False,left,6.639957427978516e-05,0.1846299589326562,0.0,0.0,check_success
+notebook,092_notebook,1,left,22001,grasp,True,True,False,left,0.0,0.19687897716723762,0.0,0.0,check_success
+notebook,092_notebook,2,left,22002,grasp,True,True,False,left,-1.0132789611816406e-05,0.19386394897398823,0.0,0.0,check_success
+brush pen,093_brush-pen,0,left,22003,grasp,True,True,False,left,0.0003821253776550293,0.17796146081518133,0.0,0.0,check_success
+brush pen,093_brush-pen,1,left,22004,grasp,True,True,True,left,0.11186611652374268,0.16322573085471906,0.0,0.0,
+brush pen,093_brush-pen,2,left,22005,grasp,True,True,True,left,0.12728089094161987,0.17601299417524927,0.0,0.0,
+brush pen,093_brush-pen,4,left,22006,grasp,True,True,True,left,0.11728721857070923,0.18752406121057077,0.0,0.0,
+brush pen,093_brush-pen,5,left,22007,grasp,True,True,False,left,7.867813110351562e-06,0.1968547784646032,0.0,0.0,check_success

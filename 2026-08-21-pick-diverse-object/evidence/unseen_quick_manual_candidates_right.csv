@@ -1,0 +1,4 @@
+noun,asset,model_id,arm,seed,phase,setup_ok,settle_ok,oracle_ok,actual_arm,target_z_rise,min_xy_separation,max_linear_speed,max_angular_speed,failure
+brush pen,093_brush-pen,1,right,23000,grasp,True,True,True,right,0.10925722122192383,0.17807441289420553,0.0,0.0,
+brush pen,093_brush-pen,2,right,23001,grasp,True,True,True,right,0.11579769849777222,0.15897917129521996,0.0,0.0,
+brush pen,093_brush-pen,4,right,23002,grasp,True,True,False,right,-0.0007383227348327637,0.18172892223551132,0.0,0.0,check_success

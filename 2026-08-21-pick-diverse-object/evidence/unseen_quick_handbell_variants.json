@@ -1,0 +1,1329 @@
+{
+  "args": {
+    "phase": "grasp",
+    "nouns": [
+      "call bell"
+    ],
+    "model_id": null,
+    "first_id_per_noun": false,
+    "arms": [
+      "left",
+      "right"
+    ],
+    "repeats": 1,
+    "base_seed": 5000,
+    "output": "/home/xichen6/Documents/repos/robotwin-if/notes/2026-08-21-pick-diverse-object/evidence/unseen_quick_handbell_variants.json",
+    "overwrite": false
+  },
+  "summary": {
+    "trials": 10,
+    "setup_ok": 10,
+    "settle_ok": 10,
+    "oracle_ok": 6,
+    "failures": {
+      "check_success": 4
+    }
+  },
+  "records": [
+    {
+      "noun": "call bell",
+      "asset": "111_callbell",
+      "model_id": 1,
+      "arm": "left",
+      "seed": 5000,
+      "phase": "grasp",
+      "setup_ok": true,
+      "settle_ok": true,
+      "oracle_ok": true,
+      "failure": null,
+      "objects": [
+        {
+          "noun": "call bell",
+          "asset": "111_callbell",
+          "model_id": 1,
+          "role": "target",
+          "position": [
+            -0.1786285936832428,
+            -0.14604830741882324,
+            0.7408597469329834
+          ],
+          "quaternion": [
+            0.7035879492759705,
+            0.7035300731658936,
+            0.07091858983039856,
+            0.07057064026594162
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "noun": "pencil cup",
+          "asset": "059_pencup",
+          "model_id": 0,
+          "role": "distractor",
+          "position": [
+            0.01803959533572197,
+            -0.05417081341147423,
+            0.7410058975219727
+          ],
+          "quaternion": [
+            0.6260674595832825,
+            0.6264849305152893,
+            -0.3284456431865692,
+            -0.3281458616256714
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "noun": "hydrating oil",
+          "asset": "109_hydrating-oil",
+          "model_id": 1,
+          "role": "distractor",
+          "position": [
+            0.23893287777900696,
+            -0.10555121302604675,
+            0.7413437366485596
+          ],
+          "quaternion": [
+            0.6487497687339783,
+            0.648450493812561,
+            -0.281178742647171,
+            -0.28208914399147034
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "noun": "speaker",
+          "asset": "055_small-speaker",
+          "model_id": 1,
+          "role": "distractor",
+          "position": [
+            0.08510040491819382,
+            -0.21985144913196564,
+            0.7404547929763794
+          ],
+          "quaternion": [
+            0.7037935853004456,
+            0.7037546038627625,
+            -0.06858170032501221,
+            -0.06856006383895874
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "min_xy_separation": 0.17873786737734879,
+      "max_linear_speed": 0.0,
+      "max_angular_speed": 0.0,
+      "workspace_ok": true,
+      "motion_ok": true,
+      "actual_arm": "left",
+      "target_z_rise": 0.11908996105194092,
+      "instruction_target": "the call bell"
+    },
+    {
+      "noun": "call bell",
+      "asset": "111_callbell",
+      "model_id": 1,
+      "arm": "right",
+      "seed": 5001,
+      "phase": "grasp",
+      "setup_ok": true,
+      "settle_ok": true,
+      "oracle_ok": false,
+      "failure": "check_success",
+      "objects": [
+        {
+          "noun": "call bell",
+          "asset": "111_callbell",
+          "model_id": 1,
+          "role": "target",
+          "position": [
+            0.23346684873104095,
+            0.035872552543878555,
+            0.7408597469329834
+          ],
+          "quaternion": [
+            0.703906238079071,
+            0.703909158706665,
+            -0.06700640171766281,
+            -0.06736636161804199
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "noun": "pencil cup",
+          "asset": "059_pencup",
+          "model_id": 1,
+          "role": "distractor",
+          "position": [
+            -0.08385410159826279,
+            -0.14384181797504425,
+            0.7406927943229675
+          ],
+          "quaternion": [
+            0.7041051387786865,
+            0.7041948437690735,
+            -0.06460936367511749,
+            -0.06458625197410583
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "noun": "speaker",
+          "asset": "055_small-speaker",
+          "model_id": 1,
+          "role": "distractor",
+          "position": [
+            0.013965616002678871,
+            0.05917450785636902,
+            0.7404546141624451
+          ],
+          "quaternion": [
+            0.7066994905471802,
+            0.7066605687141418,
+            -0.024581991136074066,
+            -0.02454543113708496
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "noun": "hydrating oil",
+          "asset": "109_hydrating-oil",
+          "model_id": 2,
+          "role": "distractor",
+          "position": [
+            -0.1876940131187439,
+            0.006737864576280117,
+            0.7413558959960938
+          ],
+          "quaternion": [
+            0.661952555179596,
+            0.6635388135910034,
+            -0.24532157182693481,
+            -0.24769435822963715
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "min_xy_separation": 0.1829124599961385,
+      "max_linear_speed": 0.0,
+      "max_angular_speed": 0.0,
+      "workspace_ok": true,
+      "motion_ok": true,
+      "actual_arm": "right",
+      "target_z_rise": 0.0,
+      "instruction_target": "the call bell"
+    },
+    {
+      "noun": "call bell",
+      "asset": "111_callbell",
+      "model_id": 2,
+      "arm": "left",
+      "seed": 5002,
+      "phase": "grasp",
+      "setup_ok": true,
+      "settle_ok": true,
+      "oracle_ok": false,
+      "failure": "check_success",
+      "objects": [
+        {
+          "noun": "call bell",
+          "asset": "111_callbell",
+          "model_id": 2,
+          "role": "target",
+          "position": [
+            -0.19303473830223083,
+            -0.1582600325345993,
+            0.7376526594161987
+          ],
+          "quaternion": [
+            0.7018362879753113,
+            0.7017530202865601,
+            -0.08669743686914444,
+            -0.0863264873623848
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "noun": "hydrating oil",
+          "asset": "109_hydrating-oil",
+          "model_id": 5,
+          "role": "distractor",
+          "position": [
+            0.08547290414571762,
+            -0.0025283321738243103,
+            0.7413708567619324
+          ],
+          "quaternion": [
+            0.654737651348114,
+            0.6555642485618591,
+            0.26604899764060974,
+            0.266030490398407
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "noun": "speaker",
+          "asset": "055_small-speaker",
+          "model_id": 2,
+          "role": "distractor",
+          "position": [
+            0.06933169811964035,
+            -0.21027880907058716,
+            0.7407196164131165
+          ],
+          "quaternion": [
+            0.6537351608276367,
+            0.6424047350883484,
+            0.28028324246406555,
+            0.2852855920791626
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "noun": "pencil cup",
+          "asset": "059_pencup",
+          "model_id": 3,
+          "role": "distractor",
+          "position": [
+            0.23909536004066467,
+            -0.09245327115058899,
+            0.7409566044807434
+          ],
+          "quaternion": [
+            0.6698779463768005,
+            0.6773217916488647,
+            0.21627187728881836,
+            0.2138351947069168
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "min_xy_separation": 0.17800661112770447,
+      "max_linear_speed": 0.0,
+      "max_angular_speed": 0.0,
+      "workspace_ok": true,
+      "motion_ok": true,
+      "actual_arm": "left",
+      "target_z_rise": 0.0,
+      "instruction_target": "the call bell"
+    },
+    {
+      "noun": "call bell",
+      "asset": "111_callbell",
+      "model_id": 2,
+      "arm": "right",
+      "seed": 5003,
+      "phase": "grasp",
+      "setup_ok": true,
+      "settle_ok": true,
+      "oracle_ok": true,
+      "failure": null,
+      "objects": [
+        {
+          "noun": "call bell",
+          "asset": "111_callbell",
+          "model_id": 2,
+          "role": "target",
+          "position": [
+            0.22675809264183044,
+            -0.0956207886338234,
+            0.7376518249511719
+          ],
+          "quaternion": [
+            0.6611419916152954,
+            0.6612322330474854,
+            0.25047945976257324,
+            0.2508454918861389
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "noun": "speaker",
+          "asset": "055_small-speaker",
+          "model_id": 1,
+          "role": "distractor",
+          "position": [
+            -0.06487579643726349,
+            -0.18443602323532104,
+            0.7404547929763794
+          ],
+          "quaternion": [
+            0.7002262473106384,
+            0.7001835107803345,
+            -0.09857173264026642,
+            -0.09853851795196533
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "noun": "hydrating oil",
+          "asset": "109_hydrating-oil",
+          "model_id": 1,
+          "role": "distractor",
+          "position": [
+            -0.14164137840270996,
+            -0.017370499670505524,
+            0.7413434386253357
+          ],
+          "quaternion": [
+            0.7042248845100403,
+            0.7035349607467651,
+            0.06779312342405319,
+            0.06715621054172516
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "noun": "pencil cup",
+          "asset": "059_pencup",
+          "model_id": 2,
+          "role": "distractor",
+          "position": [
+            -0.25958573818206787,
+            -0.15019063651561737,
+            0.741388738155365
+          ],
+          "quaternion": [
+            0.6187940835952759,
+            0.6183704137802124,
+            -0.342450886964798,
+            -0.34269437193870544
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "min_xy_separation": 0.17762899750692976,
+      "max_linear_speed": 0.0,
+      "max_angular_speed": 0.0,
+      "workspace_ok": true,
+      "motion_ok": true,
+      "actual_arm": "right",
+      "target_z_rise": 0.12253093719482422,
+      "instruction_target": "the call bell"
+    },
+    {
+      "noun": "call bell",
+      "asset": "111_callbell",
+      "model_id": 3,
+      "arm": "left",
+      "seed": 5004,
+      "phase": "grasp",
+      "setup_ok": true,
+      "settle_ok": true,
+      "oracle_ok": true,
+      "failure": null,
+      "objects": [
+        {
+          "noun": "call bell",
+          "asset": "111_callbell",
+          "model_id": 3,
+          "role": "target",
+          "position": [
+            -0.16809095442295074,
+            -0.12474794685840607,
+            0.7375633716583252
+          ],
+          "quaternion": [
+            0.6524282097816467,
+            0.6528453230857849,
+            0.2722368538379669,
+            0.2720620334148407
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "noun": "hydrating oil",
+          "asset": "109_hydrating-oil",
+          "model_id": 2,
+          "role": "distractor",
+          "position": [
+            -0.21212999522686005,
+            0.047414377331733704,
+            0.7413565516471863
+          ],
+          "quaternion": [
+            0.62322998046875,
+            0.6225297451019287,
+            0.3360789120197296,
+            0.3333051800727844
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "noun": "pencil cup",
+          "asset": "059_pencup",
+          "model_id": 0,
+          "role": "distractor",
+          "position": [
+            0.09972816705703735,
+            -0.07543089240789413,
+            0.7410059571266174
+          ],
+          "quaternion": [
+            0.7067766785621643,
+            0.7072995901107788,
+            0.009825408458709717,
+            0.009881336241960526
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "noun": "speaker",
+          "asset": "055_small-speaker",
+          "model_id": 1,
+          "role": "distractor",
+          "position": [
+            0.25017502903938293,
+            -0.21387672424316406,
+            0.7404550909996033
+          ],
+          "quaternion": [
+            0.6188990473747253,
+            0.6188870072364807,
+            0.34199169278144836,
+            0.3420298993587494
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "min_xy_separation": 0.1777056639093959,
+      "max_linear_speed": 0.0,
+      "max_angular_speed": 0.0,
+      "workspace_ok": true,
+      "motion_ok": true,
+      "actual_arm": "left",
+      "target_z_rise": 0.1193053126335144,
+      "instruction_target": "the call bell"
+    },
+    {
+      "noun": "call bell",
+      "asset": "111_callbell",
+      "model_id": 3,
+      "arm": "right",
+      "seed": 5005,
+      "phase": "grasp",
+      "setup_ok": true,
+      "settle_ok": true,
+      "oracle_ok": false,
+      "failure": "check_success",
+      "objects": [
+        {
+          "noun": "call bell",
+          "asset": "111_callbell",
+          "model_id": 3,
+          "role": "target",
+          "position": [
+            0.2633454203605652,
+            -0.10875007510185242,
+            0.7375445365905762
+          ],
+          "quaternion": [
+            0.6787934303283691,
+            0.6793182492256165,
+            0.19710369408130646,
+            0.19727320969104767
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "noun": "hydrating oil",
+          "asset": "109_hydrating-oil",
+          "model_id": 1,
+          "role": "distractor",
+          "position": [
+            -0.08615977317094803,
+            -0.06673571467399597,
+            0.7413437962532043
+          ],
+          "quaternion": [
+            0.7013249397277832,
+            0.7007752060890198,
+            -0.09196048974990845,
+            -0.09273996204137802
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "noun": "speaker",
+          "asset": "055_small-speaker",
+          "model_id": 2,
+          "role": "distractor",
+          "position": [
+            0.044143564999103546,
+            0.0485917329788208,
+            0.7407196760177612
+          ],
+          "quaternion": [
+            0.7110215425491333,
+            0.6986770033836365,
+            0.055599864572286606,
+            0.05663450434803963
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "noun": "pencil cup",
+          "asset": "059_pencup",
+          "model_id": 1,
+          "role": "distractor",
+          "position": [
+            -0.24902868270874023,
+            -0.1763244867324829,
+            0.7406925559043884
+          ],
+          "quaternion": [
+            0.6275667548179626,
+            0.6276289820671082,
+            -0.32578906416893005,
+            -0.3257353901863098
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "min_xy_separation": 0.1740097127184917,
+      "max_linear_speed": 0.0,
+      "max_angular_speed": 0.0,
+      "workspace_ok": true,
+      "motion_ok": true,
+      "actual_arm": "right",
+      "target_z_rise": 0.004258334636688232,
+      "instruction_target": "the call bell"
+    },
+    {
+      "noun": "call bell",
+      "asset": "111_callbell",
+      "model_id": 4,
+      "arm": "left",
+      "seed": 5006,
+      "phase": "grasp",
+      "setup_ok": true,
+      "settle_ok": true,
+      "oracle_ok": true,
+      "failure": null,
+      "objects": [
+        {
+          "noun": "call bell",
+          "asset": "111_callbell",
+          "model_id": 4,
+          "role": "target",
+          "position": [
+            -0.23269745707511902,
+            0.05465060845017433,
+            0.7376106381416321
+          ],
+          "quaternion": [
+            0.6898736953735352,
+            0.6897440552711487,
+            0.15543389320373535,
+            0.1554601490497589
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "noun": "hydrating oil",
+          "asset": "109_hydrating-oil",
+          "model_id": 1,
+          "role": "distractor",
+          "position": [
+            0.06308038532733917,
+            -0.11379249393939972,
+            0.7413432598114014
+          ],
+          "quaternion": [
+            0.7074173092842102,
+            0.706790566444397,
+            -0.0015990410465747118,
+            -0.0023085803259164095
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "noun": "pencil cup",
+          "asset": "059_pencup",
+          "model_id": 6,
+          "role": "distractor",
+          "position": [
+            0.173231303691864,
+            0.041295286267995834,
+            0.7408631443977356
+          ],
+          "quaternion": [
+            0.7013590931892395,
+            0.7012763619422913,
+            0.09035372734069824,
+            0.09023933112621307
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "noun": "speaker",
+          "asset": "055_small-speaker",
+          "model_id": 1,
+          "role": "distractor",
+          "position": [
+            -0.20676346123218536,
+            -0.193843275308609,
+            0.7404561042785645
+          ],
+          "quaternion": [
+            0.6334739327430725,
+            0.6334110498428345,
+            -0.3142341077327728,
+            -0.31425827741622925
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "min_xy_separation": 0.1902247207547054,
+      "max_linear_speed": 0.0,
+      "max_angular_speed": 0.0,
+      "workspace_ok": true,
+      "motion_ok": true,
+      "actual_arm": "left",
+      "target_z_rise": 0.1187402606010437,
+      "instruction_target": "the call bell"
+    },
+    {
+      "noun": "call bell",
+      "asset": "111_callbell",
+      "model_id": 4,
+      "arm": "right",
+      "seed": 5007,
+      "phase": "grasp",
+      "setup_ok": true,
+      "settle_ok": true,
+      "oracle_ok": true,
+      "failure": null,
+      "objects": [
+        {
+          "noun": "call bell",
+          "asset": "111_callbell",
+          "model_id": 4,
+          "role": "target",
+          "position": [
+            0.10422641038894653,
+            -0.09631974250078201,
+            0.737610936164856
+          ],
+          "quaternion": [
+            0.7071018218994141,
+            0.7069761157035828,
+            0.009797975420951843,
+            0.009786063805222511
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "noun": "speaker",
+          "asset": "055_small-speaker",
+          "model_id": 2,
+          "role": "distractor",
+          "position": [
+            -0.10969175398349762,
+            -0.129081591963768,
+            0.7407196164131165
+          ],
+          "quaternion": [
+            0.7022629380226135,
+            0.690078854560852,
+            0.12261443585157394,
+            0.12483439594507217
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "noun": "pencil cup",
+          "asset": "059_pencup",
+          "model_id": 6,
+          "role": "distractor",
+          "position": [
+            0.24945229291915894,
+            -0.21540699899196625,
+            0.7408628463745117
+          ],
+          "quaternion": [
+            0.6457049250602722,
+            0.6455926895141602,
+            0.28835785388946533,
+            0.28831374645233154
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "noun": "hydrating oil",
+          "asset": "109_hydrating-oil",
+          "model_id": 5,
+          "role": "distractor",
+          "position": [
+            -0.0202876515686512,
+            0.04539579153060913,
+            0.7413706183433533
+          ],
+          "quaternion": [
+            0.701309859752655,
+            0.7021220922470093,
+            -0.08735497295856476,
+            -0.08693800866603851
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "min_xy_separation": 0.18780929587024214,
+      "max_linear_speed": 0.0,
+      "max_angular_speed": 0.0,
+      "workspace_ok": true,
+      "motion_ok": true,
+      "actual_arm": "right",
+      "target_z_rise": 0.11876261234283447,
+      "instruction_target": "the call bell"
+    },
+    {
+      "noun": "call bell",
+      "asset": "111_callbell",
+      "model_id": 5,
+      "arm": "left",
+      "seed": 5008,
+      "phase": "grasp",
+      "setup_ok": true,
+      "settle_ok": true,
+      "oracle_ok": true,
+      "failure": null,
+      "objects": [
+        {
+          "noun": "call bell",
+          "asset": "111_callbell",
+          "model_id": 5,
+          "role": "target",
+          "position": [
+            -0.23280227184295654,
+            -0.21358957886695862,
+            0.7384445667266846
+          ],
+          "quaternion": [
+            0.6510193347930908,
+            0.6519371271133423,
+            -0.27503159642219543,
+            -0.2747897207736969
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "noun": "hydrating oil",
+          "asset": "109_hydrating-oil",
+          "model_id": 1,
+          "role": "distractor",
+          "position": [
+            0.1987435668706894,
+            -0.061370499432086945,
+            0.7413437366485596
+          ],
+          "quaternion": [
+            0.6349649429321289,
+            0.6347028017044067,
+            -0.3109673261642456,
+            -0.3118835985660553
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "noun": "pencil cup",
+          "asset": "059_pencup",
+          "model_id": 3,
+          "role": "distractor",
+          "position": [
+            -0.007325324695557356,
+            -0.14277656376361847,
+            0.7409527897834778
+          ],
+          "quaternion": [
+            0.6891553401947021,
+            0.6970711946487427,
+            -0.14073921740055084,
+            -0.13910196721553802
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "noun": "speaker",
+          "asset": "055_small-speaker",
+          "model_id": 2,
+          "role": "distractor",
+          "position": [
+            -0.13325664401054382,
+            0.05629098042845726,
+            0.7407192587852478
+          ],
+          "quaternion": [
+            0.6884763240814209,
+            0.6767452955245972,
+            0.18278741836547852,
+            0.18602398037910461
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "min_xy_separation": 0.22156564576055335,
+      "max_linear_speed": 0.0,
+      "max_angular_speed": 0.0,
+      "workspace_ok": true,
+      "motion_ok": true,
+      "actual_arm": "left",
+      "target_z_rise": 0.12133586406707764,
+      "instruction_target": "the call bell"
+    },
+    {
+      "noun": "call bell",
+      "asset": "111_callbell",
+      "model_id": 5,
+      "arm": "right",
+      "seed": 5009,
+      "phase": "grasp",
+      "setup_ok": true,
+      "settle_ok": true,
+      "oracle_ok": false,
+      "failure": "check_success",
+      "objects": [
+        {
+          "noun": "call bell",
+          "asset": "111_callbell",
+          "model_id": 5,
+          "role": "target",
+          "position": [
+            0.1899270862340927,
+            -0.014609987847507,
+            0.7384449243545532
+          ],
+          "quaternion": [
+            0.7020485997200012,
+            0.7029669284820557,
+            0.08063860237598419,
+            0.08039183914661407
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "noun": "speaker",
+          "asset": "055_small-speaker",
+          "model_id": 1,
+          "role": "distractor",
+          "position": [
+            -0.1415807008743286,
+            -0.014897109940648079,
+            0.740455150604248
+          ],
+          "quaternion": [
+            0.6310162544250488,
+            0.6309986114501953,
+            0.3190901279449463,
+            0.31912505626678467
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "noun": "pencil cup",
+          "asset": "059_pencup",
+          "model_id": 1,
+          "role": "distractor",
+          "position": [
+            0.023277783766388893,
+            0.058104705065488815,
+            0.7406932711601257
+          ],
+          "quaternion": [
+            0.6447758078575134,
+            0.6448279023170471,
+            -0.2902354598045349,
+            -0.2902149558067322
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "noun": "hydrating oil",
+          "asset": "109_hydrating-oil",
+          "model_id": 1,
+          "role": "distractor",
+          "position": [
+            -0.14409206807613373,
+            -0.21418897807598114,
+            0.7413435578346252
+          ],
+          "quaternion": [
+            0.6351022124290466,
+            0.634280264377594,
+            0.31189581751823425,
+            0.31153613328933716
+          ],
+          "linear_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "angular_velocity": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "min_xy_separation": 0.18029859941836465,
+      "max_linear_speed": 0.0,
+      "max_angular_speed": 0.0,
+      "workspace_ok": true,
+      "motion_ok": true,
+      "actual_arm": "right",
+      "target_z_rise": 0.0,
+      "instruction_target": "the call bell"
+    }
+  ]
+}

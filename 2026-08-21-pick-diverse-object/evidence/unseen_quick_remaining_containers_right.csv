@@ -1,0 +1,8 @@
+noun,asset,model_id,arm,seed,phase,setup_ok,settle_ok,oracle_ok,actual_arm,target_z_rise,min_xy_separation,max_linear_speed,max_angular_speed,failure
+shampoo bottle,049_shampoo,1,right,15000,grasp,True,True,False,right,0.0,0.17515228714215808,0.0,0.0,check_success
+shampoo bottle,049_shampoo,3,right,15001,grasp,False,False,,,,,,,"setup:UnStableError: Objects is unstable in seed(15001), unstable objects: 049_shampoo"
+shampoo bottle,049_shampoo,7,right,15002,grasp,True,True,False,right,0.00029224157333374023,0.1587788644856224,0.0,0.0,check_success
+glue bottle,095_glue,1,right,15003,grasp,True,True,False,right,-2.09808349609375e-05,0.20963843257181386,0.0,0.0,check_success
+glue bottle,095_glue,2,right,15004,grasp,True,True,True,right,0.1197018027305603,0.18878732317495964,0.0,0.0,
+glue bottle,095_glue,6,right,15005,grasp,True,True,True,right,0.11878252029418945,0.1782769058530881,0.0,0.0,
+milk tea,101_milk-tea,0,right,15006,grasp,True,True,False,right,6.556510925292969e-07,0.18222963297176065,0.0,0.0,check_success

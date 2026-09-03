@@ -1,0 +1,5 @@
+noun,asset,model_id,arm,seed,phase,setup_ok,settle_ok,oracle_ok,actual_arm,target_z_rise,min_xy_separation,max_linear_speed,max_angular_speed,failure
+trophy,090_trophy,3,left,6000,grasp,True,True,True,left,0.11246007680892944,0.16325480892237204,0.0,0.0,
+trophy,090_trophy,3,right,6001,grasp,True,True,True,right,0.11451065540313721,0.16492972672479786,0.0,0.0,
+trophy,090_trophy,3,left,6002,grasp,True,True,True,left,0.11259829998016357,0.18260765094002115,0.0,0.0,
+trophy,090_trophy,3,right,6003,grasp,True,True,False,right,1.0728836059570312e-06,0.19708595601452486,0.0,0.0,check_success

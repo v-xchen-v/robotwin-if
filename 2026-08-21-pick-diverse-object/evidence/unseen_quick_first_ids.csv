@@ -1,0 +1,29 @@
+noun,asset,model_id,arm,seed,phase,setup_ok,settle_ok,oracle_ok,actual_arm,target_z_rise,min_xy_separation,max_linear_speed,max_angular_speed,failure
+drill,030_drill,6,left,1000,grasp,True,True,False,left,,0.18626136784984923,0.0,0.0,oracle:AssertionError: target_pose cannot be None for move action.
+drill,030_drill,6,right,1001,grasp,False,False,,,,,,,setup:UnStableError: pick_diverse_object: no free spot for 030_drill (placement radius 0.085)
+shampoo bottle,049_shampoo,1,left,1002,grasp,True,True,False,left,-4.649162292480469e-06,0.16485642715346613,0.0,0.0,check_success
+shampoo bottle,049_shampoo,1,right,1003,grasp,True,True,False,right,-3.933906555175781e-06,0.1834499002557064,0.0,0.0,check_success
+candlestick,051_candlestick,0,left,1004,grasp,True,True,False,left,-0.007788121700286865,0.1861599260105492,0.0,0.0,check_success
+candlestick,051_candlestick,0,right,1005,grasp,False,False,,,,,,,setup:UnStableError: pick_diverse_object: no free spot for 051_candlestick (placement radius 0.120)
+dumbbell,052_dumbbell,0,left,1006,grasp,True,True,True,left,0.12135422229766846,0.19018925345463983,0.0,0.0,
+dumbbell,052_dumbbell,0,right,1007,grasp,True,True,True,right,0.118388831615448,0.1574199930217293,0.0,0.0,
+speaker,055_small-speaker,1,left,1008,grasp,True,True,True,left,0.1185954213142395,0.15427819451280775,0.0,0.0,
+speaker,055_small-speaker,1,right,1009,grasp,True,True,True,right,0.1190183162689209,0.16636207435813954,0.0,0.0,
+pencil cup,059_pencup,0,left,1010,grasp,True,True,True,left,0.12121623754501343,0.16292066456812726,0.0,0.0,
+pencil cup,059_pencup,0,right,1011,grasp,True,True,False,right,0.0,0.19010884191481944,0.0,0.0,check_success
+drink carton,068_boxdrink,2,left,1012,grasp,True,True,False,left,-7.152557373046875e-07,0.18486727666774322,0.0,0.0,check_success
+drink carton,068_boxdrink,2,right,1013,grasp,True,True,True,right,0.11959785223007202,0.17709053802696614,0.0,0.0,
+wooden mallet,084_woodenmallet,3,left,1014,grasp,True,True,True,left,0.12118154764175415,0.17181394408906947,0.0,0.0,
+wooden mallet,084_woodenmallet,3,right,1015,grasp,True,True,True,right,0.12490147352218628,0.2150242350510362,0.0,0.0,
+globe,089_globe,2,left,1016,grasp,True,True,False,left,0.0,0.23126755752031367,0.0,0.0,check_success
+globe,089_globe,2,right,1017,grasp,True,True,False,right,-1.6689300537109375e-06,0.17241161129998586,0.0,0.0,check_success
+trophy,090_trophy,0,left,1018,grasp,False,False,,,,,,,setup:UnStableError: pick_diverse_object: no free spot for 090_trophy (placement radius 0.100)
+trophy,090_trophy,0,right,1019,grasp,True,True,False,right,-0.5556640625,0.19008433680319684,0.0,0.0,check_success
+glue bottle,095_glue,0,left,1020,grasp,True,True,False,left,0.0,0.16186693041989306,0.0,0.0,check_success
+glue bottle,095_glue,0,right,1021,grasp,True,True,False,right,0.0,0.16084718284469313,0.0,0.0,check_success
+milk tea,101_milk-tea,0,left,1022,grasp,True,True,False,left,0.0,0.1750504289003139,0.0,0.0,check_success
+milk tea,101_milk-tea,0,right,1023,grasp,True,True,False,right,0.0,0.18950810834782775,0.0,0.0,check_success
+hydrating oil,109_hydrating-oil,0,left,1024,grasp,True,True,True,left,0.11969530582427979,0.16094496448325307,0.0,0.0,
+hydrating oil,109_hydrating-oil,0,right,1025,grasp,True,True,False,right,0.0,0.1772960153070029,0.0,0.0,check_success
+call bell,111_callbell,1,left,1026,grasp,True,True,True,left,0.12060868740081787,0.2007301299749461,0.0,0.0,
+call bell,111_callbell,1,right,1027,grasp,True,True,False,right,0.0,0.20931628068081112,0.0,0.0,check_success

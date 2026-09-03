@@ -1,63 +1,172 @@
-# Pick-Diverse-Object — 工程决策记录
+# Pick-Diverse-Object：决策记录
 
-> 记的是"基于当时理解做了什么工程选择、为什么"，带批判视角。跟 `understanding.md`（理解怎么变）、`architecture.md`（代码位置）不同维度。
+> 当前状态：2026-09-03 object-familiarity extension 已锁定。Production Unseen pool 为 dumbbell、Apple、wooden mallet、paintbrush；一次性候选实验已在 closeout 中移除，只保留 aggregate outcome 与决策理由。
 
-## 关键决策点（轻量 ADR）
+## D1 — Seen 的定义来自 raw-task 资产引用
 
-### D1. 指令的"颜色+名词"怎么产生
-- **决策**：目标物体在指令里怎么被命名成 "the blue cup"。
-- **候选**：
-  - (轻) 沿用 operate_tabletop 的 `{C}`=物体路径 → native `replace_placeholders` 从 `objects_description` **随机挑一条描述**。零新代码。
-  - (中·选中) `info["info"]["{A}"]` 填**字面量** `"the {color} {noun}"`（不含 `/`）→ 走 native 的"非路径即字面替换"分支。
-  - (重) 自建完整 description-gen 管线 / 给每个物体写新 `objects_description` 文件。
-- **选中**：字面量。因为随机描述**不保证含颜色、也不保证能区分目标**（可能挑到 "plastic mouse"），而 IF 要颜色可控可测；字面量还免掉了 `objects_description` 依赖。
-- **放弃代价**：字面量绕过了 native 的描述多样性——同一个 (色,名) 每次措辞一样，多样性全靠句式模板层。对本 task 可接受（要的是受控），但如果将来想让"物体描述本身"也 seen/unseen 隔离，得回头改。
+**决定**：编号资产只要被 first-commit `8187d5b` 的 50 个 native/raw tasks 引用，就属于 raw-task Seen；否则属于 raw-task Unseen。
 
-### D2. 场景采样策略（本 feature 最大的分岔，且churn 最多）
-- **决策**：4 物体怎么采、目标怎么选、要不要保证颜色必要。
-- **演进**：option A（强制每 episode 含同名异色+同色异名干扰 → 颜色+名词联合必要）→ 用户指出分布被压偏 → option B（均匀采 4/12，只保证目标唯一）→ 用户指出目标仍限 3 类不等概率 → **12 品类等概率目标（seed%12）+ 均匀干扰**。
-- **候选**（终态视角）：
-  - (轻) option A 只让 bottle/cup/shoe 当目标：代码最少、颜色 grounding 最强，但物体分布严重偏斜。
-  - (中·选中) 12 等概率目标 + 均匀干扰：分布最忠实"随机采 12"。
-  - (重) 12 等概率 + 强制颜色必要 + 分层报告：忠实且颜色可测，但要给 9 个物体全配可抓 + 采样加约束。
-- **选中**：12 等概率均匀。**批判**：这块 churn 了三版，根因是**一开始没把"分布均匀性"和"颜色 grounding 强度"这对张力想清楚**就先实现了 option A。如果实现前先跟用户对齐"目标要不要 12 等概率、颜色要不要每次必要"，能少走两轮返工。终态的代价：颜色 grounding 被均匀采样稀释（~10-15% episode 才必要）——已记为 IF-review TODO，是自觉留的债。
+**结果**：51 Seen / 69 Unseen，覆盖全部 120 categories。
 
-### D3. 目标选择用 `seed % N` 而非 rng 抽取
-- **决策**：目标怎么从 seed 派生。
-- **候选**：(轻·原始) `np.random.default_rng(seed).integers(N)`；(选中) `变体[seed % N]`。
-- **选中**：`seed % N`。因为 rng 首抽对**低连续 seed 聚簇**（seed 0/2/3/4/8/10 全 → shoe/red），collect_data 从 0 顺序采、小规模数据集直接偏斜。`seed % N` 在任意连续区间严格均匀，且更简单、可复现。**这不是"更重"换"更对"，是又轻又对**——原方案是隐蔽的错。借了 operate_tabletop 的 `mode=seed%3` 同款手法。
+**理由**：研究问题是 native-ft 是否接触过该物体。IF-Ext 不生成或消费 finetuning data，所以 IF-added task 中出现的 asset 不改变 familiarity。instruction JSON 顶层 `seen/unseen` 只切 sentence templates。
 
-### D4. 抽共用判定 `_if_grounding.py` vs 各自内联
-- **决策**：pick_diverse_object 和 operate_tabletop 的 pick 判定逻辑一样，要不要抽。
-- **候选**：(轻) 各写一份 3 行判定；(中·选中) 抽一个函数、operate_tabletop 也改调它；(重) 抽 grounding-strategy 抽象基类 / 判定策略注册表。
-- **选中**：抽一个纯函数。feature-03 就提示过同源。**批判**：没上到"策略类"是对的——就 3 行、一个判据，抽基类是过度设计。代价是动了已验证的 operate_tabletop（但回归 7/7 兜住了）。
+## D2 — 采用两组独立同质场景
 
-### D5. 逐物体的 qpos/旋转/抓取参数怎么组织
-- **决策**：12 个物体各有不同静置朝向、旋转范围、抓取参数，怎么放。
-- **现状**：`REST_QPOS`（类级 dict）+ `ROTATE`（类级 dict）+ 抓取参数（play_once 里的 if/elif 链，6 个分支）+ bottle 站/躺（load_actors 里的 if 特判）。
-- **候选**：(轻·现状) 分散在 2 dict + 2 处 if；(重) 统一成一个 `OBJECT_CFG = {obj: {qpos, rotate, grasp_kwargs, ...}}` 单一配置源。
-- **选中**：分散。**批判**：这是本 feature 最该被质疑的点——**同一个物体的配置散在 3-4 个地方**，加新物体要改多处、容易漏。当初分散是因为它们是**增量长出来的**（先 qpos、后加旋转、再加抓取、最后加 bottle 站躺），不是设计成这样。统一成单一 per-object config 会更好维护；没做是图快 + 每处都 work 了。**留作可选重构**（低优先，功能无碍）。
+**决定**：Seen target 配 all-Seen scene；Unseen target 配 all-Unseen scene。
 
-## 改动量级评估
+**取舍**：same-scene target-only contrast 的因果解释更强，但当前 Seen/Unseen assets 无法做到替换后 pixel-identical。最终 gap 因而是 scene-level familiarity difference，不是 target-only causal effect；reporter 和文档必须明确这一点。
 
-**范围**（robotwin-if 侧，submodule 零改）：
-- **新增**：`pick_diverse_object.py`(~230 行)、`_if_grounding.py`(共用 helper)、`pick_diverse_object.json`、`test_instructions.py`+`test_check_success.py`、`report_pick_diverse_object.py`、`render_pick_pool_{thumbs,snapshots}.py`（2 个渲染工具）。
-- **修改**：`operate_tabletop.py`（1 处小重构改调 helper）、`docs/features/04`（大幅更新）。
-- 占比：**绝大部分是新增**（本就是新 task），重构极少（1 处），无删除。
+## D3 — 指令改为 noun-only
 
-**量级是否匹配问题**：
-- **基本匹配，但偏重**。任务本质"采样+摆放+抓取+判定"不复杂，但 **12 个物理形态各异的物体**逼出了大量 per-object 特判（qpos/旋转/抓取/bottle 站躺/phone 专属 qpos）——这部分复杂度是**问题固有的**（真实物体就是各不相同），不是过度设计。
-- **过度设计嫌疑**：reporter 的 `--eval-log` 分支是照 operate_tabletop 抄的，**本轮没跑过任何 policy eval**，属于为将来建的、暂未验证的路径。轻度投机，但跟既有 task 保持一致、成本低，可接受。
-- **两个渲染工具**（thumbs/snapshots）严格说不属于"task 实现"，是为**颜色核校**临时造的——但这个核校是这个 task 的命门（颜色标签有噪），造工具是值的，且留作可复现证据。不算跑题。
-- **技术债（自觉）**：D5 的分散配置；`pdo_bench.yml`（我建的 episode_num 配置，在 submodule 里未跟踪）；`/tmp/pdo_*` 探针脚本（一次性、未整理）。都不影响功能。
+**决定**：四物体 noun 强制唯一，`{A}` 为 `the <noun>`，移除颜色条件。
 
-## 设计模式 / 工程手法
+**理由**：本扩展隔离 object-category familiarity；颜色会额外引入 attribute grounding。历史 color+noun baseline 作为论文复刻证据保留，但不再是 production contract。
 
-- **Template Method**（`Base_Task` 定义 setup_demo/play_once/check_success 骨架、我们 override）：不是我们的选择，是 RoboTwin 的框架约定，顺着用。
-- **确定性 seed 派生**（`seed % N`）：为可复现的惯用手法，借自 operate_tabletop。**必要性**：若写最直白的 `rng.integers`，就是 D3 那个隐蔽聚簇 bug——所以这个"手法"是真必要，不是装饰。
-- **共用纯函数**（`_if_grounding`）而非策略类：**克制**的一次抽象。若不抽、直接复制 3 行，问题是两处逻辑会漂移（feature-03 已提示）；但抽成类就过了。一个函数正好。
-- **没有生搬硬套的模式**：play_once 的抓取分派是**直白 if/elif**，没硬套 registry/strategy——对 6 个分支这是最可读的写法。**批判反问**"完全不用任何模式会怎样？"→ 答案是"就是现在这样，挺好"，说明这里本就不需要模式；真正的问题不是"少了个模式"，而是 D5 说的**配置分散**（那是组织问题，不是模式问题）。
+## D4 — Distractors 跟随 target group
 
-## 一句话
+**决定**：target 和三个 distractors 全部来自 active familiarity pool，且 noun 不重复。
 
-核心决策（字面量指令、共用判定、seed%N、12 等概率）都站得住；**最大的过程教训是采样策略 churn 三版**（实现前没对齐分布 vs 颜色强度的张力）；**最该改的是 per-object 配置分散**（D5，留作可选重构）。
+**后果**：Unseen pool 恰好四类，所以每个 Unseen scene 都出现四类，只轮换 target role、pose 和 ordering。必须同时报告 per-noun macro。
+
+## D5 — Raw seed parity 控制 tried composition
+
+**决定**：偶数 Seen、奇数 Unseen；`group_index=seed//2` 驱动每组 target cycle。
+
+**理由**：相邻 raw seeds 严格 50/50。不得用 successful-episode count 替代 tried denominator，也不得为 setup/planning failure 偷换 seed。
+
+## D6 — Metadata 只做 shortlist，不做 admission
+
+**决定**：原 Unseen shortlist 条件是 rigid visual/collision mesh、`stable=True`、有效 nonempty contact group/mask。14 nouns / 54 exact variants 全部进入真实 probe，但不会自动进入 production。
+
+**门槛**：independent confirmation ≥70%，左右臂各至少一次真实成功，并能参与 all-Unseen production scene。
+
+## D7 — 不为凑够四类降低门槛
+
+主要 false positives：
+
+- hand bell base4：多个 yaw/contact follow-up 仍约 4/6 或更低；
+- drink bottle base2：fresh contact-ID confirmation 2/6；
+- trophy base3/base4：0/4、2/6；
+- glue base2/base6：2/6、1/6；
+- candlestick base2：2/6，另有 setup failure。
+
+**决定**：保持固定门槛。isolated planner reachability 和 quick success 不能替代执行后的 lift-and-held confirmation。
+
+## D8 — Manual candidates 与原 14/54 分层
+
+**决定**：notebook 和 `093_brush-pen` 单列 manual inventory。它们 stable 且有 contact poses，但 group/mask 为空，不满足原 shortlist 条件。
+
+**结果**：显式 `contact_point_id=0`、不修改 third-party metadata。paintbrush/base1 达到 5/6（L 2/3、R 3/3）并成为第四类；notebook 未通过。
+
+## D9 — Noun 以真实 geometry/texture 为准
+
+- `068_boxdrink` → drink bottle；
+- `111_callbell` → hand bell；
+- `093_brush-pen/base1` → paintbrush。
+
+Asset category name 和历史 description 可能不准确；真实 baseColor texture + geometry snapshot 才是 instruction noun 的视觉依据。
+
+## D10 — Production placement 使用 footprint radius
+
+**决定**：按 radius 从大到小放置，pair separation 为 `radius_a + radius_b + 0.025`，tie 由 seed 决定。forced exact-candidate probe 使用 target-first；production 始终 radius-first。
+
+**理由**：固定中心距会让 dumbbell、mallet 等长物体碰撞；probe placement 不能泄漏到 production。
+
+## D11 — Success 为 target-specific lift-and-held
+
+**决定**：named target 相对 settled origin 上升 >0.02 m 且仍在 gripper contact 才成功。
+
+**拒绝**：任意 actor 被抬起、只看 z-rise、仅检查末态位置。抬起 distractor、移动但未保持 target 均为 False。
+
+## D12 — 第一版四类 pool 作为历史 evidence，而非现役 manifest
+
+第一版为 dumbbell/base0、small-speaker/base1、wooden-mallet/base3、paintbrush/base1。odd seeds 1–15 达到 8/8 setup、8/8 settle、7/8 oracle，四个 target nouns 都至少成功一次。
+
+**Closeout 决定**：保留 `evidence/unseen_production_seeds_1_15.{json,csv}` 作为首次四物体 coexistence 的历史证据，但删除 runtime 中的备份 pool。当前代码不提供 `PRE_APPLE_UNSEEN_POOL`，也不把这次 sweep 当作当前 Apple pool 的 production result。
+
+## D13 — 不借用 procedural `108_block` 结果
+
+IF-Grasp-Approach 创建 procedural box，并未加载 `108_block` asset。相同名词或视觉概念不能替代 exact-asset evidence。
+
+## D14 — Report 同时报 micro、macro 与 retention
+
+主报告包含 `S_seen`、`S_unseen`、balanced average、absolute gap、retention、per-group micro、per-noun macro、exact variants 和 tried/kept composition。禁止 target-only causal language。
+
+## D15 — 098 speaker 未过固定门槛
+
+`098_speaker/base3` 外观更容易辨认，但缺少生产所需 scale/contact metadata。历史 probe-only config 注入 task-local scale/contact frames且不修改 source JSON。
+
+**结果**：independent confirmation 4/6（L 1/3、R 3/3），低于 ≥70%；停止于 coexistence 前，不追加 trial、不降低门槛。
+
+**Closeout 决定**：删除 098 的 one-off runtime manifest 和 raw/debug evidence，只保留上述 aggregate conclusion。当前 generic probe 不再复现这套 handcrafted config。
+
+## D16 — 旧 Apple natural-pose/radius-first 实验不决定最终 production
+
+早期实验把 Apple 临时替换 dumbbell，使用 native side contacts，并针对 principal-axis pose family 做严格 drift/tilt/packing gate。没有 pose family 达到冻结的 6/6 family gate；多数失败来自共享场景 packing，`x-pos-up` 另有重复 tilt/drift failure。
+
+Outcome-informed radius-first follow-up 的 Gate A 为 5/6：五个 executed scenes 稳定，固定 seed 25001 无合法 placement。随后独立 exploratory grasp 为 5/6 overall、5/5 conditional on attempt，但不能重写已失败的 packing gate。
+
+**Closeout 决定**：这些结果只保留为历史 aggregate reasoning；one-off pose families、stability schema、policy mapping、JSON/CSV、debug frames 和 exploratory MP4 已删除。最终 Apple production decision 是独立决策。
+
+## D17 — Apple 替换 speaker，而不是 dumbbell
+
+**决定**：最终 `UNSEEN_POOL` 固定顺序为：
+
+1. dumbbell — `052_dumbbell/base0`
+2. apple — `035_apple/base1`
+3. wooden mallet — `084_woodenmallet/base3`
+4. paintbrush — `093_brush-pen/base1`
+
+**理由**：Apple 更日常、noun grounding 更直观；用户明确要求替换 speaker。最终 pool 直接声明，不通过历史 replacement manifest 派生。
+
+## D18 — Production Apple 为 z-up、body-centered top grasp
+
+第一轮 promotion 沿用 y-pos-up/native contacts，视频中 Apple 侧放、侧抓；仅改 z-up 后 native contacts 对位置/yaw/arm 仍不稳定。
+
+**最终配置**：
+
+- exact asset `035_apple/base1`；
+- z-up visual pose + full world-z yaw；
+- 四个经过验证的 top-down wrist-roll rotations；
+- contact translation 使用 native metadata `center`；
+- actor 创建后 deep-copy config，只改当前 production actor；
+- source `model_data1.json` 不修改。
+
+**固定门槛**：left 5/6、right 5/6、总计 10/12；两次失败都是后缘 planner failure，十次成功均 lift-and-held，approach-axis world-z 约 `-1.0`。
+
+## D19 — 正常 collect-data 路径验收 production
+
+使用正常 `collect_data.sh pick_diverse_object pdo_apple20 0`，不增加 collection-only scheduler。
+
+**结果**：23 tries 收满 20 successes；accepted seeds `1,2,3,4,5,6,8,9,10,11,12,13,14,15,16,17,18,20,21,22`，failed `0,7,19`。生成 20 trajectory、HDF5、H.264 MP4、instruction JSON 和 scene-info records。
+
+Apple 在 9 个 Unseen scenes 全部 z-up；target episodes 2/9 均由左臂 top-grasp、lift-and-held。右臂能力来自 D18 的 fixed gate，不从这两段自然调度视频推断。
+
+**边界**：这是 scripted oracle 和 pipeline closeout，不是 VLA evaluation；successful 11 Seen / 9 Unseen composition 不能替代 raw-seed parity。
+
+## D20 — 更日常候选均未替换 final four
+
+Closeout 前还测试了更日常的 Raw-task-Unseen objects：
+
+- perfume/base1：native grasp 1/2；base2 只完成 settle 后按用户决定放弃；
+- toothpaste/base0：baseline native grasp 0/2；upright pose-only rescue仍未形成可靠双臂候选；
+- whiteboard eraser/base0：baseline native grasp 0/2；用户随后明确放弃 eraser，不做 contact-frame tuning；
+- tissue-box/base4：一个 contact 路径出现 `target_pose cannot be None`，另一路径 target z-rise 0；视频显示 missed contact/推到 distractor。
+
+**决定**：不继续 candidate exploration，不修改 source contacts，不把 settle success 当 grasp admission。perfume、toothpaste、eraser、tissue-box 的 one-off manifests、pose atlases、raw/debug evidence 在 closeout 删除。
+
+## D21 — Closeout 只保留长期接口和最终证据
+
+保留：
+
+- final Seen/Unseen production manifests；
+- 原 14/54 shortlist 与 manual inventory；
+- generic exact-variant/production-seed probe；
+- final selected-object evidence；
+- final Apple z-up/top-grasp videos/screenshots；
+- first locked-pool coexistence JSON；
+- historical color+noun baseline evidence。
+
+删除：一次性 candidate-set registries、stability/policy interfaces、淘汰候选 raw/debug evidence、old Apple y-pos/radius-first evidence、098 evidence 和 duplicate report。
+
+该边界使 production source of truth 只剩当前四类，同时保留足够的选择依据与最终审计证据。
