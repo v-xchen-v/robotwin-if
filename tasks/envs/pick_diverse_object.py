@@ -1,5 +1,3 @@
-from copy import deepcopy
-
 import numpy as np
 import sapien.core as sapien
 import transforms3d as t3d
@@ -11,6 +9,7 @@ from ._pick_diverse_object_pool import (
     SEEN_POOL,
     UNSEEN_CANDIDATES,
     UNSEEN_POOL,
+    _apple_top_down_actor_config,
     familiarity_for_seed,
     target_for_seed,
 )
@@ -34,7 +33,6 @@ class pick_diverse_object(Base_Task):
     TARGET_SIDE_OVERRIDE = None
     POOL_OVERRIDE = None
     DISTRACTOR_NOUNS_OVERRIDE = None
-    PLACEMENT_ORDER_OVERRIDE = None
 
     def setup_demo(self, **kwags):
         # Eval calls setup_demo twice with the same seed (expert check + rollout).
@@ -124,23 +122,12 @@ class pick_diverse_object(Base_Task):
         return nouns
 
     def _placement_indices(self, variants, pool, rng):
-        policy = self.PLACEMENT_ORDER_OVERRIDE
-        if policy is None:
-            policy = (
-                "target-first"
-                if self.TARGET_NOUN_OVERRIDE is not None
-                else "radius-first"
-            )
-        if policy not in {"target-first", "radius-first"}:
-            raise ValueError(f"unknown placement order policy: {policy!r}")
-
-        self.placement_policy = policy
-        if policy == "target-first":
-            if self.TARGET_NOUN_OVERRIDE is None:
-                raise ValueError("target-first placement requires a forced target")
+        if self.TARGET_NOUN_OVERRIDE is not None:
+            self.placement_policy = "target-first"
             distractor_order = [int(i) + 1 for i in rng.permutation(3)]
             return [0] + distractor_order
 
+        self.placement_policy = "radius-first"
         tie_breakers = rng.random(len(variants))
         return sorted(
             range(len(variants)),
@@ -159,8 +146,8 @@ class pick_diverse_object(Base_Task):
             model_ids = entry["model_ids"]
             model_id = int(model_ids[int(rng.integers(len(model_ids)))])
             variants.append((noun, entry["asset"], model_id, False))
-        # Historical forced-target probes stay target-first. Production and the
-        # explicitly bound Apple rescue use the same largest-footprint-first ordering.
+        # Forced exact-candidate probes stay target-first; production uses the same
+        # largest-footprint-first ordering for every familiarity group.
         order = self._placement_indices(variants, pool, rng)
 
         self.target_familiarity = familiarity
@@ -171,6 +158,7 @@ class pick_diverse_object(Base_Task):
         self.distractor_info = []
         self.scene_objects = []
         self._target_bottle_upright = False
+        self._approach_axis_z = None
 
         occupied = []
         for idx in order:
@@ -223,9 +211,6 @@ class pick_diverse_object(Base_Task):
                 if is_target:
                     self._target_bottle_upright = upright
 
-            actor_kwargs = {}
-            if "scale" in entry:
-                actor_kwargs["scale"] = entry["scale"]
             actor = create_actor(
                 self,
                 pose=pose,
@@ -233,15 +218,15 @@ class pick_diverse_object(Base_Task):
                 convex=True,
                 model_id=model_id,
                 is_static=False,
-                **actor_kwargs,
             )
             if actor is None:
                 raise UnStableError(f"pick_diverse_object: failed to place {asset}")
-            if "actor_config" in entry:
-                # Some manual candidates have meshes but no usable asset metadata.
-                # Keep the third-party JSON untouched and give each episode its own
-                # grasp config so Actor.get_point() can apply the explicit scale.
-                actor.config = deepcopy(entry["actor_config"])
+            if entry["grasp_strategy"] == "apple_top_down":
+                if asset != "035_apple" or model_id != 1:
+                    raise ValueError(
+                        "apple_top_down is restricted to native 035_apple/base1 metadata"
+                    )
+                actor.config = _apple_top_down_actor_config(actor.config)
             occupied.append((np.asarray(pose.p[:2], dtype=float), radius))
             self.add_prohibit_area(
                 actor if actor.config is not None else actor.get_pose(),
@@ -303,9 +288,6 @@ class pick_diverse_object(Base_Task):
         arm_tag = ArmTag("right" if self.target.get_pose().p[0] > 0 else "left")
         strategy = self.target_entry["grasp_strategy"]
         kwargs = dict(self.target_entry["grasp_kwargs"])
-        kwargs.update(
-            self.target_entry.get("grasp_kwargs_by_arm", {}).get(str(arm_tag), {})
-        )
         if strategy == "cup":
             kwargs["contact_point_id"] = [0, 2][int(arm_tag == "left")]
         elif strategy == "shoe":
@@ -314,11 +296,17 @@ class pick_diverse_object(Base_Task):
             kwargs["pre_grasp_dis"] = 0.08 if self._target_bottle_upright else 0.1
         grasp = self.grasp_actor(self.target, arm_tag=arm_tag, **kwargs)
         self.move(grasp)
+        ee = np.asarray(self.get_arm_pose(arm_tag), dtype=np.float64)
+        ee_rotation = t3d.quaternions.quat2mat(ee[3:7])
+        self._approach_axis_z = float(ee_rotation[:, 0][2])
         # World-z works for both top and side grasps; arm-axis lift does not.
         self.move(self.move_by_displacement(arm_tag, z=0.12))
 
         # Literal noun phrase (no '/') is substituted verbatim by RoboTwin.
         self.info["info"] = {"{A}": f"the {self.target_noun}", "{a}": str(arm_tag)}
+        self.info["oracle_signals"] = {
+            "approach_axis_z": round(self._approach_axis_z, 3),
+        }
         return self.info
 
     def check_success(self):

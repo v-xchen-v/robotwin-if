@@ -5,7 +5,8 @@ reporter use one source of truth.  ``UNSEEN_CANDIDATES`` is only a metadata
 shortlist; entries graduate to ``UNSEEN_POOL`` after real settle/grasp probing.
 """
 
-from math import pi
+from copy import deepcopy
+from math import isfinite, pi
 
 
 # Category-level familiarity is defined only by the 50 native/raw task files that
@@ -28,86 +29,16 @@ RAW_TASK_SEEN_ASSETS = frozenset({
 FAMILIARITIES = ("seen", "unseen")
 _DEFAULT_REST_QPOS = (0.707, 0.707, 0.0, 0.0)
 _DEFAULT_ROTATE_LIM = (0.0, pi / 3, 0.0)
-_SQRT_HALF = 2 ** -0.5
 
-# Frozen before the 035_apple stability screen. Each support axis is expressed in
-# the asset-local frame and maps to world +Z under the corresponding rest quaternion.
-APPLE_STABILITY_FAMILY_ORDER = (
-    "y-pos-up",
-    "x-pos-up",
-    "x-neg-up",
-    "z-pos-up",
-    "z-neg-up",
+# Proven top-down rotations from grasp_cube_approach. Translation is filled from
+# the Apple metadata center so the gripper closes around the body, not the crown.
+APPLE_TOP_DOWN_CONTACT_ROTATIONS = (
+    ((0.0, 0.0, 1.0), (1.0, 0.0, 0.0), (0.0, 1.0, 0.0)),
+    ((1.0, 0.0, 0.0), (0.0, 0.0, -1.0), (0.0, 1.0, 0.0)),
+    ((-1.0, 0.0, 0.0), (0.0, 0.0, 1.0), (0.0, 1.0, 0.0)),
+    ((0.0, 0.0, -1.0), (-1.0, 0.0, 0.0), (0.0, 1.0, 0.0)),
 )
-APPLE_STABILITY_POSE_FAMILIES = {
-    "y-pos-up": {
-        "rest_qpos": (_SQRT_HALF, _SQRT_HALF, 0.0, 0.0),
-        "support_axis": (0.0, 1.0, 0.0),
-        "rotate_lim": (0.0, pi, 0.0),
-    },
-    "x-pos-up": {
-        "rest_qpos": (_SQRT_HALF, 0.0, -_SQRT_HALF, 0.0),
-        "support_axis": (1.0, 0.0, 0.0),
-        "rotate_lim": (pi, 0.0, 0.0),
-    },
-    "x-neg-up": {
-        "rest_qpos": (_SQRT_HALF, 0.0, _SQRT_HALF, 0.0),
-        "support_axis": (-1.0, 0.0, 0.0),
-        "rotate_lim": (pi, 0.0, 0.0),
-    },
-    "z-pos-up": {
-        "rest_qpos": (1.0, 0.0, 0.0, 0.0),
-        "support_axis": (0.0, 0.0, 1.0),
-        "rotate_lim": (0.0, 0.0, pi),
-    },
-    "z-neg-up": {
-        "rest_qpos": (0.0, 1.0, 0.0, 0.0),
-        "support_axis": (0.0, 0.0, -1.0),
-        "rotate_lim": (0.0, 0.0, pi),
-    },
-}
-APPLE_STABILITY_THRESHOLDS = {
-    "max_target_linear_speed": 0.01,
-    "max_target_angular_speed": 0.10,
-    "max_xy_drift": 0.015,
-    "max_support_tilt_deg": 15.0,
-}
 
-# 098_speaker/base3 has no scale or contact metadata. Its mesh uses the same y-up,
-# box-like convention as the confirmed 055 speaker, so the first probe reuses 055's
-# eight contact orientations at the 098 mesh center. This is an experimental grasp
-# hypothesis, not production asset metadata.
-_SPEAKER_098_B3_CENTER = (
-    4.3250735767945425e-05,
-    0.9502841313048153,
-    -0.0007235937799795297,
-)
-_SPEAKER_098_B3_CONTACT_ROTATIONS = (
-    (
-        (0.01351999957114458, 0.007910000160336494, 0.9998800158500671),
-        (0.9999099969863892, -0.00011000000085914508, -0.01351999957114458),
-        (0.0, 0.999970018863678, -0.007910000160336494),
-    ),
-    (
-        (0.01351999957114458, 0.9998800158500671, -0.007910000160336494),
-        (0.9999099969863892, -0.01351999957114458, 0.00011000000085914508),
-        (0.0, -0.007910000160336494, -0.999970018863678),
-    ),
-    (
-        (0.01351999957114458, -0.007910000160336494, -0.9998800158500671),
-        (0.9999099969863892, 0.00011000000085914508, 0.01351999957114458),
-        (0.0, -0.999970018863678, 0.007910000160336494),
-    ),
-    (
-        (0.01351999957114458, -0.9998800158500671, 0.007910000160336494),
-        (0.9999099969863892, 0.01351999957114458, -0.00011000000085914508),
-        (0.0, 0.007910000160336494, 0.999970018863678),
-    ),
-    ((1.0, 0.0, 0.0), (0.0, 1.0, 0.0), (0.0, 0.0, 1.0)),
-    ((0.0, 0.0, 1.0), (0.0, 1.0, 0.0), (-1.0, 0.0, 0.0)),
-    ((-1.0, 0.0, 0.0), (0.0, 1.0, 0.0), (0.0, 0.0, -1.0)),
-    ((0.0, 0.0, -1.0), (0.0, 1.0, 0.0), (1.0, 0.0, 0.0)),
-)
 
 
 def _contact_pose_at_center(rotation, center):
@@ -117,16 +48,45 @@ def _contact_pose_at_center(rotation, center):
     ) + ((0.0, 0.0, 0.0, 1.0),)
 
 
+def _apple_top_down_actor_config(native_config):
+    """Return an isolated Apple config with body-centered top-down contacts."""
+    if not isinstance(native_config, dict):
+        raise ValueError("Apple top-down grasp requires native actor metadata")
+
+    vectors = {}
+    for key in ("center", "extents", "scale"):
+        try:
+            values = tuple(float(value) for value in native_config[key])
+        except (KeyError, TypeError, ValueError) as exc:
+            raise ValueError(f"invalid Apple {key} metadata") from exc
+        if len(values) != 3 or not all(isfinite(value) for value in values):
+            raise ValueError(f"invalid Apple {key} metadata")
+        vectors[key] = values
+
+    if not all(value > 0 for value in vectors["extents"]):
+        raise ValueError("Apple extents must be positive")
+    if not all(value > 0 for value in vectors["scale"]):
+        raise ValueError("Apple scale must be positive")
+
+    result = deepcopy(native_config)
+    result["contact_points_pose"] = [
+        [list(row) for row in _contact_pose_at_center(rotation, vectors["center"])]
+        for rotation in APPLE_TOP_DOWN_CONTACT_ROTATIONS
+    ]
+    result["contact_points_group"] = [[0, 1, 2, 3]]
+    result["contact_points_mask"] = [True]
+    return result
+
+
 def _entry(asset, model_ids, *, rest_qpos=_DEFAULT_REST_QPOS,
            rotate_rand=True, rotate_lim=_DEFAULT_ROTATE_LIM,
            grasp_strategy="default", pre_grasp_dis=0.1,
-           contact_point_id=None, grasp_kwargs_by_arm=None,
-           placement_radius=0.07, scale=None, actor_config=None):
+           contact_point_id=None, placement_radius=0.07):
     """Build an immutable-by-convention pool entry with centralized task config."""
     grasp_kwargs = {"pre_grasp_dis": float(pre_grasp_dis)}
     if contact_point_id is not None:
         grasp_kwargs["contact_point_id"] = int(contact_point_id)
-    entry = {
+    return {
         "asset": asset,
         "model_ids": tuple(model_ids),
         "rest_qpos": tuple(rest_qpos),
@@ -134,54 +94,48 @@ def _entry(asset, model_ids, *, rest_qpos=_DEFAULT_REST_QPOS,
         "rotate_lim": tuple(rotate_lim),
         "grasp_strategy": grasp_strategy,
         "grasp_kwargs": grasp_kwargs,
-        "grasp_kwargs_by_arm": {
-            arm: dict(kwargs) for arm, kwargs in (grasp_kwargs_by_arm or {}).items()
-        },
         "placement_radius": float(placement_radius),
     }
-    if scale is not None:
-        entry["scale"] = tuple(float(value) for value in scale)
-    if actor_config is not None:
-        entry["actor_config"] = actor_config
-    return entry
 
 
-# Production Seen pool: 12 categories / 16 exact variants. All are raw-task Seen and
-# already have task-level oracle evidence. Colors deliberately do not appear here:
-# the redesigned instruction identifies one of four distinct nouns by noun only.
+# Production Seen pool: 12 categories / 12 exact variants, one per noun. Every exact
+# ID is reachable from native/raw task Python at commit 8187d5b. The IDs were selected
+# by visual review in the object atlas; model-specific native pose adjustments are kept.
 SEEN_POOL = {
     "bottle": _entry(
-        "001_bottle", (0, 22, 5), rest_qpos=(0.707, 0.0, 0.0, 0.707),
+        "001_bottle", (13,), rest_qpos=(0.707, 0.0, 0.0, 0.707),
         rotate_rand=False, rotate_lim=(0.0, 0.0, 0.0),
         grasp_strategy="bottle", placement_radius=0.065,
     ),
     "cup": _entry(
-        "021_cup", (0, 3), rest_qpos=(0.5, 0.5, 0.5, 0.5),
+        "021_cup", (0,), rest_qpos=(0.5, 0.5, 0.5, 0.5),
         rotate_rand=False, rotate_lim=(0.0, 0.0, 0.0),
         grasp_strategy="cup", placement_radius=0.06,
     ),
     "shoe": _entry(
-        "041_shoe", (8, 4), grasp_strategy="shoe", placement_radius=0.09,
+        "041_shoe", (8,), grasp_strategy="shoe", placement_radius=0.09,
     ),
     "mug": _entry(
         "039_mug", (0,), grasp_strategy="mug", pre_grasp_dis=0.05,
         placement_radius=0.07,
     ),
     "can": _entry(
-        "071_can", (3,), rest_qpos=(0.5, 0.5, 0.5, 0.5),
+        "071_can", (2,), rest_qpos=(0.5, 0.5, 0.5, 0.5),
         rotate_rand=False, rotate_lim=(0.0, 0.0, 0.0), placement_radius=0.045,
     ),
-    "toy car": _entry("057_toycar", (3,), placement_radius=0.07),
+    "toy car": _entry("057_toycar", (5,), placement_radius=0.07),
     "phone": _entry(
-        "077_phone", (4,), rest_qpos=(0.5, -0.5, 0.5, -0.5),
+        # Native place_phone_stand uses this model-specific resting orientation
+        # for base1; the previous quaternion was the native base4 orientation.
+        "077_phone", (1,), rest_qpos=(0.5, 0.5, 0.5, 0.5),
         rotate_lim=(0.0, 0.7, 0.0), pre_grasp_dis=0.08,
         placement_radius=0.06,
     ),
-    "soap": _entry("107_soap", (2,), placement_radius=0.055),
-    "hamburger": _entry("006_hamburg", (4,), placement_radius=0.06),
-    "bread": _entry("075_bread", (4,), placement_radius=0.07),
-    "coffee box": _entry("113_coffee-box", (0,), placement_radius=0.065),
-    "mouse": _entry("047_mouse", (0,), placement_radius=0.055),
+    "soap": _entry("107_soap", (0,), placement_radius=0.055),
+    "hamburger": _entry("006_hamburg", (0,), placement_radius=0.06),
+    "bread": _entry("075_bread", (5,), placement_radius=0.07),
+    "coffee box": _entry("113_coffee-box", (1,), placement_radius=0.065),
+    "mouse": _entry("047_mouse", (2,), placement_radius=0.055),
 }
 
 
@@ -229,107 +183,28 @@ PROBE_UNSEEN_CANDIDATES = {
 }
 
 
-# Production Unseen pool. Every exact variant passed the documented real-SAPIEN
-# confirmation threshold (>=70% overall and at least one success per arm). The final
-# production-seed sweep additionally verifies that these four objects can coexist.
+def _production_apple_entry():
+    """Canonical upright Apple with task-local, arm-symmetric top contacts."""
+    return _entry(
+        "035_apple",
+        (1,),
+        rest_qpos=(1.0, 0.0, 0.0, 0.0),
+        rotate_rand=True,
+        rotate_lim=(0.0, 0.0, pi),
+        grasp_strategy="apple_top_down",
+        pre_grasp_dis=0.08,
+        placement_radius=0.055,
+    )
+
+
+# Production Unseen pool: four exact variants that passed real settle/grasp gates.
+# Insertion order defines the target cycle for odd raw seeds.
 UNSEEN_POOL = {
     "dumbbell": _entry("052_dumbbell", (0,), placement_radius=0.105),
-    "speaker": _entry("055_small-speaker", (1,), placement_radius=0.075),
+    "apple": _production_apple_entry(),
     "wooden mallet": _entry("084_woodenmallet", (3,), placement_radius=0.10),
     "paintbrush": _entry(
         "093_brush-pen", (1,), contact_point_id=0, placement_radius=0.08,
-    ),
-}
-
-
-def _replacement_pool(pool, replaced_noun, candidate_noun, candidate_entry):
-    """Return a four-noun probe pool with one slot replaced, failing closed."""
-    if replaced_noun not in pool:
-        raise ValueError(f"replacement noun {replaced_noun!r} is not in the pool")
-    if candidate_noun in pool and candidate_noun != replaced_noun:
-        raise ValueError(f"candidate noun {candidate_noun!r} already exists in the pool")
-    result = {
-        candidate_noun if noun == replaced_noun else noun:
-            candidate_entry if noun == replaced_noun else entry
-        for noun, entry in pool.items()
-    }
-    if len(result) != 4:
-        raise ValueError("experimental replacement must produce four distinct nouns")
-    return result
-
-
-def _apple_stability_entry(model_id, pose_family):
-    family = APPLE_STABILITY_POSE_FAMILIES.get(pose_family)
-    if family is None:
-        raise ValueError(f"unknown Apple stability pose family: {pose_family!r}")
-    placement_radius = 0.055 if int(model_id) == 1 else 0.060
-    entry = _entry(
-        "035_apple",
-        (int(model_id),),
-        rest_qpos=family["rest_qpos"],
-        rotate_rand=True,
-        rotate_lim=family["rotate_lim"],
-        placement_radius=placement_radius,
-    )
-    entry["stability_probe"] = {
-        "variant": int(model_id),
-        "pose_family": pose_family,
-        "support_axis": family["support_axis"],
-        **APPLE_STABILITY_THRESHOLDS,
-    }
-    return entry
-
-
-_SPEAKER_098_B3_SCALE = (0.05, 0.05, 0.05)
-_SPEAKER_098_B3_CONFIG = {
-    "stable": True,
-    "center": _SPEAKER_098_B3_CENTER,
-    "extents": (1.124096427856812, 1.935167998826259, 1.0884406255397343),
-    "scale": _SPEAKER_098_B3_SCALE,
-    "contact_points_pose": tuple(
-        _contact_pose_at_center(rotation, _SPEAKER_098_B3_CENTER)
-        for rotation in _SPEAKER_098_B3_CONTACT_ROTATIONS
-    ),
-    "contact_points_group": ((0, 1, 2, 3), (4, 5, 6, 7)),
-    "contact_points_mask": (True, True),
-}
-
-APPLE_RADIUS_FIRST_RESCUE_SET = (
-    "apple-035-base1-y-pos-up-radius-first-rescue"
-)
-EXPERIMENTAL_PROBE_PLACEMENT_POLICIES = {
-    APPLE_RADIUS_FIRST_RESCUE_SET: "radius-first",
-}
-
-
-# Post-lock replacement experiments. These pools are reachable only through explicit
-# probe overrides; production and the historical 14/54 candidate inventory stay fixed.
-EXPERIMENTAL_PROBE_CANDIDATE_SETS = {
-    "speaker-098-base3": {
-        **UNSEEN_POOL,
-        "speaker": _entry(
-            "098_speaker",
-            (3,),
-            scale=_SPEAKER_098_B3_SCALE,
-            actor_config=_SPEAKER_098_B3_CONFIG,
-            placement_radius=0.075,
-        ),
-    },
-    **{
-        f"apple-035-base{model_id}-{pose_family}": _replacement_pool(
-            UNSEEN_POOL,
-            "dumbbell",
-            "apple",
-            _apple_stability_entry(model_id, pose_family),
-        )
-        for model_id in (1, 0)
-        for pose_family in APPLE_STABILITY_FAMILY_ORDER
-    },
-    APPLE_RADIUS_FIRST_RESCUE_SET: _replacement_pool(
-        UNSEEN_POOL,
-        "dumbbell",
-        "apple",
-        _apple_stability_entry(1, "y-pos-up"),
     ),
 }
 
