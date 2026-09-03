@@ -1,4 +1,5 @@
 from ._base_task import Base_Task
+from ._if_eval import apply_if_eval_step_limit
 from .utils import *
 from ._GLOBAL_CONFIGS import *
 import sapien
@@ -89,6 +90,7 @@ class attribute_select(Base_Task):
         self._seed = kwags.get("seed", 0)
         self._demo_kwargs = dict(kwags)
         super()._init_task_env_(**kwags)
+        apply_if_eval_step_limit(self)
 
     def load_actors(self):
         scene_seed = self._seed // 2

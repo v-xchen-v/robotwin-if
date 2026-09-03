@@ -1,4 +1,5 @@
 from ._base_task import Base_Task
+from ._if_eval import apply_if_eval_step_limit
 from .utils import *
 from ._GLOBAL_CONFIGS import *
 import sapien
@@ -107,6 +108,7 @@ class grasp_cube_approach(Base_Task):
         # Capture the seed so mode/scene derive purely from it (IF wiring).
         self._seed = kwags.get("seed", 0)
         super()._init_task_env_(**kwags)
+        apply_if_eval_step_limit(self)
 
     def load_actors(self):
         # IF wiring: scene depends only on seed//2 (a pair shares one scene);

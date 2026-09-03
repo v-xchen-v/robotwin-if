@@ -1,4 +1,5 @@
 from ._base_task import Base_Task
+from ._if_eval import apply_if_eval_step_limit
 from .utils import *
 import sapien
 import numpy as np
@@ -56,6 +57,7 @@ class stack_sequence(Base_Task):
     def setup_demo(self, **kwags):
         self._seed = kwags.get("seed", 0)
         super()._init_task_env_(**kwags)
+        apply_if_eval_step_limit(self)
 
     def load_actors(self):
         # Decouple scene from order. When MODE is forced (spike), vary the scene

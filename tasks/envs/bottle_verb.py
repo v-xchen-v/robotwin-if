@@ -1,4 +1,5 @@
 from ._base_task import Base_Task
+from ._if_eval import apply_if_eval_step_limit
 from .utils import *
 import sapien
 import math
@@ -48,6 +49,7 @@ class bottle_verb(Base_Task):
         self._seed = kwags.get("seed", 0)
         self._demo_kwargs = dict(kwags)  # so the partner trial-run rebuilds an identical env
         super()._init_task_env_(**kwags)
+        apply_if_eval_step_limit(self)
 
     def load_actors(self):
         # Decouple scene from verb: scene depends only on seed//2 so (2k,2k+1) share

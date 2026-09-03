@@ -1,19 +1,16 @@
 #!/usr/bin/env python3
-"""Layer-B check_success discrimination tests for pick_diverse_object.
+"""Layer-B grounding discrimination tests for Pick-Diverse-Object.
 
-Positive collection runs only prove "correct action -> True". They do NOT prove
-"wrong action -> False" — a check_success that always returned True would pass them
-all yet make the grounding benchmark meaningless. This drives specific end-states
-and asserts check_success returns the expected boolean.
+Positive oracle runs alone cannot show that the success check is target-specific. This
+script drives positive and negative terminal states in both object-familiarity groups:
 
-The KEY cases are D3/D4: the instruction names one object by color+noun, a DIFFERENT
-distractor is lifted instead, and check_success must stay False:
-  - D3 lifts the SAME-COLOR different-noun distractor (color alone would mislead),
-  - D4 lifts the SAME-NOUN different-color distractor (noun alone would mislead).
-D5 lifts the target itself WITHOUT a grasp -> False (the "held" half of the check).
+* every locked production noun must be graspable and produce ``True``;
+* lifting an arbitrary distractor must remain ``False``;
+* moving the target upward without holding it must remain ``False``;
+* the untouched initial state must remain ``False``.
 
-Run from anywhere, inside the RoboTwin conda env:
-    conda activate RoboTwin
+Run from anywhere inside the RoboTwin conda environment:
+
     python tests/pick_diverse_object/test_check_success.py
 """
 import os
@@ -27,127 +24,128 @@ while not os.path.isdir(os.path.join(_REPO, "third_party", "robotwin")):
     _REPO = _parent
 _RT = os.path.join(_REPO, "third_party", "robotwin")
 os.chdir(_RT)
-sys.path.insert(0, os.path.join(_RT, "script"))
-sys.path.insert(0, _RT)
+sys.path[:0] = [os.path.join(_RT, "script"), _RT]
 
-import numpy as np  # noqa: E402
 import sapien  # noqa: E402
-import collect_data as cd  # noqa: E402  (RoboTwin's collector; reused for arg construction)
-
-_cap = {}
-
-
-def _capture_run(task, args):
-    _cap["task"] = task
-    _cap["args"] = args
+import collect_data as cd  # noqa: E402
+from envs._pick_diverse_object_pool import SEEN_POOL, UNSEEN_POOL  # noqa: E402
 
 
-cd.run = _capture_run
+_CAPTURE = {}
+cd.run = lambda task, args: _CAPTURE.update(task=task, args=args)
 cd.main(task_name="pick_diverse_object", task_config="demo_clean")
-TASK = _cap["task"]
-ARGS = dict(_cap["args"])
+TASK = _CAPTURE["task"]
+ARGS = dict(_CAPTURE["args"])
 ARGS["render_freq"] = 0
 
 ALIGN_Q = [0.5, 0.5, 0.5, 0.5]
-_results = []
-
-
-def _setup(seed):
-    """setup_demo with retry on UnStableError (advance seed by +1; single mode)."""
-    s = seed
-    last = None
-    for _ in range(40):
-        try:
-            TASK.setup_demo(now_ep_num=0, seed=s, **ARGS)
-            return s
-        except Exception as e:  # UnStableError etc.
-            last = e
-        s += 1
-    raise RuntimeError(f"no suitable scene near seed {seed}: {last}")
-
-
-def _distractor(role):
-    for d in TASK.distractors:
-        if d["role"] == role:
-            return d
-    return None
+RESULTS = []
 
 
 def _record(name, got, expect, note=""):
     got = bool(got)
     ok = got == expect
-    _results.append(ok)
+    RESULTS.append(ok)
     print(f"[{'PASS' if ok else 'FAIL'}] {name}: got={got} expect={expect}  {note}")
 
 
-def _lift(actor):
-    tp = TASK.target.get_pose().p
-    actor.actor.set_pose(sapien.Pose([float(tp[0]), float(tp[1]), float(tp[2]) + 0.2], ALIGN_Q))
+def _configure(familiarity, noun=None, model_id=None, side=None):
+    TASK.FAMILIARITY_OVERRIDE = familiarity
+    TASK.POOL_OVERRIDE = None
+    TASK.TARGET_NOUN_OVERRIDE = noun
+    TASK.TARGET_MODEL_ID_OVERRIDE = model_id
+    TASK.TARGET_SIDE_OVERRIDE = side
+    TASK.DISTRACTOR_NOUNS_OVERRIDE = None
 
 
-# D1 default: nothing picked, target at rest -> False.
-_setup(0)
-_record("D1 default (nothing picked)", TASK.check_success(), False,
-        note=f"target={TASK.target_noun}/{TASK.target_color}")
-
-# D2 positives: the scripted expert must be able to grasp+lift EACH of the 12 target
-# categories (grasp params are object-specific). A single grasp from a random pose isn't
-# 100% reliable (normal for RoboTwin — collect_data retries), so give each noun several
-# chances and pass if ANY succeeds with check_success True; the real per-object oracle
-# rate is what the collection reporter measures. seed % 12 -> each noun recurs every 12.
-ALL_NOUNS = ["bottle", "cup", "shoe", "mug", "can", "toycar", "phone",
-             "soap", "hamburg", "bread", "coffee-box", "mouse"]
-passed, attempts = {}, {}
-seed = 0
-while len(passed) < len(ALL_NOUNS) and seed < 240:
-    s = _setup(seed)
-    noun = TASK.target_noun
-    if noun not in passed:
-        attempts[noun] = attempts.get(noun, 0) + 1
+def _setup(seed):
+    """Set up the currently forced target, retrying only physical setup failures."""
+    last = None
+    for candidate_seed in range(seed, seed + 40):
         try:
-            TASK.play_once()
-            if TASK.check_success():
-                passed[noun] = (s, TASK.target_color)
-        except Exception:
-            pass
-    seed = s + 1
-for noun in ALL_NOUNS:
-    if noun in passed:
-        _record(f"D2 positive ({noun} target graspable)", True, True,
-                note=f"{passed[noun][1]} {noun} seed={passed[noun][0]} (in {attempts[noun]} tries)")
-    else:
-        _record(f"D2 positive ({noun} target graspable)", False, True,
-                note=f"no success in {attempts.get(noun, 0)} tries")
-
-# D3 (KEY) lift the SAME-COLOR different-noun distractor -> False (color alone misleads).
-# Under option B such a distractor isn't in every scene, so scan seeds to find one.
-def _find_role(role, start):
-    s = start
-    for _ in range(80):
-        s = _setup(s)
-        d = _distractor(role)
-        if d is not None:
-            return s, d
-        s += 1
-    raise RuntimeError(f"no episode with a {role} distractor near seed {start}")
+            TASK.setup_demo(now_ep_num=0, seed=candidate_seed, **ARGS)
+            return candidate_seed
+        except Exception as exc:
+            last = exc
+    raise RuntimeError(f"no suitable scene near seed {seed}: {last}")
 
 
-s, d = _find_role("same_color", 1)
-_lift(d["actor"])
-_record("D3 same-COLOR distractor lifted <-KEY", TASK.check_success(), False,
-        note=f"seed={s} target={TASK.target_noun}/{TASK.target_color} wrong={d['noun']}/{d['color']}")
+def _lift_without_grasp(actor):
+    pose = actor.get_pose()
+    actor.actor.set_pose(sapien.Pose(
+        [float(pose.p[0]), float(pose.p[1]), float(pose.p[2]) + 0.2],
+        ALIGN_Q,
+    ))
 
-# D4 (KEY) lift the SAME-NOUN different-color distractor -> False (noun alone misleads).
-s, d = _find_role("same_noun", 1)
-_lift(d["actor"])
-_record("D4 same-NOUN distractor lifted <-KEY", TASK.check_success(), False,
-        note=f"seed={s} target={TASK.target_noun}/{TASK.target_color} wrong={d['noun']}/{d['color']}")
 
-# D5 target moved up but NOT held (no grasp) -> False (the "held" half of the check).
-_setup(3)
-_lift(TASK.target)
-_record("D5 target lifted but not held", TASK.check_success(), False)
+def _negative_cases(familiarity, pool, seed_base):
+    noun = next(iter(pool))
+    model_id = pool[noun]["model_ids"][0]
 
-print("\n==== summary ====")
-print(f"{sum(_results)}/{len(_results)} passed")
-sys.exit(0 if _results and all(_results) else 1)
+    _configure(familiarity, noun, model_id)
+    seed = _setup(seed_base)
+    _record(f"{familiarity}: untouched initial state", TASK.check_success(), False,
+            note=f"target={noun} seed={seed}")
+
+    _configure(familiarity, noun, model_id)
+    seed = _setup(seed_base + 100)
+    wrong = TASK.distractors[0]
+    _lift_without_grasp(wrong["actor"])
+    _record(f"{familiarity}: arbitrary distractor lifted", TASK.check_success(), False,
+            note=f"target={noun} wrong={wrong['noun']} seed={seed}")
+
+    _configure(familiarity, noun, model_id)
+    seed = _setup(seed_base + 200)
+    _lift_without_grasp(TASK.target)
+    _record(f"{familiarity}: target moved but not held", TASK.check_success(), False,
+            note=f"target={noun} seed={seed}")
+
+
+def _positive_cases(familiarity, pool, seed_base):
+    for noun_index, (noun, entry) in enumerate(pool.items()):
+        model_id = entry["model_ids"][0]
+        success = None
+        attempts = 0
+        for attempt in range(6):
+            side = ("left", "right")[attempt % 2]
+            _configure(familiarity, noun, model_id, side)
+            seed = _setup(seed_base + noun_index * 100 + attempt * 10)
+            attempts += 1
+            try:
+                TASK.play_once()
+                if TASK.check_success():
+                    success = (seed, side)
+                    break
+            except Exception:
+                pass
+        _record(
+            f"{familiarity}: {noun} target graspable",
+            success is not None,
+            True,
+            note=(
+                f"model=base{model_id} seed={success[0]} arm={success[1]} "
+                f"attempts={attempts}"
+                if success
+                else f"model=base{model_id} no success in {attempts} attempts"
+            ),
+        )
+
+
+if len(UNSEEN_POOL) < 4:
+    raise RuntimeError(
+        "UNSEEN_POOL is not locked; Layer-B tests require at least four production nouns"
+    )
+
+for group_index, (familiarity, pool) in enumerate((
+    ("seen", SEEN_POOL),
+    ("unseen", UNSEEN_POOL),
+)):
+    base = 20000 + group_index * 10000
+    _negative_cases(familiarity, pool, base)
+    _positive_cases(familiarity, pool, base + 1000)
+
+# Never leave probe overrides enabled for an imported/reused TASK instance.
+_configure(None)
+
+print(f"\n==== {sum(RESULTS)}/{len(RESULTS)} passed ====")
+sys.exit(0 if RESULTS and all(RESULTS) else 1)

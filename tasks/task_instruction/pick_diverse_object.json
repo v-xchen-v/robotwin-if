@@ -1,6 +1,6 @@
 {
-    "full_description": "Four objects are sampled from a 12-category pool; the instruction names ONE of them by color and noun (e.g. 'the red cup'), and the robot lifts that one single-arm among three distractors. Tests target-object grounding (color + noun jointly).",
-    "schema": "{A}=the named target object, filled by play_once with the literal 'the {color} {noun}' (no '/', so replace_placeholders substitutes it verbatim instead of drawing a random objects_description -> color+noun controlled and always present). {a}=arm. Templates borrowed from adjust_bottle's orientation-free subset (the same set operate_tabletop's pick branch used, {C}->{A}); bottle-orientation wording (head-up/upright/'the bottle') was dropped.",
+    "full_description": "Four distinct object nouns are sampled from one object-familiarity group. An all-Seen scene uses only raw-task-Seen objects; an all-Unseen scene uses only probed raw-task-Unseen objects. The instruction names ONE target by noun only, and the robot lifts it single-arm among three same-group distractors.",
+    "schema": "{A}=the named target object, filled by play_once with the literal 'the {noun}' (no '/', so replace_placeholders substitutes it verbatim instead of drawing a random objects_description). {a}=arm. The top-level JSON keys 'seen' and 'unseen' below are the instruction-template split, not the object-familiarity split. Templates borrowed from adjust_bottle's orientation-free subset (the same set operate_tabletop's pick branch used, {C}->{A}); bottle-orientation wording was dropped.",
     "preference": "borrowed from adjust_bottle native pool; num of words should not exceed 15",
     "seen": [
         "Grab {A} from the table with {a}",

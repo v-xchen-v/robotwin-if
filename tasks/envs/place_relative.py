@@ -5,6 +5,7 @@ import numpy as np
 import sapien.core as sapien
 
 from ._base_task import Base_Task
+from ._if_eval import apply_if_eval_step_limit
 from ._if_relative import DIRECTIONS, placed_in_direction, placed_on_top
 from .utils import *
 from ._GLOBAL_CONFIGS import *
@@ -92,6 +93,7 @@ class place_relative(Base_Task):
         # setup_demo twice with the same seed and both must match).
         self._seed = kwags.get("seed", 0)
         super()._init_task_env_(**kwags)
+        apply_if_eval_step_limit(self)
 
     def _sample_pose(self, occupied, xlim, ylim, qpos, rotate_rand=False,
                      rotate_lim=(0, 0, 0), min_sep=0.15, min_abs_x=0.0, avoid=None,

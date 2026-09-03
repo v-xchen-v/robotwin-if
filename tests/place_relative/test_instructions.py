@@ -1,20 +1,16 @@
 #!/usr/bin/env python3
 """Layer-A instruction-pool invariants for place_relative.json.
 
-Two relation families share ONE pool, routed by placeholder signature through
-RoboTwin's real filter_instructions:
-  - beside : {A}=mover, {B}=reference
-  - on-top : {A}=mover, {C}=reference
-The reference key ({B} vs {C}) is what keeps the families un-mixable, so the
-central check here is ROUTING: a beside episode (info has {A},{B},{a}) must select
-ONLY beside frames and ZERO on-top frames, and vice-versa. Also checks seen/unseen
-disjointness and the controlled literal "the {color} {noun}" injection for both
-object slots.
+All five placement directions share one template family:
+  - {A}: mover
+  - {B}: reference
+  - {D}: seed-selected direction phrase
+  - {a}: optional arm
+
+The test exercises RoboTwin's real filter_instructions and placeholder renderer for
+all five directions. It does not require the simulator.
 
     python tests/place_relative/test_instructions.py
-
-(no simulator needed, but run in the RoboTwin env for the yaml import inside the
-generate_episode_instructions module).
 """
 import json
 import os
@@ -32,27 +28,21 @@ _JSON = os.path.join(_REPO, "tasks", "task_instruction", "place_relative.json")
 sys.path.insert(0, os.path.join(_REPO, "third_party", "robotwin", "description", "utils"))
 from generate_episode_instructions import filter_instructions, replace_placeholders  # noqa: E402
 
-# beside episode names the reference as {B}, on-top names it as {C}; mover always {A}.
-BESIDE = {"{A}": "the red mouse", "{B}": "the green plate", "{a}": "left"}
-ONTOP = {"{A}": "the red mouse", "{C}": "the green plate", "{a}": "left"}
+DIRECTION_PHRASES = (
+    "to the left of",
+    "to the right of",
+    "in front of",
+    "behind",
+    "on top of",
+)
+BASE_PARAMS = {
+    "{A}": "the red mouse",
+    "{B}": "the green plate",
+    "{a}": "left",
+}
 
 data = json.load(open(_JSON))
 SEEN, UNSEEN = data["seen"], data["unseen"]
-
-
-def _sig(t):
-    ph = set(re.findall(r"{([^}]+)}", t))
-    ph.discard("a")
-    return frozenset(ph)
-
-
-def is_beside(t):
-    return _sig(t) == frozenset({"A", "B"})
-
-
-def is_ontop(t):
-    return _sig(t) == frozenset({"A", "C"})
-
 
 _results = []
 
@@ -62,41 +52,64 @@ def _check(name, ok, note=""):
     print(f"[{'PASS' if ok else 'FAIL'}] {name}  {note}")
 
 
-# 1. Every template is exactly one of the two allowed signatures (mover {A} + one ref).
-for pool_name, pool in [("seen", SEEN), ("unseen", UNSEEN)]:
-    bad = [t for t in pool if not (is_beside(t) or is_ontop(t))]
-    _check(f"{pool_name}: every template is {{A,B}} or {{A,C}}", not bad, note=f"offenders={bad[:3]}")
+def _sig(template):
+    placeholders = set(re.findall(r"{([^}]+)}", template))
+    placeholders.discard("a")
+    return frozenset(placeholders)
 
-# 2. seen ∩ unseen = ∅ (IF requires zero train/eval template overlap).
+
+# 1. Every template belongs to the one unified direction family. The optional arm
+#    placeholder does not affect routing.
+for pool_name, pool in [("seen", SEEN), ("unseen", UNSEEN)]:
+    bad = [template for template in pool if _sig(template) != frozenset({"A", "B", "D"})]
+    _check(
+        f"{pool_name}: every template uses {{A,B,D}} (+ optional {{a}})",
+        not bad,
+        note=f"offenders={bad[:3]}",
+    )
+
+# 2. The direction phrase must directly modify the reference object. This prevents
+#    templates that render ambiguously or attach the direction to the mover/action.
+for pool_name, pool in [("seen", SEEN), ("unseen", UNSEEN)]:
+    bad = [template for template in pool if "{D} {B}" not in template]
+    _check(
+        f"{pool_name}: {{D}} is immediately before {{B}}",
+        not bad,
+        note=f"offenders={bad[:3]}",
+    )
+
+# 3. IF held-out instruction templates must not overlap the seen pool.
 s, u = set(SEEN), set(UNSEEN)
 _check("seen∩unseen = empty", s.isdisjoint(u), note=f"overlap={len(s & u)}")
 
-# 3. Both families present in BOTH seen and unseen (else one relation has no held-out set).
-for pool_name, pool in [("seen", SEEN), ("unseen", UNSEEN)]:
-    nb, no = sum(map(is_beside, pool)), sum(map(is_ontop, pool))
-    _check(f"{pool_name}: has beside AND on-top frames", nb > 0 and no > 0, note=f"beside={nb} ontop={no}")
+# 4. Exercise RoboTwin's real routing and rendering for every direction. Because all
+#    directions use {D}, each parameter set must retain the entire unified pool.
+for phrase in DIRECTION_PHRASES:
+    params = {**BASE_PARAMS, "{D}": phrase}
+    for pool_name, pool in [("seen", SEEN), ("unseen", UNSEEN)]:
+        filtered = filter_instructions(list(pool), params)
+        _check(
+            f"{pool_name}/{phrase}: real filter retains unified family",
+            len(filtered) == len(pool) and set(filtered) == set(pool),
+            note=f"got={len(filtered)}/{len(pool)}",
+        )
 
-# 4. ROUTING (the core mechanism): beside params select exactly the beside frames and
-#    NONE of the on-top frames; on-top params do the mirror. Cross-leak == broken task.
-for pool_name, pool in [("seen", SEEN), ("unseen", UNSEEN)]:
-    nb, no = sum(map(is_beside, pool)), sum(map(is_ontop, pool))
-    fb = filter_instructions(list(pool), BESIDE)
-    fo = filter_instructions(list(pool), ONTOP)
-    _check(f"{pool_name}: beside params -> only beside frames",
-           len(fb) == nb and all(is_beside(t) for t in fb), note=f"got {len(fb)}/{nb}")
-    _check(f"{pool_name}: on-top params -> only on-top frames",
-           len(fo) == no and all(is_ontop(t) for t in fo), note=f"got {len(fo)}/{no}")
-
-# 5. Literal injection: the correct object phrases render verbatim for each relation,
-#    with no leftover braces and no "the the".
-for pool_name, pool in [("seen", SEEN), ("unseen", UNSEEN)]:
-    bad = []
-    for t in pool:
-        params = BESIDE if is_beside(t) else ONTOP
-        out = replace_placeholders(t, dict(params))
-        if ("red mouse" not in out) or ("green plate" not in out) or ("{" in out) or ("the the" in out):
-            bad.append(out)
-    _check(f"{pool_name}: literal object phrases render cleanly", not bad, note=f"offenders={bad[:2]}")
+        bad = []
+        for template in filtered:
+            rendered = replace_placeholders(template, dict(params))
+            if (
+                BASE_PARAMS["{A}"] not in rendered
+                or BASE_PARAMS["{B}"] not in rendered
+                or phrase not in rendered
+                or "{" in rendered
+                or "the the" in rendered.lower()
+            ):
+                bad.append(rendered)
+        _check(
+            f"{pool_name}/{phrase}: placeholders render cleanly",
+            not bad,
+            note=f"offenders={bad[:2]}",
+        )
 
 print(f"\n==== {sum(_results)}/{len(_results)} passed ====")
 sys.exit(0 if _results and all(_results) else 1)
