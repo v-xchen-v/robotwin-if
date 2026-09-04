@@ -1,0 +1,3149 @@
+{
+  "blocks": [
+    {
+      "accepted": true,
+      "block_index": 50000,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "left",
+          "failure": null,
+          "observed_mode": "left",
+          "plan_success": true,
+          "seed": 100000,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "right",
+          "failure": null,
+          "observed_mode": "right",
+          "plan_success": true,
+          "seed": 100001,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100000,
+        100001
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50001,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "left",
+          "failure": null,
+          "observed_mode": "left",
+          "plan_success": true,
+          "seed": 100002,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "right",
+          "failure": null,
+          "observed_mode": "right",
+          "plan_success": true,
+          "seed": 100003,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100002,
+        100003
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50002,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "left",
+          "failure": null,
+          "observed_mode": "left",
+          "plan_success": true,
+          "seed": 100004,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "right",
+          "failure": null,
+          "observed_mode": "right",
+          "plan_success": true,
+          "seed": 100005,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100004,
+        100005
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50003,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "left",
+          "failure": null,
+          "observed_mode": "left",
+          "plan_success": true,
+          "seed": 100006,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "right",
+          "failure": null,
+          "observed_mode": "right",
+          "plan_success": true,
+          "seed": 100007,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100006,
+        100007
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50004,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "left",
+          "failure": null,
+          "observed_mode": "left",
+          "plan_success": true,
+          "seed": 100008,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "right",
+          "failure": null,
+          "observed_mode": "right",
+          "plan_success": true,
+          "seed": 100009,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100008,
+        100009
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50005,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "left",
+          "failure": null,
+          "observed_mode": "left",
+          "plan_success": true,
+          "seed": 100010,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "right",
+          "failure": null,
+          "observed_mode": "right",
+          "plan_success": true,
+          "seed": 100011,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100010,
+        100011
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50006,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "left",
+          "failure": null,
+          "observed_mode": "left",
+          "plan_success": true,
+          "seed": 100012,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "right",
+          "failure": null,
+          "observed_mode": "right",
+          "plan_success": true,
+          "seed": 100013,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100012,
+        100013
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50007,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "left",
+          "failure": null,
+          "observed_mode": "left",
+          "plan_success": true,
+          "seed": 100014,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "right",
+          "failure": null,
+          "observed_mode": "right",
+          "plan_success": true,
+          "seed": 100015,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100014,
+        100015
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50008,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "left",
+          "failure": null,
+          "observed_mode": "left",
+          "plan_success": true,
+          "seed": 100016,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "right",
+          "failure": null,
+          "observed_mode": "right",
+          "plan_success": true,
+          "seed": 100017,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100016,
+        100017
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50009,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "left",
+          "failure": null,
+          "observed_mode": "left",
+          "plan_success": true,
+          "seed": 100018,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "right",
+          "failure": null,
+          "observed_mode": "right",
+          "plan_success": true,
+          "seed": 100019,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100018,
+        100019
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50010,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "left",
+          "failure": null,
+          "observed_mode": "left",
+          "plan_success": true,
+          "seed": 100020,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "right",
+          "failure": null,
+          "observed_mode": "right",
+          "plan_success": true,
+          "seed": 100021,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100020,
+        100021
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50011,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "left",
+          "failure": null,
+          "observed_mode": "left",
+          "plan_success": true,
+          "seed": 100022,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "right",
+          "failure": null,
+          "observed_mode": "right",
+          "plan_success": true,
+          "seed": 100023,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100022,
+        100023
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50012,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "left",
+          "failure": null,
+          "observed_mode": "left",
+          "plan_success": true,
+          "seed": 100024,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "right",
+          "failure": null,
+          "observed_mode": "right",
+          "plan_success": true,
+          "seed": 100025,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100024,
+        100025
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50013,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "left",
+          "failure": null,
+          "observed_mode": "left",
+          "plan_success": true,
+          "seed": 100026,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "right",
+          "failure": null,
+          "observed_mode": "right",
+          "plan_success": true,
+          "seed": 100027,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100026,
+        100027
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50014,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "left",
+          "failure": null,
+          "observed_mode": "left",
+          "plan_success": true,
+          "seed": 100028,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "right",
+          "failure": null,
+          "observed_mode": "right",
+          "plan_success": true,
+          "seed": 100029,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100028,
+        100029
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50015,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "left",
+          "failure": null,
+          "observed_mode": "left",
+          "plan_success": true,
+          "seed": 100030,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "right",
+          "failure": null,
+          "observed_mode": "right",
+          "plan_success": true,
+          "seed": 100031,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100030,
+        100031
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50016,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "left",
+          "failure": null,
+          "observed_mode": "left",
+          "plan_success": true,
+          "seed": 100032,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "right",
+          "failure": null,
+          "observed_mode": "right",
+          "plan_success": true,
+          "seed": 100033,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100032,
+        100033
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50017,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "left",
+          "failure": null,
+          "observed_mode": "left",
+          "plan_success": true,
+          "seed": 100034,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "right",
+          "failure": null,
+          "observed_mode": "right",
+          "plan_success": true,
+          "seed": 100035,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100034,
+        100035
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50018,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "left",
+          "failure": null,
+          "observed_mode": "left",
+          "plan_success": true,
+          "seed": 100036,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "right",
+          "failure": null,
+          "observed_mode": "right",
+          "plan_success": true,
+          "seed": 100037,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100036,
+        100037
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50019,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "left",
+          "failure": null,
+          "observed_mode": "left",
+          "plan_success": true,
+          "seed": 100038,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "right",
+          "failure": null,
+          "observed_mode": "right",
+          "plan_success": true,
+          "seed": 100039,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100038,
+        100039
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50020,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "left",
+          "failure": null,
+          "observed_mode": "left",
+          "plan_success": true,
+          "seed": 100040,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "right",
+          "failure": null,
+          "observed_mode": "right",
+          "plan_success": true,
+          "seed": 100041,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100040,
+        100041
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50021,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "left",
+          "failure": null,
+          "observed_mode": "left",
+          "plan_success": true,
+          "seed": 100042,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "right",
+          "failure": null,
+          "observed_mode": "right",
+          "plan_success": true,
+          "seed": 100043,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100042,
+        100043
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50022,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "left",
+          "failure": null,
+          "observed_mode": "left",
+          "plan_success": true,
+          "seed": 100044,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "right",
+          "failure": null,
+          "observed_mode": "right",
+          "plan_success": true,
+          "seed": 100045,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100044,
+        100045
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50023,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "left",
+          "failure": null,
+          "observed_mode": "left",
+          "plan_success": true,
+          "seed": 100046,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "right",
+          "failure": null,
+          "observed_mode": "right",
+          "plan_success": true,
+          "seed": 100047,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100046,
+        100047
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50024,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "left",
+          "failure": null,
+          "observed_mode": "left",
+          "plan_success": true,
+          "seed": 100048,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "right",
+          "failure": null,
+          "observed_mode": "right",
+          "plan_success": true,
+          "seed": 100049,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100048,
+        100049
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50025,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "left",
+          "failure": null,
+          "observed_mode": "left",
+          "plan_success": true,
+          "seed": 100050,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "right",
+          "failure": null,
+          "observed_mode": "right",
+          "plan_success": true,
+          "seed": 100051,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100050,
+        100051
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50026,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "left",
+          "failure": null,
+          "observed_mode": "left",
+          "plan_success": true,
+          "seed": 100052,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "right",
+          "failure": null,
+          "observed_mode": "right",
+          "plan_success": true,
+          "seed": 100053,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100052,
+        100053
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50027,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "left",
+          "failure": null,
+          "observed_mode": "left",
+          "plan_success": true,
+          "seed": 100054,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "right",
+          "failure": null,
+          "observed_mode": "right",
+          "plan_success": true,
+          "seed": 100055,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100054,
+        100055
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50028,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "left",
+          "failure": null,
+          "observed_mode": "left",
+          "plan_success": true,
+          "seed": 100056,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "right",
+          "failure": null,
+          "observed_mode": "right",
+          "plan_success": true,
+          "seed": 100057,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100056,
+        100057
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50029,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "left",
+          "failure": null,
+          "observed_mode": "left",
+          "plan_success": true,
+          "seed": 100058,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "right",
+          "failure": null,
+          "observed_mode": "right",
+          "plan_success": true,
+          "seed": 100059,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100058,
+        100059
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50030,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "left",
+          "failure": null,
+          "observed_mode": "left",
+          "plan_success": true,
+          "seed": 100060,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "right",
+          "failure": null,
+          "observed_mode": "right",
+          "plan_success": true,
+          "seed": 100061,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100060,
+        100061
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50031,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "left",
+          "failure": null,
+          "observed_mode": "left",
+          "plan_success": true,
+          "seed": 100062,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "right",
+          "failure": null,
+          "observed_mode": "right",
+          "plan_success": true,
+          "seed": 100063,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100062,
+        100063
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50032,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "left",
+          "failure": null,
+          "observed_mode": "left",
+          "plan_success": true,
+          "seed": 100064,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "right",
+          "failure": null,
+          "observed_mode": "right",
+          "plan_success": true,
+          "seed": 100065,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100064,
+        100065
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50033,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "left",
+          "failure": null,
+          "observed_mode": "left",
+          "plan_success": true,
+          "seed": 100066,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "right",
+          "failure": null,
+          "observed_mode": "right",
+          "plan_success": true,
+          "seed": 100067,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100066,
+        100067
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50034,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "left",
+          "failure": null,
+          "observed_mode": "left",
+          "plan_success": true,
+          "seed": 100068,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "right",
+          "failure": null,
+          "observed_mode": "right",
+          "plan_success": true,
+          "seed": 100069,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100068,
+        100069
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50035,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "left",
+          "failure": null,
+          "observed_mode": "left",
+          "plan_success": true,
+          "seed": 100070,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "right",
+          "failure": null,
+          "observed_mode": "right",
+          "plan_success": true,
+          "seed": 100071,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100070,
+        100071
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50036,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "left",
+          "failure": null,
+          "observed_mode": "left",
+          "plan_success": true,
+          "seed": 100072,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "right",
+          "failure": null,
+          "observed_mode": "right",
+          "plan_success": true,
+          "seed": 100073,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100072,
+        100073
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50037,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "left",
+          "failure": null,
+          "observed_mode": "left",
+          "plan_success": true,
+          "seed": 100074,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "right",
+          "failure": null,
+          "observed_mode": "right",
+          "plan_success": true,
+          "seed": 100075,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100074,
+        100075
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50038,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "left",
+          "failure": null,
+          "observed_mode": "left",
+          "plan_success": true,
+          "seed": 100076,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "right",
+          "failure": null,
+          "observed_mode": "right",
+          "plan_success": true,
+          "seed": 100077,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100076,
+        100077
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50039,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "left",
+          "failure": null,
+          "observed_mode": "left",
+          "plan_success": true,
+          "seed": 100078,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "right",
+          "failure": null,
+          "observed_mode": "right",
+          "plan_success": true,
+          "seed": 100079,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100078,
+        100079
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50040,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "left",
+          "failure": null,
+          "observed_mode": "left",
+          "plan_success": true,
+          "seed": 100080,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "right",
+          "failure": null,
+          "observed_mode": "right",
+          "plan_success": true,
+          "seed": 100081,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100080,
+        100081
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50041,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "left",
+          "failure": null,
+          "observed_mode": "left",
+          "plan_success": true,
+          "seed": 100082,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "right",
+          "failure": null,
+          "observed_mode": "right",
+          "plan_success": true,
+          "seed": 100083,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100082,
+        100083
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50042,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "left",
+          "failure": null,
+          "observed_mode": "left",
+          "plan_success": true,
+          "seed": 100084,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "right",
+          "failure": null,
+          "observed_mode": "right",
+          "plan_success": true,
+          "seed": 100085,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100084,
+        100085
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50043,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "left",
+          "failure": null,
+          "observed_mode": "left",
+          "plan_success": true,
+          "seed": 100086,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "right",
+          "failure": null,
+          "observed_mode": "right",
+          "plan_success": true,
+          "seed": 100087,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100086,
+        100087
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50044,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "left",
+          "failure": null,
+          "observed_mode": "left",
+          "plan_success": true,
+          "seed": 100088,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "right",
+          "failure": null,
+          "observed_mode": "right",
+          "plan_success": true,
+          "seed": 100089,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100088,
+        100089
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50045,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "left",
+          "failure": null,
+          "observed_mode": "left",
+          "plan_success": true,
+          "seed": 100090,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "right",
+          "failure": null,
+          "observed_mode": "right",
+          "plan_success": true,
+          "seed": 100091,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100090,
+        100091
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50046,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "left",
+          "failure": null,
+          "observed_mode": "left",
+          "plan_success": true,
+          "seed": 100092,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "right",
+          "failure": null,
+          "observed_mode": "right",
+          "plan_success": true,
+          "seed": 100093,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100092,
+        100093
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50047,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "left",
+          "failure": null,
+          "observed_mode": "left",
+          "plan_success": true,
+          "seed": 100094,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "right",
+          "failure": null,
+          "observed_mode": "right",
+          "plan_success": true,
+          "seed": 100095,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100094,
+        100095
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50048,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "left",
+          "failure": null,
+          "observed_mode": "left",
+          "plan_success": true,
+          "seed": 100096,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "right",
+          "failure": null,
+          "observed_mode": "right",
+          "plan_success": true,
+          "seed": 100097,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100096,
+        100097
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50049,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "left",
+          "failure": null,
+          "observed_mode": "left",
+          "plan_success": true,
+          "seed": 100098,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "right",
+          "failure": null,
+          "observed_mode": "right",
+          "plan_success": true,
+          "seed": 100099,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100098,
+        100099
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50050,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "left",
+          "failure": null,
+          "observed_mode": "left",
+          "plan_success": true,
+          "seed": 100100,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "right",
+          "failure": null,
+          "observed_mode": "right",
+          "plan_success": true,
+          "seed": 100101,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100100,
+        100101
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50051,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "left",
+          "failure": null,
+          "observed_mode": "left",
+          "plan_success": true,
+          "seed": 100102,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "right",
+          "failure": null,
+          "observed_mode": "right",
+          "plan_success": true,
+          "seed": 100103,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100102,
+        100103
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50052,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "left",
+          "failure": null,
+          "observed_mode": "left",
+          "plan_success": true,
+          "seed": 100104,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "right",
+          "failure": null,
+          "observed_mode": "right",
+          "plan_success": true,
+          "seed": 100105,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100104,
+        100105
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50053,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "left",
+          "failure": null,
+          "observed_mode": "left",
+          "plan_success": true,
+          "seed": 100106,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "right",
+          "failure": null,
+          "observed_mode": "right",
+          "plan_success": true,
+          "seed": 100107,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100106,
+        100107
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50054,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "left",
+          "failure": null,
+          "observed_mode": "left",
+          "plan_success": true,
+          "seed": 100108,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "right",
+          "failure": null,
+          "observed_mode": "right",
+          "plan_success": true,
+          "seed": 100109,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100108,
+        100109
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50055,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "left",
+          "failure": null,
+          "observed_mode": "left",
+          "plan_success": true,
+          "seed": 100110,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "right",
+          "failure": null,
+          "observed_mode": "right",
+          "plan_success": true,
+          "seed": 100111,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100110,
+        100111
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50056,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "left",
+          "failure": null,
+          "observed_mode": "left",
+          "plan_success": true,
+          "seed": 100112,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "right",
+          "failure": null,
+          "observed_mode": "right",
+          "plan_success": true,
+          "seed": 100113,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100112,
+        100113
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50057,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "left",
+          "failure": null,
+          "observed_mode": "left",
+          "plan_success": true,
+          "seed": 100114,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "right",
+          "failure": null,
+          "observed_mode": "right",
+          "plan_success": true,
+          "seed": 100115,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100114,
+        100115
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50058,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "left",
+          "failure": null,
+          "observed_mode": "left",
+          "plan_success": true,
+          "seed": 100116,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "right",
+          "failure": null,
+          "observed_mode": "right",
+          "plan_success": true,
+          "seed": 100117,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100116,
+        100117
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50059,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "left",
+          "failure": null,
+          "observed_mode": "left",
+          "plan_success": true,
+          "seed": 100118,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "right",
+          "failure": null,
+          "observed_mode": "right",
+          "plan_success": true,
+          "seed": 100119,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100118,
+        100119
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50060,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "left",
+          "failure": null,
+          "observed_mode": "left",
+          "plan_success": true,
+          "seed": 100120,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "right",
+          "failure": null,
+          "observed_mode": "right",
+          "plan_success": true,
+          "seed": 100121,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100120,
+        100121
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50061,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "left",
+          "failure": null,
+          "observed_mode": "left",
+          "plan_success": true,
+          "seed": 100122,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "right",
+          "failure": null,
+          "observed_mode": "right",
+          "plan_success": true,
+          "seed": 100123,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100122,
+        100123
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50062,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "left",
+          "failure": null,
+          "observed_mode": "left",
+          "plan_success": true,
+          "seed": 100124,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "right",
+          "failure": null,
+          "observed_mode": "right",
+          "plan_success": true,
+          "seed": 100125,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100124,
+        100125
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50063,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "left",
+          "failure": null,
+          "observed_mode": "left",
+          "plan_success": true,
+          "seed": 100126,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "right",
+          "failure": null,
+          "observed_mode": "right",
+          "plan_success": true,
+          "seed": 100127,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100126,
+        100127
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50064,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "left",
+          "failure": null,
+          "observed_mode": "left",
+          "plan_success": true,
+          "seed": 100128,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "right",
+          "failure": null,
+          "observed_mode": "right",
+          "plan_success": true,
+          "seed": 100129,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100128,
+        100129
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50065,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "left",
+          "failure": null,
+          "observed_mode": "left",
+          "plan_success": true,
+          "seed": 100130,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "right",
+          "failure": null,
+          "observed_mode": "right",
+          "plan_success": true,
+          "seed": 100131,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100130,
+        100131
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50066,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "left",
+          "failure": null,
+          "observed_mode": "left",
+          "plan_success": true,
+          "seed": 100132,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "right",
+          "failure": null,
+          "observed_mode": "right",
+          "plan_success": true,
+          "seed": 100133,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100132,
+        100133
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50067,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "left",
+          "failure": null,
+          "observed_mode": "left",
+          "plan_success": true,
+          "seed": 100134,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "right",
+          "failure": null,
+          "observed_mode": "right",
+          "plan_success": true,
+          "seed": 100135,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100134,
+        100135
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50068,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "left",
+          "failure": null,
+          "observed_mode": "left",
+          "plan_success": true,
+          "seed": 100136,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "right",
+          "failure": null,
+          "observed_mode": "right",
+          "plan_success": true,
+          "seed": 100137,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100136,
+        100137
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50069,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "left",
+          "failure": null,
+          "observed_mode": "left",
+          "plan_success": true,
+          "seed": 100138,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "right",
+          "failure": null,
+          "observed_mode": "right",
+          "plan_success": true,
+          "seed": 100139,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100138,
+        100139
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50070,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "left",
+          "failure": null,
+          "observed_mode": "left",
+          "plan_success": true,
+          "seed": 100140,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "right",
+          "failure": null,
+          "observed_mode": "right",
+          "plan_success": true,
+          "seed": 100141,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100140,
+        100141
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50071,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "left",
+          "failure": null,
+          "observed_mode": "left",
+          "plan_success": true,
+          "seed": 100142,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "right",
+          "failure": null,
+          "observed_mode": "right",
+          "plan_success": true,
+          "seed": 100143,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100142,
+        100143
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50072,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "left",
+          "failure": null,
+          "observed_mode": "left",
+          "plan_success": true,
+          "seed": 100144,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "right",
+          "failure": null,
+          "observed_mode": "right",
+          "plan_success": true,
+          "seed": 100145,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100144,
+        100145
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50073,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "left",
+          "failure": null,
+          "observed_mode": "left",
+          "plan_success": true,
+          "seed": 100146,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "right",
+          "failure": null,
+          "observed_mode": "right",
+          "plan_success": true,
+          "seed": 100147,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100146,
+        100147
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50074,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "left",
+          "failure": null,
+          "observed_mode": "left",
+          "plan_success": true,
+          "seed": 100148,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "right",
+          "failure": null,
+          "observed_mode": "right",
+          "plan_success": true,
+          "seed": 100149,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100148,
+        100149
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50075,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "left",
+          "failure": null,
+          "observed_mode": "left",
+          "plan_success": true,
+          "seed": 100150,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "right",
+          "failure": null,
+          "observed_mode": "right",
+          "plan_success": true,
+          "seed": 100151,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100150,
+        100151
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50076,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "left",
+          "failure": null,
+          "observed_mode": "left",
+          "plan_success": true,
+          "seed": 100152,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "right",
+          "failure": null,
+          "observed_mode": "right",
+          "plan_success": true,
+          "seed": 100153,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100152,
+        100153
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50077,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "left",
+          "failure": null,
+          "observed_mode": "left",
+          "plan_success": true,
+          "seed": 100154,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "right",
+          "failure": null,
+          "observed_mode": "right",
+          "plan_success": true,
+          "seed": 100155,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100154,
+        100155
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50078,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "left",
+          "failure": null,
+          "observed_mode": "left",
+          "plan_success": true,
+          "seed": 100156,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "right",
+          "failure": null,
+          "observed_mode": "right",
+          "plan_success": true,
+          "seed": 100157,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100156,
+        100157
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50079,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "left",
+          "failure": null,
+          "observed_mode": "left",
+          "plan_success": true,
+          "seed": 100158,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "right",
+          "failure": null,
+          "observed_mode": "right",
+          "plan_success": true,
+          "seed": 100159,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100158,
+        100159
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50080,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "left",
+          "failure": null,
+          "observed_mode": "left",
+          "plan_success": true,
+          "seed": 100160,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "right",
+          "failure": null,
+          "observed_mode": "right",
+          "plan_success": true,
+          "seed": 100161,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100160,
+        100161
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50081,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "left",
+          "failure": null,
+          "observed_mode": "left",
+          "plan_success": true,
+          "seed": 100162,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "right",
+          "failure": null,
+          "observed_mode": "right",
+          "plan_success": true,
+          "seed": 100163,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100162,
+        100163
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50082,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "left",
+          "failure": null,
+          "observed_mode": "left",
+          "plan_success": true,
+          "seed": 100164,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "right",
+          "failure": null,
+          "observed_mode": "right",
+          "plan_success": true,
+          "seed": 100165,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100164,
+        100165
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50083,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "left",
+          "failure": null,
+          "observed_mode": "left",
+          "plan_success": true,
+          "seed": 100166,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "right",
+          "failure": null,
+          "observed_mode": "right",
+          "plan_success": true,
+          "seed": 100167,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100166,
+        100167
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50084,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "left",
+          "failure": null,
+          "observed_mode": "left",
+          "plan_success": true,
+          "seed": 100168,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "right",
+          "failure": null,
+          "observed_mode": "right",
+          "plan_success": true,
+          "seed": 100169,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100168,
+        100169
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50085,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "left",
+          "failure": null,
+          "observed_mode": "left",
+          "plan_success": true,
+          "seed": 100170,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "right",
+          "failure": null,
+          "observed_mode": "right",
+          "plan_success": true,
+          "seed": 100171,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100170,
+        100171
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50086,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "left",
+          "failure": null,
+          "observed_mode": "left",
+          "plan_success": true,
+          "seed": 100172,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "right",
+          "failure": null,
+          "observed_mode": "right",
+          "plan_success": true,
+          "seed": 100173,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100172,
+        100173
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50087,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "left",
+          "failure": null,
+          "observed_mode": "left",
+          "plan_success": true,
+          "seed": 100174,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "right",
+          "failure": null,
+          "observed_mode": "right",
+          "plan_success": true,
+          "seed": 100175,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100174,
+        100175
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50088,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "left",
+          "failure": null,
+          "observed_mode": "left",
+          "plan_success": true,
+          "seed": 100176,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "right",
+          "failure": null,
+          "observed_mode": "right",
+          "plan_success": true,
+          "seed": 100177,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100176,
+        100177
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50089,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "left",
+          "failure": null,
+          "observed_mode": "left",
+          "plan_success": true,
+          "seed": 100178,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "right",
+          "failure": null,
+          "observed_mode": "right",
+          "plan_success": true,
+          "seed": 100179,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100178,
+        100179
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50090,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "left",
+          "failure": null,
+          "observed_mode": "left",
+          "plan_success": true,
+          "seed": 100180,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "right",
+          "failure": null,
+          "observed_mode": "right",
+          "plan_success": true,
+          "seed": 100181,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100180,
+        100181
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50091,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "left",
+          "failure": null,
+          "observed_mode": "left",
+          "plan_success": true,
+          "seed": 100182,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "right",
+          "failure": null,
+          "observed_mode": "right",
+          "plan_success": true,
+          "seed": 100183,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100182,
+        100183
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50092,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "left",
+          "failure": null,
+          "observed_mode": "left",
+          "plan_success": true,
+          "seed": 100184,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "right",
+          "failure": null,
+          "observed_mode": "right",
+          "plan_success": true,
+          "seed": 100185,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100184,
+        100185
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50093,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "left",
+          "failure": null,
+          "observed_mode": "left",
+          "plan_success": true,
+          "seed": 100186,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "right",
+          "failure": null,
+          "observed_mode": "right",
+          "plan_success": true,
+          "seed": 100187,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100186,
+        100187
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50094,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "left",
+          "failure": null,
+          "observed_mode": "left",
+          "plan_success": true,
+          "seed": 100188,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "right",
+          "failure": null,
+          "observed_mode": "right",
+          "plan_success": true,
+          "seed": 100189,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100188,
+        100189
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50095,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "left",
+          "failure": null,
+          "observed_mode": "left",
+          "plan_success": true,
+          "seed": 100190,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "right",
+          "failure": null,
+          "observed_mode": "right",
+          "plan_success": true,
+          "seed": 100191,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100190,
+        100191
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50096,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "left",
+          "failure": null,
+          "observed_mode": "left",
+          "plan_success": true,
+          "seed": 100192,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "right",
+          "failure": null,
+          "observed_mode": "right",
+          "plan_success": true,
+          "seed": 100193,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100192,
+        100193
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50097,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "left",
+          "failure": null,
+          "observed_mode": "left",
+          "plan_success": true,
+          "seed": 100194,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "right",
+          "failure": null,
+          "observed_mode": "right",
+          "plan_success": true,
+          "seed": 100195,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100194,
+        100195
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50098,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "left",
+          "failure": null,
+          "observed_mode": "left",
+          "plan_success": true,
+          "seed": 100196,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "right",
+          "failure": null,
+          "observed_mode": "right",
+          "plan_success": true,
+          "seed": 100197,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100196,
+        100197
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50099,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "left",
+          "failure": null,
+          "observed_mode": "left",
+          "plan_success": true,
+          "seed": 100198,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "right",
+          "failure": null,
+          "observed_mode": "right",
+          "plan_success": true,
+          "seed": 100199,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100198,
+        100199
+      ]
+    }
+  ],
+  "contract_schema_version": 1,
+  "manifest_sha256": "b47088df90b8d0dadb2d3c9bd8242d621202352291984adb32aa24c9ff491697",
+  "next_block": 50100,
+  "parameters": {
+    "accepted_blocks": 100,
+    "candidate_floor": 100000,
+    "first_block": 50000,
+    "max_candidate_blocks": 500,
+    "task": "arm_select",
+    "task_config": "demo_clean"
+  },
+  "provenance": {
+    "bridge_allow_compatible_commit": true,
+    "generator": {
+      "generation_schema_version": 1,
+      "manifest_schema_version": 1,
+      "name": "tools/generate_if_seed_manifest.py",
+      "version": 1
+    },
+    "source_commit": "6fd624fd03b0c49e60adb9ee4204031556712431",
+    "source_digest": "719c3f43818403d33f2a79f7a44aed0068a4b5a958fac0bf9b994c23343684bb",
+    "source_dirty": false,
+    "source_root": "/home/xichen6/Documents/repos/robotwin-if",
+    "target_commit": "b82ffb81d291d14c24be444bb7b6f81719481e0f",
+    "target_contract_dirty": false,
+    "target_root": "/home/xichen6/Documents/repos/robotwin-if/third_party/robotwin-manifest-clean",
+    "task_config_path": "task_config/demo_clean.yml",
+    "task_config_sha256": "8ee5d0d07daecf7599b8d89b44776b700c7c60da24cd6317e176e6798d8cb11e"
+  },
+  "schema_version": 1,
+  "status": "complete",
+  "summary": {
+    "accepted_block_ids": [
+      50000,
+      50001,
+      50002,
+      50003,
+      50004,
+      50005,
+      50006,
+      50007,
+      50008,
+      50009,
+      50010,
+      50011,
+      50012,
+      50013,
+      50014,
+      50015,
+      50016,
+      50017,
+      50018,
+      50019,
+      50020,
+      50021,
+      50022,
+      50023,
+      50024,
+      50025,
+      50026,
+      50027,
+      50028,
+      50029,
+      50030,
+      50031,
+      50032,
+      50033,
+      50034,
+      50035,
+      50036,
+      50037,
+      50038,
+      50039,
+      50040,
+      50041,
+      50042,
+      50043,
+      50044,
+      50045,
+      50046,
+      50047,
+      50048,
+      50049,
+      50050,
+      50051,
+      50052,
+      50053,
+      50054,
+      50055,
+      50056,
+      50057,
+      50058,
+      50059,
+      50060,
+      50061,
+      50062,
+      50063,
+      50064,
+      50065,
+      50066,
+      50067,
+      50068,
+      50069,
+      50070,
+      50071,
+      50072,
+      50073,
+      50074,
+      50075,
+      50076,
+      50077,
+      50078,
+      50079,
+      50080,
+      50081,
+      50082,
+      50083,
+      50084,
+      50085,
+      50086,
+      50087,
+      50088,
+      50089,
+      50090,
+      50091,
+      50092,
+      50093,
+      50094,
+      50095,
+      50096,
+      50097,
+      50098,
+      50099
+    ],
+    "accepted_blocks": 100,
+    "candidate_blocks": 100,
+    "failure_categories": {},
+    "rejected_block_ids": [],
+    "rejected_blocks": 0
+  },
+  "timing": {
+    "elapsed_seconds": 662.5621604230255,
+    "started_at": "2026-09-03T18:44:45.470967+00:00",
+    "updated_at": "2026-09-03T18:55:48.043223+00:00"
+  }
+}
