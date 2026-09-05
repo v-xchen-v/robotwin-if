@@ -119,9 +119,14 @@ class arm_select(Base_Task):
 
         sig = self.eval_signals()
         self.info["mode"] = self.mode
+        # info["info"] must contain only instruction-template placeholders.
+        # Extra diagnostic keys make RoboTwin reject every template because its
+        # renderer requires an exact placeholder/parameter match.
         self.info["info"] = {
-            "{A}": "block",
+            "{A}": "the block",
             "{a}": str(arm_tag),
+        }
+        self.info["signals"] = {
             "arm_match": sig["arm_match"],
             "lifted": sig["lifted"],
         }
