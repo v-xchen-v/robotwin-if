@@ -1,7 +1,11 @@
 #!/usr/bin/env python3
-"""Render + color-verify the Pick-Diverse-Object 12-item pool (18 variants).
+"""Legacy color audit for the original 12-item Seen pool (16 variants).
 
-Headless software render (trimesh + matplotlib, no GL). For each locked
+The current object-familiarity extension uses noun-only instructions and reads its
+production pools from ``_pick_diverse_object_pool.py``. This tool remains as
+reproducible evidence for the paper-faithful color+noun baseline only.
+
+Headless software render (trimesh + matplotlib, no GL). For each historical
 (noun, obj, base_id, claimed_color) variant it: renders a shaded thumbnail,
 samples the dominant baseColor from the glb texture, auto-classifies that to a
 named color, and flags rows where the auto guess disagrees with the claimed
@@ -10,8 +14,8 @@ to focus review. Output: one contact sheet + per-variant PNGs + a printed table.
 
     python tools/render_pick_pool_thumbs.py
 
-Locked table source: docs/features/04-Pick-Diverse-Object.md. Update POOL there
-and here together.
+Historical table source: docs/features/04-Pick-Diverse-Object.md. Do not use this
+legacy list as the current production pool.
 """
 import json
 import os

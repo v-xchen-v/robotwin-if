@@ -1,74 +1,70 @@
 #!/usr/bin/env python3
-"""Layer-A instruction-pool invariants for pick_diverse_object.json.
-
-Single-mode task (only {A}=target object, {a}=arm), so routing is simpler than the
-three-way operate_tabletop. What matters here is the CONTROLLED color+noun injection:
-{A} is filled with a literal "the {color} {noun}" (no '/'), so RoboTwin's real
-replace_placeholders must substitute it verbatim (not draw a random objects_description).
-This test checks seen/unseen disjointness, {A}-only routing via the real
-filter_instructions, and that literal injection yields a clean color+noun sentence.
-
-    python tests/pick_diverse_object/test_instructions.py
-
-(no simulator needed, but run in the RoboTwin env for the yaml import inside the
-generate_episode_instructions module).
-"""
+"""Layer-A noun-only instruction-template invariants for pick_diverse_object."""
 import json
 import os
 import sys
 
-_REPO = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-while not os.path.isdir(os.path.join(_REPO, "third_party", "robotwin")):
-    _p = os.path.dirname(_REPO)
-    if _p == _REPO:
-        raise RuntimeError("could not locate repo root (no third_party/robotwin above)")
-    _REPO = _p
+REPO = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+while not os.path.isdir(os.path.join(REPO, "third_party", "robotwin")):
+    parent = os.path.dirname(REPO)
+    if parent == REPO:
+        raise RuntimeError("could not locate repo root")
+    REPO = parent
 
-_JSON = os.path.join(_REPO, "tasks", "task_instruction", "pick_diverse_object.json")
-sys.path.insert(0, os.path.join(_REPO, "third_party", "robotwin", "description", "utils"))
+JSON_PATH = os.path.join(REPO, "tasks", "task_instruction", "pick_diverse_object.json")
+sys.path.insert(0, os.path.join(REPO, "third_party", "robotwin", "description", "utils"))
 from generate_episode_instructions import filter_instructions, replace_placeholders  # noqa: E402
 
-# Regression tripwire (borrowed from adjust_bottle's orientation-free subset, {C}->{A}).
-EXPECT = {"seen": 12, "unseen": 4}
-PARAMS = {"{A}": "the red cup", "{a}": "left"}  # {A} literal = "the {color} {noun}"
+EXPECTED_TEMPLATE_COUNTS = {"seen": 12, "unseen": 4}
+PARAMS = {"{A}": "the wooden mallet", "{a}": "left"}
 
-data = json.load(open(_JSON))
-SEEN, UNSEEN = data["seen"], data["unseen"]
+with open(JSON_PATH) as handle:
+    data = json.load(handle)
+TEMPLATE_SEEN = data["seen"]
+TEMPLATE_UNSEEN = data["unseen"]
+RESULTS = []
 
-_results = []
 
-
-def _check(name, ok, note=""):
-    _results.append(bool(ok))
+def check(name, condition, note=""):
+    ok = bool(condition)
+    RESULTS.append(ok)
     print(f"[{'PASS' if ok else 'FAIL'}] {name}  {note}")
 
 
-# 1. Every template carries {A}; no stray {B}/{C} (single-object task).
-for pool_name, pool in [("seen", SEEN), ("unseen", UNSEEN)]:
-    no_a = [t for t in pool if "{A}" not in t]
-    stray = [t for t in pool if "{B}" in t or "{C}" in t]
-    _check(f"{pool_name}: every template has {{A}}", not no_a, note=f"offenders={no_a[:3]}")
-    _check(f"{pool_name}: no stray {{B}}/{{C}}", not stray, note=f"offenders={stray[:3]}")
+for split_name, templates in (("seen", TEMPLATE_SEEN), ("unseen", TEMPLATE_UNSEEN)):
+    no_target = [template for template in templates if "{A}" not in template]
+    stray = [template for template in templates if "{B}" in template or "{C}" in template]
+    check(f"template-{split_name}: every template has {{A}}", not no_target,
+          f"offenders={no_target[:3]}")
+    check(f"template-{split_name}: no stray {{B}}/{{C}}", not stray,
+          f"offenders={stray[:3]}")
 
-# 2. seen ∩ unseen = ∅ (IF requires zero train/eval template overlap).
-s, u = set(SEEN), set(UNSEEN)
-_check("seen∩unseen = empty", s.isdisjoint(u), note=f"overlap={len(s & u)}")
+seen_set = set(TEMPLATE_SEEN)
+unseen_set = set(TEMPLATE_UNSEEN)
+check("template seen/unseen split is disjoint", seen_set.isdisjoint(unseen_set),
+      f"overlap={len(seen_set & unseen_set)}")
 
-# 3. Routing via RoboTwin's real filter: params select the whole pool, counts match.
-for pool_name, pool in [("seen", SEEN), ("unseen", UNSEEN)]:
-    f = filter_instructions(list(pool), PARAMS)
-    _check(f"{pool_name}: filter non-empty & count == {EXPECT[pool_name]}",
-           len(f) == EXPECT[pool_name], note=f"got {len(f)}")
+for split_name, templates in (("seen", TEMPLATE_SEEN), ("unseen", TEMPLATE_UNSEEN)):
+    filtered = filter_instructions(list(templates), PARAMS)
+    check(
+        f"template-{split_name}: real filter preserves expected count",
+        len(filtered) == EXPECTED_TEMPLATE_COUNTS[split_name],
+        f"got={len(filtered)}",
+    )
 
-# 4. Literal color+noun injection: replace_placeholders substitutes "{A}" verbatim,
-#    every rendered instruction contains "red cup", no leftover braces, no "the the".
-for pool_name, pool in [("seen", SEEN), ("unseen", UNSEEN)]:
+for split_name, templates in (("seen", TEMPLATE_SEEN), ("unseen", TEMPLATE_UNSEEN)):
     bad = []
-    for t in pool:
-        out = replace_placeholders(t, dict(PARAMS))
-        if ("red cup" not in out) or ("{" in out) or ("the the" in out):
-            bad.append(out)
-    _check(f"{pool_name}: literal color+noun renders cleanly", not bad, note=f"offenders={bad[:2]}")
+    for template in templates:
+        output = replace_placeholders(template, dict(PARAMS))
+        if "wooden mallet" not in output or "{" in output or "the the" in output:
+            bad.append(output)
+    check(f"template-{split_name}: literal noun phrase renders cleanly", not bad,
+          f"offenders={bad[:2]}")
 
-print(f"\n==== {sum(_results)}/{len(_results)} passed ====")
-sys.exit(0 if _results and all(_results) else 1)
+schema = data.get("schema", "")
+check("schema distinguishes template split from object familiarity",
+      "instruction-template split" in schema and "object-familiarity split" in schema)
+check("schema documents noun-only literal", "the {noun}" in schema)
+
+print(f"\n==== {sum(RESULTS)}/{len(RESULTS)} passed ====")
+sys.exit(0 if RESULTS and all(RESULTS) else 1)

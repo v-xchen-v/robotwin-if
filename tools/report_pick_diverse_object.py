@@ -1,140 +1,215 @@
 #!/usr/bin/env python3
-"""Report pick_diverse_object success rates, broken down by what is being grounded:
-  - aggregate: the whole task set
-  - per target NOUN: all 12 categories
-  - per target COLOR
+"""Report all-Seen-scene vs all-Unseen-scene Pick-Diverse-Object results.
 
-The target (noun, color) is `variant[seed % N]` in the env's load_actors, so it is
-reproducible from the seed alone (target_of_seed below mirrors that) -- no extra logging
-needed for the denominator, exactly like operate_tabletop derives mode from seed parity.
-
-Two data sources:
-  --collection <dir>   oracle/collection stats from scene_info.json + seed.txt.
-                       Default: third_party/robotwin/data/pick_diverse_object/demo_clean
-  --eval-log <file>    policy eval stats parsed from eval_policy.py stdout:
-                       bash script/eval_policy.sh ... | tee eval.log
-
-Run from anywhere:
-    python tools/report_pick_diverse_object.py
-    python tools/report_pick_diverse_object.py --collection <dir>
-    python tools/report_pick_diverse_object.py --eval-log eval.log
+This is a scene-level object-familiarity split: the target and all three distractors
+come from the same group. The Seen/Unseen gap must not be interpreted as a pure
+same-scene target-only causal effect.
 """
 import argparse
 import json
 import os
 import re
+import sys
 from collections import Counter
 
-_REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-_DEFAULT_COLLECTION = os.path.join(
-    _REPO, "third_party", "robotwin", "data", "pick_diverse_object", "demo_clean")
+REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, REPO)
+from tasks.envs._pick_diverse_object_pool import (  # noqa: E402
+    SEEN_POOL,
+    UNSEEN_POOL,
+    familiarity_for_seed,
+    target_for_seed,
+)
 
-# Must match pick_diverse_object.POOL (noun -> colors in order). Target noun cycles by
-# seed % 12, color by seed // 12 -> every category is an equally likely target.
-POOL = {
-    "bottle": ["red", "green", "orange"], "cup": ["blue", "green"], "shoe": ["red", "green"],
-    "mug": ["black"], "can": ["red"], "toycar": ["green"], "phone": ["black"],
-    "soap": ["blue"], "hamburg": ["yellow"], "bread": ["golden"],
-    "coffee-box": ["brown"], "mouse": ["gray"],
-}
-NOUNS = list(POOL.keys())
-COLORS = ["red", "green", "blue", "orange", "black", "yellow", "golden", "brown", "gray"]
+DEFAULT_COLLECTION = os.path.join(
+    REPO, "third_party", "robotwin", "data", "pick_diverse_object", "demo_clean"
+)
+POOLS = {"seen": SEEN_POOL, "unseen": UNSEEN_POOL}
 
 
 def target_of_seed(seed):
-    # Matches pick_diverse_object.load_actors: noun = NOUNS[seed % 12], color cycles
-    # within the noun by seed // 12 (seed%N cycle, not an rng draw, so consecutive seeds
-    # give a uniform target distribution).
-    noun = NOUNS[seed % len(NOUNS)]
-    colors = POOL[noun]
-    return (noun, colors[(seed // len(NOUNS)) % len(colors)])
+    familiarity = familiarity_for_seed(seed)
+    noun, asset, model_id = target_for_seed(seed, POOLS[familiarity])
+    return familiarity, noun, asset, model_id
 
 
-def _pct(a, b):
-    return f"{a}/{b} = {100 * a / b:.1f}%" if b else f"{a}/0 = n/a"
+def rate(successes, total):
+    return successes / total if total else None
 
 
-def _print_breakdown(title, keys, succ, total):
-    st = sum(succ.get(k, 0) for k in keys)
-    tt = sum(total.get(k, 0) for k in keys)
-    print(f"== {title} ==")
-    print(f"  aggregate (whole task set): {_pct(st, tt)}")
-    for k in keys:
-        print(f"  {k:<10}: {_pct(succ.get(k, 0), total.get(k, 0))}")
+def pct(successes, total):
+    value = rate(successes, total)
+    return f"{successes}/{total} = {100 * value:.1f}%" if value is not None else "0/0 = n/a"
 
 
-def _report(seed_success, header):
-    """seed_success: list of (seed, succeeded_bool)."""
-    succ_noun, tot_noun = Counter(), Counter()
-    succ_color, tot_color = Counter(), Counter()
-    for seed, ok in seed_success:
-        noun, color = target_of_seed(seed)
-        tot_noun[noun] += 1
-        tot_color[color] += 1
-        if ok:
-            succ_noun[noun] += 1
-            succ_color[color] += 1
-    print(header)
-    _print_breakdown("success by target NOUN", NOUNS, succ_noun, tot_noun)
-    print()
-    _print_breakdown("success by target COLOR", COLORS, succ_color, tot_color)
+def scalar_pct(value):
+    return "n/a" if value is None else f"{100 * value:.1f}%"
+
+
+def report_seed_results(seed_success, heading):
+    success_group = Counter()
+    total_group = Counter()
+    success_noun = Counter()
+    total_noun = Counter()
+    success_variant = Counter()
+    total_variant = Counter()
+
+    for seed, succeeded in seed_success:
+        familiarity, noun, asset, model_id = target_of_seed(seed)
+        noun_key = (familiarity, noun)
+        variant_key = (familiarity, noun, asset, model_id)
+        total_group[familiarity] += 1
+        total_noun[noun_key] += 1
+        total_variant[variant_key] += 1
+        if succeeded:
+            success_group[familiarity] += 1
+            success_noun[noun_key] += 1
+            success_variant[variant_key] += 1
+
+    group_rates = {
+        familiarity: rate(success_group[familiarity], total_group[familiarity])
+        for familiarity in ("seen", "unseen")
+    }
+    available = [value for value in group_rates.values() if value is not None]
+    balanced = sum(available) / len(available) if len(available) == 2 else None
+    gap = (
+        group_rates["seen"] - group_rates["unseen"]
+        if all(value is not None for value in group_rates.values())
+        else None
+    )
+    retention = (
+        group_rates["unseen"] / group_rates["seen"]
+        if group_rates["seen"] not in (None, 0) and group_rates["unseen"] is not None
+        else None
+    )
+
+    print(heading)
+    print("  Seen target / all-Seen scene   :", pct(success_group["seen"], total_group["seen"]))
+    print("  Unseen target / all-Unseen scene:", pct(success_group["unseen"], total_group["unseen"]))
+    print("  balanced average               :", scalar_pct(balanced))
+    print("  absolute gap (Seen - Unseen)   :", scalar_pct(gap))
+    print("  retention (Unseen / Seen)      :", scalar_pct(retention))
+
+    for familiarity in ("seen", "unseen"):
+        print(f"\n== {familiarity.upper()} target nouns / all-{familiarity.capitalize()} scenes ==")
+        noun_rates = []
+        for noun in POOLS[familiarity]:
+            key = (familiarity, noun)
+            noun_rate = rate(success_noun[key], total_noun[key])
+            if noun_rate is not None:
+                noun_rates.append(noun_rate)
+            print(f"  {noun:<18s}: {pct(success_noun[key], total_noun[key])}")
+        macro = sum(noun_rates) / len(noun_rates) if noun_rates else None
+        micro = group_rates[familiarity]
+        print(f"  {'micro':<18s}: {scalar_pct(micro)}")
+        print(f"  {'macro over tried nouns':<18s}: {scalar_pct(macro)}")
+
+    print("\n== exact target variants ==")
+    for key in total_variant:
+        familiarity, noun, asset, model_id = key
+        print(
+            f"  {familiarity:6s} {noun:<18s} {asset} base{model_id:<2d}: "
+            f"{pct(success_variant[key], total_variant[key])}"
+        )
 
 
 def report_collection(data_dir):
-    scene = json.load(open(os.path.join(data_dir, "scene_info.json")))
-    seeds = [int(s) for s in open(os.path.join(data_dir, "seed.txt")).read().split()]
-    mx = max(seeds)
+    scene_path = os.path.join(data_dir, "scene_info.json")
+    seed_path = os.path.join(data_dir, "seed.txt")
+    with open(scene_path) as handle:
+        scene = json.load(handle)
+    with open(seed_path) as handle:
+        seeds = [int(seed) for seed in handle.read().split()]
+    if not seeds:
+        raise RuntimeError(f"no successful seeds in {seed_path}")
+
+    max_seed = max(seeds)
     kept = set(seeds)
-    # Oracle: every seed 0..max was tried; those in seed.txt succeeded (kept).
-    seed_success = [(s, s in kept) for s in range(mx + 1)]
-
-    print("# pick_diverse_object — collection (oracle expert) report")
+    seed_success = [(seed, seed in kept) for seed in range(max_seed + 1)]
+    print("# Pick-Diverse-Object object familiarity report")
+    print("# comparison: Seen target / all-Seen scene vs Unseen target / all-Unseen scene")
+    print("# interpretation: independent scenes; NOT a target-only same-scene causal gap")
     print(f"# source: {data_dir}")
-    print(f"seeds tried 0..{mx} ({mx + 1}), kept {len(seeds)}\n")
-    _report(seed_success, "-- oracle expert success rate (kept/tried) --")
+    print(f"# tried seeds: 0..{max_seed} ({max_seed + 1}); kept: {len(seeds)}\n")
+    report_seed_results(seed_success, "-- oracle kept / raw seeds tried --")
 
-    # Extra detail from the kept episodes' logged makeup.
-    comp = Counter(v.get("target_noun") for v in scene.values())
-    print("\n-- collected dataset composition (successful episodes) --")
-    print("  target noun: " + "  ".join(f"{n}={comp.get(n, 0)}" for n in NOUNS) + f"  total={len(scene)}")
-    dcount = Counter(d.split("/")[0] for v in scene.values() for d in v.get("distractors", []))
-    if dcount:
-        print("  distractor nouns: " + ", ".join(f"{k}={c}" for k, c in dcount.most_common()))
+    kept_group = Counter()
+    kept_noun = Counter()
+    distractor_noun = Counter()
+    mismatches = []
+    for episode in scene.values():
+        familiarity = episode.get("target_familiarity")
+        noun = episode.get("target_noun")
+        if familiarity is not None:
+            kept_group[familiarity] += 1
+            kept_noun[(familiarity, noun)] += 1
+        if (
+            familiarity is not None
+            and episode.get("scene_familiarity") not in (None, familiarity)
+        ):
+            mismatches.append(episode)
+        for distractor in episode.get("distractors", []):
+            distractor_noun[distractor.split("/", 1)[0]] += 1
+
+    print("\n-- kept episode composition (successful oracle episodes only) --")
+    print("  familiarity:", "  ".join(
+        f"{name}={kept_group[name]}" for name in ("seen", "unseen")
+    ))
+    for familiarity in ("seen", "unseen"):
+        values = "  ".join(
+            f"{noun}={kept_noun[(familiarity, noun)]}" for noun in POOLS[familiarity]
+        )
+        print(f"  {familiarity} target nouns: {values}")
+    if distractor_noun:
+        print("  distractor nouns:", ", ".join(
+            f"{noun}={count}" for noun, count in distractor_noun.most_common()
+        ))
+    print("  logged target/scene familiarity mismatches:", len(mismatches))
+    print(
+        "\n# Unkept raw seeds combine setup, planning, and physical/check failures; "
+        "use the probe JSON for stage-specific failure rates."
+    )
 
 
 def report_eval_log(path):
-    results, pending = [], None
-    for line in open(path):
-        if "Success!" in line:
-            pending = True
-        elif "Fail!" in line:
-            pending = False
-        m = re.search(r"current seed:\s*(\d+)", line)
-        if m and pending is not None:
-            results.append((int(m.group(1)), pending))
-            pending = None
+    results = []
+    pending = None
+    with open(path) as handle:
+        for line in handle:
+            if "Success!" in line:
+                pending = True
+            elif "Fail!" in line:
+                pending = False
+            match = re.search(r"current seed:\s*(\d+)", line)
+            if match and pending is not None:
+                results.append((int(match.group(1)), pending))
+                pending = None
     if not results:
-        print(f"no episodes parsed from {path} "
-              f"(expected 'Success!/Fail!' + 'current seed: N' lines)")
-        return
-    print(f"# pick_diverse_object — policy eval report")
-    print(f"# source: {path}  ({len(results)} episodes)\n")
-    _report(results, "-- policy success rate --")
+        raise RuntimeError(
+            f"no episodes parsed from {path}; expected Success!/Fail! plus current seed"
+        )
+    print("# Pick-Diverse-Object policy report")
+    print("# comparison: Seen target / all-Seen scene vs Unseen target / all-Unseen scene")
+    print("# interpretation: independent scenes; NOT a target-only same-scene causal gap")
+    print(f"# source: {path}; episodes: {len(results)}\n")
+    report_seed_results(results, "-- policy success rate --")
 
 
 def main():
-    ap = argparse.ArgumentParser(description=__doc__,
-                                 formatter_class=argparse.RawDescriptionHelpFormatter)
-    g = ap.add_mutually_exclusive_group()
-    g.add_argument("--collection", nargs="?", const=_DEFAULT_COLLECTION,
-                   help="collection data dir (default demo_clean)")
-    g.add_argument("--eval-log", help="eval_policy.py stdout log to parse")
-    a = ap.parse_args()
-
-    if a.eval_log:
-        report_eval_log(a.eval_log)
+    if len(UNSEEN_POOL) < 4:
+        raise RuntimeError(
+            "UNSEEN_POOL is not locked; reporting a production familiarity split "
+            "would incorrectly treat metadata candidates as validated objects"
+        )
+    ap = argparse.ArgumentParser(description=__doc__)
+    group = ap.add_mutually_exclusive_group()
+    group.add_argument("--collection", nargs="?", const=DEFAULT_COLLECTION)
+    group.add_argument("--eval-log")
+    args = ap.parse_args()
+    if args.eval_log:
+        report_eval_log(args.eval_log)
     else:
-        report_collection(a.collection or _DEFAULT_COLLECTION)
+        report_collection(args.collection or DEFAULT_COLLECTION)
 
 
 if __name__ == "__main__":

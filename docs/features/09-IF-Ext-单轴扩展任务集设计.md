@@ -1,0 +1,209 @@
+---
+status: planning
+area: robotics
+created: 2026-08-28
+tags: [robotwin, vla, benchmark, if-ext]
+parent: "[[RoboTwin-IF 复刻]]"
+---
+
+# IF-Ext：单轴指令跟随扩展任务集设计
+
+> 与论文复刻的 5 个任务集是**并列新增**关系，不替代、不修改原 5 个任务集。定位：论文 5 个任务集覆盖的维度是"任务集内部混合测多个维度"，IF-Ext 反过来做**单维度拆分**——每个任务集只主测一个能力轴，方便定位 policy 具体在哪个轴上退化。
+
+## 背景与动机
+
+论文 RoboTwin-IF 的 5 个任务集已经覆盖了目标物体 grounding、空间关系、多步序列+双臂协调、共享场景动词判别等能力，但这些能力在各任务集内是**耦合**的（比如 Operate-Tabletop 里"动词"和"目标物体"是绑定的——选摇铃动词就等于选了铃铛这个物体）。
+
+IF-Ext 补充 7 个**单轴**任务集，每个只隔离测试一个具体能力维度：
+
+1. **verb**（动词）
+2. **target object noun**（目标物体名词）
+3. **视觉特征**（primitive 版按特征型分 mode：color / decal(贴图) / shape / size）
+4. **左右臂指定**
+5. **序列能力**（多物体按顺序放入容器，顺序不能错）
+6. **放置方位**（相对某物体的 左/右/前/后/上方）
+7. **抓取接近方向**（同物体从顶部抓 vs 从侧面抓，指令指定抓取构型）
+
+## 与现有 5 任务集的集成方式（复用既定机制，不新增机制）
+
+- **独立任务组、可改可复用**：IF-Ext 6 个任务自成一个**独立任务组**，与原 robotwin-if 的任务组（native 50 + 论文复刻 5）解耦，在 `all_tasks_plus_if.yml` 里单列一组。不同于论文复刻"不改 native"的约束——IF-Ext **允许直接 fork native 任务代码、修改后复用，并复用其资产/抓取参数**（如复制 `open_laptop.py` 加合盖逻辑、remap 指令池、借某物体在 native 里的 `grasp_actor` 参数）。约定：fork 到 `robotwin-if` 自己的 `tasks/envs/` 下改，不回改 submodule 里 native 原文件本身。
+- 同一个 `robotwin-if` 仓库、同一套 submodule 桥接机制（`envs/{task_name}.py` + `description/task_instruction/{task_name}.json`）
+- 同一份合并评测清单 `all_tasks_plus_if.yml`，追加 7 个新 task_name（原 50 + 论文 5 + IF-Ext 7 = 62）
+- 同一套 seen/unseen 静态指令模板机制（10 seen / 2 unseen），复用 RoboTwin 2.0 原生 description-gen 管线
+- 同一套 Layer A/B 验证方法论（见主文档"基准验证计划"）：Layer A 结构正确性、Layer B oracle 正例/反例判定正确性
+
+## 七个任务集设计
+
+### 1. IF-Verb-Select（动词判别）
+
+- **测试目标（收紧）**：动词与物体**解耦**——同一个物体、同一套几何，只有指令里的动词变。真正诊断的失败模式是**动词被"物体→惯用动作"先验盖掉**（policy 学到 laptop→开，就无视指令里的"关"）。所以测法是：选一个有强默认动作的铰接物体，指令去命令那个**非默认**动词，看 policy 是否真读了动词。
+- **三条设计判据（同时也是可实现性判据）**：
+  - (a) 该动词槽位是场景里**唯一**的区分量（几何/物体身份全中性）
+  - (b) oracle 对开、关**两个取值都**要 ~90%，且都从**同一中间态**起验（否则任务本身不成立，参考 [[mic-drawer-oracle-infeasible]] 的教训）
+  - (c) 开/关两个结果在**相机画面上明显可分**（否则 policy 连初始态都看不出、成功差异也无意义）
+- **选定资产：`015_laptop` 开/关（先试 B 方案）**：盖子平放 vs 立起，视觉差最大（满足 c）；开 = 复用 native `open_laptop`（抓 contact_point 0 → 转向 1 的单循环，比微波炉干净，满足 b 的开向），只是起始开度从 native 的 ~20% 提到共用中间态 ~50%。
+  - **为什么不选另两个**：`056_switch` 拨杆本身成功率就低、且开/关画面几乎同一张（c 不满足，淘汰）；`044_microwave` 的 native 开门代码带一整段兜底重试、首次成功率不高（b 有风险，淘汰）。
+  - **备选（B 验证不过再退）**：候选 A `036_cabinet` 抽屉开/关——抓把手拉出/推入，纯 prismatic、开关严格对称、oracle 最稳，且不往里放物体正好绕开 [[mic-drawer-oracle-infeasible]] 的放置墙；代价是视觉差只"够用"不戏剧。候选 C 同物体 pick vs press——两原语都 native、oracle 最稳、初始场景严格同一，但动作集和 Operate-Tabletop 重叠。
+- **指令示例**："把它合上" / "把它打开"。**已实现为单个 env `tasks/envs/laptop_verb.py` + 单指令池 `laptop_verb.json`**（动词随指令切换）：
+  - **场景/动词解耦**（合并的核心价值——"同帧只变动词"从约定升级为结构性保证）：`scene_seed = seed // 2`(在 `load_actors` 顶部重播种)决定场景、`mode = ["open","close"][seed % 2]` 决定方向 → 相邻种子对 `(2k,2k+1)` 是**同一场景**(同变体/位姿/50% 开度)、一开一关。评测跑连续种子对即可拿到像素级同帧、仅动词不同的两局。已验证 seed(4,5)→同 mid/位姿、模式相反。
+  - **指令路由用 `{V}` 动词占位符**(不 hack 框架)：开/关 episode 都提供 `{A}/{a}/{V}`，占位符集合相同 → 框架标准路由(`filter_instructions` 精确匹配)直接通,`{V}` 注入 open-族/close-族动词(现取 open=`open`、close=`close`/`shut`,避开 raise/lift/lower 以防"抬起整机"歧义)。模板全部只用 `{V}+{A}(+{a})`、开关共用一套,只有动词变——verb-contrast 最纯。渲染验证正常。
+  - 保留 `close_laptop.py` / `open_laptop_mid.py` 两个 spike env(可行性验证脚本仍在用)；其对应的 `close_laptop.json`/`open_laptop_mid.json` 为早期两并列 task 形态遗留、已被 `laptop_verb.json` 取代。
+- **成功判定**：初始态为**开、关共用的中间开度（~50%）**——两个变体初始画面完全相同，只有指令动词不同，逼 policy 读动词而非靠初始几何猜动作（呼应"动词-物体解耦"的测试目标，也让 50% 半开这个歧义最大的状态把动词先验暴露得最彻底）。铰链关节角到达指令方向对应端——开 → qpos 过高阈值（**~70%**，见下方 spike：开向可靠上限 ~78%，够不到 ~90%）；关 → qpos 回到低阈值区间（合并 env `laptop_verb` 用 **~20%**：去掉腕部翻转后合盖稳定落在 ~12–15%、离 15% 太近，N=20 诊断里有一条落 15.1% fail，遂放宽到 20% 留 5–8% 余量）；**不是**"关节角发生了变化"。50% 起点 → 开 ~78% / 关 ~13% 三档在画面上清楚可分。N=20 诊断：总 90%、开/关各 90%、成功后仍 9 开 9 关均衡、`(2k,2k+1)` 同场景零违例。
+- **反例设计（Layer B，已过）**：`tests/laptop_verb/test_check_success.py` 直接把铰链 `set_qpos` 到各末态断言 check_success——关键反例"应关却开(~78%)→ close 判 False""应开却关(~5%)→ open 判 False"均过，另含正例/未动(50%)/阈值两侧,加上"种子对同场景+模式相反"结构验证,共 12/12。(早期两并列 task 版判定测试 `tests/close_laptop/test_check_success.py` 亦保留、10/10。)
+- **主要风险与待验**：native 只有 `open_*` 没有 `close_*`，**合盖 oracle 要自写**（把中间态的盖子沿铰链弧线往下折——复用 open/microwave 的"抓一点 servo 向另一接触点"惯用法反向驱动，弧线由铰链约束自动产生，无需手写；目标点为基座 `link_0` 上的 contact_point 3，接近合上时盖/座可能碰撞）。第一步先跑一个小 oracle spike，从共用中间态（~50%）**双向**跑，确认开、关**都**能到 ~90%——过了才锁 B，不过就退到备选 A。
+- **spike 结论（双向已跑，锁定 B、子集 {1, 9}）**：合盖 oracle `tasks/envs/close_laptop.py`（抓 contact_point 0 → 循环 servo 向 contact_point 3 折下，判据 `qpos <= 15%`）；开向 oracle `tasks/envs/open_laptop_mid.py`（同 init/子集，抓 0 → servo 向 1 掀开，判据 `qpos >= 70%`）。成功率**逐变体确定性**分层，根因是 `015_laptop` 11 个变体接触点**逐变体手工标注、彼此不一致**：① **INV 变体 {0,2,5}** 屏幕/基座接触点互换 → 合向驱动语义反、双峰、贴 15.8% 判定线；② **{3,4,6,8}** 的 point-3 抓取位姿退化 → `choose_grasp_pose` 返回 None 崩。合向可靠子集本为 {1,9,10}（91.5%），但**开向进一步暴露 mid=10 不可靠**：开向 servo 屏幕转陡后点 1 抓取规划撞墙（需 `try/except` guard 就地停，否则崩），mid=1/9 稳定开到 77–81%、mid=10 约 60% 概率卡在 63%。**两方向都要过 → 共用子集收到 {1, 9}**：开向 ≥70% 100%(22/22)、合向 ≤15% ~92%(33/36)。验证脚本：`tests/close_laptop/{spike_success_rate,spike_open_success_rate,sweep_per_variant}.py`。
+- **可信度**：中偏高（开、合两向 spike 均已过、机制与判定验证充分；开向可达上限 ~78% 而非 ~90%，阈值已按实测下修到 70%；残余不确定性只是子集缩到 2 个变体、视觉多样性降低——但 IF-Verb-Select 固定同一物体、只变动词，变体多样性非核心诊断量）。
+- **⚠ 前提风险（选型层面，比实现更重要）**：`close` 是全 native 里唯一没演示过的闭合动作 → 对 zeroshot / 只 native-ft 的模型是 **action-OOD**，二值判据下 close=0 无法归因（"没读动词" vs "执行不出"），**IF 会塌成 OOD 泛化**。有效性随评测协议翻转：`ifext-ft` 下干净、`zeroshot`/`native-ft` 下需改**方向性/分级判据 + 报 open/close gap**。详见设计准则 [被测行为须在能力库内-IF避免塌成OOD](../task-design/被测行为须在能力库内-IF避免塌成OOD.md)。
+
+### 2. IF-Noun-Grounding（目标名词 grounding，纯净基线）
+
+- **测试目标（收紧）**：只隔离**名词槽位**——唯一区分量是类别名词、干扰物是**不同类别**时，policy 能否 ground 对。定位是 IF-Attribute-Select 的**对照基线**：policy 连这都挂，说明是最基础的名词 grounding 问题，而非"视觉特征"问题。价值是**比较性的**。
+- **三条判据**：(a) 唯一区分量 = 名词 → 干扰物必须**跨类别**、被点名类别场景里只有一个；(b) oracle ~90% → 只复合一次抓取，可靠性压在 per-object 抓取参数上（per-variant 的坑，见 [[verify-asset-colors-by-texture]]）；(c) 画面可分 → 跨类别天生满足（当初淘汰 switch 的就是这条，这里免费）。
+- **场景（选定方案 2·精简基线）**：**2–3 个不同类别物体**（如 杯 / 瓶 / 盒），单臂，指令用纯名词点名 1 个。不堆到 paper 的 4 物体——它的职责是"对照"，堆物体不按比例换诊断价值，需就绪的抓取类别也更少、起得快。
+- **复用与成本**：机制 ≈ **Pick-Diverse-Object 去掉形容词 + 干扰物改跨类别**，差量很小。但 Pick-Diverse 的 env/池**不在当前分支**（在 `pick_diverse_object` 分支，submodule 里的符号链接已断），实际成本取决于把那条分支的池子工作搬过来复用、还是本分支起精简版；主要工作量是逐类别配 per-object 抓取参数（借用 native 里抓该物体的任务，见 [[reuse-native-instruction-pools]] / [[verify-asset-colors-by-texture]]）。
+- **指令示例**："拿起杯子"（池中另有瓶子、盒子）
+- **成功判定**：抓取物体的类别标签 == 指令名词 且离地过阈值，**不是**"抓到某个东西就算"。
+- **反例设计（Layer B）**：oracle 故意抓一个**干扰物**（错名词）→ 必判失败。
+- **与 §3 的关系（互补但独立成任务）**：Noun-Grounding 是**纯名词**（不看颜色/贴图/形状，抓对类别即成功），IF-Attribute-Select 测同一物体上的**单一视觉特征**——两者**各自独立成任务**；§2 用跨类别物体池、§3 用 primitive，**infra 不再共用**。Noun 提供"无特征、纯类别 grounding"的对照读数，Attribute 在其上换成按特征区分。
+- **可信度**：中（机制复用可靠；主要不确定性是跨类别抓取参数的覆盖，非判定逻辑）。
+
+### 3. IF-Attribute-Select（视觉特征 grounding：primitive 版，四特征 mode：color / decal / shape / size）
+
+- **测试目标**：隔离**单一视觉特征槽位**——物体其余特征全部固定，只有**一种特征**是区分量，测 policy 能否真正用上该特征 grounding 到正确物体。**按特征型分成独立 mode**（color / decal / shape / size，正好收齐原"color > texture > shape > size"四类、decal 顶替 texture 档），**分 mode 统计成功率**：某 mode 骤降 = policy 用不上那一类特征（退化行为的量化证据）。与 §2 Noun-Grounding **互补但独立**：Noun 测跨类别名词，本任务测同一物体上**单一视觉特征**的 grounding。
+- **两个关键选型（对早期"物体池 + 优先级阶梯"设计的修正）**：
+  - **① 用 primitive 而非物体池**：三 mode 全用 `create_box`/`create_sphere`/`create_cylinder` 直接生成——color/decal/shape/size 都由参数写死。这一刀同时消掉旧设计三大风险：**池盘点、属性标注 noisy（[[verify-asset-colors-by-texture]]）、per-object 抓取参数**，并**摆脱 pick_diverse_object 池 infra 依赖**（断链 symlink）→ §3 从此**自包含**、与 §4/§7 同级共用 create_box 脚手架。特征是你 set 的，不用反推。
+  - **② decal(贴图)替换抽象 texture**：中间档从"材质纹理(条纹/木纹)"换成"表面图像内容(猫/狗)"。材质纹理的老风险是**同色不同材质相机分不分得清**；换成 decal 后**视觉可分免费**(猫 vs 狗一眼可分 + 强语义先验)，中间档从"7 任务最高风险"退成低风险。机制现成：`create_box(texture_id=...)` 把图当 baseColorTexture 贴上（见 [create_actor.py](../../third_party/robotwin/envs/utils/create_actor.py)）。**诚实定位**：decal 是"表面图像语义"，是一种视觉特征、但**不是材质纹理、也不是严格意义的形容词**；放这当中间档取的是它"可分免费 + 易构造"。与 §2 划界：§2 跨**类别**真实物体、decal 是**同一 cube** 只换贴图 → 物体身份中性，不同轴。
+- **为什么按特征型拆、而非累积阶梯**：累积档（color → color+texture → …）升档时「特征种类」和「累积个数」**同时**在动，失败分不清哪层挂；按特征型拆则每 mode 只动一种特征，而「优先级退化」照样从 per-mode 成功率读得出（color 高 / decal·shape 低 = 靠颜色、无视其它），更干净。累积阶梯多测的「过度指定」在 pick 任务不致失败、诊断价值薄，舍弃。
+- **单 env·mode 结构（复用 laptop_verb 写法）**：`MODES = ["color","decal","shape","size"]`、`k = len(MODES)`（=4）；`scene_seed = seed // k` 定场景、`mode = MODES[seed % k]` 定特征轴 → **同场景、只变特征轴**为结构性保证。成功判定按 mode 分派比较器 `check_attr_match(picked, target, ATTRS[mode])`，干扰物构造也按 mode 分派（各 mode 一个 primitive builder）。指令用统一形容词槽 `{ADJ}`，跨 mode 占位符集合一致 → 框架标准路由（`filter_instructions` 精确匹配）直接通。
+- **size mode（第四档，effort 极低）**：`MODES` 里第四项，配一个 size 比较器（scale/bbox 体积卡阈值）+ scale-cube builder 即可。**size 是最省事的 mode**：同一 cube 缩放出大/小两实例、零素材、抓取沿用 box。**两个小验**：① 大/小 scale 比要够大（如 1.5–2×）相机才分得清——size 是连续量、可分性弱于 color/decal，是四档里最弱的一档；② 大 cube 别超夹爪最大开度、小 cube 别扁到抓不住，两档都卡在可抓区间内。因四 mode 一起上，`k = 4` 从头固定、`seed//4` 定场景 `seed%4` 定轴，无跨版本重映射问题。
+- **三条判据（primitive 后大幅退风险）**：
+  - (a) 每 mode 唯一区分量 = 该特征、被点名对象唯一 → **primitive 完全可控、天然满足**：color 只变 baseColor、decal 只换 texture_id、shape 只换几何类型，其余逐字节相同。旧设计的"构造主难点"在此消失。
+  - (b) oracle ~90%：box/sphere 单次抓取，§4/§7 已验证；`create_box` 自带 contact_points。
+  - (c) 视觉可分：color 天然、shape 天然、decal 猫vs狗免费（见选型②）；size 需大/小 scale 比够大（1.5–2×）才分得清，是四档里可分性最弱的一档、列小验。
+- **decal mode 落地待验（唯一剩余小验）**：① **cube 的 UV 映射**——box 贴图是"每面一张完整图"还是"按尺寸平铺"，render 一眼再定，平铺则调 UV / 只贴上半面；② **图像授权**——用 CC0 / 生成图，别扒版权图；③ 选无歧义图案对（猫/狗/…）。
+- **场景**：单臂，primitive（create_box/sphere/cylinder）放桌面中央、固定或轻随机。**自包含，不依赖 pick_diverse_object 池 infra**。
+- **成功判定**：抓取的 primitive 在**当前 mode 特征上匹配**（color 比 baseColor / decal 比 texture 标签 / shape 比几何类型 / size 比 scale·bbox 体积）且离地过阈值；**不是**"抓到某个东西就算"。分 mode 统计成功率。
+- **反例设计（Layer B）**：oracle 抓一个"本 mode 特征不匹配、但其余都对"的干扰 primitive（如 color mode 抓那个只异色的 cube）→ 必判失败。每 mode **分别**测反例。
+- **指令示例**：color「拿起红色的方块」（另有蓝方块）；decal「拿起有猫的方块」（另有印狗的方块）；shape「拿起球」（另有方块）；size「拿起大的方块」（另有小方块）。
+- **可信度**：中偏高（primitive 消解构造/标注/抓取三重风险、decal 消解视觉风险 → §3 从"7 任务最高风险"降到低-中；残余待验仅 decal 的 UV 映射 + 图像授权、size 的 scale 比/可抓区间，均小且可控）。
+
+### 4. IF-Arm-Select（左右臂指定）
+
+- **测试目标（收紧）**：指令显式指定"用左臂/右臂"，物体落在**双臂重叠区**、本身无 grounding 歧义——臂词是**唯一区分量**，测 policy 是否服从指定执行臂，而不是"哪只手方便就用哪只 / 总用惯用手"。
+- **三条设计不变量**：
+  - (1) 物体放**双臂重叠区、固定 x=0**（jitter 关，非窄 xlim）——geometry 完全不泄露答案，种子对像素同一，只有指令决定用哪只臂；
+  - (2) **只有被指定臂动作**，另一只闲置——所以 [[mic-drawer-oracle-infeasible]] 的双臂夹爪互撞坑在这里不存在（那次是双臂**同时**动作导致的，本任务单臂动作）；
+  - (3) 成功判定是 **state-based"哪只夹爪最终握着物体"**，不是 oracle 自报 `ArmTag`——policy rollout 时只能从末态推断。
+- **选定场景：Propose A·中央盒子单臂抓取（已实现 `tasks/envs/arm_select.py`，spike 双臂 100%）**：复用 `handover_block` 的 `boxtype="long"` box（0.06×0.06×0.2m tall block，8 侧抓点，[0,1,2,3]=上半高度 front/right/left/back 四面，`choose_grasp_pose` 为每只臂挑可达面）。box 固定 x=0、**y=0.10**、桌面高度、identity yaw，两臂都用 [0,1,2,3]，单臂抓起。
+  - **IF 配线**（同 `laptop_verb`/`grasp_cube_approach`）：`scene_seed=seed//2`、`mode=["left","right"][seed%2]` → 种子对 (2k,2k+1) box 位姿**逐位一致**、只有指令臂词不同；oracle 抓取臂 = `ArmTag(mode)`（**不是** x 由来），先验（"哪只手近用哪只"）被指令覆盖。`ARM_OVERRIDE` 强制单臂、`ORACLE_ARM` 强制执行臂≠指令臂（仅 spike/反例用）。
+- **指令示例**："用左臂拿起积木" / "用右臂拿起积木"。指令池 `tasks/task_instruction/arm_select.json`：`{a}`（臂词）本身是**唯一信号**且每条模板必填（与 grasp_cube 的 `{D}` 同构，框架 `{a}` 渲染成 "the left/right arm"），`{A}`=block。
+- **成功判定（state-based）**：盒子离地过阈值(>0.05) **且** `arm_match`——盒子末位置离**指定臂 TCP** < NEAR_TCP(0.20) **且**比闲置臂 TCP 更近(`d_cmd < d_other`)。tall box 侧抓握在顶部、盒中心离 TCP 天然 ~0.14m，故 NEAR 放宽到 0.20；真正的臂身份判据是 `d_cmd < d_other`（实测 0.14 vs 0.51，裕度极大）。`eval_signals()` 把 `arm_match`(IF信号)/`lifted`(执行) 分离报（policy eval 用），`check_success` 收 AND（采集用）。**不是**"盒子被拿起来就算"，也不是 oracle 自报臂。
+- **反例设计（Layer B 已过）**：spike counter-example 阶段 `ORACLE_ARM`——指令左臂、执行右臂 → 盒子举起(+0.099) 但 `d_cmd=0.51`(远)、`d_other=0.14`(实握的右臂)→ `arm_match=False`，**0/15 全判失败**。
+- **⚠ 踩坑（实现层，已解）**：① 初版 `NEAR_TCP=0.12` 把每个真实抓取(d_cmd≈0.14)全毙了——tall box 侧抓握顶部所致；② 初版 box 放 y=-0.05（离机器人太近）导致两臂都够不到、误判为"x=0 不可达"，实为坏深度——挪到 y=0.10（handover 证明的 ylim=[0,0.25] 带内）后两臂各 15/15。探针另确认：中央 box 从近桌面(cz 0.86)到 cz 0.98、identity 与 45° yaw **都** 3/3，重叠区很宽，**不需要架高**（handover 的 z=0.9 中央抓只是其一个可行点，非必需）。
+- **spike 结论（已锁 Propose A）**：`tests/arm_select/spike_success_rate.py` N=15：左臂 100%、右臂 100%、counter-example 0%（PASS）。数值确定性（固定位姿 → 每局 rise 0.098/d_cmd 0.141）印证"像素同一、只变臂词"。IF 配线验证 `tests/arm_select/check_if_wiring.py`（seed→mode、种子对同场景、`{a}` 匹配）。
+- **可信度**：高（机制复用 handover 已验证的 tall-box 抓取；双臂各 100%、反例 0%、判定与配线均已验；残余不确定性仅：固定位姿零场景多样性——但 arm-select 固定物体只变臂词，多样性非核心诊断量，且可按需给 box 加 y/yaw 变化而不泄露 x 轴答案）。
+- **✅ 检验优势**：left/right 抓取都是**能力库内**行为（native 双臂日常抓取，handover 两臂都用）→ **不塌成 ACTION-OOD**（不同于 close-laptop [[if-tasks-need-in-repertoire-behaviors]]），zeroshot/native-ft 下二值判定不因"执行不出"归因不清。
+
+### 5. IF-Sequence-Container（多物体按序放入容器）
+
+- **测试目标**：3 个可命名、互相可区分的物体**依次单臂放入同一容器，顺序不能错**——测纯序列约束本身（不涉及双臂，比论文 Operate-Mic-Drawer 的双臂多步更聚焦）。诊断的失败模式：policy 把 3 个都放进去了但**无视顺序**（"顺序盲假阳性"）。
+- **三条判据的特殊性**：
+  - (a) 唯一区分量 = **顺序**：3 物体都必须最终入容器、都可被单独指代，只有先后变——但顺序是**时间属性**，不是静态末态。
+  - (b) oracle ~90% 是**本任务最大风险**：单臂 3 次连续 pick+place **复合**（≈0.9³）。压制手段：开口宽容器 + "落入容器 footprint"松判定 + 从上方投放，把每次 place 顶到 ~0.95（→ ≈0.86）。3 物体是选定的（比 2 更忠实序列语义），代价就是 oracle 天花板低于单物体任务，需接受。
+  - (c) **末态编码不了顺序**（最后一帧"三个都在盒里"对错顺序长一样）→ 成功判定必须**轨迹/时间戳-based**，不能看最后一帧。这是本任务的实现核心。
+- **选定场景**：单臂，开口容器（复用 `062_plasticbox` / `110_basket`，开口 → 绕开 mic-drawer 垂直净空墙）+ 3 个 color+noun 可单独指代的物体（复用抓取池）。**单臂顺序放**——不用双臂，双臂会让两个"同时"进容器、破坏顺序定义。
+- **指令示例**："先放红色积木，再放蓝色球，最后放绿色瓶子"
+- **成功判定（轨迹-based，核心）**：每个控制 step 轮询各物体位置，记录它**首次进入容器区域**（xy 落在容器 footprint 内 + z 低于容器口沿）的 step；按首次进入 step 排序得到实际顺序，与指令顺序逐位比对；**任一相邻顺序颠倒即 fail**。**不能只判"三个都在容器里"**——native `place_cans_plasticbox` 的 check_success 就是只判"都在"、不查顺序，那正是要避开的假阳性。
+- **反例设计（Layer B 必过）**：oracle 故意倒序放（如先蓝球再红积木）→ 即使三个最终都在容器里，也必判失败。
+- **主要风险与待验**：① oracle 3 次复合成功率（见 b）；② **进入检测的实现**：RoboTwin eval 能否在 rollout 过程中**逐 step 采样**物体位置来记录进入顺序（而非只在末尾调一次 check_success）——待查 `_base_task` / eval 管线；逐 step 轮询方案本身与 API 无关、一定可行。
+- **可信度**：中（容器/放置机制复用可靠；轨迹-based 顺序判定新写但逻辑清晰；主要不确定性是 3 次复合的 oracle 率 + eval 能否逐 step 采样）。
+
+### 6. IF-Spatial-Direction（放置方位：左/右/前/后/上方）
+
+- **测试目标**：在 Place-Relative（已覆盖 左/右/上方）基础上**补齐"前/后"**，凑齐 左右前后+上方 5 种相对方位。方位词是**唯一区分量**：锚点物体 B 与被放物体 A 固定，只有方位变。
+- **轴映射（已由 native `place_a2b_left` 落地）**：**左/右 = 带符号 x 轴**（native 里"左"= `target_x - 0.13`，check_success 判 `object_x < target_x` 且 `|Δy|<0.05` 锁住横向）；**前/后 = 带符号 y 轴**（新扩展，对称地锁 `|Δx|<0.05` + 带符号 Δy 过阈值）；**上方 = z / align**（复用 `place_actor` 的 align 判定）。
+- **关键设计决策——前/后参考系**：桌面无天然前后，显式约定 **以机器人朝向为准**（靠近机器人一侧 = 前，远离 = 后），即世界 y 轴，与左右共用同一世界坐标系（避免用物体自身朝向——随机化下不稳定）。**唯一待验：world-y 的哪个符号朝向机器人**，跑通后按机器人 base 朝向确定符号。
+- **成功判定（沿用 `place_a2b_left` 的 check_success 模式）**：A 相对 B 在指令轴上的**带符号偏移**过阈值 + **正交轴锁住**（<~0.05）+ 距离落在带内（如 [0.08, 0.2]）。前/后与左右**用不同轴**，实现上极易一个对一个错 → 每个方向对（左vs右、前vs后）必须**分别测反例**。
+- **三条判据**：(a) 唯一区分量 = 方位词 ✓；(b) oracle ~90% → 单次 place，复用 native 已验证的 place 机制（只换轴/符号），可靠；(c) 视觉可分 → 左右横向最明显，**前/后是相机里的深度差**（~0.13m），比横向略弱但应可见，列为小验证项。
+- **指令示例**："把 A 放到 B 前面 / 后面 / 左边 / 右边 / 上面"
+- **反例设计（Layer B 必过）**：oracle 故意放到**相反方位**（应前却后）→ 必判失败；左右、前后**分开测**（不同轴）。
+- **复用与成本**：场景基础设施（2 命名物体 + 1–3 干扰物）复用 Place-Relative，但**该 env 不在当前分支**（`place_relative.py` 符号链接已断、在另一分支，同 §2/§3），需搬过来或起精简版；左右/上方判定直接搬 native，前/后是对称新增。
+- **可信度**：中（左右/上方复用已验证判定；前/后是对称新增，主要待验就是 world-y 朝向符号 + 前后深度的视觉可分）。
+
+### 7. IF-Grasp-Approach（抓取接近方向：顶部 vs 侧面）
+
+- **测试目标**：指令指定**抓取构型/接近方向**（"从顶部抓" vs "从侧面抓"），物体固定、两种抓法都可行——动词都是"抓"，唯一区分量是抓法词。测 policy 是否服从指定接近方向，而不是默认用自己最省力的那种抓法。与 §1 Verb-Select 呼应：同物体、**同一初始位姿**，只有指令变（沿用 §1 的"初始画面完全相同"思路）。
+- **三条判据**：
+  - (a) 唯一区分量 = 抓法词：单个 cube 放桌面中央固定，无 grounding 歧义。✓
+  - (b) oracle 两值都 ~90%：**顶抓 trivial**（夹爪竖直下压）；**侧抓有真风险**——cube 贴桌时水平接近的**下指易撞桌面**。压制：cube 高度做够 / 只抓侧面上半段 / 略抬高。这是本任务的 spike 点（与 §1 合盖 spike 同级）。
+  - (c) 画面可分：顶抓夹爪**竖直**、侧抓夹爪**水平**，末态朝向一眼可分。✓
+- **选定场景**：`create_box` 立方体（复用 §4 Arm-Select 的 box 机制，尺寸可控——把高度调到让侧抓下指清桌面），放中央固定。两种抓法各定一组 contact points（IF-Ext 允许自定义/fork，符合独立组原则）：顶抓 = 竖直 -z 接近；侧抓 = 水平接近。
+- **指令示例**："从顶部拿起方块" / "从侧面拿起方块"
+- **成功判定（orientation-based，可用于 policy eval）**：物体离地过阈值 **且** 抓取夹爪的 **approach 轴朝向**匹配指令（竖直 vs 水平，用角度阈值卡）——**不是**"抓起来就算"，因为两种抓法都能举起物体，只有夹爪朝向能区分。
+- **反例设计（Layer B 必过）**：oracle 用错抓法（该顶却侧）→ 即使举起也必判失败。
+- **可信度**：中（顶抓复用现成；侧抓的桌面清空 + 朝向判定是主要待验，与 §1 合盖 spike 同级）。
+
+## 跨任务共用设计（沿用主文档已定机制，不新增）
+
+- **指令模板 seen/unseen 隔离**：每个新任务集接入 RoboTwin 2.0 原生 description-gen 管线，生成 12 条指令切 10 seen / 2 unseen，静态存成 `description/task_instruction/{task_name}.json`
+- **验证方法论**：同主文档 Layer A（结构/集成正确性）+ Layer B（oracle 正例/反例判定正确性），7 个新任务集均适用，尤其 IF-Verb-Select / IF-Arm-Select / IF-Sequence-Container / IF-Spatial-Direction / IF-Grasp-Approach 这 5 个的反例设计（"故意做错"）是验收必过项，不能省略
+- **可信度标注约定**：延续主文档"信息来源与可信度"表的做法，每个任务实现记录里对"低可信度"判定逻辑单独标注"依据：本设计原创，非论文/原生任务确认"
+
+## 命名与合并评测接入
+
+- Task name：`if_ext_verb_select` / `if_ext_noun_grounding` / `if_ext_attribute_select` / `if_ext_arm_select` / `if_ext_sequence_container` / `if_ext_spatial_direction` / `if_ext_grasp_approach`
+- 追加进 `robotwin-if` 自维护的 `all_tasks_plus_if.yml`，与论文 5 个任务集并列，不影响原 50 + 论文 5 的现有条目
+- 类文件放在 `robotwin-if` 自己目录下，安装期脚本 symlink 进 submodule `envs/`，与主文档已定桥接方案完全一致，无需新机制
+
+## 未决问题汇总（待环境搭建后逐项确认）
+
+| 任务 | 未决问题 |
+|---|---|
+| IF-Verb-Select | 已选 `015_laptop` 开/关（B 方案）；native 无 `close_*`，合盖 oracle 需自写，**先跑 spike 验证能否 ~90%**，不过则退到抽屉方案 A（`036_cabinet`） |
+| IF-Attribute-Select | primitive 版四 mode（color/decal/shape/size）；构造/标注/抓取风险已被 primitive 消掉、视觉风险被 decal(猫/狗贴图)消掉；**剩余小验**：cube 贴图 UV 映射（整图 per 面 vs 平铺，render 核对）+ 图像授权（用 CC0/生成图）+ size 的大/小 scale 比够大且两档都在夹爪可抓区间 |
+| IF-Arm-Select | 盒子固定 x≈0 后，左/右两臂各自独立抓取能否都 ~90%（对称盒子应成立，需跑通确认重叠区够宽）；不够则退 Propose B 中央点触 |
+| IF-Sequence-Container | ① 进入检测：eval 能否在 rollout 过程中**逐 step 采样**物体位置记录进入顺序（而非只末尾调 check_success）——待查 `_base_task`/eval 管线，轮询方案本身一定可行；② 单臂 3 次 place 复合成功率能否靠开口容器+松判定顶到可接受 |
+| IF-Spatial-Direction | 前/后 = world-y 轴，**哪个符号朝机器人**需按 base 朝向跑通确定；前后是相机深度差(~0.13m)、视觉可分性比左右弱需确认；场景 infra 同 §2 在另一分支需搬 |
+| IF-Grasp-Approach | 侧抓下指清桌面：cube 需做够高 / 只抓上半段，需 spike 验证顶、侧两抓法都能 ~90%；朝向阈值卡角度的松紧待调 |
+
+## 时间评估（初步，供后续排入主文档实施计划）
+
+7 个任务集按风险分三档：
+
+- **低风险（判定机制已复用/落地）**：IF-Noun-Grounding、IF-Arm-Select、IF-Spatial-Direction、**IF-Attribute-Select（primitive + decal，自包含）**。
+- **中风险**：IF-Verb-Select（合盖 oracle 需自写 + spike 验证）、IF-Sequence-Container（单臂 3 次复合 + 轨迹-based 顺序判定 + eval 逐 step 采样待查）、IF-Grasp-Approach（侧抓桌面清空 + 朝向判定，spike 验证）。
+- **最高风险**：（原 IF-Attribute-Select 的纹理档已用 primitive + decal 改造消解、降到低风险，见 §3）当前无单独突出的最高风险项，剩余最不确定的是 IF-Sequence-Container 的 3 次复合 + eval 逐 step 采样。
+
+**横切现实**：Noun / Sequence / Spatial 仍依赖"多物体抓取池 / Place-Relative"这类 infra，而它们**当前不在本分支**（在 `pick_diverse_object` / `place_relative` 等分支，submodule 符号链接已断），排期时要先决定"搬过来合并 vs 本分支起精简版"；**IF-Attribute-Select 已改 primitive、不再依赖池 infra，自包含**。具体排期见下。
+
+## 一周排期估算（含今天 2026-08-28 ～ 09-04，进度跟踪用）
+
+> **现实目标**：一周做扎实 **3 个自包含任务**（Arm-Select / Grasp-Approach / Verb-Select——不依赖跨分支 infra、共用 `create_box` 脚手架），其余 4 个延后。**7 个全做+全验证一周内不现实**（每个带 spike/构造风险，4 个还要先搬 infra）。策略：**先打 3 个 spike 退风险，再量产 + Layer A/B 验证**。日期为粗估，状态列随进度更新。
+
+### 本周目标（3 个）
+
+| 阶段 | 任务 / 内容 | 估算 | 目标日期 | 风险闸 / 依赖 | 状态 |
+|---|---|---|---|---|---|
+| Spike | Verb-Select 合盖 oracle（50% 中间态**双向** ~90%） | 1–1.5d | 08-28~29 | 挂则切 cabinet 后备 A | 未开始 |
+| Spike | Arm-Select 两臂各自 ~90% | 0.5d | 08-29 | 对称 box 应直接成立 | 未开始 |
+| Spike | Grasp-Approach 侧抓清桌面 | 0.5d | 08-30 | cube 加高 / 抓上半段 | 未开始 |
+| 量产 | Arm-Select 全套（env+check+指令池+Layer A/B） | 0.5–1d | 08-31 | — | 未开始 |
+| 量产 | Grasp-Approach 全套（复用 Arm 脚手架） | 0.5–1d | 09-01 | — | 未开始 |
+| 量产 | Verb-Select 全套（或 cabinet 后备） | 1–1.5d | 09-02~03 | — | 未开始 |
+| 收尾 | 3 个反例验证 + 指令池洁净 + `all_tasks_plus_if.yml` 接入 + buffer | 1d | 09-04 | — | 未开始 |
+
+### 延后（本周不做，估算供后续排期）
+
+| 任务 | 估算 | 主要阻塞 | 状态 |
+|---|---|---|---|
+| Noun-Grounding | 1–1.5d | 先搬 `pick_diverse_object` 池 infra | 延后 |
+| Spatial-Direction | 1–1.5d | 先搬 `place_relative` infra | 延后 |
+| Sequence-Container | 2–3d | 单臂 3× 复合 oracle + eval 逐 step 采样 | 延后 |
+| Attribute-Select | 1.5–2d | 不再阻塞（primitive + decal 自包含，脱离池 infra）；四 mode color/decal/shape/size，仅 decal UV/授权 + size scale 小验 | 可提前 |
+
+> **杠杆**：三个 spike 都快速通过 → 可把 Noun-Grounding 作为第 4 个冲刺（前提是池 infra 搬迁顺利，有挤占验证时间的风险）。
+
+## 参考
+
+- 主文档：[[RoboTwin-IF 复刻]]
+- 复用判定思路来源：论文 Operate-Mic-Drawer 的 ArmTag 校验（IF-Arm-Select）、论文 Place-Relative 的 align 判定（IF-Spatial-Direction 左右/上面部分）
