@@ -1,0 +1,146 @@
+{
+  "blocks": [
+    {
+      "accepted": true,
+      "block_index": 12500,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "color:red",
+          "failure": null,
+          "observed_mode": "color:red",
+          "plan_success": true,
+          "seed": 100000,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "color:blue",
+          "failure": null,
+          "observed_mode": "color:blue",
+          "plan_success": true,
+          "seed": 100001,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "decal:cat",
+          "failure": null,
+          "observed_mode": "decal:cat",
+          "plan_success": true,
+          "seed": 100002,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "decal:dog",
+          "failure": null,
+          "observed_mode": "decal:dog",
+          "plan_success": true,
+          "seed": 100003,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "shape:block",
+          "failure": null,
+          "observed_mode": "shape:block",
+          "plan_success": true,
+          "seed": 100004,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "shape:bar",
+          "failure": null,
+          "observed_mode": "shape:bar",
+          "plan_success": true,
+          "seed": 100005,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "size:big",
+          "failure": null,
+          "observed_mode": "size:big",
+          "plan_success": true,
+          "seed": 100006,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "size:small",
+          "failure": null,
+          "observed_mode": "size:small",
+          "plan_success": true,
+          "seed": 100007,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100000,
+        100001,
+        100002,
+        100003,
+        100004,
+        100005,
+        100006,
+        100007
+      ]
+    }
+  ],
+  "contract_schema_version": 1,
+  "manifest_sha256": "d471768dfea6bf4d0b63ce1bf7de61092c355884a11bc15507e8c0ad702125bf",
+  "next_block": 12501,
+  "parameters": {
+    "accepted_blocks": 1,
+    "candidate_floor": 100000,
+    "first_block": 12500,
+    "max_candidate_blocks": 2,
+    "task": "attribute_select",
+    "task_config": "demo_clean"
+  },
+  "provenance": {
+    "bridge_allow_compatible_commit": false,
+    "generator": {
+      "generation_schema_version": 1,
+      "manifest_schema_version": 1,
+      "name": "tools/generate_if_seed_manifest.py",
+      "version": 1
+    },
+    "source_commit": "ef9a1992bf03230a1550c81b0c65ea9e5f969503",
+    "source_digest": "40c78757dbe349d9d55594291f6d12c4ed63e978fb6e3f28d6fccd2d5b564da9",
+    "source_dirty": true,
+    "source_root": "/home/xichen6/Documents/repos/robotwin-if",
+    "target_commit": "0aeea2d669c0f8516f4d5785f0aa33ba812c14b4",
+    "target_contract_dirty": false,
+    "target_root": "/home/xichen6/Documents/repos/robotwin-if/third_party/robotwin",
+    "task_config_path": "task_config/demo_clean.yml",
+    "task_config_sha256": "ae893a209ed2425d1a4d2cd7046187d60a566fc715aa88447901335ea2900f82"
+  },
+  "schema_version": 1,
+  "status": "complete",
+  "summary": {
+    "accepted_block_ids": [
+      12500
+    ],
+    "accepted_blocks": 1,
+    "candidate_blocks": 1,
+    "failure_categories": {},
+    "rejected_block_ids": [],
+    "rejected_blocks": 0
+  },
+  "timing": {
+    "elapsed_seconds": 128.38423075154424,
+    "started_at": "2026-09-03T06:18:29.776824+00:00",
+    "updated_at": "2026-09-03T06:20:38.162438+00:00"
+  }
+}

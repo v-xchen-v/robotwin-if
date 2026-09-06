@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "task": "attribute_select",
+  "task_config": "demo_clean",
+  "seeds": [
+    100000,
+    100001,
+    100002,
+    100003,
+    100004,
+    100005,
+    100006,
+    100007
+  ]
+}

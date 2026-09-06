@@ -1,0 +1,120 @@
+{
+  "blocks": [
+    {
+      "accepted": false,
+      "block_index": 50000,
+      "episodes": [
+        {
+          "accepted": false,
+          "check_success": false,
+          "expected_mode": "pick",
+          "failure": {
+            "category": "check_success",
+            "message": "task.check_success() is false"
+          },
+          "observed_mode": "pick",
+          "plan_success": true,
+          "seed": 100000,
+          "setup_ok": true
+        },
+        {
+          "accepted": false,
+          "check_success": false,
+          "expected_mode": "shake",
+          "failure": {
+            "category": "check_success",
+            "message": "task.check_success() is false"
+          },
+          "observed_mode": "shake",
+          "plan_success": true,
+          "seed": 100001,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100000,
+        100001
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50001,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "pick",
+          "failure": null,
+          "observed_mode": "pick",
+          "plan_success": true,
+          "seed": 100002,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "shake",
+          "failure": null,
+          "observed_mode": "shake",
+          "plan_success": true,
+          "seed": 100003,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100002,
+        100003
+      ]
+    }
+  ],
+  "contract_schema_version": 1,
+  "manifest_sha256": "8718408cff039464ca5f2f32aa473e7c652ca1ba28f35073593e7857fb03bc1a",
+  "next_block": 50002,
+  "parameters": {
+    "accepted_blocks": 1,
+    "candidate_floor": 100000,
+    "first_block": 50000,
+    "max_candidate_blocks": 2,
+    "task": "bottle_verb",
+    "task_config": "demo_clean"
+  },
+  "provenance": {
+    "bridge_allow_compatible_commit": false,
+    "generator": {
+      "generation_schema_version": 1,
+      "manifest_schema_version": 1,
+      "name": "tools/generate_if_seed_manifest.py",
+      "version": 1
+    },
+    "source_commit": "ef9a1992bf03230a1550c81b0c65ea9e5f969503",
+    "source_digest": "40c78757dbe349d9d55594291f6d12c4ed63e978fb6e3f28d6fccd2d5b564da9",
+    "source_dirty": true,
+    "source_root": "/home/xichen6/Documents/repos/robotwin-if",
+    "target_commit": "0aeea2d669c0f8516f4d5785f0aa33ba812c14b4",
+    "target_contract_dirty": false,
+    "target_root": "/home/xichen6/Documents/repos/robotwin-if/third_party/robotwin",
+    "task_config_path": "task_config/demo_clean.yml",
+    "task_config_sha256": "ae893a209ed2425d1a4d2cd7046187d60a566fc715aa88447901335ea2900f82"
+  },
+  "schema_version": 1,
+  "status": "complete",
+  "summary": {
+    "accepted_block_ids": [
+      50001
+    ],
+    "accepted_blocks": 1,
+    "candidate_blocks": 2,
+    "failure_categories": {
+      "check_success": 2
+    },
+    "rejected_block_ids": [
+      50000
+    ],
+    "rejected_blocks": 1
+  },
+  "timing": {
+    "elapsed_seconds": 116.92368359677494,
+    "started_at": "2026-09-03T06:15:59.970311+00:00",
+    "updated_at": "2026-09-03T06:17:56.895282+00:00"
+  }
+}

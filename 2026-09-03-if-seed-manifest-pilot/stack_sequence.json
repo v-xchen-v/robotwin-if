@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "task": "stack_sequence",
+  "task_config": "demo_clean",
+  "seeds": [
+    100008,
+    100009,
+    100010,
+    100011,
+    100012,
+    100013
+  ]
+}

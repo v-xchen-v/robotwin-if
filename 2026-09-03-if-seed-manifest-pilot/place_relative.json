@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "task": "place_relative",
+  "task_config": "demo_clean",
+  "seeds": [
+    100000,
+    100001,
+    100002,
+    100003,
+    100004
+  ]
+}

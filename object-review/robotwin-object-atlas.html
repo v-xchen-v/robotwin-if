@@ -1,0 +1,1995 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>RoboTwin Object Atlas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
+<style>
+:root {
+  --ground: #e9eff3;
+  --grid-line: rgba(39, 70, 92, 0.07);
+  --surface: #f8fbfc;
+  --surface-raised: #ffffff;
+  --surface-muted: #dfe7ec;
+  --ink: #172631;
+  --ink-soft: #5b6f7d;
+  --line: #c4d1d9;
+  --line-strong: #91a5b2;
+  --accent: #2457c5;
+  --accent-soft: #dce6ff;
+  --selected: #08766d;
+  --selected-soft: #d6efeb;
+  --warning: #9d402d;
+  --warning-soft: #f4ddd7;
+  --shadow: rgba(19, 41, 55, 0.14);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ground: #10181e;
+    --grid-line: rgba(172, 199, 215, 0.055);
+    --surface: #162129;
+    --surface-raised: #1b2831;
+    --surface-muted: #22323c;
+    --ink: #edf4f7;
+    --ink-soft: #a5b7c2;
+    --line: #344750;
+    --line-strong: #58707d;
+    --accent: #7da2ff;
+    --accent-soft: #24375f;
+    --selected: #61cbbd;
+    --selected-soft: #173f3b;
+    --warning: #ef917b;
+    --warning-soft: #4b2b28;
+    --shadow: rgba(0, 0, 0, 0.35);
+  }
+}
+:root[data-theme="dark"] {
+  --ground: #10181e;
+  --grid-line: rgba(172, 199, 215, 0.055);
+  --surface: #162129;
+  --surface-raised: #1b2831;
+  --surface-muted: #22323c;
+  --ink: #edf4f7;
+  --ink-soft: #a5b7c2;
+  --line: #344750;
+  --line-strong: #58707d;
+  --accent: #7da2ff;
+  --accent-soft: #24375f;
+  --selected: #61cbbd;
+  --selected-soft: #173f3b;
+  --warning: #ef917b;
+  --warning-soft: #4b2b28;
+  --shadow: rgba(0, 0, 0, 0.35);
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  min-width: 0;
+  overflow-x: hidden;
+  color: var(--ink);
+  background-color: var(--ground);
+  background-image:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: 24px 24px;
+  font-family: "IBM Plex Sans", "Noto Sans", Arial, sans-serif;
+  line-height: 1.45;
+}
+button, input { font: inherit; }
+button { color: inherit; }
+.skip-link {
+  position: fixed;
+  left: 1rem;
+  top: -5rem;
+  z-index: 100;
+  padding: .65rem .9rem;
+  color: var(--surface-raised);
+  background: var(--ink);
+}
+.skip-link:focus { top: 1rem; }
+.masthead {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 2.5rem;
+  align-items: end;
+  max-width: 1800px;
+  margin: 0 auto;
+  padding: 2.8rem clamp(1rem, 3vw, 3.5rem) 2.2rem;
+}
+.eyebrow,
+.metric-label,
+.section-code,
+.control-label,
+.card-tasks,
+.selection-key {
+  font-family: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+}
+.eyebrow {
+  margin: 0 0 .55rem;
+  color: var(--accent);
+  font-size: .72rem;
+  font-weight: 500;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+h1, h2, p { margin: 0; }
+h1 {
+  max-width: 12ch;
+  font-family: "Archivo Narrow", "Arial Narrow", sans-serif;
+  font-size: clamp(2.6rem, 5vw, 5.3rem);
+  font-weight: 700;
+  letter-spacing: -.025em;
+  line-height: .88;
+  text-wrap: balance;
+}
+.dek {
+  max-width: 66ch;
+  margin-top: 1.1rem;
+  color: var(--ink-soft);
+  font-size: .98rem;
+}
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(8rem, 1fr));
+  border-top: 1px solid var(--line-strong);
+  border-left: 1px solid var(--line-strong);
+}
+.metric {
+  min-width: 8.5rem;
+  padding: .8rem 1rem .95rem;
+  border-right: 1px solid var(--line-strong);
+  border-bottom: 1px solid var(--line-strong);
+  background: var(--surface);
+}
+.metric-value {
+  display: block;
+  font-family: "Archivo Narrow", "Arial Narrow", sans-serif;
+  font-size: 2rem;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+.metric-label {
+  display: block;
+  margin-top: .35rem;
+  color: var(--ink-soft);
+  font-size: .62rem;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+.toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: minmax(15rem, 1fr) auto auto;
+  gap: 1rem;
+  align-items: end;
+  padding: .8rem clamp(1rem, 3vw, 3.5rem);
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line-strong);
+  background: color-mix(in srgb, var(--surface) 93%, transparent);
+  box-shadow: 0 5px 22px var(--shadow);
+  backdrop-filter: blur(14px);
+}
+.search-wrap,
+.filter-wrap { display: grid; gap: .35rem; }
+.control-label {
+  color: var(--ink-soft);
+  font-size: .62rem;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+.search {
+  width: 100%;
+  min-height: 2.45rem;
+  padding: .55rem .75rem;
+  color: var(--ink);
+  border: 1px solid var(--line-strong);
+  border-radius: 2px;
+  outline: none;
+  background: var(--surface-raised);
+}
+.search:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+.filter-row { display: flex; flex-wrap: wrap; gap: .35rem; }
+.filter,
+.theme-button,
+.action-button {
+  min-height: 2.45rem;
+  padding: .5rem .75rem;
+  border: 1px solid var(--line-strong);
+  border-radius: 2px;
+  background: var(--surface-raised);
+  cursor: pointer;
+}
+.filter:hover,
+.theme-button:hover,
+.action-button:hover { border-color: var(--accent); }
+.filter[aria-pressed="true"] {
+  color: var(--surface-raised);
+  border-color: var(--ink);
+  background: var(--ink);
+}
+.theme-button:focus-visible,
+.filter:focus-visible,
+.action-button:focus-visible,
+.category-link:focus-visible,
+.variant-card:focus-within {
+  outline: 3px solid var(--accent-soft);
+  outline-offset: 2px;
+}
+.toolbar-tail { display: flex; align-items: center; gap: .75rem; }
+.visible-count {
+  min-width: 7.2rem;
+  color: var(--ink-soft);
+  font-family: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+  font-size: .74rem;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.workspace {
+  display: grid;
+  grid-template-columns: 10.5rem minmax(0, 1fr) 18rem;
+  gap: clamp(1rem, 2vw, 2rem);
+  align-items: start;
+  max-width: 1800px;
+  margin: 0 auto;
+  padding: 2rem clamp(1rem, 3vw, 3.5rem) 5rem;
+}
+.category-index,
+.selection-panel {
+  position: sticky;
+  top: 5.9rem;
+  max-height: calc(100vh - 7rem);
+  overflow-y: auto;
+}
+.index-title,
+.selection-title {
+  margin: 0 0 .75rem;
+  font-family: "Archivo Narrow", "Arial Narrow", sans-serif;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+.category-links { display: grid; border-top: 1px solid var(--line); }
+.category-link {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: .5rem;
+  padding: .55rem .15rem;
+  color: var(--ink-soft);
+  border-bottom: 1px solid var(--line);
+  text-decoration: none;
+}
+.category-link:hover { color: var(--accent); }
+.category-link span:last-child {
+  font-family: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+  font-size: .68rem;
+}
+.atlas { display: grid; gap: 2.5rem; min-width: 0; }
+.shelf {
+  min-width: 0;
+  scroll-margin-top: 6.7rem;
+  border-top: 2px solid var(--ink);
+}
+.shelf[hidden], .variant-card[hidden] { display: none; }
+.shelf-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: baseline;
+  padding: .65rem 0 .8rem;
+}
+.shelf-title {
+  font-family: "Archivo Narrow", "Arial Narrow", sans-serif;
+  font-size: 1.8rem;
+  font-weight: 700;
+  line-height: 1;
+  text-transform: uppercase;
+}
+.section-code { color: var(--ink-soft); font-size: .72rem; }
+.shelf-count {
+  color: var(--ink-soft);
+  font-family: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+  font-size: .72rem;
+  font-variant-numeric: tabular-nums;
+}
+.variant-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(11.8rem, 1fr));
+  gap: .8rem;
+}
+.variant-card {
+  position: relative;
+  display: grid;
+  min-width: 0;
+  overflow: hidden;
+  color: var(--ink);
+  border: 1px solid var(--line-strong);
+  border-radius: 2px;
+  background: var(--surface-raised);
+  cursor: pointer;
+  transition: transform 140ms ease, border-color 140ms ease, box-shadow 140ms ease;
+}
+.variant-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--ink);
+  box-shadow: 0 8px 20px var(--shadow);
+}
+.variant-card.is-current { border-top: 4px solid var(--accent); }
+.variant-card.is-selected {
+  border-color: var(--selected);
+  box-shadow: 0 0 0 3px var(--selected-soft);
+}
+.variant-card.is-unreachable {
+  cursor: not-allowed;
+  background:
+    repeating-linear-gradient(-45deg, transparent 0 8px, var(--warning-soft) 8px 10px),
+    var(--surface-raised);
+}
+.variant-card.is-unreachable:hover { transform: none; border-color: var(--warning); box-shadow: none; }
+.variant-check {
+  position: absolute;
+  top: .55rem;
+  right: .55rem;
+  z-index: 2;
+  width: 1.25rem;
+  height: 1.25rem;
+  margin: 0;
+  appearance: none;
+  border: 1px solid var(--line-strong);
+  border-radius: 1px;
+  background: var(--surface-raised);
+  cursor: pointer;
+}
+.variant-check:checked { border-color: var(--selected); background: var(--selected); }
+.variant-check:checked::after {
+  content: "";
+  position: absolute;
+  left: .34rem;
+  top: .12rem;
+  width: .32rem;
+  height: .62rem;
+  border: solid var(--surface-raised);
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+.variant-check:disabled { opacity: .42; cursor: not-allowed; }
+.variant-stage {
+  position: relative;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-bottom: 1px solid var(--line);
+  background-color: #ffffff;
+  background-image:
+    linear-gradient(rgba(32, 61, 79, .045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(32, 61, 79, .045) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+.variant-stage::after {
+  content: "";
+  position: absolute;
+  inset: 50% auto auto 50%;
+  width: 24px;
+  height: 24px;
+  border-top: 1px solid rgba(32, 61, 79, .15);
+  border-left: 1px solid rgba(32, 61, 79, .15);
+  transform: translate(-12px, -12px);
+  pointer-events: none;
+}
+.variant-image { display: block; width: 100%; height: 100%; object-fit: cover; }
+.card-body { display: grid; gap: .5rem; padding: .7rem .75rem .78rem; }
+.card-head { display: flex; gap: .5rem; align-items: center; min-width: 0; }
+.base-id {
+  font-family: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+  font-size: .86rem;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+.badge {
+  padding: .12rem .38rem;
+  border: 1px solid currentColor;
+  border-radius: 1px;
+  font-family: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+  font-size: .56rem;
+  font-weight: 500;
+  letter-spacing: .05em;
+  line-height: 1.35;
+  text-transform: uppercase;
+}
+.badge-current { margin-left: auto; color: var(--accent); background: var(--accent-soft); }
+.reachability {
+  display: flex;
+  gap: .4rem;
+  align-items: center;
+  color: var(--ink-soft);
+  font-size: .72rem;
+}
+.reachability::before {
+  content: "";
+  width: .48rem;
+  height: .48rem;
+  border: 1px solid var(--ink-soft);
+  border-radius: 50%;
+  background: transparent;
+}
+.is-unreachable .reachability { color: var(--warning); font-weight: 600; }
+.is-unreachable .reachability::before { border-color: var(--warning); background: var(--warning); }
+.card-tasks {
+  min-height: 2.35rem;
+  overflow: hidden;
+  color: var(--ink-soft);
+  font-size: .61rem;
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+.selection-panel {
+  border-top: 4px solid var(--selected);
+  background: var(--surface);
+  box-shadow: 0 8px 24px var(--shadow);
+}
+.selection-head { padding: 1rem 1rem .8rem; border-bottom: 1px solid var(--line); }
+.selection-title { margin: 0; }
+.selection-note { margin-top: .35rem; color: var(--ink-soft); font-size: .75rem; }
+.selection-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: .45rem;
+  padding: .8rem 1rem;
+  border-bottom: 1px solid var(--line);
+}
+.action-button { min-height: 2.15rem; padding: .4rem .55rem; font-size: .74rem; }
+.action-button.primary {
+  grid-column: 1 / -1;
+  color: var(--surface-raised);
+  border-color: var(--selected);
+  background: var(--selected);
+}
+.action-button:disabled { opacity: .42; cursor: not-allowed; }
+.selection-list { display: grid; max-height: 48vh; overflow-y: auto; }
+.selection-empty { padding: 1.2rem 1rem; color: var(--ink-soft); font-size: .78rem; }
+.selection-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  gap: .45rem;
+  align-items: center;
+  padding: .52rem 1rem;
+  border-bottom: 1px solid var(--line);
+  font-size: .75rem;
+}
+.selection-key { overflow: hidden; color: var(--ink-soft); font-size: .64rem; text-overflow: ellipsis; white-space: nowrap; }
+.remove-button {
+  width: 1.5rem;
+  height: 1.5rem;
+  padding: 0;
+  color: var(--ink-soft);
+  border: 1px solid transparent;
+  background: transparent;
+  cursor: pointer;
+}
+.remove-button:hover { color: var(--warning); border-color: var(--warning); }
+.legend { display: grid; gap: .45rem; padding: 1rem; border-top: 1px solid var(--line); }
+.legend-row { display: flex; gap: .5rem; align-items: center; color: var(--ink-soft); font-size: .7rem; }
+.legend-mark { width: 1.2rem; height: .55rem; border: 1px solid var(--line-strong); background: var(--surface-raised); }
+.legend-mark.current { border-top: 4px solid var(--accent); }
+.legend-mark.selected { border-color: var(--selected); box-shadow: 0 0 0 2px var(--selected-soft); }
+.legend-mark.unreachable { border-color: var(--warning); background: var(--warning-soft); }
+.toast {
+  position: fixed;
+  right: 1.25rem;
+  bottom: 1.25rem;
+  z-index: 80;
+  max-width: min(24rem, calc(100vw - 2.5rem));
+  padding: .7rem .9rem;
+  color: var(--surface-raised);
+  border: 1px solid var(--ink);
+  background: var(--ink);
+  box-shadow: 0 8px 24px var(--shadow);
+  opacity: 0;
+  transform: translateY(.5rem);
+  pointer-events: none;
+  transition: opacity 140ms ease, transform 140ms ease;
+}
+.toast.show { opacity: 1; transform: translateY(0); }
+@media (max-width: 1240px) {
+  .workspace { grid-template-columns: 8.5rem minmax(0, 1fr) 16rem; }
+  .variant-grid { grid-template-columns: repeat(auto-fill, minmax(10.8rem, 1fr)); }
+}
+@media (max-width: 980px) {
+  .masthead { grid-template-columns: 1fr; }
+  .metrics { max-width: 36rem; }
+  .toolbar { grid-template-columns: 1fr; align-items: stretch; }
+  .toolbar-tail { justify-content: space-between; }
+  .workspace { grid-template-columns: minmax(0, 1fr); }
+  .category-index, .selection-panel { position: static; max-height: none; }
+  .category-links { grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr)); }
+  .selection-list { max-height: 18rem; }
+}
+@media (max-width: 560px) {
+  .masthead { padding-top: 1.8rem; }
+  .metrics { grid-template-columns: 1fr 1fr; }
+  .metric { min-width: 0; }
+  .filter-row { display: grid; grid-template-columns: 1fr 1fr; }
+  .filter { width: 100%; }
+  .variant-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .55rem; }
+  .card-tasks { min-height: 3.2rem; }
+  .badge-current { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { transition-duration: .001ms !important; }
+}
+</style>
+</head>
+<body>
+<a class="skip-link" href="#atlas">Skip to object variants</a>
+<header class="masthead">
+  <div>
+    <p class="eyebrow">RoboTwin-IF / Seen exact-ID review</p>
+    <h1>RoboTwin Object Atlas</h1>
+    <p class="dek">Compare every renderable model instance in the 12 current Seen categories. Select only exact IDs you want to retain; IDs outside native raw-task sampling remain visible for audit but cannot be selected.</p>
+  </div>
+  <div class="metrics" aria-label="Atlas summary">
+    <div class="metric"><strong class="metric-value" id="metric-categories">—</strong><span class="metric-label">categories</span></div>
+    <div class="metric"><strong class="metric-value" id="metric-variants">—</strong><span class="metric-label">renderable IDs</span></div>
+    <div class="metric"><strong class="metric-value" id="metric-reachable">—</strong><span class="metric-label">raw reachable</span></div>
+    <div class="metric"><strong class="metric-value" id="metric-current">—</strong><span class="metric-label">current production</span></div>
+  </div>
+</header>
+<nav class="toolbar" aria-label="Atlas controls">
+  <label class="search-wrap">
+    <span class="control-label">Search noun, asset, baseID, or raw task</span>
+    <input class="search" id="search" type="search" placeholder="Try: bottle, base13, place_object_stand" autocomplete="off" />
+  </label>
+  <div class="filter-wrap">
+    <span class="control-label">Show</span>
+    <div class="filter-row" id="filters">
+      <button class="filter" type="button" data-filter="all" aria-pressed="true">All</button>
+      <button class="filter" type="button" data-filter="reachable" aria-pressed="false">Raw reachable</button>
+      <button class="filter" type="button" data-filter="unreachable" aria-pressed="false">Not reachable</button>
+      <button class="filter" type="button" data-filter="current" aria-pressed="false">Current</button>
+      <button class="filter" type="button" data-filter="selected" aria-pressed="false">Selected</button>
+    </div>
+  </div>
+  <div class="toolbar-tail">
+    <span class="visible-count" id="visible-count">—</span>
+    <button class="theme-button" id="theme-button" type="button">Theme: system</button>
+  </div>
+</nav>
+<div class="workspace">
+  <aside class="category-index" aria-label="Category index">
+    <h2 class="index-title">Category shelves</h2>
+    <nav class="category-links" id="category-links"></nav>
+  </aside>
+  <main class="atlas" id="atlas"></main>
+  <aside class="selection-panel" aria-label="Selected variants">
+    <div class="selection-head">
+      <h2 class="selection-title">Selection <span id="selection-count">0</span></h2>
+      <p class="selection-note">Choose one or more exact IDs per noun, then copy the compact list back to Claude.</p>
+    </div>
+    <div class="selection-actions">
+      <button class="action-button" id="load-current" type="button">Load current set</button>
+      <button class="action-button" id="clear-selection" type="button">Clear</button>
+      <button class="action-button primary" id="copy-selection" type="button" disabled>Copy selected IDs</button>
+    </div>
+    <div class="selection-list" id="selection-list"><p class="selection-empty">No variants selected.</p></div>
+    <div class="legend" aria-label="Visual key">
+      <div class="legend-row"><span class="legend-mark current"></span><span>Current production ID</span></div>
+      <div class="legend-row"><span class="legend-mark selected"></span><span>Your selection</span></div>
+      <div class="legend-row"><span class="legend-mark unreachable"></span><span>Not exact-ID reachable</span></div>
+    </div>
+  </aside>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script>
+const catalog = {
+  "source_commit": "8187d5b",
+  "categories": [
+    {
+      "noun": "bottle",
+      "asset": "001_bottle",
+      "slug": "bottle",
+      "variants": [
+        {
+          "base_id": 0,
+          "reachable": true,
+          "current": false,
+          "raw_tasks": [
+            "pick_diverse_bottles",
+            "shake_bottle",
+            "shake_bottle_horizontally"
+          ],
+          "image": "robotwin-object-atlas-assets/bottle/snap_001_bottle_b0.png"
+        },
+        {
+          "base_id": 1,
+          "reachable": true,
+          "current": false,
+          "raw_tasks": [
+            "pick_diverse_bottles",
+            "shake_bottle",
+            "shake_bottle_horizontally"
+          ],
+          "image": "robotwin-object-atlas-assets/bottle/snap_001_bottle_b1.png"
+        },
+        {
+          "base_id": 2,
+          "reachable": true,
+          "current": false,
+          "raw_tasks": [
+            "pick_diverse_bottles",
+            "shake_bottle",
+            "shake_bottle_horizontally"
+          ],
+          "image": "robotwin-object-atlas-assets/bottle/snap_001_bottle_b2.png"
+        },
+        {
+          "base_id": 3,
+          "reachable": true,
+          "current": false,
+          "raw_tasks": [
+            "pick_diverse_bottles",
+            "shake_bottle",
+            "shake_bottle_horizontally"
+          ],
+          "image": "robotwin-object-atlas-assets/bottle/snap_001_bottle_b3.png"
+        },
+        {
+          "base_id": 4,
+          "reachable": true,
+          "current": false,
+          "raw_tasks": [
+            "pick_diverse_bottles",
+            "shake_bottle",
+            "shake_bottle_horizontally"
+          ],
+          "image": "robotwin-object-atlas-assets/bottle/snap_001_bottle_b4.png"
+        },
+        {
+          "base_id": 5,
+          "reachable": true,
+          "current": false,
+          "raw_tasks": [
+            "pick_diverse_bottles",
+            "shake_bottle",
+            "shake_bottle_horizontally"
+          ],
+          "image": "robotwin-object-atlas-assets/bottle/snap_001_bottle_b5.png"
+        },
+        {
+          "base_id": 6,
+          "reachable": true,
+          "current": false,
+          "raw_tasks": [
+            "pick_diverse_bottles",
+            "shake_bottle",
+            "shake_bottle_horizontally"
+          ],
+          "image": "robotwin-object-atlas-assets/bottle/snap_001_bottle_b6.png"
+        },
+        {
+          "base_id": 7,
+          "reachable": true,
+          "current": false,
+          "raw_tasks": [
+            "pick_diverse_bottles",
+            "shake_bottle",
+            "shake_bottle_horizontally"
+          ],
+          "image": "robotwin-object-atlas-assets/bottle/snap_001_bottle_b7.png"
+        },
+        {
+          "base_id": 8,
+          "reachable": true,
+          "current": false,
+          "raw_tasks": [
+            "pick_diverse_bottles",
+            "shake_bottle",
+            "shake_bottle_horizontally"
+          ],
+          "image": "robotwin-object-atlas-assets/bottle/snap_001_bottle_b8.png"
+        },
+        {
+          "base_id": 9,
+          "reachable": true,
+          "current": false,
+          "raw_tasks": [
+            "pick_diverse_bottles",
+            "shake_bottle",
+            "shake_bottle_horizontally"
+          ],
+          "image": "robotwin-object-atlas-assets/bottle/snap_001_bottle_b9.png"
+        },
+        {
+          "base_id": 10,
+          "reachable": true,
+          "current": false,
+          "raw_tasks": [
+            "pick_diverse_bottles",
+            "shake_bottle",
+            "shake_bottle_horizontally"
+          ],
+          "image": "robotwin-object-atlas-assets/bottle/snap_001_bottle_b10.png"
+        },
+        {
+          "base_id": 11,
+          "reachable": true,
+          "current": false,
+          "raw_tasks": [
+            "pick_diverse_bottles",
+            "shake_bottle",
+            "shake_bottle_horizontally"
+          ],
+          "image": "robotwin-object-atlas-assets/bottle/snap_001_bottle_b11.png"
+        },
+        {
+          "base_id": 12,
+          "reachable": true,
+          "current": false,
+          "raw_tasks": [
+            "pick_diverse_bottles",
+            "shake_bottle",
+            "shake_bottle_horizontally"
+          ],
+          "image": "robotwin-object-atlas-assets/bottle/snap_001_bottle_b12.png"
+        },
+        {
+          "base_id": 13,
+          "reachable": true,
+          "current": true,
+          "raw_tasks": [
+            "pick_diverse_bottles",
+            "shake_bottle",
+            "shake_bottle_horizontally",
+            "adjust_bottle",
+            "pick_dual_bottles"
+          ],
+          "image": "robotwin-object-atlas-assets/bottle/snap_001_bottle_b13.png"
+        },
+        {
+          "base_id": 14,
+          "reachable": true,
+          "current": false,
+          "raw_tasks": [
+            "pick_diverse_bottles",
+            "shake_bottle",
+            "shake_bottle_horizontally"
+          ],
+          "image": "robotwin-object-atlas-assets/bottle/snap_001_bottle_b14.png"
+        },
+        {
+          "base_id": 15,
+          "reachable": true,
+          "current": false,
+          "raw_tasks": [
+            "pick_diverse_bottles",
+            "shake_bottle",
+            "shake_bottle_horizontally"
+          ],
+          "image": "robotwin-object-atlas-assets/bottle/snap_001_bottle_b15.png"
+        },
+        {
+          "base_id": 16,
+          "reachable": true,
+          "current": false,
+          "raw_tasks": [
+            "pick_diverse_bottles",
+            "shake_bottle",
+            "shake_bottle_horizontally",
+            "adjust_bottle",
+            "pick_dual_bottles"
+          ],
+          "image": "robotwin-object-atlas-assets/bottle/snap_001_bottle_b16.png"
+        },
+        {
+          "base_id": 17,
+          "reachable": true,
+          "current": false,
+          "raw_tasks": [
+            "pick_diverse_bottles",
+            "shake_bottle",
+            "shake_bottle_horizontally"
+          ],
+          "image": "robotwin-object-atlas-assets/bottle/snap_001_bottle_b17.png"
+        },
+        {
+          "base_id": 18,
+          "reachable": true,
+          "current": false,
+          "raw_tasks": [
+            "pick_diverse_bottles",
+            "shake_bottle",
+            "shake_bottle_horizontally"
+          ],
+          "image": "robotwin-object-atlas-assets/bottle/snap_001_bottle_b18.png"
+        },
+        {
+          "base_id": 19,
+          "reachable": true,
+          "current": false,
+          "raw_tasks": [
+            "pick_diverse_bottles",
+            "shake_bottle",
+            "shake_bottle_horizontally"
+          ],
+          "image": "robotwin-object-atlas-assets/bottle/snap_001_bottle_b19.png"
+        },
+        {
+          "base_id": 20,
+          "reachable": false,
+          "current": false,
+          "raw_tasks": [],
+          "image": "robotwin-object-atlas-assets/bottle/snap_001_bottle_b20.png"
+        },
+        {
+          "base_id": 21,
+          "reachable": false,
+          "current": false,
+          "raw_tasks": [],
+          "image": "robotwin-object-atlas-assets/bottle/snap_001_bottle_b21.png"
+        },
+        {
+          "base_id": 22,
+          "reachable": false,
+          "current": false,
+          "raw_tasks": [],
+          "image": "robotwin-object-atlas-assets/bottle/snap_001_bottle_b22.png"
+        }
+      ]
+    },
+    {
+      "noun": "cup",
+      "asset": "021_cup",
+      "slug": "cup",
+      "variants": [
+        {
+          "base_id": 0,
+          "reachable": true,
+          "current": true,
+          "raw_tasks": [
+            "place_empty_cup"
+          ],
+          "image": "robotwin-object-atlas-assets/cup/snap_021_cup_b0.png"
+        },
+        {
+          "base_id": 1,
+          "reachable": true,
+          "current": false,
+          "raw_tasks": [
+            "place_container_plate"
+          ],
+          "image": "robotwin-object-atlas-assets/cup/snap_021_cup_b1.png"
+        },
+        {
+          "base_id": 2,
+          "reachable": true,
+          "current": false,
+          "raw_tasks": [
+            "place_container_plate"
+          ],
+          "image": "robotwin-object-atlas-assets/cup/snap_021_cup_b2.png"
+        },
+        {
+          "base_id": 3,
+          "reachable": true,
+          "current": false,
+          "raw_tasks": [
+            "place_container_plate"
+          ],
+          "image": "robotwin-object-atlas-assets/cup/snap_021_cup_b3.png"
+        },
+        {
+          "base_id": 4,
+          "reachable": true,
+          "current": false,
+          "raw_tasks": [
+            "place_container_plate"
+          ],
+          "image": "robotwin-object-atlas-assets/cup/snap_021_cup_b4.png"
+        },
+        {
+          "base_id": 5,
+          "reachable": true,
+          "current": false,
+          "raw_tasks": [
+            "place_container_plate"
+          ],
+          "image": "robotwin-object-atlas-assets/cup/snap_021_cup_b5.png"
+        },
+        {
+          "base_id": 6,
+          "reachable": true,
+          "current": false,
+          "raw_tasks": [
+            "place_container_plate"
+          ],
+          "image": "robotwin-object-atlas-assets/cup/snap_021_cup_b6.png"
+        },
+        {
+          "base_id": 7,
+          "reachable": true,
+          "current": false,
+          "raw_tasks": [
+            "place_container_plate"
+          ],
+          "image": "robotwin-object-atlas-assets/cup/snap_021_cup_b7.png"
+        },
+        {
+          "base_id": 8,
+          "reachable": false,
+          "current": false,
+          "raw_tasks": [],
+          "image": "robotwin-object-atlas-assets/cup/snap_021_cup_b8.png"
+        },
+        {
+          "base_id": 9,
+          "reachable": false,
+          "current": false,
+          "raw_tasks": [],
+          "image": "robotwin-object-atlas-assets/cup/snap_021_cup_b9.png"
+        },
+        {
+          "base_id": 10,
+          "reachable": false,
+          "current": false,
+          "raw_tasks": [],
+          "image": "robotwin-object-atlas-assets/cup/snap_021_cup_b10.png"
+        },
+        {
+          "base_id": 11,
+          "reachable": false,
+          "current": false,
+          "raw_tasks": [],
+          "image": "robotwin-object-atlas-assets/cup/snap_021_cup_b11.png"
+        },
+        {
+          "base_id": 12,
+          "reachable": false,
+          "current": false,
+          "raw_tasks": [],
+          "image": "robotwin-object-atlas-assets/cup/snap_021_cup_b12.png"
+        }
+      ]
+    },
+    {
+      "noun": "shoe",
+      "asset": "041_shoe",
+      "slug": "shoe",
+      "variants": [
+        {
+          "base_id": 0,
+          "reachable": true,
+          "current": false,
+          "raw_tasks": [
+            "place_dual_shoes",
+            "place_shoe"
+          ],
+          "image": "robotwin-object-atlas-assets/shoe/snap_041_shoe_b0.png"
+        },
+        {
+          "base_id": 1,
+          "reachable": true,
+          "current": false,
+          "raw_tasks": [
+            "place_dual_shoes",
+            "place_shoe"
+          ],
+          "image": "robotwin-object-atlas-assets/shoe/snap_041_shoe_b1.png"
+        },
+        {
+          "base_id": 2,
+          "reachable": true,
+          "current": false,
+          "raw_tasks": [
+            "place_dual_shoes",
+            "place_shoe"
+          ],
+          "image": "robotwin-object-atlas-assets/shoe/snap_041_shoe_b2.png"
+        },
+        {
+          "base_id": 3,
+          "reachable": true,
+          "current": false,
+          "raw_tasks": [
+            "place_dual_shoes",
+            "place_shoe"
+          ],
+          "image": "robotwin-object-atlas-assets/shoe/snap_041_shoe_b3.png"
+        },
+        {
+          "base_id": 4,
+          "reachable": true,
+          "current": false,
+          "raw_tasks": [
+            "place_dual_shoes",
+            "place_shoe"
+          ],
+          "image": "robotwin-object-atlas-assets/shoe/snap_041_shoe_b4.png"
+        },
+        {
+          "base_id": 5,
+          "reachable": true,
+          "current": false,
+          "raw_tasks": [
+            "place_dual_shoes",
+            "place_shoe"
+          ],
+          "image": "robotwin-object-atlas-assets/shoe/snap_041_shoe_b5.png"
+        },
+        {
+          "base_id": 6,
+          "reachable": true,
+          "current": false,
+          "raw_tasks": [
+            "place_dual_shoes",
+            "place_shoe"
+          ],
+          "image": "robotwin-object-atlas-assets/shoe/snap_041_shoe_b6.png"
+        },
+        {
+          "base_id": 7,
+          "reachable": true,
+          "current": false,
+          "raw_tasks": [
+            "place_dual_shoes",
+            "place_shoe"
+          ],
+          "image": "robotwin-object-atlas-assets/shoe/snap_041_shoe_b7.png"
+        },
+        {
+          "base_id": 8,
+          "reachable": true,
+          "current": true,
+          "raw_tasks": [
+            "place_dual_shoes",
+            "place_shoe"
+          ],
+          "image": "robotwin-object-atlas-assets/shoe/snap_041_shoe_b8.png"
+        },
+        {
+          "base_id": 9,
+          "reachable": true,
+          "current": false,
+          "raw_tasks": [
+            "place_dual_shoes",
+            "place_shoe"
+          ],
+          "image": "robotwin-object-atlas-assets/shoe/snap_041_shoe_b9.png"
+        }
+      ]
+    },
+    {
+      "noun": "mug",
+      "asset": "039_mug",
+      "slug": "mug",
+      "variants": [
+        {
+          "base_id": 0,
+          "reachable": true,
+          "current": true,
+          "raw_tasks": [
+            "hanging_mug"
+          ],
+          "image": "robotwin-object-atlas-assets/mug/snap_039_mug_b0.png"
+        },
+        {
+          "base_id": 1,
+          "reachable": true,
+          "current": false,
+          "raw_tasks": [
+            "hanging_mug"
+          ],
+          "image": "robotwin-object-atlas-assets/mug/snap_039_mug_b1.png"
+        },
+        {
+          "base_id": 2,
+          "reachable": true,
+          "current": false,
+          "raw_tasks": [
+            "hanging_mug"
+          ],
+          "image": "robotwin-object-atlas-assets/mug/snap_039_mug_b2.png"
+        },
+        {
+          "base_id": 3,
+          "reachable": true,
+          "current": false,
+          "raw_tasks": [
+            "hanging_mug"
+          ],
+          "image": "robotwin-object-atlas-assets/mug/snap_039_mug_b3.png"
+        },
+        {
+          "base_id": 4,
+          "reachable": true,
+          "current": false,
+          "raw_tasks": [
+            "hanging_mug"
+          ],
+          "image": "robotwin-object-atlas-assets/mug/snap_039_mug_b4.png"
+        },
+        {
+          "base_id": 5,
+          "reachable": true,
+          "current": false,
+          "raw_tasks": [
+            "hanging_mug"
+          ],
+          "image": "robotwin-object-atlas-assets/mug/snap_039_mug_b5.png"
+        },
+        {
+          "base_id": 6,
+          "reachable": true,
+          "current": false,
+          "raw_tasks": [
+            "hanging_mug"
+          ],
+          "image": "robotwin-object-atlas-assets/mug/snap_039_mug_b6.png"
+        },
+        {
+          "base_id": 7,
+          "reachable": true,
+          "current": false,
+          "raw_tasks": [
+            "hanging_mug"
+          ],
+          "image": "robotwin-object-atlas-assets/mug/snap_039_mug_b7.png"
+        },
+        {
+          "base_id": 8,
+          "reachable": true,
+          "current": false,
+          "raw_tasks": [
+            "hanging_mug"
+          ],
+          "image": "robotwin-object-atlas-assets/mug/snap_039_mug_b8.png"
+        },
+        {
+          "base_id": 9,
+          "reachable": true,
+          "current": false,
+          "raw_tasks": [
+            "hanging_mug"
+          ],
+          "image": "robotwin-object-atlas-assets/mug/snap_039_mug_b9.png"
+        },
+        {
+          "base_id": 10,
+          "reachable": false,
+          "current": false,
+          "raw_tasks": [],
+          "image": "robotwin-object-atlas-assets/mug/snap_039_mug_b10.png"
+        },
+        {
+          "base_id": 11,
+          "reachable": false,
+          "current": false,
+          "raw_tasks": [],
+          "image": "robotwin-object-atlas-assets/mug/snap_039_mug_b11.png"
+        },
+        {
+          "base_id": 12,
+          "reachable": false,
+          "current": false,
+          "raw_tasks": [],
+          "image": "robotwin-object-atlas-assets/mug/snap_039_mug_b12.png"
+        }
+      ]
+    },
+    {
+      "noun": "can",
+      "asset": "071_can",
+      "slug": "can",
+      "variants": [
+        {
+          "base_id": 0,
+          "reachable": true,
+          "current": false,
+          "raw_tasks": [
+            "place_can_basket",
+            "place_cans_plasticbox"
+          ],
+          "image": "robotwin-object-atlas-assets/can/snap_071_can_b0.png"
+        },
+        {
+          "base_id": 1,
+          "reachable": true,
+          "current": false,
+          "raw_tasks": [
+            "place_can_basket",
+            "place_cans_plasticbox"
+          ],
+          "image": "robotwin-object-atlas-assets/can/snap_071_can_b1.png"
+        },
+        {
+          "base_id": 2,
+          "reachable": true,
+          "current": true,
+          "raw_tasks": [
+            "place_can_basket",
+            "place_cans_plasticbox"
+          ],
+          "image": "robotwin-object-atlas-assets/can/snap_071_can_b2.png"
+        },
+        {
+          "base_id": 3,
+          "reachable": true,
+          "current": false,
+          "raw_tasks": [
+            "place_can_basket",
+            "place_cans_plasticbox"
+          ],
+          "image": "robotwin-object-atlas-assets/can/snap_071_can_b3.png"
+        },
+        {
+          "base_id": 5,
+          "reachable": true,
+          "current": false,
+          "raw_tasks": [
+            "place_can_basket",
+            "place_cans_plasticbox"
+          ],
+          "image": "robotwin-object-atlas-assets/can/snap_071_can_b5.png"
+        },
+        {
+          "base_id": 6,
+          "reachable": true,
+          "current": false,
+          "raw_tasks": [
+            "place_can_basket",
+            "place_cans_plasticbox"
+          ],
+          "image": "robotwin-object-atlas-assets/can/snap_071_can_b6.png"
+        }
+      ]
+    },
+    {
+      "noun": "toy car",
+      "asset": "057_toycar",
+      "slug": "toy-car",
+      "variants": [
+        {
+          "base_id": 0,
+          "reachable": true,
+          "current": false,
+          "raw_tasks": [
+            "place_a2b_left",
+            "place_a2b_right",
+            "place_object_basket",
+            "place_object_stand",
+            "put_object_cabinet"
+          ],
+          "image": "robotwin-object-atlas-assets/toy-car/snap_057_toycar_b0.png"
+        },
+        {
+          "base_id": 1,
+          "reachable": true,
+          "current": false,
+          "raw_tasks": [
+            "place_a2b_left",
+            "place_a2b_right",
+            "place_object_basket",
+            "place_object_stand",
+            "put_object_cabinet"
+          ],
+          "image": "robotwin-object-atlas-assets/toy-car/snap_057_toycar_b1.png"
+        },
+        {
+          "base_id": 2,
+          "reachable": true,
+          "current": false,
+          "raw_tasks": [
+            "place_a2b_left",
+            "place_a2b_right",
+            "place_object_basket",
+            "place_object_stand",
+            "put_object_cabinet"
+          ],
+          "image": "robotwin-object-atlas-assets/toy-car/snap_057_toycar_b2.png"
+        },
+        {
+          "base_id": 3,
+          "reachable": true,
+          "current": false,
+          "raw_tasks": [
+            "place_a2b_left",
+            "place_a2b_right",
+            "place_object_basket",
+            "place_object_stand",
+            "put_object_cabinet"
+          ],
+          "image": "robotwin-object-atlas-assets/toy-car/snap_057_toycar_b3.png"
+        },
+        {
+          "base_id": 4,
+          "reachable": true,
+          "current": false,
+          "raw_tasks": [
+            "place_a2b_left",
+            "place_a2b_right",
+            "place_object_basket",
+            "place_object_stand",
+            "put_object_cabinet"
+          ],
+          "image": "robotwin-object-atlas-assets/toy-car/snap_057_toycar_b4.png"
+        },
+        {
+          "base_id": 5,
+          "reachable": true,
+          "current": true,
+          "raw_tasks": [
+            "place_a2b_left",
+            "place_a2b_right",
+            "place_object_basket",
+            "place_object_stand",
+            "put_object_cabinet"
+          ],
+          "image": "robotwin-object-atlas-assets/toy-car/snap_057_toycar_b5.png"
+        }
+      ]
+    },
+    {
+      "noun": "phone",
+      "asset": "077_phone",
+      "slug": "phone",
+      "variants": [
+        {
+          "base_id": 0,
+          "reachable": true,
+          "current": false,
+          "raw_tasks": [
+            "place_a2b_left",
+            "place_a2b_right",
+            "place_phone_stand",
+            "put_object_cabinet"
+          ],
+          "image": "robotwin-object-atlas-assets/phone/snap_077_phone_b0.png"
+        },
+        {
+          "base_id": 1,
+          "reachable": true,
+          "current": true,
+          "raw_tasks": [
+            "place_a2b_left",
+            "place_a2b_right",
+            "place_phone_stand",
+            "put_object_cabinet"
+          ],
+          "image": "robotwin-object-atlas-assets/phone/snap_077_phone_b1.png"
+        },
+        {
+          "base_id": 2,
+          "reachable": true,
+          "current": false,
+          "raw_tasks": [
+            "place_a2b_left",
+            "place_a2b_right",
+            "place_phone_stand",
+            "put_object_cabinet"
+          ],
+          "image": "robotwin-object-atlas-assets/phone/snap_077_phone_b2.png"
+        },
+        {
+          "base_id": 3,
+          "reachable": true,
+          "current": false,
+          "raw_tasks": [
+            "place_a2b_left",
+            "place_a2b_right",
+            "put_object_cabinet"
+          ],
+          "image": "robotwin-object-atlas-assets/phone/snap_077_phone_b3.png"
+        },
+        {
+          "base_id": 4,
+          "reachable": true,
+          "current": false,
+          "raw_tasks": [
+            "place_a2b_left",
+            "place_a2b_right",
+            "place_phone_stand",
+            "put_object_cabinet"
+          ],
+          "image": "robotwin-object-atlas-assets/phone/snap_077_phone_b4.png"
+        }
+      ]
+    },
+    {
+      "noun": "soap",
+      "asset": "107_soap",
+      "slug": "soap",
+      "variants": [
+        {
+          "base_id": 0,
+          "reachable": true,
+          "current": true,
+          "raw_tasks": [
+            "place_a2b_left",
+            "place_a2b_right",
+            "put_object_cabinet"
+          ],
+          "image": "robotwin-object-atlas-assets/soap/snap_107_soap_b0.png"
+        },
+        {
+          "base_id": 1,
+          "reachable": true,
+          "current": false,
+          "raw_tasks": [
+            "place_a2b_left",
+            "place_a2b_right",
+            "put_object_cabinet"
+          ],
+          "image": "robotwin-object-atlas-assets/soap/snap_107_soap_b1.png"
+        },
+        {
+          "base_id": 2,
+          "reachable": true,
+          "current": false,
+          "raw_tasks": [
+            "place_a2b_left",
+            "place_a2b_right",
+            "put_object_cabinet"
+          ],
+          "image": "robotwin-object-atlas-assets/soap/snap_107_soap_b2.png"
+        },
+        {
+          "base_id": 3,
+          "reachable": true,
+          "current": false,
+          "raw_tasks": [
+            "place_a2b_left",
+            "place_a2b_right",
+            "put_object_cabinet"
+          ],
+          "image": "robotwin-object-atlas-assets/soap/snap_107_soap_b3.png"
+        }
+      ]
+    },
+    {
+      "noun": "hamburger",
+      "asset": "006_hamburg",
+      "slug": "hamburger",
+      "variants": [
+        {
+          "base_id": 0,
+          "reachable": true,
+          "current": true,
+          "raw_tasks": [
+            "place_burger_fries"
+          ],
+          "image": "robotwin-object-atlas-assets/hamburger/snap_006_hamburg_b0.png"
+        },
+        {
+          "base_id": 1,
+          "reachable": true,
+          "current": false,
+          "raw_tasks": [
+            "place_burger_fries"
+          ],
+          "image": "robotwin-object-atlas-assets/hamburger/snap_006_hamburg_b1.png"
+        },
+        {
+          "base_id": 2,
+          "reachable": true,
+          "current": false,
+          "raw_tasks": [
+            "place_burger_fries"
+          ],
+          "image": "robotwin-object-atlas-assets/hamburger/snap_006_hamburg_b2.png"
+        },
+        {
+          "base_id": 3,
+          "reachable": true,
+          "current": false,
+          "raw_tasks": [
+            "place_burger_fries"
+          ],
+          "image": "robotwin-object-atlas-assets/hamburger/snap_006_hamburg_b3.png"
+        },
+        {
+          "base_id": 4,
+          "reachable": true,
+          "current": false,
+          "raw_tasks": [
+            "place_burger_fries"
+          ],
+          "image": "robotwin-object-atlas-assets/hamburger/snap_006_hamburg_b4.png"
+        },
+        {
+          "base_id": 5,
+          "reachable": true,
+          "current": false,
+          "raw_tasks": [
+            "place_burger_fries"
+          ],
+          "image": "robotwin-object-atlas-assets/hamburger/snap_006_hamburg_b5.png"
+        }
+      ]
+    },
+    {
+      "noun": "bread",
+      "asset": "075_bread",
+      "slug": "bread",
+      "variants": [
+        {
+          "base_id": 0,
+          "reachable": true,
+          "current": false,
+          "raw_tasks": [
+            "place_a2b_left",
+            "place_a2b_right",
+            "place_bread_basket",
+            "place_bread_skillet",
+            "put_object_cabinet"
+          ],
+          "image": "robotwin-object-atlas-assets/bread/snap_075_bread_b0.png"
+        },
+        {
+          "base_id": 1,
+          "reachable": true,
+          "current": false,
+          "raw_tasks": [
+            "place_a2b_left",
+            "place_a2b_right",
+            "place_bread_basket",
+            "place_bread_skillet",
+            "put_object_cabinet"
+          ],
+          "image": "robotwin-object-atlas-assets/bread/snap_075_bread_b1.png"
+        },
+        {
+          "base_id": 2,
+          "reachable": true,
+          "current": false,
+          "raw_tasks": [
+            "place_a2b_left",
+            "place_a2b_right",
+            "put_object_cabinet"
+          ],
+          "image": "robotwin-object-atlas-assets/bread/snap_075_bread_b2.png"
+        },
+        {
+          "base_id": 3,
+          "reachable": true,
+          "current": false,
+          "raw_tasks": [
+            "place_a2b_left",
+            "place_a2b_right",
+            "place_bread_basket",
+            "place_bread_skillet",
+            "put_object_cabinet"
+          ],
+          "image": "robotwin-object-atlas-assets/bread/snap_075_bread_b3.png"
+        },
+        {
+          "base_id": 4,
+          "reachable": true,
+          "current": false,
+          "raw_tasks": [
+            "place_a2b_left",
+            "place_a2b_right",
+            "put_object_cabinet"
+          ],
+          "image": "robotwin-object-atlas-assets/bread/snap_075_bread_b4.png"
+        },
+        {
+          "base_id": 5,
+          "reachable": true,
+          "current": true,
+          "raw_tasks": [
+            "place_a2b_left",
+            "place_a2b_right",
+            "place_bread_basket",
+            "place_bread_skillet",
+            "put_object_cabinet"
+          ],
+          "image": "robotwin-object-atlas-assets/bread/snap_075_bread_b5.png"
+        },
+        {
+          "base_id": 6,
+          "reachable": true,
+          "current": false,
+          "raw_tasks": [
+            "place_a2b_left",
+            "place_a2b_right",
+            "place_bread_basket",
+            "place_bread_skillet",
+            "put_object_cabinet"
+          ],
+          "image": "robotwin-object-atlas-assets/bread/snap_075_bread_b6.png"
+        }
+      ]
+    },
+    {
+      "noun": "coffee box",
+      "asset": "113_coffee-box",
+      "slug": "coffee-box",
+      "variants": [
+        {
+          "base_id": 0,
+          "reachable": true,
+          "current": false,
+          "raw_tasks": [
+            "place_a2b_left",
+            "place_a2b_right",
+            "put_object_cabinet"
+          ],
+          "image": "robotwin-object-atlas-assets/coffee-box/snap_113_coffee-box_b0.png"
+        },
+        {
+          "base_id": 1,
+          "reachable": true,
+          "current": true,
+          "raw_tasks": [
+            "place_a2b_left",
+            "place_a2b_right",
+            "put_object_cabinet"
+          ],
+          "image": "robotwin-object-atlas-assets/coffee-box/snap_113_coffee-box_b1.png"
+        },
+        {
+          "base_id": 2,
+          "reachable": true,
+          "current": false,
+          "raw_tasks": [
+            "place_a2b_left",
+            "place_a2b_right",
+            "put_object_cabinet"
+          ],
+          "image": "robotwin-object-atlas-assets/coffee-box/snap_113_coffee-box_b2.png"
+        },
+        {
+          "base_id": 3,
+          "reachable": true,
+          "current": false,
+          "raw_tasks": [
+            "place_a2b_left",
+            "place_a2b_right",
+            "put_object_cabinet"
+          ],
+          "image": "robotwin-object-atlas-assets/coffee-box/snap_113_coffee-box_b3.png"
+        },
+        {
+          "base_id": 4,
+          "reachable": true,
+          "current": false,
+          "raw_tasks": [
+            "place_a2b_left",
+            "place_a2b_right",
+            "put_object_cabinet"
+          ],
+          "image": "robotwin-object-atlas-assets/coffee-box/snap_113_coffee-box_b4.png"
+        },
+        {
+          "base_id": 5,
+          "reachable": true,
+          "current": false,
+          "raw_tasks": [
+            "place_a2b_left",
+            "place_a2b_right",
+            "put_object_cabinet"
+          ],
+          "image": "robotwin-object-atlas-assets/coffee-box/snap_113_coffee-box_b5.png"
+        },
+        {
+          "base_id": 6,
+          "reachable": true,
+          "current": false,
+          "raw_tasks": [
+            "place_a2b_left",
+            "place_a2b_right",
+            "put_object_cabinet"
+          ],
+          "image": "robotwin-object-atlas-assets/coffee-box/snap_113_coffee-box_b6.png"
+        }
+      ]
+    },
+    {
+      "noun": "mouse",
+      "asset": "047_mouse",
+      "slug": "mouse",
+      "variants": [
+        {
+          "base_id": 0,
+          "reachable": true,
+          "current": false,
+          "raw_tasks": [
+            "place_a2b_left",
+            "place_a2b_right",
+            "place_mouse_pad",
+            "place_object_scale",
+            "place_object_stand",
+            "put_object_cabinet"
+          ],
+          "image": "robotwin-object-atlas-assets/mouse/snap_047_mouse_b0.png"
+        },
+        {
+          "base_id": 1,
+          "reachable": true,
+          "current": false,
+          "raw_tasks": [
+            "place_a2b_left",
+            "place_a2b_right",
+            "place_mouse_pad",
+            "place_object_scale",
+            "place_object_stand",
+            "put_object_cabinet"
+          ],
+          "image": "robotwin-object-atlas-assets/mouse/snap_047_mouse_b1.png"
+        },
+        {
+          "base_id": 2,
+          "reachable": true,
+          "current": true,
+          "raw_tasks": [
+            "place_a2b_left",
+            "place_a2b_right",
+            "place_mouse_pad",
+            "place_object_scale",
+            "place_object_stand",
+            "put_object_cabinet"
+          ],
+          "image": "robotwin-object-atlas-assets/mouse/snap_047_mouse_b2.png"
+        }
+      ]
+    }
+  ]
+};
+const atlas = document.querySelector("#atlas");
+const categoryLinks = document.querySelector("#category-links");
+const search = document.querySelector("#search");
+const cards = [];
+let activeFilter = "all";
+
+function makeElement(tag, className, text) {
+  const element = document.createElement(tag);
+  if (className) element.className = className;
+  if (text !== undefined) element.textContent = text;
+  return element;
+}
+
+function buildAtlas() {
+  for (const category of catalog.categories) {
+    const link = makeElement("a", "category-link");
+    link.href = `#category-${category.slug}`;
+    link.append(makeElement("span", "", category.noun), makeElement("span", "", String(category.variants.length).padStart(2, "0")));
+    categoryLinks.append(link);
+
+    const section = makeElement("section", "shelf");
+    section.id = `category-${category.slug}`;
+    section.dataset.category = category.slug;
+    const header = makeElement("header", "shelf-header");
+    const titleGroup = makeElement("div");
+    titleGroup.append(makeElement("h2", "shelf-title", category.noun), makeElement("p", "section-code", category.asset));
+    const reachable = category.variants.filter((variant) => variant.reachable).length;
+    header.append(titleGroup, makeElement("p", "shelf-count", `${reachable}/${category.variants.length} raw reachable`));
+    section.append(header);
+
+    const grid = makeElement("div", "variant-grid");
+    for (const variant of category.variants) {
+      const card = makeElement("label", "variant-card");
+      const key = `${category.asset}/base${variant.base_id}`;
+      card.dataset.key = key;
+      card.dataset.noun = category.noun;
+      card.dataset.asset = category.asset;
+      card.dataset.baseId = String(variant.base_id);
+      card.dataset.reachable = String(variant.reachable);
+      card.dataset.current = String(variant.current);
+      card.dataset.search = [category.noun, category.asset, `base${variant.base_id}`, ...variant.raw_tasks].join(" ").toLowerCase();
+      if (variant.current) card.classList.add("is-current");
+      if (!variant.reachable) {
+        card.classList.add("is-unreachable");
+        card.title = "This exact ID is not selectable by native/raw task Python at commit 8187d5b.";
+      }
+
+      const checkbox = makeElement("input", "variant-check");
+      checkbox.type = "checkbox";
+      checkbox.value = key;
+      checkbox.disabled = !variant.reachable;
+      checkbox.setAttribute("aria-label", `Select ${category.noun} ${key}`);
+      checkbox.addEventListener("change", () => {
+        card.classList.toggle("is-selected", checkbox.checked);
+        persistSelection();
+        renderSelection();
+        if (activeFilter === "selected") applyFilters();
+      });
+
+      const stage = makeElement("span", "variant-stage");
+      const image = makeElement("img", "variant-image");
+      image.src = variant.image;
+      image.alt = `${category.noun}, ${category.asset} base${variant.base_id}`;
+      image.loading = "lazy";
+      image.decoding = "async";
+      stage.append(image);
+
+      const body = makeElement("span", "card-body");
+      const head = makeElement("span", "card-head");
+      head.append(makeElement("strong", "base-id", `base${variant.base_id}`));
+      if (variant.current) head.append(makeElement("span", "badge badge-current", "current"));
+      const reach = makeElement("span", "reachability", variant.reachable ? "Raw-task reachable" : "Not exact-ID reachable");
+      const tasks = makeElement("span", "card-tasks", variant.raw_tasks.length ? variant.raw_tasks.join(" · ") : "No native/raw task can select this exact ID");
+      tasks.title = variant.raw_tasks.join(", ");
+      body.append(head, reach, tasks);
+      card.append(checkbox, stage, body);
+      grid.append(card);
+      cards.push({ card, checkbox, category, variant, key });
+    }
+    section.append(grid);
+    atlas.append(section);
+  }
+}
+
+function applyFilters() {
+  const query = search.value.trim().toLowerCase();
+  let visible = 0;
+  for (const item of cards) {
+    const statusMatch = activeFilter === "all"
+      || (activeFilter === "reachable" && item.variant.reachable)
+      || (activeFilter === "unreachable" && !item.variant.reachable)
+      || (activeFilter === "current" && item.variant.current)
+      || (activeFilter === "selected" && item.checkbox.checked);
+    const queryMatch = !query || item.card.dataset.search.includes(query);
+    item.card.hidden = !(statusMatch && queryMatch);
+    if (!item.card.hidden) visible += 1;
+  }
+  for (const section of atlas.querySelectorAll(".shelf")) {
+    section.hidden = !Array.from(section.querySelectorAll(".variant-card")).some((card) => !card.hidden);
+  }
+  document.querySelector("#visible-count").textContent = `${visible} / ${cards.length} visible`;
+}
+
+function selectedItems() {
+  return cards.filter((item) => item.checkbox.checked);
+}
+
+function persistSelection() {
+  try {
+    localStorage.setItem("robotwin-object-atlas-selection", JSON.stringify(selectedItems().map((item) => item.key)));
+  } catch (_) {}
+}
+
+function restoreSelection() {
+  let stored = [];
+  try { stored = JSON.parse(localStorage.getItem("robotwin-object-atlas-selection") || "[]"); } catch (_) {}
+  const keys = new Set(Array.isArray(stored) ? stored : []);
+  for (const item of cards) {
+    item.checkbox.checked = item.variant.reachable && keys.has(item.key);
+    item.card.classList.toggle("is-selected", item.checkbox.checked);
+  }
+}
+
+function renderSelection() {
+  const selected = selectedItems();
+  const list = document.querySelector("#selection-list");
+  const count = document.querySelector("#selection-count");
+  const copy = document.querySelector("#copy-selection");
+  count.textContent = String(selected.length);
+  copy.disabled = selected.length === 0;
+  list.replaceChildren();
+  if (!selected.length) {
+    list.append(makeElement("p", "selection-empty", "No variants selected."));
+    return;
+  }
+  for (const item of selected) {
+    const row = makeElement("div", "selection-row");
+    row.append(makeElement("strong", "", item.category.noun), makeElement("span", "selection-key", `base${item.variant.base_id}`));
+    const remove = makeElement("button", "remove-button", "×");
+    remove.type = "button";
+    remove.title = `Remove ${item.category.noun} base${item.variant.base_id}`;
+    remove.setAttribute("aria-label", remove.title);
+    remove.addEventListener("click", () => {
+      item.checkbox.checked = false;
+      item.card.classList.remove("is-selected");
+      persistSelection();
+      renderSelection();
+      if (activeFilter === "selected") applyFilters();
+    });
+    row.append(remove);
+    list.append(row);
+  }
+}
+
+function selectionText() {
+  const grouped = new Map();
+  for (const category of catalog.categories) grouped.set(category.asset, []);
+  for (const item of selectedItems()) grouped.get(item.category.asset).push(item.variant.base_id);
+  return catalog.categories
+    .filter((category) => grouped.get(category.asset).length)
+    .map((category) => `${category.noun} (${category.asset}): ${grouped.get(category.asset).sort((a, b) => a - b).join(", ")}`)
+    .join("\n");
+}
+
+let toastTimer = 0;
+function showToast(message) {
+  const toast = document.querySelector("#toast");
+  toast.textContent = message;
+  toast.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toast.classList.remove("show"), 2200);
+}
+
+async function copySelection() {
+  const text = selectionText();
+  if (!text) return;
+  try {
+    await navigator.clipboard.writeText(text);
+  } catch (_) {
+    const textarea = makeElement("textarea");
+    textarea.value = text;
+    textarea.style.position = "fixed";
+    textarea.style.opacity = "0";
+    document.body.append(textarea);
+    textarea.select();
+    document.execCommand("copy");
+    textarea.remove();
+  }
+  showToast("Selected exact IDs copied.");
+}
+
+function loadCurrent() {
+  for (const item of cards) {
+    item.checkbox.checked = item.variant.current;
+    item.card.classList.toggle("is-selected", item.checkbox.checked);
+  }
+  persistSelection();
+  renderSelection();
+  if (activeFilter === "selected") applyFilters();
+  showToast(`Loaded ${cards.filter((item) => item.variant.current).length} current production variants.`);
+}
+
+function clearSelection() {
+  for (const item of cards) {
+    item.checkbox.checked = false;
+    item.card.classList.remove("is-selected");
+  }
+  persistSelection();
+  renderSelection();
+  if (activeFilter === "selected") applyFilters();
+}
+
+function setTheme(theme) {
+  if (theme === "system") document.documentElement.removeAttribute("data-theme");
+  else document.documentElement.dataset.theme = theme;
+  document.querySelector("#theme-button").textContent = `Theme: ${theme}`;
+  try { localStorage.setItem("robotwin-object-atlas-theme", theme); } catch (_) {}
+}
+
+function initTheme() {
+  let theme = "system";
+  try { theme = localStorage.getItem("robotwin-object-atlas-theme") || "system"; } catch (_) {}
+  if (!["system", "light", "dark"].includes(theme)) theme = "system";
+  setTheme(theme);
+}
+
+buildAtlas();
+document.querySelector("#metric-categories").textContent = String(catalog.categories.length);
+document.querySelector("#metric-variants").textContent = String(cards.length);
+document.querySelector("#metric-reachable").textContent = String(cards.filter((item) => item.variant.reachable).length);
+document.querySelector("#metric-current").textContent = String(cards.filter((item) => item.variant.current).length);
+restoreSelection();
+renderSelection();
+applyFilters();
+initTheme();
+
+search.addEventListener("input", applyFilters);
+document.querySelector("#filters").addEventListener("click", (event) => {
+  const button = event.target.closest("[data-filter]");
+  if (!button) return;
+  activeFilter = button.dataset.filter;
+  for (const filter of document.querySelectorAll(".filter")) filter.setAttribute("aria-pressed", String(filter === button));
+  applyFilters();
+});
+document.querySelector("#load-current").addEventListener("click", loadCurrent);
+document.querySelector("#clear-selection").addEventListener("click", clearSelection);
+document.querySelector("#copy-selection").addEventListener("click", copySelection);
+document.querySelector("#theme-button").addEventListener("click", () => {
+  const current = document.documentElement.dataset.theme || "system";
+  setTheme(current === "system" ? "light" : current === "light" ? "dark" : "system");
+});
+</script>
+</body>
+</html>

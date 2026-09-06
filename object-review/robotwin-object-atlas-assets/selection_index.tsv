@@ -1,0 +1,104 @@
+noun	asset	base_id	raw_task_reachable	current_production	raw_tasks
+bottle	001_bottle	0	yes	no	pick_diverse_bottles,shake_bottle,shake_bottle_horizontally
+bottle	001_bottle	1	yes	no	pick_diverse_bottles,shake_bottle,shake_bottle_horizontally
+bottle	001_bottle	2	yes	no	pick_diverse_bottles,shake_bottle,shake_bottle_horizontally
+bottle	001_bottle	3	yes	no	pick_diverse_bottles,shake_bottle,shake_bottle_horizontally
+bottle	001_bottle	4	yes	no	pick_diverse_bottles,shake_bottle,shake_bottle_horizontally
+bottle	001_bottle	5	yes	no	pick_diverse_bottles,shake_bottle,shake_bottle_horizontally
+bottle	001_bottle	6	yes	no	pick_diverse_bottles,shake_bottle,shake_bottle_horizontally
+bottle	001_bottle	7	yes	no	pick_diverse_bottles,shake_bottle,shake_bottle_horizontally
+bottle	001_bottle	8	yes	no	pick_diverse_bottles,shake_bottle,shake_bottle_horizontally
+bottle	001_bottle	9	yes	no	pick_diverse_bottles,shake_bottle,shake_bottle_horizontally
+bottle	001_bottle	10	yes	no	pick_diverse_bottles,shake_bottle,shake_bottle_horizontally
+bottle	001_bottle	11	yes	no	pick_diverse_bottles,shake_bottle,shake_bottle_horizontally
+bottle	001_bottle	12	yes	no	pick_diverse_bottles,shake_bottle,shake_bottle_horizontally
+bottle	001_bottle	13	yes	yes	pick_diverse_bottles,shake_bottle,shake_bottle_horizontally,adjust_bottle,pick_dual_bottles
+bottle	001_bottle	14	yes	no	pick_diverse_bottles,shake_bottle,shake_bottle_horizontally
+bottle	001_bottle	15	yes	no	pick_diverse_bottles,shake_bottle,shake_bottle_horizontally
+bottle	001_bottle	16	yes	no	pick_diverse_bottles,shake_bottle,shake_bottle_horizontally,adjust_bottle,pick_dual_bottles
+bottle	001_bottle	17	yes	no	pick_diverse_bottles,shake_bottle,shake_bottle_horizontally
+bottle	001_bottle	18	yes	no	pick_diverse_bottles,shake_bottle,shake_bottle_horizontally
+bottle	001_bottle	19	yes	no	pick_diverse_bottles,shake_bottle,shake_bottle_horizontally
+bottle	001_bottle	20	no	no	
+bottle	001_bottle	21	no	no	
+bottle	001_bottle	22	no	no	
+cup	021_cup	0	yes	yes	place_empty_cup
+cup	021_cup	1	yes	no	place_container_plate
+cup	021_cup	2	yes	no	place_container_plate
+cup	021_cup	3	yes	no	place_container_plate
+cup	021_cup	4	yes	no	place_container_plate
+cup	021_cup	5	yes	no	place_container_plate
+cup	021_cup	6	yes	no	place_container_plate
+cup	021_cup	7	yes	no	place_container_plate
+cup	021_cup	8	no	no	
+cup	021_cup	9	no	no	
+cup	021_cup	10	no	no	
+cup	021_cup	11	no	no	
+cup	021_cup	12	no	no	
+shoe	041_shoe	0	yes	no	place_dual_shoes,place_shoe
+shoe	041_shoe	1	yes	no	place_dual_shoes,place_shoe
+shoe	041_shoe	2	yes	no	place_dual_shoes,place_shoe
+shoe	041_shoe	3	yes	no	place_dual_shoes,place_shoe
+shoe	041_shoe	4	yes	no	place_dual_shoes,place_shoe
+shoe	041_shoe	5	yes	no	place_dual_shoes,place_shoe
+shoe	041_shoe	6	yes	no	place_dual_shoes,place_shoe
+shoe	041_shoe	7	yes	no	place_dual_shoes,place_shoe
+shoe	041_shoe	8	yes	yes	place_dual_shoes,place_shoe
+shoe	041_shoe	9	yes	no	place_dual_shoes,place_shoe
+mug	039_mug	0	yes	yes	hanging_mug
+mug	039_mug	1	yes	no	hanging_mug
+mug	039_mug	2	yes	no	hanging_mug
+mug	039_mug	3	yes	no	hanging_mug
+mug	039_mug	4	yes	no	hanging_mug
+mug	039_mug	5	yes	no	hanging_mug
+mug	039_mug	6	yes	no	hanging_mug
+mug	039_mug	7	yes	no	hanging_mug
+mug	039_mug	8	yes	no	hanging_mug
+mug	039_mug	9	yes	no	hanging_mug
+mug	039_mug	10	no	no	
+mug	039_mug	11	no	no	
+mug	039_mug	12	no	no	
+can	071_can	0	yes	no	place_can_basket,place_cans_plasticbox
+can	071_can	1	yes	no	place_can_basket,place_cans_plasticbox
+can	071_can	2	yes	yes	place_can_basket,place_cans_plasticbox
+can	071_can	3	yes	no	place_can_basket,place_cans_plasticbox
+can	071_can	5	yes	no	place_can_basket,place_cans_plasticbox
+can	071_can	6	yes	no	place_can_basket,place_cans_plasticbox
+toy car	057_toycar	0	yes	no	place_a2b_left,place_a2b_right,place_object_basket,place_object_stand,put_object_cabinet
+toy car	057_toycar	1	yes	no	place_a2b_left,place_a2b_right,place_object_basket,place_object_stand,put_object_cabinet
+toy car	057_toycar	2	yes	no	place_a2b_left,place_a2b_right,place_object_basket,place_object_stand,put_object_cabinet
+toy car	057_toycar	3	yes	no	place_a2b_left,place_a2b_right,place_object_basket,place_object_stand,put_object_cabinet
+toy car	057_toycar	4	yes	no	place_a2b_left,place_a2b_right,place_object_basket,place_object_stand,put_object_cabinet
+toy car	057_toycar	5	yes	yes	place_a2b_left,place_a2b_right,place_object_basket,place_object_stand,put_object_cabinet
+phone	077_phone	0	yes	no	place_a2b_left,place_a2b_right,place_phone_stand,put_object_cabinet
+phone	077_phone	1	yes	yes	place_a2b_left,place_a2b_right,place_phone_stand,put_object_cabinet
+phone	077_phone	2	yes	no	place_a2b_left,place_a2b_right,place_phone_stand,put_object_cabinet
+phone	077_phone	3	yes	no	place_a2b_left,place_a2b_right,put_object_cabinet
+phone	077_phone	4	yes	no	place_a2b_left,place_a2b_right,place_phone_stand,put_object_cabinet
+soap	107_soap	0	yes	yes	place_a2b_left,place_a2b_right,put_object_cabinet
+soap	107_soap	1	yes	no	place_a2b_left,place_a2b_right,put_object_cabinet
+soap	107_soap	2	yes	no	place_a2b_left,place_a2b_right,put_object_cabinet
+soap	107_soap	3	yes	no	place_a2b_left,place_a2b_right,put_object_cabinet
+hamburger	006_hamburg	0	yes	yes	place_burger_fries
+hamburger	006_hamburg	1	yes	no	place_burger_fries
+hamburger	006_hamburg	2	yes	no	place_burger_fries
+hamburger	006_hamburg	3	yes	no	place_burger_fries
+hamburger	006_hamburg	4	yes	no	place_burger_fries
+hamburger	006_hamburg	5	yes	no	place_burger_fries
+bread	075_bread	0	yes	no	place_a2b_left,place_a2b_right,place_bread_basket,place_bread_skillet,put_object_cabinet
+bread	075_bread	1	yes	no	place_a2b_left,place_a2b_right,place_bread_basket,place_bread_skillet,put_object_cabinet
+bread	075_bread	2	yes	no	place_a2b_left,place_a2b_right,put_object_cabinet
+bread	075_bread	3	yes	no	place_a2b_left,place_a2b_right,place_bread_basket,place_bread_skillet,put_object_cabinet
+bread	075_bread	4	yes	no	place_a2b_left,place_a2b_right,put_object_cabinet
+bread	075_bread	5	yes	yes	place_a2b_left,place_a2b_right,place_bread_basket,place_bread_skillet,put_object_cabinet
+bread	075_bread	6	yes	no	place_a2b_left,place_a2b_right,place_bread_basket,place_bread_skillet,put_object_cabinet
+coffee box	113_coffee-box	0	yes	no	place_a2b_left,place_a2b_right,put_object_cabinet
+coffee box	113_coffee-box	1	yes	yes	place_a2b_left,place_a2b_right,put_object_cabinet
+coffee box	113_coffee-box	2	yes	no	place_a2b_left,place_a2b_right,put_object_cabinet
+coffee box	113_coffee-box	3	yes	no	place_a2b_left,place_a2b_right,put_object_cabinet
+coffee box	113_coffee-box	4	yes	no	place_a2b_left,place_a2b_right,put_object_cabinet
+coffee box	113_coffee-box	5	yes	no	place_a2b_left,place_a2b_right,put_object_cabinet
+coffee box	113_coffee-box	6	yes	no	place_a2b_left,place_a2b_right,put_object_cabinet
+mouse	047_mouse	0	yes	no	place_a2b_left,place_a2b_right,place_mouse_pad,place_object_scale,place_object_stand,put_object_cabinet
+mouse	047_mouse	1	yes	no	place_a2b_left,place_a2b_right,place_mouse_pad,place_object_scale,place_object_stand,put_object_cabinet
+mouse	047_mouse	2	yes	yes	place_a2b_left,place_a2b_right,place_mouse_pad,place_object_scale,place_object_stand,put_object_cabinet
