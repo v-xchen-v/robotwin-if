@@ -7,13 +7,16 @@ policies/
 ├── README.md
 └── xvla/
     ├── README.md
+    ├── client.py
+    ├── eval.py
+    ├── outputs.py
     ├── setup_env.sh
     └── requirements.txt
 ```
 
 | Policy | Checkpoint | Conda inference environment | 当前状态 |
 |---|---|---|---|
-| [X-VLA](xvla/README.md) | `2toINF/X-VLA-RoboTwin2` | `robotwin-if-xvla` | 本地环境安装、模块导入和 CUDA 检查通过；模型加载及任务验证待完成 |
+| [X-VLA](xvla/README.md) | `2toINF/X-VLA-RoboTwin2` | `robotwin-if-xvla` | 初次闭环已验证：raw `click_bell` 1/1；IF `arm_select` 左成功、右失败（1/2） |
 
 ## 环境与源码约定
 
@@ -22,6 +25,7 @@ policies/
 - 第三方模型源码放在 `third_party/<policy>/`，setup 固定其 revision。模型权重保留在 Hugging Face cache 或外部 checkpoint 目录。
 - 环境目录、第三方 checkout、权重和运行日志不加入 Git。这里维护安装方法及适配代码。
 - 先完成一至两个策略，再从实际实现中提取公共层；公共层的目录和接口在该阶段确定。
+- 评测输出统一采用 `outputs/policy-eval/<run>/<policy>/<task>/`，以 `<task>_ep<seed>` 平铺保存 summary、status、指令、日志、视频、初始图像、逐步耗时和 chunk 动作日志，参考 `smoke-blocks1/cogact/arm_select/`。可增加策略专用诊断文件；未采集字段明确标为 `null`。X-VLA 的文件语义与离线转换见其 [README](xvla/README.md#输出格式)。
 
 ## 每个策略的验收顺序
 

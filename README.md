@@ -101,7 +101,7 @@ done
 
 ### 4. Policy 评测
 
-本仓库维护的策略入口见 [`policies/README.md`](policies/README.md)。X-VLA 环境安装命令为 `bash policies/xvla/setup_env.sh`，启动方法见其 [README](policies/xvla/README.md)。本地环境安装、模块导入和 CUDA 检查已通过，模型加载、真实推理与任务验证尚未完成。每个策略先验证一个 raw RoboTwin task，再验证一个 IF task。
+本仓库维护的策略入口见 [`policies/README.md`](policies/README.md)。X-VLA 环境安装命令为 `bash policies/xvla/setup_env.sh`，服务启动与最小评测命令见其 [README](policies/xvla/README.md)。初次闭环验证已完成：raw `click_bell` 1/1 成功，IF `arm_select` 的一个完整左右臂 block 为 1/2（左成功、右达到动作上限），结果属于 smoke 验证。每个策略先验证一个 raw RoboTwin task，再验证一个 IF task。
 
 RoboTwin 没有统一的顶层 eval 命令；每个 policy 使用自己的 `eval.sh`，参数签名也可能不同。常见入口为：
 
