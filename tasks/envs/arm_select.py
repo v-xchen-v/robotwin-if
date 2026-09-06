@@ -70,6 +70,9 @@ class arm_select(Base_Task):
         self._seed = kwags.get("seed", 0)
         super()._init_task_env_(**kwags)
         apply_if_eval_step_limit(self)
+        # Policy evaluation starts after setup_demo without calling play_once.
+        # Capture the settled initial height for both oracle and policy paths.
+        self._init_box_z = float(self.box.get_pose().p[2])
 
     def load_actors(self):
         # Scene depends only on seed//2 (a pair shares one scene); mode from
