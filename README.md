@@ -14,7 +14,7 @@
 
 唯一正式维护的 IF inventory 是 [`eval_cfg/if_tasks.yml`](eval_cfg/if_tasks.yml)。其他 env/JSON 可以为历史或实验目的留在仓库中，但只要没有列入该文件，就不属于 active suite。Manifest membership 与 production readiness 分开管理：例如 `pick_diverse_object` 属于上述七项，其已锁定的四类 Unseen production pool 仍由独立测试 gate 持续约束。
 
-范围仅限 benchmark task（场景、干扰物、指令模板、成功判定与评测语义），**不在本仓库训练模型**。真实 VLA 评测在 CogACT 侧进行：把本仓库挂入 CogACT，由这里锁定的 RoboTwin runtime 运行任务，由 CogACT/X-VLA 提供推理。
+本仓库维护 benchmark task（场景、干扰物、指令模板、成功判定与评测语义），并开始在 [`policies/`](policies/README.md) 中维护开源策略的独立推理环境与后续适配代码，**不在本仓库训练模型**。首个策略为 X-VLA-RoboTwin2，其模型服务与 RoboTwin 仿真使用不同的 Conda 环境；也可由外部 CogACT/X-VLA 集成提供推理。
 
 ## 设计原则：零改上游
 
@@ -101,6 +101,8 @@ done
 
 ### 4. Policy 评测
 
+本仓库维护的策略入口见 [`policies/README.md`](policies/README.md)。X-VLA 环境安装命令为 `bash policies/xvla/setup_env.sh`，启动方法见其 [README](policies/xvla/README.md)。本地环境安装、模块导入和 CUDA 检查已通过，模型加载、真实推理与任务验证尚未完成。每个策略先验证一个 raw RoboTwin task，再验证一个 IF task。
+
 RoboTwin 没有统一的顶层 eval 命令；每个 policy 使用自己的 `eval.sh`，参数签名也可能不同。常见入口为：
 
 ```bash
@@ -183,6 +185,7 @@ python tests/<task>/test_check_success.py
 
 ```text
 tasks/                  任务 env、instruction JSON 与对象描述；bridge 的 source of truth
+policies/               每个开源策略的独立推理环境、说明与后续 adapter
 if_benchmark/           simulator-free seed contracts、manifest 与 generation state
 eval_cfg/               canonical IF 七项与 native 50 + IF 七项 task inventory
 scripts/                thin shell entrypoints + stdlib ownership installer
@@ -191,6 +194,7 @@ tools/                  seed generator/validator、probe、report 与可视化�
 docs/                   设计及逐任务实现记录
 notes/                  实验、评审与集成证据
 third_party/robotwin/    锁定的 RoboTwin 2.0 submodule
+third_party/xvla/        setup 获取的固定版本 X-VLA 源码（Git 忽略）
 ```
 
 ## 当前状态
