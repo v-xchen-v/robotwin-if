@@ -3,4 +3,5 @@ __pycache__/
 *.pyc
 /third_party/xvla/
 /third_party/lingbot-va/
+/third_party/lingbot-vla/
 /outputs/policy-eval/

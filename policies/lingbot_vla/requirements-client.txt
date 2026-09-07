@@ -1,0 +1,3 @@
+# Simulator transport only; the model has a separate environment.
+websockets==15.0.1
+msgpack==1.1.1
