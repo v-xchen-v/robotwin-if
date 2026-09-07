@@ -5,18 +5,25 @@
 ```text
 policies/
 ├── README.md
-└── xvla/
+├── xvla/                 # HTTP, stateless chunks, 20D EE6D
+└── lingbot_va/           # WebSocket, KV cache, relative EE poses
     ├── README.md
+    ├── setup_env.sh
+    ├── requirements.txt
+    ├── requirements-client.txt
+    ├── download_checkpoint.py
+    ├── serve.py
     ├── client.py
     ├── eval.py
     ├── outputs.py
-    ├── setup_env.sh
-    └── requirements.txt
+    ├── patch_source.py
+    └── check_env.py
 ```
 
 | Policy | Checkpoint | Conda inference environment | 当前状态 |
 |---|---|---|---|
 | [X-VLA](xvla/README.md) | `2toINF/X-VLA-RoboTwin2` | `robotwin-if-xvla` | 初次闭环已验证：raw `click_bell` 1/1；IF `arm_select` 左成功、右失败（1/2） |
+| [LingBot-VA](lingbot_va/README.md) | `robbyant/lingbot-va-posttrain-robotwin` | `robotwin-if-lingbot-va` | 初次闭环已验证：raw `click_bell` 1/1；IF `arm_select` 左右均成功（2/2） |
 
 ## 环境与源码约定
 
