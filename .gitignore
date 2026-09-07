@@ -6,3 +6,6 @@ __pycache__/
 /third_party/lingbot-vla/
 /third_party/vlact/
 /outputs/policy-eval/
+
+/third_party/opendm/
+/third_party/hy-vla/
