@@ -7,6 +7,7 @@ policies/
 ├── README.md
 ├── xvla/                 # HTTP, stateless chunks, 20D EE6D
 ├── lingbot_vla/          # WebSocket, 4B VLA, absolute 14D joint chunks
+├── vlact/                # WebSocket, Qwen3OFT, wrap32 absolute joint chunks
 └── lingbot_va/           # WebSocket, KV cache, relative EE poses
     ├── README.md
     ├── setup_env.sh
@@ -26,6 +27,7 @@ policies/
 | [X-VLA](xvla/README.md) | `2toINF/X-VLA-RoboTwin2` | `robotwin-if-xvla` | 初次闭环已验证：raw `click_bell` 1/1；IF `arm_select` 左成功、右失败（1/2） |
 | [LingBot-VA](lingbot_va/README.md) | `robbyant/lingbot-va-posttrain-robotwin` | `robotwin-if-lingbot-va` | 初次闭环已验证：raw `click_bell` 1/1；IF `arm_select` 左右均成功（2/2） |
 | [LingBot-VLA 4B](lingbot_vla/README.md) | `robbyant/lingbot-vla-4b-posttrain-robotwin` | `robotwin-if-lingbot-vla` | raw `click_bell` 1/1 成功；IF `arm_select` 完整左右 block 为 0/2，均达到动作上限，IF 成功验收尚未通过 |
+| [VLAct Qwen3OFT](vlact/README.md) | `StarVLA/VLAct_Qwen3OFT_Robotwin_Finetune` | `robotwin-if-vlact` | 初次闭环已验证：raw `click_bell` 1/1；IF `arm_select` 完整左右 block 为 1/2（左达到动作上限、右成功） |
 
 ## 环境与源码约定
 
