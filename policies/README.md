@@ -2,6 +2,9 @@
 
 每个策略使用一个小写目录 `policies/<policy_name>/`，维护自己的推理环境、配置、适配代码与使用说明。采用复数 `policies`，与上游 RoboTwin 的 `policy/` 安装目录区分。
 
+`arm_select` 的可选场景变化配置、双臂预检与独立 manifest 使用方式见
+[arm_select v2 试验说明](../docs/arm-select-v2.md)。
+
 ```text
 policies/
 ├── README.md

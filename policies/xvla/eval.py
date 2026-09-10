@@ -87,7 +87,10 @@ def instruction_for(task, episode_info, split, seed):
     from generate_episode_instructions import generate_episode_descriptions
     state = random.getstate()
     try:
-        random.seed(seed)
+        # Experimental arm pairs share a template, changing only the arm word.
+        paired = (task == "arm_select" and
+                  episode_info.get("arm_select_scene", {}).get("version") == "jitter-v2")
+        random.seed(seed // 2 if paired else seed)
         descriptions = generate_episode_descriptions(task, [episode_info["info"]], 1)[0][split]
     finally:
         random.setstate(state)

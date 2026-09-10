@@ -21,6 +21,8 @@ class BaseTask:
         self.box = SimpleNamespace(get_pose=lambda: SimpleNamespace(p=self.position))
         # load_actors currently clears this before the base task settles physics.
         self._init_box_z = None
+        self.info = {}
+        self._scene_spec = {"version": self.scene_version}
         self.tcps = {"left": np.array([-0.3, 0.1, 0.9]), "right": np.array([0.3, 0.1, 0.9])}
 
     def get_arm_pose(self, arm):

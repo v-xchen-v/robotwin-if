@@ -10,7 +10,7 @@ class arm_select(Base_Task):
     """IF-Arm-Select: the instruction names which arm (left vs right) grasps a
     center box; the arm word is the ONLY signal.
 
-    The box sits at a FIXED center pose (x=0, axis-aligned), so geometry does not
+    By default the box sits at a FIXED center pose (x=0, axis-aligned), so geometry does not
     leak which arm to use -- native handover_block chooses the arm by box x-sign
     (``ArmTag("left" if x<0 else "right")``, the "convenient hand" prior); pinning
     x=0 puts that prior exactly on its decision boundary and the instruction has
@@ -23,8 +23,10 @@ class arm_select(Base_Task):
     IF wiring mirrors laptop_verb / grasp_cube_approach:
         scene_seed = seed // 2      # identical for the consecutive pair (2k, 2k+1)
         mode       = ["left","right"][seed % 2]
-    The box is fully fixed, so a pair (2k, 2k+1) is pixel-identical and the ONLY
-    difference the policy sees is the commanded arm word ({a}).
+    The optional arm_select_scene_version="jitter-v2" config varies xy/yaw
+    between pairs in the central workspace. Both modes still share exactly the
+    same scene. Qualify BOTH arms before retaining a complete block; a position
+    must never determine the commanded arm. Keep v1/v2 manifests separate.
 
     Success is STATE-BASED (invariant 3): policy eval cannot trust the oracle's
     ArmTag, so we infer the executing arm from the end state -- the box must be
@@ -41,6 +43,12 @@ class arm_select(Base_Task):
     # over x=0 x {both arms} x heights found both arms grasp reliably here (a
     # near-robot y like -0.05 was the original reach failure, not x=0 itself).
     FIXED_XY = (0.0, 0.10)
+    SCENE_VERSIONS = ("fixed-v1", "jitter-v2")
+    # Three equal-width x strata, cycled by scene seed (never by arm/mode).
+    # These are candidate ranges; a complete-block oracle probe qualifies them.
+    V2_X_BINS = ((-0.02, -0.02 / 3), (-0.02 / 3, 0.02 / 3), (0.02 / 3, 0.02))
+    V2_Y_RANGE = (0.10, 0.12)
+    V2_YAW_LIMIT = np.deg2rad(3.0)
     # The "long" boxtype ships 8 side grasps: ids [0,1,2,3] = front/right/left/back
     # at the upper height, [4,5,6,7] the same at the lower height. Both arms use
     # the upper set; choose_grasp_pose picks each arm's reachable face.
@@ -68,27 +76,48 @@ class arm_select(Base_Task):
     def setup_demo(self, **kwags):
         # Capture the seed so mode/scene derive purely from it (IF wiring).
         self._seed = kwags.get("seed", 0)
+        self.scene_version = kwags.pop("arm_select_scene_version", "fixed-v1")
+        if self.scene_version not in self.SCENE_VERSIONS:
+            raise ValueError(f"Unknown arm_select_scene_version: {self.scene_version!r}")
         super()._init_task_env_(**kwags)
         apply_if_eval_step_limit(self)
         # Policy evaluation starts after setup_demo without calling play_once.
         # Capture the settled initial height for both oracle and policy paths.
         self._init_box_z = float(self.box.get_pose().p[2])
+        self.info["arm_select_scene"] = dict(self._scene_spec)
+
+    @classmethod
+    def scene_pose(cls, scene_seed, version):
+        """Pure, mode-independent scene sampling; leave global RNG untouched."""
+        if version == "fixed-v1":
+            return (*cls.FIXED_XY, 0.0, "center")
+        if version != "jitter-v2":
+            raise ValueError(f"Unknown arm_select_scene_version: {version!r}")
+        rng = np.random.RandomState(scene_seed)
+        stratum = scene_seed % len(cls.V2_X_BINS)
+        return (float(rng.uniform(*cls.V2_X_BINS[stratum])),
+                float(rng.uniform(*cls.V2_Y_RANGE)),
+                float(rng.uniform(-cls.V2_YAW_LIMIT, cls.V2_YAW_LIMIT)),
+                ("left", "center", "right")[stratum])
 
     def load_actors(self):
         # Scene depends only on seed//2 (a pair shares one scene); mode from
         # seed%2. Re-seed with scene_seed to override _init_task_env_'s raw-seed
-        # seeding. The box pose is fixed, so every scene is identical -- the pair
-        # (2k, 2k+1) differs only in the commanded arm. ARM_OVERRIDE forces the
-        # mode (harness/testing only).
+        # seeding. The versioned pose sampler never receives the commanded arm.
+        # ARM_OVERRIDE forces the mode (harness/testing only).
         scene_seed = self._seed // 2
         np.random.seed(scene_seed)
         self.mode = self.ARM_OVERRIDE if self.ARM_OVERRIDE in ("left", "right") \
             else ["left", "right"][self._seed % 2]
 
-        x, y = self.FIXED_XY
+        x, y, yaw, region = self.scene_pose(scene_seed, self.scene_version)
+        quat = [float(np.cos(yaw / 2)), 0, 0, float(np.sin(yaw / 2))]
+        self._scene_spec = {"version": self.scene_version, "scene_seed": scene_seed,
+                            "region": region, "position": [x, y, self.BOX_Z],
+                            "quaternion": quat, "yaw_degrees": float(np.rad2deg(yaw))}
         self.box = create_box(
             scene=self,
-            pose=sapien.Pose([x, y, self.BOX_Z], [1, 0, 0, 0]),
+            pose=sapien.Pose([x, y, self.BOX_Z], quat),
             half_size=self.BOX_HALF,
             color=(1, 0, 0),
             name="box",
