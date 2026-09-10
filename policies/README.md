@@ -8,6 +8,9 @@
 `grasp_cube_approach` 的可选平移配置、顶抓/侧抓配对预检见
 [grasp approach v2 试验说明](../docs/grasp-approach-v2.md)。
 
+七任务正式评测使用 [if-ext-v2-12-per-mode](../seed-manifests/if-ext-v2-12-per-mode/README.md)：
+每项 12 blocks，同名的 arm_select / grasp_cube_approach 采用 v2，附已有结果复用索引与待跑 seeds。
+
 ```text
 policies/
 ├── README.md

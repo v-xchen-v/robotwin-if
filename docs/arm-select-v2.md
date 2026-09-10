@@ -57,12 +57,14 @@ supervisor 每 10 秒记录 GPU 利用率和显存；查询超时、显存超过
 ```text
 --task arm_select
 --task-config demo_clean_arm_select_v2
---seed-manifest outputs/policy-eval/arm-select-v2-probe-new/arm_select.json
+--seed-manifest seed-manifests/if-ext-v2-12-per-mode/arm_select.json
 --blocks 12
 ```
 
 其余模型连接参数沿用各 policy 的配置。旧 `demo_clean` manifest 与新配置不能混用。
-仅在预检确认完整 blocks 均可执行后使用生成的 manifest；所有 policy 复用同一份清单。
+正式评测使用 [七任务 12-block 清单](../seed-manifests/if-ext-v2-12-per-mode/README.md)，
+其中 arm v2 的 seeds 独立于调试集。已验证的 12-block 开发集和完整 oracle 证据另存于
+[v2 manifest 目录](../seed-manifests/if-ext-v2-dev-12-per-mode/README.md)。
 当前渲染同步/oracle 缓存优化仅对 `demo_clean` 启用，这个新配置暂时使用原生执行路径。
 先完成小规模可执行性验证，再决定是否扩大到 50 blocks 并适配优化。
 

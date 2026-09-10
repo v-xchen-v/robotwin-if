@@ -1,0 +1,4325 @@
+schema_version: 1
+evidence_kind: formal_serial_oracle_qualification
+task: arm_select
+task_config: demo_clean_arm_select_v2
+manifest_sha256: b0603546bdb2342c03db3fd5f473ba20aede083b2ca782010c1d21562f0b4b0b
+selection: Unchanged v2 geometry; choose first four qualified blocks per x region
+  in candidate order. A failed member rejects the whole block; any planned repeat/control
+  failure also rejects it. All candidate failures and unused passing blocks are preserved.
+selected_blocks: 12
+selected_regions:
+  center: 4
+  right: 4
+  left: 4
+independent_of_development_seeds: true
+decisions:
+- seeds: &id001
+  - 200000
+  - 200001
+  region: center
+  selected: true
+  reason: selected
+  controls_count: 4
+  controls_passed: true
+  probe_directory: outputs/policy-eval/arm-select-v2-formal-12blocks-001
+- seeds: &id002
+  - 200002
+  - 200003
+  region: right
+  selected: true
+  reason: selected
+  controls_count: 4
+  controls_passed: true
+  probe_directory: outputs/policy-eval/arm-select-v2-formal-12blocks-001
+- seeds: &id003
+  - 200004
+  - 200005
+  region: left
+  selected: true
+  reason: selected
+  controls_count: 4
+  controls_passed: true
+  probe_directory: outputs/policy-eval/arm-select-v2-formal-12blocks-001
+- seeds: &id004
+  - 200006
+  - 200007
+  region: center
+  selected: true
+  reason: selected
+  controls_count: 0
+  controls_passed: true
+  probe_directory: outputs/policy-eval/arm-select-v2-formal-12blocks-001
+- seeds: &id005
+  - 200008
+  - 200009
+  region: right
+  selected: true
+  reason: selected
+  controls_count: 0
+  controls_passed: true
+  probe_directory: outputs/policy-eval/arm-select-v2-formal-12blocks-001
+- seeds: &id006
+  - 200010
+  - 200011
+  region: left
+  selected: true
+  reason: selected
+  controls_count: 0
+  controls_passed: true
+  probe_directory: outputs/policy-eval/arm-select-v2-formal-12blocks-001
+- seeds: &id007
+  - 200012
+  - 200013
+  region: center
+  selected: true
+  reason: selected
+  controls_count: 0
+  controls_passed: true
+  probe_directory: outputs/policy-eval/arm-select-v2-formal-12blocks-001
+- seeds: &id008
+  - 200014
+  - 200015
+  region: right
+  selected: false
+  reason: candidate_failed
+  controls_count: 0
+  controls_passed: true
+  probe_directory: outputs/policy-eval/arm-select-v2-formal-12blocks-001
+- seeds: &id009
+  - 200016
+  - 200017
+  region: left
+  selected: true
+  reason: selected
+  controls_count: 0
+  controls_passed: true
+  probe_directory: outputs/policy-eval/arm-select-v2-formal-12blocks-001
+- seeds: &id010
+  - 200018
+  - 200019
+  region: center
+  selected: true
+  reason: selected
+  controls_count: 0
+  controls_passed: true
+  probe_directory: outputs/policy-eval/arm-select-v2-formal-12blocks-001
+- seeds: &id011
+  - 200020
+  - 200021
+  region: right
+  selected: true
+  reason: selected
+  controls_count: 0
+  controls_passed: true
+  probe_directory: outputs/policy-eval/arm-select-v2-formal-12blocks-001
+- seeds: &id012
+  - 200022
+  - 200023
+  region: left
+  selected: true
+  reason: selected
+  controls_count: 0
+  controls_passed: true
+  probe_directory: outputs/policy-eval/arm-select-v2-formal-12blocks-001
+- seeds: &id013
+  - 200024
+  - 200025
+  region: center
+  selected: false
+  reason: region_quota_full
+  controls_count: 4
+  controls_passed: true
+  probe_directory: outputs/policy-eval/arm-select-v2-formal-12blocks-002
+- seeds: &id014
+  - 200026
+  - 200027
+  region: right
+  selected: true
+  reason: selected
+  controls_count: 4
+  controls_passed: true
+  probe_directory: outputs/policy-eval/arm-select-v2-formal-12blocks-002
+- seeds: &id015
+  - 200028
+  - 200029
+  region: left
+  selected: false
+  reason: region_quota_full
+  controls_count: 4
+  controls_passed: true
+  probe_directory: outputs/policy-eval/arm-select-v2-formal-12blocks-002
+runs:
+- directory: outputs/policy-eval/arm-select-v2-formal-12blocks-001
+  report:
+    complete: true
+    all_checks_passed: false
+    task: arm_select
+    task_config: demo_clean_arm_select_v2
+    pci: 0000:af:00.0
+    blocks:
+    - seeds: *id001
+      same_rgb: true
+      same_pose: true
+      same_template: true
+      region: center
+      accepted: true
+    - seeds: *id002
+      same_rgb: true
+      same_pose: true
+      same_template: true
+      region: right
+      accepted: true
+    - seeds: *id003
+      same_rgb: true
+      same_pose: true
+      same_template: true
+      region: left
+      accepted: true
+    - seeds: *id004
+      same_rgb: true
+      same_pose: true
+      same_template: true
+      region: center
+      accepted: true
+    - seeds: *id005
+      same_rgb: true
+      same_pose: true
+      same_template: true
+      region: right
+      accepted: true
+    - seeds: *id006
+      same_rgb: true
+      same_pose: true
+      same_template: true
+      region: left
+      accepted: true
+    - seeds: *id007
+      same_rgb: true
+      same_pose: true
+      same_template: true
+      region: center
+      accepted: true
+    - seeds: *id008
+      same_rgb: true
+      same_pose: true
+      same_template: true
+      region: right
+      accepted: false
+    - seeds: *id009
+      same_rgb: true
+      same_pose: true
+      same_template: true
+      region: left
+      accepted: true
+    - seeds: *id010
+      same_rgb: true
+      same_pose: true
+      same_template: true
+      region: center
+      accepted: true
+    - seeds: *id011
+      same_rgb: true
+      same_pose: true
+      same_template: true
+      region: right
+      accepted: true
+    - seeds: *id012
+      same_rgb: true
+      same_pose: true
+      same_template: true
+      region: left
+      accepted: true
+    episodes:
+    - seed: 100000
+      phase: fixed
+      mode: left
+      version: fixed-v1
+      initial_rgb:
+        head_camera: b600f83b98d4d152efbd1652750e8d01cb237130eda98d5a39d4c0ab81923af2
+        left_camera: 07c9764d0e9898730eb7617a3a24dd955f9fd1d89fb9121d9c45e40ba56fca5d
+        right_camera: 2991ffad492a309def1aea4882c0ec6cbf6e7db4a8c2e7b7c388d5cbbfd51054
+      initial_pose:
+      - -1.150382217929291e-06
+      - 0.09999887645244598
+      - 0.8400006294250488
+      - 1.0
+      - 5.4782040024292655e-06
+      - -5.616101589112077e-06
+      - 3.612565890875885e-08
+      scene:
+        version: fixed-v1
+        scene_seed: 50000
+        region: center
+        position:
+        - 0.0
+        - 0.1
+        - 0.842
+        quaternion:
+        - 1.0
+        - 0
+        - 0
+        - 0.0
+        yaw_degrees: 0.0
+      initial_success: false
+      matches_archived_v1: true
+      plan_success: true
+      success: true
+      signals:
+        arm: left
+        arm_match: true
+        lifted: true
+        lift_delta: 0.09866571426391602
+        dist_cmd_tcp: 0.14054958390103459
+        dist_other_tcp: 0.5141834453234538
+      instruction: Have the left arm take the block.
+      passed: true
+      oracle_info:
+        cluttered_table_info: []
+        texture_info:
+          wall_texture: null
+          table_texture: null
+        info:
+          '{A}': the block
+          '{a}': left
+        arm_select_scene:
+          version: fixed-v1
+          scene_seed: 50000
+          region: center
+          position:
+          - 0.0
+          - 0.1
+          - 0.842
+          quaternion:
+          - 1.0
+          - 0
+          - 0
+          - 0.0
+          yaw_degrees: 0.0
+        mode: left
+        signals:
+          arm_match: true
+          lifted: true
+      elapsed_seconds: 42.674490803008666
+    - seed: 100001
+      phase: fixed
+      mode: right
+      version: fixed-v1
+      initial_rgb:
+        head_camera: b600f83b98d4d152efbd1652750e8d01cb237130eda98d5a39d4c0ab81923af2
+        left_camera: 07c9764d0e9898730eb7617a3a24dd955f9fd1d89fb9121d9c45e40ba56fca5d
+        right_camera: 2991ffad492a309def1aea4882c0ec6cbf6e7db4a8c2e7b7c388d5cbbfd51054
+      initial_pose:
+      - -1.150382217929291e-06
+      - 0.09999887645244598
+      - 0.8400006294250488
+      - 1.0
+      - 5.4782040024292655e-06
+      - -5.616101589112077e-06
+      - 3.612565890875885e-08
+      scene:
+        version: fixed-v1
+        scene_seed: 50000
+        region: center
+        position:
+        - 0.0
+        - 0.1
+        - 0.842
+        quaternion:
+        - 1.0
+        - 0
+        - 0
+        - 0.0
+        yaw_degrees: 0.0
+      initial_success: false
+      matches_archived_v1: true
+      plan_success: true
+      success: true
+      signals:
+        arm: right
+        arm_match: true
+        lifted: true
+        lift_delta: 0.09853333234786987
+        dist_cmd_tcp: 0.1406154935137973
+        dist_other_tcp: 0.5087633504465939
+      instruction: Use the right arm to retrieve the block.
+      passed: true
+      oracle_info:
+        cluttered_table_info: []
+        texture_info:
+          wall_texture: null
+          table_texture: null
+        info:
+          '{A}': the block
+          '{a}': right
+        arm_select_scene:
+          version: fixed-v1
+          scene_seed: 50000
+          region: center
+          position:
+          - 0.0
+          - 0.1
+          - 0.842
+          quaternion:
+          - 1.0
+          - 0
+          - 0
+          - 0.0
+          yaw_degrees: 0.0
+        mode: right
+        signals:
+          arm_match: true
+          lifted: true
+      elapsed_seconds: 3.7019329620234203
+    - seed: 200000
+      phase: candidate
+      mode: left
+      version: jitter-v2
+      initial_rgb:
+        head_camera: dca4d40b5fbaf425d3477bca33bce106e11f360b483f9b742acb4a9411c085c8
+        left_camera: a26a534158dd455f46d417dc41aef4a2f5922316fde0137cecf3bd391a353d6f
+        right_camera: 2e942a1ed2dca3e100e3f7a9ddedcaf7841a40636edecb17484279ab2b31276c
+      initial_pose:
+      - -0.002833652077242732
+      - 0.11016400158405304
+      - 0.8400006294250488
+      - 1.0
+      - 4.7694352360849734e-06
+      - -5.598029929387849e-06
+      - -0.00010251216735923663
+      scene:
+        version: jitter-v2
+        scene_seed: 100000
+        region: center
+        position:
+        - -0.002832521802241896
+        - 0.11016496381695566
+        - 0.842
+        quaternion:
+        - 0.9999999947395074
+        - 0
+        - 0
+        - -0.0001025718535720457
+        yaw_degrees: -0.011753868633634573
+      initial_success: false
+      plan_success: true
+      success: true
+      signals:
+        arm: left
+        arm_match: true
+        lifted: true
+        lift_delta: 0.0982322096824646
+        dist_cmd_tcp: 0.1407549101173557
+        dist_other_tcp: 0.5251141093045448
+      instruction: Have the left arm take the block.
+      passed: true
+      oracle_info:
+        cluttered_table_info: []
+        texture_info:
+          wall_texture: null
+          table_texture: null
+        info:
+          '{A}': the block
+          '{a}': left
+        arm_select_scene:
+          version: jitter-v2
+          scene_seed: 100000
+          region: center
+          position:
+          - -0.002832521802241896
+          - 0.11016496381695566
+          - 0.842
+          quaternion:
+          - 0.9999999947395074
+          - 0
+          - 0
+          - -0.0001025718535720457
+          yaw_degrees: -0.011753868633634573
+        mode: left
+        signals:
+          arm_match: true
+          lifted: true
+      elapsed_seconds: 2.6878030450025108
+    - seed: 200001
+      phase: candidate
+      mode: right
+      version: jitter-v2
+      initial_rgb:
+        head_camera: dca4d40b5fbaf425d3477bca33bce106e11f360b483f9b742acb4a9411c085c8
+        left_camera: a26a534158dd455f46d417dc41aef4a2f5922316fde0137cecf3bd391a353d6f
+        right_camera: 2e942a1ed2dca3e100e3f7a9ddedcaf7841a40636edecb17484279ab2b31276c
+      initial_pose:
+      - -0.002833652077242732
+      - 0.11016400158405304
+      - 0.8400006294250488
+      - 1.0
+      - 4.7694352360849734e-06
+      - -5.598029929387849e-06
+      - -0.00010251216735923663
+      scene:
+        version: jitter-v2
+        scene_seed: 100000
+        region: center
+        position:
+        - -0.002832521802241896
+        - 0.11016496381695566
+        - 0.842
+        quaternion:
+        - 0.9999999947395074
+        - 0
+        - 0
+        - -0.0001025718535720457
+        yaw_degrees: -0.011753868633634573
+      initial_success: false
+      plan_success: true
+      success: true
+      signals:
+        arm: right
+        arm_match: true
+        lifted: true
+        lift_delta: 0.09882384538650513
+        dist_cmd_tcp: 0.14062585043657835
+        dist_other_tcp: 0.5153434779375029
+      instruction: Have the right arm take the block.
+      passed: true
+      oracle_info:
+        cluttered_table_info: []
+        texture_info:
+          wall_texture: null
+          table_texture: null
+        info:
+          '{A}': the block
+          '{a}': right
+        arm_select_scene:
+          version: jitter-v2
+          scene_seed: 100000
+          region: center
+          position:
+          - -0.002832521802241896
+          - 0.11016496381695566
+          - 0.842
+          quaternion:
+          - 0.9999999947395074
+          - 0
+          - 0
+          - -0.0001025718535720457
+          yaw_degrees: -0.011753868633634573
+        mode: right
+        signals:
+          arm_match: true
+          lifted: true
+      elapsed_seconds: 3.01387592300307
+    - seed: 200002
+      phase: candidate
+      mode: left
+      version: jitter-v2
+      initial_rgb:
+        head_camera: eff0ac2464158e00291cb7bb36488ad2b9d79755934647592d0da38fdb70d803
+        left_camera: cc78b4c9e9776accdfc22c1d6cc12a4cebe0f327ed7e1523b254022fc7b8508c
+        right_camera: 01b25574c75e989382a0945fd87d630fee1394a02f5665c3fd296c60927f96e7
+      initial_pose:
+      - 0.009106048382818699
+      - 0.10307853668928146
+      - 0.8400006294250488
+      - 0.9999831318855286
+      - 5.546979082282633e-06
+      - -5.615645932266489e-06
+      - 0.005809770431369543
+      scene:
+        version: jitter-v2
+        scene_seed: 100001
+        region: right
+        position:
+        - 0.009107174600749803
+        - 0.10307965823393728
+        - 0.842
+        quaternion:
+        - 0.999983123458989
+        - 0
+        - 0
+        - 0.005809715759340104
+        yaw_degrees: 0.6657481315410891
+      initial_success: false
+      plan_success: true
+      success: true
+      signals:
+        arm: left
+        arm_match: true
+        lifted: true
+        lift_delta: 0.09839522838592529
+        dist_cmd_tcp: 0.14087522046528853
+        dist_other_tcp: 0.5124623010505835
+      instruction: Use the left arm to retrieve the block.
+      passed: true
+      oracle_info:
+        cluttered_table_info: []
+        texture_info:
+          wall_texture: null
+          table_texture: null
+        info:
+          '{A}': the block
+          '{a}': left
+        arm_select_scene:
+          version: jitter-v2
+          scene_seed: 100001
+          region: right
+          position:
+          - 0.009107174600749803
+          - 0.10307965823393728
+          - 0.842
+          quaternion:
+          - 0.999983123458989
+          - 0
+          - 0
+          - 0.005809715759340104
+          yaw_degrees: 0.6657481315410891
+        mode: left
+        signals:
+          arm_match: true
+          lifted: true
+      elapsed_seconds: 3.0567871620005462
+    - seed: 200003
+      phase: candidate
+      mode: right
+      version: jitter-v2
+      initial_rgb:
+        head_camera: eff0ac2464158e00291cb7bb36488ad2b9d79755934647592d0da38fdb70d803
+        left_camera: cc78b4c9e9776accdfc22c1d6cc12a4cebe0f327ed7e1523b254022fc7b8508c
+        right_camera: 01b25574c75e989382a0945fd87d630fee1394a02f5665c3fd296c60927f96e7
+      initial_pose:
+      - 0.009106048382818699
+      - 0.10307853668928146
+      - 0.8400006294250488
+      - 0.9999831318855286
+      - 5.546979082282633e-06
+      - -5.615645932266489e-06
+      - 0.005809770431369543
+      scene:
+        version: jitter-v2
+        scene_seed: 100001
+        region: right
+        position:
+        - 0.009107174600749803
+        - 0.10307965823393728
+        - 0.842
+        quaternion:
+        - 0.999983123458989
+        - 0
+        - 0
+        - 0.005809715759340104
+        yaw_degrees: 0.6657481315410891
+      initial_success: false
+      plan_success: true
+      success: true
+      signals:
+        arm: right
+        arm_match: true
+        lifted: true
+        lift_delta: 0.09833705425262451
+        dist_cmd_tcp: 0.14069915201410105
+        dist_other_tcp: 0.5160973461255944
+      instruction: Use the right arm to retrieve the block.
+      passed: true
+      oracle_info:
+        cluttered_table_info: []
+        texture_info:
+          wall_texture: null
+          table_texture: null
+        info:
+          '{A}': the block
+          '{a}': right
+        arm_select_scene:
+          version: jitter-v2
+          scene_seed: 100001
+          region: right
+          position:
+          - 0.009107174600749803
+          - 0.10307965823393728
+          - 0.842
+          quaternion:
+          - 0.999983123458989
+          - 0
+          - 0
+          - 0.005809715759340104
+          yaw_degrees: 0.6657481315410891
+        mode: right
+        signals:
+          arm_match: true
+          lifted: true
+      elapsed_seconds: 2.9905798959953245
+    - seed: 200004
+      phase: candidate
+      mode: left
+      version: jitter-v2
+      initial_rgb:
+        head_camera: c7c723485cd2ef403d36ef45559bf7d93b5909090618337b2cf4dc19ae92a0a5
+        left_camera: 41d03cd6de36ab5e182d375e0eac558b237cc4ac454b72098a89a16f68e45104
+        right_camera: b3592d218429dd1e82a3c3910028e191d8512fc5b82d17e580bd36592fc0c888
+      initial_pose:
+      - -0.007303883787244558
+      - 0.11605551838874817
+      - 0.840000569820404
+      - 0.9999950528144836
+      - 5.111250629852293e-06
+      - -5.573388989432715e-06
+      - 0.003141486318781972
+      scene:
+        version: jitter-v2
+        scene_seed: 100002
+        region: left
+        position:
+        - -0.007302760769294831
+        - 0.11605655528525692
+        - 0.842
+        quaternion:
+        - 0.9999950657171947
+        - 0
+        - 0
+        - 0.003141423445441122
+        yaw_degrees: 0.35998120225765745
+      initial_success: false
+      plan_success: true
+      success: true
+      signals:
+        arm: left
+        arm_match: true
+        lifted: true
+        lift_delta: 0.09843558073043823
+        dist_cmd_tcp: 0.14075471535128242
+        dist_other_tcp: 0.5325306775891596
+      instruction: Let the left arm grab the block.
+      passed: true
+      oracle_info:
+        cluttered_table_info: []
+        texture_info:
+          wall_texture: null
+          table_texture: null
+        info:
+          '{A}': the block
+          '{a}': left
+        arm_select_scene:
+          version: jitter-v2
+          scene_seed: 100002
+          region: left
+          position:
+          - -0.007302760769294831
+          - 0.11605655528525692
+          - 0.842
+          quaternion:
+          - 0.9999950657171947
+          - 0
+          - 0
+          - 0.003141423445441122
+          yaw_degrees: 0.35998120225765745
+        mode: left
+        signals:
+          arm_match: true
+          lifted: true
+      elapsed_seconds: 2.95591219200287
+    - seed: 200005
+      phase: candidate
+      mode: right
+      version: jitter-v2
+      initial_rgb:
+        head_camera: c7c723485cd2ef403d36ef45559bf7d93b5909090618337b2cf4dc19ae92a0a5
+        left_camera: 41d03cd6de36ab5e182d375e0eac558b237cc4ac454b72098a89a16f68e45104
+        right_camera: b3592d218429dd1e82a3c3910028e191d8512fc5b82d17e580bd36592fc0c888
+      initial_pose:
+      - -0.007303883787244558
+      - 0.11605551838874817
+      - 0.840000569820404
+      - 0.9999950528144836
+      - 5.111250629852293e-06
+      - -5.573388989432715e-06
+      - 0.003141486318781972
+      scene:
+        version: jitter-v2
+        scene_seed: 100002
+        region: left
+        position:
+        - -0.007302760769294831
+        - 0.11605655528525692
+        - 0.842
+        quaternion:
+        - 0.9999950657171947
+        - 0
+        - 0
+        - 0.003141423445441122
+        yaw_degrees: 0.35998120225765745
+      initial_success: false
+      plan_success: true
+      success: true
+      signals:
+        arm: right
+        arm_match: true
+        lifted: true
+        lift_delta: 0.09834843873977661
+        dist_cmd_tcp: 0.14070215228122798
+        dist_other_tcp: 0.5173700980598273
+      instruction: Let the right arm grab the block.
+      passed: true
+      oracle_info:
+        cluttered_table_info: []
+        texture_info:
+          wall_texture: null
+          table_texture: null
+        info:
+          '{A}': the block
+          '{a}': right
+        arm_select_scene:
+          version: jitter-v2
+          scene_seed: 100002
+          region: left
+          position:
+          - -0.007302760769294831
+          - 0.11605655528525692
+          - 0.842
+          quaternion:
+          - 0.9999950657171947
+          - 0
+          - 0
+          - 0.003141423445441122
+          yaw_degrees: 0.35998120225765745
+        mode: right
+        signals:
+          arm_match: true
+          lifted: true
+      elapsed_seconds: 3.0178274950012565
+    - seed: 200006
+      phase: candidate
+      mode: left
+      version: jitter-v2
+      initial_rgb:
+        head_camera: 89ec1a739c5463d68dbbb032ab140ea2d75b594351c7833c1b0a4834080d3733
+        left_camera: 93132b41a4938e3ddf22b0f23d8566bb9b0c7367dcc9dc3458851e0b130806cb
+        right_camera: 0a344900b69f94930a67e4e2da6a635143bbb6a29897bdc55a1cfa4d7918c1ce
+      initial_pose:
+      - -0.0026232884265482426
+      - 0.11570418626070023
+      - 0.8400005102157593
+      - 0.9998891949653625
+      - -5.002802481612889e-06
+      - -1.9869501102220966e-06
+      - 0.014887829311192036
+      scene:
+        version: jitter-v2
+        scene_seed: 100003
+        region: center
+        position:
+        - -0.002622874276315552
+        - 0.11570319274291362
+        - 0.842
+        quaternion:
+        - 0.9998891706055547
+        - 0
+        - 0
+        - 0.014887797208986874
+        yaw_degrees: 1.7060789210067875
+      initial_success: false
+      plan_success: true
+      success: true
+      signals:
+        arm: left
+        arm_match: true
+        lifted: true
+        lift_delta: 0.09830152988433838
+        dist_cmd_tcp: 0.14094733456000458
+        dist_other_tcp: 0.5292427647283984
+      instruction: Have the left arm take the block.
+      passed: true
+      oracle_info:
+        cluttered_table_info: []
+        texture_info:
+          wall_texture: null
+          table_texture: null
+        info:
+          '{A}': the block
+          '{a}': left
+        arm_select_scene:
+          version: jitter-v2
+          scene_seed: 100003
+          region: center
+          position:
+          - -0.002622874276315552
+          - 0.11570319274291362
+          - 0.842
+          quaternion:
+          - 0.9998891706055547
+          - 0
+          - 0
+          - 0.014887797208986874
+          yaw_degrees: 1.7060789210067875
+        mode: left
+        signals:
+          arm_match: true
+          lifted: true
+      elapsed_seconds: 2.986249540990684
+    - seed: 200007
+      phase: candidate
+      mode: right
+      version: jitter-v2
+      initial_rgb:
+        head_camera: 89ec1a739c5463d68dbbb032ab140ea2d75b594351c7833c1b0a4834080d3733
+        left_camera: 93132b41a4938e3ddf22b0f23d8566bb9b0c7367dcc9dc3458851e0b130806cb
+        right_camera: 0a344900b69f94930a67e4e2da6a635143bbb6a29897bdc55a1cfa4d7918c1ce
+      initial_pose:
+      - -0.0026232884265482426
+      - 0.11570418626070023
+      - 0.8400005102157593
+      - 0.9998891949653625
+      - -5.002802481612889e-06
+      - -1.9869501102220966e-06
+      - 0.014887829311192036
+      scene:
+        version: jitter-v2
+        scene_seed: 100003
+        region: center
+        position:
+        - -0.002622874276315552
+        - 0.11570319274291362
+        - 0.842
+        quaternion:
+        - 0.9998891706055547
+        - 0
+        - 0
+        - 0.014887797208986874
+        yaw_degrees: 1.7060789210067875
+      initial_success: false
+      plan_success: true
+      success: true
+      signals:
+        arm: right
+        arm_match: true
+        lifted: true
+        lift_delta: 0.09802907705307007
+        dist_cmd_tcp: 0.1408032484524893
+        dist_other_tcp: 0.5198735258983773
+      instruction: Have the right arm take the block.
+      passed: true
+      oracle_info:
+        cluttered_table_info: []
+        texture_info:
+          wall_texture: null
+          table_texture: null
+        info:
+          '{A}': the block
+          '{a}': right
+        arm_select_scene:
+          version: jitter-v2
+          scene_seed: 100003
+          region: center
+          position:
+          - -0.002622874276315552
+          - 0.11570319274291362
+          - 0.842
+          quaternion:
+          - 0.9998891706055547
+          - 0
+          - 0
+          - 0.014887797208986874
+          yaw_degrees: 1.7060789210067875
+        mode: right
+        signals:
+          arm_match: true
+          lifted: true
+      elapsed_seconds: 2.404282116011018
+    - seed: 200008
+      phase: candidate
+      mode: left
+      version: jitter-v2
+      initial_rgb:
+        head_camera: 46615e05ae1784e4092eba58cac09a4ac0132ff104bfa060bd097f0456c4f97d
+        left_camera: b61d04fd2d0bb1dc499ecade4b4695e49f12294c74172d5611910ce34da6f696
+        right_camera: 05bd9091275aff5940d4d1edf351c42906e3b7eba962a04b055979f8dc36cc19
+      initial_pose:
+      - 0.010829078033566475
+      - 0.1155104711651802
+      - 0.840000569820404
+      - 0.9999617338180542
+      - 4.9989239414571784e-06
+      - -5.6378999033768196e-06
+      - -0.008747108280658722
+      scene:
+        version: jitter-v2
+        scene_seed: 100004
+        region: right
+        position:
+        - 0.010830225824881096
+        - 0.1155114676226412
+        - 0.842
+        quaternion:
+        - 0.9999617425082253
+        - 0
+        - 0
+        - -0.008747200690146959
+        yaw_degrees: -1.0023681469283312
+      initial_success: false
+      plan_success: true
+      success: true
+      signals:
+        arm: left
+        arm_match: true
+        lifted: true
+        lift_delta: 0.09842097759246826
+        dist_cmd_tcp: 0.14042990357878454
+        dist_other_tcp: 0.5208633512500364
+      instruction: With the left arm, grab the block.
+      passed: true
+      oracle_info:
+        cluttered_table_info: []
+        texture_info:
+          wall_texture: null
+          table_texture: null
+        info:
+          '{A}': the block
+          '{a}': left
+        arm_select_scene:
+          version: jitter-v2
+          scene_seed: 100004
+          region: right
+          position:
+          - 0.010830225824881096
+          - 0.1155114676226412
+          - 0.842
+          quaternion:
+          - 0.9999617425082253
+          - 0
+          - 0
+          - -0.008747200690146959
+          yaw_degrees: -1.0023681469283312
+        mode: left
+        signals:
+          arm_match: true
+          lifted: true
+      elapsed_seconds: 2.933439325017389
+    - seed: 200009
+      phase: candidate
+      mode: right
+      version: jitter-v2
+      initial_rgb:
+        head_camera: 46615e05ae1784e4092eba58cac09a4ac0132ff104bfa060bd097f0456c4f97d
+        left_camera: b61d04fd2d0bb1dc499ecade4b4695e49f12294c74172d5611910ce34da6f696
+        right_camera: 05bd9091275aff5940d4d1edf351c42906e3b7eba962a04b055979f8dc36cc19
+      initial_pose:
+      - 0.010829078033566475
+      - 0.1155104711651802
+      - 0.840000569820404
+      - 0.9999617338180542
+      - 4.9989239414571784e-06
+      - -5.6378999033768196e-06
+      - -0.008747108280658722
+      scene:
+        version: jitter-v2
+        scene_seed: 100004
+        region: right
+        position:
+        - 0.010830225824881096
+        - 0.1155114676226412
+        - 0.842
+        quaternion:
+        - 0.9999617425082253
+        - 0
+        - 0
+        - -0.008747200690146959
+        yaw_degrees: -1.0023681469283312
+      initial_success: false
+      plan_success: true
+      success: true
+      signals:
+        arm: right
+        arm_match: true
+        lifted: true
+        lift_delta: 0.09858304262161255
+        dist_cmd_tcp: 0.14075694525782564
+        dist_other_tcp: 0.5266734968173397
+      instruction: With the right arm, grab the block.
+      passed: true
+      oracle_info:
+        cluttered_table_info: []
+        texture_info:
+          wall_texture: null
+          table_texture: null
+        info:
+          '{A}': the block
+          '{a}': right
+        arm_select_scene:
+          version: jitter-v2
+          scene_seed: 100004
+          region: right
+          position:
+          - 0.010830225824881096
+          - 0.1155114676226412
+          - 0.842
+          quaternion:
+          - 0.9999617425082253
+          - 0
+          - 0
+          - -0.008747200690146959
+          yaw_degrees: -1.0023681469283312
+        mode: right
+        signals:
+          arm_match: true
+          lifted: true
+      elapsed_seconds: 2.9719355260021985
+    - seed: 200010
+      phase: candidate
+      mode: left
+      version: jitter-v2
+      initial_rgb:
+        head_camera: 776644f58be480a593e7ad6b32a40062cf76ca296b0fccd291ec161336f4564f
+        left_camera: 15f97ff604d1f3e498c0c33d8d277bfdd1ffa19186a4e9c052152c7d588c82c6
+        right_camera: 02749c5e967b83219b216f5b9f88e9a601aeb384f6c4f59067bdd51a647d6412
+      initial_pose:
+      - -0.01593305915594101
+      - 0.11598573625087738
+      - 0.8400005102157593
+      - 0.9998043775558472
+      - 4.873395482718479e-06
+      - -5.7107686188828666e-06
+      - -0.01978359743952751
+      scene:
+        version: jitter-v2
+        scene_seed: 100005
+        region: left
+        position:
+        - -0.015931892847941814
+        - 0.11598669418599418
+        - 0.842
+        quaternion:
+        - 0.9998042848413589
+        - 0
+        - 0
+        - -0.01978362992120091
+        yaw_degrees: -2.267184905281499
+      initial_success: false
+      plan_success: true
+      success: true
+      signals:
+        arm: left
+        arm_match: true
+        lifted: true
+        lift_delta: 0.09828776121139526
+        dist_cmd_tcp: 0.14055918363146425
+        dist_other_tcp: 0.5371424720399501
+      instruction: Employ the left arm to lift the block.
+      passed: true
+      oracle_info:
+        cluttered_table_info: []
+        texture_info:
+          wall_texture: null
+          table_texture: null
+        info:
+          '{A}': the block
+          '{a}': left
+        arm_select_scene:
+          version: jitter-v2
+          scene_seed: 100005
+          region: left
+          position:
+          - -0.015931892847941814
+          - 0.11598669418599418
+          - 0.842
+          quaternion:
+          - 0.9998042848413589
+          - 0
+          - 0
+          - -0.01978362992120091
+          yaw_degrees: -2.267184905281499
+        mode: left
+        signals:
+          arm_match: true
+          lifted: true
+      elapsed_seconds: 1.9009641549782827
+    - seed: 200011
+      phase: candidate
+      mode: right
+      version: jitter-v2
+      initial_rgb:
+        head_camera: 776644f58be480a593e7ad6b32a40062cf76ca296b0fccd291ec161336f4564f
+        left_camera: 15f97ff604d1f3e498c0c33d8d277bfdd1ffa19186a4e9c052152c7d588c82c6
+        right_camera: 02749c5e967b83219b216f5b9f88e9a601aeb384f6c4f59067bdd51a647d6412
+      initial_pose:
+      - -0.01593305915594101
+      - 0.11598573625087738
+      - 0.8400005102157593
+      - 0.9998043775558472
+      - 4.873395482718479e-06
+      - -5.7107686188828666e-06
+      - -0.01978359743952751
+      scene:
+        version: jitter-v2
+        scene_seed: 100005
+        region: left
+        position:
+        - -0.015931892847941814
+        - 0.11598669418599418
+        - 0.842
+        quaternion:
+        - 0.9998042848413589
+        - 0
+        - 0
+        - -0.01978362992120091
+        yaw_degrees: -2.267184905281499
+      initial_success: false
+      plan_success: true
+      success: true
+      signals:
+        arm: right
+        arm_match: true
+        lifted: true
+        lift_delta: 0.09858649969100952
+        dist_cmd_tcp: 0.1409442151287221
+        dist_other_tcp: 0.5127235936973115
+      instruction: Employ the right arm to lift the block.
+      passed: true
+      oracle_info:
+        cluttered_table_info: []
+        texture_info:
+          wall_texture: null
+          table_texture: null
+        info:
+          '{A}': the block
+          '{a}': right
+        arm_select_scene:
+          version: jitter-v2
+          scene_seed: 100005
+          region: left
+          position:
+          - -0.015931892847941814
+          - 0.11598669418599418
+          - 0.842
+          quaternion:
+          - 0.9998042848413589
+          - 0
+          - 0
+          - -0.01978362992120091
+          yaw_degrees: -2.267184905281499
+        mode: right
+        signals:
+          arm_match: true
+          lifted: true
+      elapsed_seconds: 4.134766100993147
+    - seed: 200012
+      phase: candidate
+      mode: left
+      version: jitter-v2
+      initial_rgb:
+        head_camera: 16057e07f6c83c38c137802d767c50577018d826780ff5ec5e997b3d0ec7143d
+        left_camera: cf635c58d2287f864f2e9a429362c2c42f902b1575dc291323ff7d82ee492f63
+        right_camera: 78411e3c64a4f44ae4e3936953f07c08e7752a98336248fffe5149e199d833a4
+      initial_pose:
+      - 0.0033788930159062147
+      - 0.11532384902238846
+      - 0.840000331401825
+      - 0.9998862147331238
+      - -1.5407873661388294e-06
+      - -4.35555830335943e-06
+      - 0.015084397047758102
+      scene:
+        version: jitter-v2
+        scene_seed: 100006
+        region: center
+        position:
+        - 0.0033797662743058994
+        - 0.11532354492684878
+        - 0.842
+        quaternion:
+        - 0.9998862238186651
+        - 0
+        - 0
+        - 0.015084409754786893
+        yaw_degrees: 1.728611589563018
+      initial_success: false
+      plan_success: true
+      success: true
+      signals:
+        arm: left
+        arm_match: true
+        lifted: true
+        lift_delta: 0.0984412431716919
+        dist_cmd_tcp: 0.14058211296311995
+        dist_other_tcp: 0.525507199663025
+      instruction: Use the left arm to hold the block.
+      passed: true
+      oracle_info:
+        cluttered_table_info: []
+        texture_info:
+          wall_texture: null
+          table_texture: null
+        info:
+          '{A}': the block
+          '{a}': left
+        arm_select_scene:
+          version: jitter-v2
+          scene_seed: 100006
+          region: center
+          position:
+          - 0.0033797662743058994
+          - 0.11532354492684878
+          - 0.842
+          quaternion:
+          - 0.9998862238186651
+          - 0
+          - 0
+          - 0.015084409754786893
+          yaw_degrees: 1.728611589563018
+        mode: left
+        signals:
+          arm_match: true
+          lifted: true
+      elapsed_seconds: 2.962498966982821
+    - seed: 200013
+      phase: candidate
+      mode: right
+      version: jitter-v2
+      initial_rgb:
+        head_camera: 16057e07f6c83c38c137802d767c50577018d826780ff5ec5e997b3d0ec7143d
+        left_camera: cf635c58d2287f864f2e9a429362c2c42f902b1575dc291323ff7d82ee492f63
+        right_camera: 78411e3c64a4f44ae4e3936953f07c08e7752a98336248fffe5149e199d833a4
+      initial_pose:
+      - 0.0033788930159062147
+      - 0.11532384902238846
+      - 0.840000331401825
+      - 0.9998862147331238
+      - -1.5407873661388294e-06
+      - -4.35555830335943e-06
+      - 0.015084397047758102
+      scene:
+        version: jitter-v2
+        scene_seed: 100006
+        region: center
+        position:
+        - 0.0033797662743058994
+        - 0.11532354492684878
+        - 0.842
+        quaternion:
+        - 0.9998862238186651
+        - 0
+        - 0
+        - 0.015084409754786893
+        yaw_degrees: 1.728611589563018
+      initial_success: false
+      plan_success: true
+      success: true
+      signals:
+        arm: right
+        arm_match: true
+        lifted: true
+        lift_delta: 0.09832876920700073
+        dist_cmd_tcp: 0.14081044248984353
+        dist_other_tcp: 0.5220628552920449
+      instruction: Use the right arm to hold the block.
+      passed: true
+      oracle_info:
+        cluttered_table_info: []
+        texture_info:
+          wall_texture: null
+          table_texture: null
+        info:
+          '{A}': the block
+          '{a}': right
+        arm_select_scene:
+          version: jitter-v2
+          scene_seed: 100006
+          region: center
+          position:
+          - 0.0033797662743058994
+          - 0.11532354492684878
+          - 0.842
+          quaternion:
+          - 0.9998862238186651
+          - 0
+          - 0
+          - 0.015084409754786893
+          yaw_degrees: 1.728611589563018
+        mode: right
+        signals:
+          arm_match: true
+          lifted: true
+      elapsed_seconds: 2.944322118011769
+    - seed: 200014
+      phase: candidate
+      mode: left
+      version: jitter-v2
+      initial_rgb:
+        head_camera: bf3c43b850e733d999c5d75311540513aa3d4f59db511734c472f400a12c4841
+        left_camera: 6827c0aaad85953107956dc7b1a7e1f0402edeb5a294de3a5b36cf3edf11aadc
+        right_camera: d3ea288e1d4c04a9b6e5f6f93b120a0a161cb08e5a032efcadf1898ac4f287f4
+      initial_pose:
+      - 0.018321489915251732
+      - 0.10529821366071701
+      - 0.8400007486343384
+      - 0.9996997714042664
+      - 5.964333922747755e-06
+      - -5.479615083459066e-06
+      - 0.024502214044332504
+      scene:
+        version: jitter-v2
+        scene_seed: 100007
+        region: right
+        position:
+        - 0.018322564915709504
+        - 0.10529944088895497
+        - 0.842
+        quaternion:
+        - 0.9996997769642879
+        - 0
+        - 0
+        - 0.02450216189549434
+        yaw_degrees: 2.8080219476988093
+      initial_success: false
+      plan_success: true
+      success: false
+      signals:
+        arm: left
+        arm_match: false
+        lifted: false
+        lift_delta: -0.018312573432922363
+        dist_cmd_tcp: 0.37408935069517524
+        dist_other_tcp: 0.6564447524079722
+      instruction: Retrieve the block with the left arm.
+      passed: false
+      oracle_info:
+        cluttered_table_info: []
+        texture_info:
+          wall_texture: null
+          table_texture: null
+        info:
+          '{A}': the block
+          '{a}': left
+        arm_select_scene:
+          version: jitter-v2
+          scene_seed: 100007
+          region: right
+          position:
+          - 0.018322564915709504
+          - 0.10529944088895497
+          - 0.842
+          quaternion:
+          - 0.9996997769642879
+          - 0
+          - 0
+          - 0.02450216189549434
+          yaw_degrees: 2.8080219476988093
+        mode: left
+        signals:
+          arm_match: false
+          lifted: false
+      elapsed_seconds: 2.9792074900178704
+    - seed: 200015
+      phase: candidate
+      mode: right
+      version: jitter-v2
+      initial_rgb:
+        head_camera: bf3c43b850e733d999c5d75311540513aa3d4f59db511734c472f400a12c4841
+        left_camera: 6827c0aaad85953107956dc7b1a7e1f0402edeb5a294de3a5b36cf3edf11aadc
+        right_camera: d3ea288e1d4c04a9b6e5f6f93b120a0a161cb08e5a032efcadf1898ac4f287f4
+      initial_pose:
+      - 0.018321489915251732
+      - 0.10529821366071701
+      - 0.8400007486343384
+      - 0.9996997714042664
+      - 5.964333922747755e-06
+      - -5.479615083459066e-06
+      - 0.024502214044332504
+      scene:
+        version: jitter-v2
+        scene_seed: 100007
+        region: right
+        position:
+        - 0.018322564915709504
+        - 0.10529944088895497
+        - 0.842
+        quaternion:
+        - 0.9996997769642879
+        - 0
+        - 0
+        - 0.02450216189549434
+        yaw_degrees: 2.8080219476988093
+      initial_success: false
+      plan_success: true
+      success: true
+      signals:
+        arm: right
+        arm_match: true
+        lifted: true
+        lift_delta: 0.09829568862915039
+        dist_cmd_tcp: 0.14043965105202508
+        dist_other_tcp: 0.5235205652055076
+      instruction: Retrieve the block with the right arm.
+      passed: true
+      oracle_info:
+        cluttered_table_info: []
+        texture_info:
+          wall_texture: null
+          table_texture: null
+        info:
+          '{A}': the block
+          '{a}': right
+        arm_select_scene:
+          version: jitter-v2
+          scene_seed: 100007
+          region: right
+          position:
+          - 0.018322564915709504
+          - 0.10529944088895497
+          - 0.842
+          quaternion:
+          - 0.9996997769642879
+          - 0
+          - 0
+          - 0.02450216189549434
+          yaw_degrees: 2.8080219476988093
+        mode: right
+        signals:
+          arm_match: true
+          lifted: true
+      elapsed_seconds: 1.9067489720182493
+    - seed: 200016
+      phase: candidate
+      mode: left
+      version: jitter-v2
+      initial_rgb:
+        head_camera: a6b58a566861615c6317e3ea2d1ba33e15ab2da1ff472577182ca0d9f5d6d94f
+        left_camera: c00be720216c099e497efabf2ce99296f8c0d94fb889c6f451496d145daa2d49
+        right_camera: 147b2d67d1dacea9d484abd436e1c439c5558080cab2024435b3a8b8d7b9d85c
+      initial_pose:
+      - -0.015021108090877533
+      - 0.102542944252491
+      - 0.8400006890296936
+      - 0.9998562932014465
+      - 5.68583391213906e-06
+      - -5.548427452595206e-06
+      - 0.01695440150797367
+      scene:
+        version: jitter-v2
+        scene_seed: 100008
+        region: left
+        position:
+        - -0.015020008690162767
+        - 0.10254411992680795
+        - 0.842
+        quaternion:
+        - 0.9998562650720544
+        - 0
+        - 0
+        - 0.016954326768166144
+        yaw_degrees: 1.942915825783968
+      initial_success: false
+      plan_success: true
+      success: true
+      signals:
+        arm: left
+        arm_match: true
+        lifted: true
+        lift_delta: 0.09852200746536255
+        dist_cmd_tcp: 0.14075251355873947
+        dist_other_tcp: 0.526561657564556
+      instruction: Employ the left arm to lift the block.
+      passed: true
+      oracle_info:
+        cluttered_table_info: []
+        texture_info:
+          wall_texture: null
+          table_texture: null
+        info:
+          '{A}': the block
+          '{a}': left
+        arm_select_scene:
+          version: jitter-v2
+          scene_seed: 100008
+          region: left
+          position:
+          - -0.015020008690162767
+          - 0.10254411992680795
+          - 0.842
+          quaternion:
+          - 0.9998562650720544
+          - 0
+          - 0
+          - 0.016954326768166144
+          yaw_degrees: 1.942915825783968
+        mode: left
+        signals:
+          arm_match: true
+          lifted: true
+      elapsed_seconds: 3.003201762010576
+    - seed: 200017
+      phase: candidate
+      mode: right
+      version: jitter-v2
+      initial_rgb:
+        head_camera: a6b58a566861615c6317e3ea2d1ba33e15ab2da1ff472577182ca0d9f5d6d94f
+        left_camera: c00be720216c099e497efabf2ce99296f8c0d94fb889c6f451496d145daa2d49
+        right_camera: 147b2d67d1dacea9d484abd436e1c439c5558080cab2024435b3a8b8d7b9d85c
+      initial_pose:
+      - -0.015021108090877533
+      - 0.102542944252491
+      - 0.8400006890296936
+      - 0.9998562932014465
+      - 5.68583391213906e-06
+      - -5.548427452595206e-06
+      - 0.01695440150797367
+      scene:
+        version: jitter-v2
+        scene_seed: 100008
+        region: left
+        position:
+        - -0.015020008690162767
+        - 0.10254411992680795
+        - 0.842
+        quaternion:
+        - 0.9998562650720544
+        - 0
+        - 0
+        - 0.016954326768166144
+        yaw_degrees: 1.942915825783968
+      initial_success: false
+      plan_success: true
+      success: true
+      signals:
+        arm: right
+        arm_match: true
+        lifted: true
+        lift_delta: 0.09876829385757446
+        dist_cmd_tcp: 0.14051450735361318
+        dist_other_tcp: 0.5023443458100043
+      instruction: Employ the right arm to lift the block.
+      passed: true
+      oracle_info:
+        cluttered_table_info: []
+        texture_info:
+          wall_texture: null
+          table_texture: null
+        info:
+          '{A}': the block
+          '{a}': right
+        arm_select_scene:
+          version: jitter-v2
+          scene_seed: 100008
+          region: left
+          position:
+          - -0.015020008690162767
+          - 0.10254411992680795
+          - 0.842
+          quaternion:
+          - 0.9998562650720544
+          - 0
+          - 0
+          - 0.016954326768166144
+          yaw_degrees: 1.942915825783968
+        mode: right
+        signals:
+          arm_match: true
+          lifted: true
+      elapsed_seconds: 2.9698206780012697
+    - seed: 200018
+      phase: candidate
+      mode: left
+      version: jitter-v2
+      initial_rgb:
+        head_camera: d26661bb374ecbf68d3458ade8c692c6c45630eb7b652506e2009f6a6b94672b
+        left_camera: c9eb07da3ba1ddc5cd3a1aec0a60f837c45ce045f345e7d4f32a5a1977d0ab17
+        right_camera: e2af7857672c9ceacf2d7450b834b4e2e2404375de28b3ce24f1acc8ad5cbab2
+      initial_pose:
+      - 0.005699980538338423
+      - 0.11566028743982315
+      - 0.840000569820404
+      - 0.999843180179596
+      - 4.7701837502245326e-06
+      - -5.491197043738794e-06
+      - 0.017710253596305847
+      scene:
+        version: jitter-v2
+        scene_seed: 100009
+        region: center
+        position:
+        - 0.00570107081933664
+        - 0.11566127193848708
+        - 0.842
+        quaternion:
+        - 0.9998431613021149
+        - 0
+        - 0
+        - 0.01771024554863844
+        yaw_degrees: 2.029550753296607
+      initial_success: false
+      plan_success: true
+      success: true
+      signals:
+        arm: left
+        arm_match: true
+        lifted: true
+        lift_delta: 0.09837675094604492
+        dist_cmd_tcp: 0.14096468483371127
+        dist_other_tcp: 0.5246627261789162
+      instruction: Collect the block using the left arm.
+      passed: true
+      oracle_info:
+        cluttered_table_info: []
+        texture_info:
+          wall_texture: null
+          table_texture: null
+        info:
+          '{A}': the block
+          '{a}': left
+        arm_select_scene:
+          version: jitter-v2
+          scene_seed: 100009
+          region: center
+          position:
+          - 0.00570107081933664
+          - 0.11566127193848708
+          - 0.842
+          quaternion:
+          - 0.9998431613021149
+          - 0
+          - 0
+          - 0.01771024554863844
+          yaw_degrees: 2.029550753296607
+        mode: left
+        signals:
+          arm_match: true
+          lifted: true
+      elapsed_seconds: 2.971079754992388
+    - seed: 200019
+      phase: candidate
+      mode: right
+      version: jitter-v2
+      initial_rgb:
+        head_camera: d26661bb374ecbf68d3458ade8c692c6c45630eb7b652506e2009f6a6b94672b
+        left_camera: c9eb07da3ba1ddc5cd3a1aec0a60f837c45ce045f345e7d4f32a5a1977d0ab17
+        right_camera: e2af7857672c9ceacf2d7450b834b4e2e2404375de28b3ce24f1acc8ad5cbab2
+      initial_pose:
+      - 0.005699980538338423
+      - 0.11566028743982315
+      - 0.840000569820404
+      - 0.999843180179596
+      - 4.7701837502245326e-06
+      - -5.491197043738794e-06
+      - 0.017710253596305847
+      scene:
+        version: jitter-v2
+        scene_seed: 100009
+        region: center
+        position:
+        - 0.00570107081933664
+        - 0.11566127193848708
+        - 0.842
+        quaternion:
+        - 0.9998431613021149
+        - 0
+        - 0
+        - 0.01771024554863844
+        yaw_degrees: 2.029550753296607
+      initial_success: false
+      plan_success: true
+      success: true
+      signals:
+        arm: right
+        arm_match: true
+        lifted: true
+        lift_delta: 0.0981866717338562
+        dist_cmd_tcp: 0.14080248624569697
+        dist_other_tcp: 0.524409966414128
+      instruction: Collect the block using the right arm.
+      passed: true
+      oracle_info:
+        cluttered_table_info: []
+        texture_info:
+          wall_texture: null
+          table_texture: null
+        info:
+          '{A}': the block
+          '{a}': right
+        arm_select_scene:
+          version: jitter-v2
+          scene_seed: 100009
+          region: center
+          position:
+          - 0.00570107081933664
+          - 0.11566127193848708
+          - 0.842
+          quaternion:
+          - 0.9998431613021149
+          - 0
+          - 0
+          - 0.01771024554863844
+          yaw_degrees: 2.029550753296607
+        mode: right
+        signals:
+          arm_match: true
+          lifted: true
+      elapsed_seconds: 3.0395192849973682
+    - seed: 200020
+      phase: candidate
+      mode: left
+      version: jitter-v2
+      initial_rgb:
+        head_camera: fbcccce4078a19d95140d5ff220dde2059c8f1b6081c374f286965ec512c2af8
+        left_camera: d516ab0fedcd694fd06d8c8eaaeaf5513c2fe435b6b155b5e8caf38846867d41
+        right_camera: ee5087fe4b80118378bc7c0d2fa542fa9f223b0937afcbbd7293723c59d2272c
+      initial_pose:
+      - 0.008750027976930141
+      - 0.10963597148656845
+      - 0.8400006294250488
+      - 0.9998647570610046
+      - 5.4168867791304365e-06
+      - -5.555415555136278e-06
+      - 0.01644626446068287
+      scene:
+        version: jitter-v2
+        scene_seed: 100010
+        region: right
+        position:
+        - 0.008751131879368984
+        - 0.10963707773811565
+        - 0.842
+        quaternion:
+        - 0.9998647521514815
+        - 0
+        - 0
+        - 0.016446197282549074
+        yaw_degrees: 1.8846803537462926
+      initial_success: false
+      plan_success: true
+      success: true
+      signals:
+        arm: left
+        arm_match: true
+        lifted: true
+        lift_delta: 0.09854328632354736
+        dist_cmd_tcp: 0.14097431009612854
+        dist_other_tcp: 0.5171534419412496
+      instruction: Pick up the block carefully with the left arm.
+      passed: true
+      oracle_info:
+        cluttered_table_info: []
+        texture_info:
+          wall_texture: null
+          table_texture: null
+        info:
+          '{A}': the block
+          '{a}': left
+        arm_select_scene:
+          version: jitter-v2
+          scene_seed: 100010
+          region: right
+          position:
+          - 0.008751131879368984
+          - 0.10963707773811565
+          - 0.842
+          quaternion:
+          - 0.9998647521514815
+          - 0
+          - 0
+          - 0.016446197282549074
+          yaw_degrees: 1.8846803537462926
+        mode: left
+        signals:
+          arm_match: true
+          lifted: true
+      elapsed_seconds: 3.018813953996869
+    - seed: 200021
+      phase: candidate
+      mode: right
+      version: jitter-v2
+      initial_rgb:
+        head_camera: fbcccce4078a19d95140d5ff220dde2059c8f1b6081c374f286965ec512c2af8
+        left_camera: d516ab0fedcd694fd06d8c8eaaeaf5513c2fe435b6b155b5e8caf38846867d41
+        right_camera: ee5087fe4b80118378bc7c0d2fa542fa9f223b0937afcbbd7293723c59d2272c
+      initial_pose:
+      - 0.008750027976930141
+      - 0.10963597148656845
+      - 0.8400006294250488
+      - 0.9998647570610046
+      - 5.4168867791304365e-06
+      - -5.555415555136278e-06
+      - 0.01644626446068287
+      scene:
+        version: jitter-v2
+        scene_seed: 100010
+        region: right
+        position:
+        - 0.008751131879368984
+        - 0.10963707773811565
+        - 0.842
+        quaternion:
+        - 0.9998647521514815
+        - 0
+        - 0
+        - 0.016446197282549074
+        yaw_degrees: 1.8846803537462926
+      initial_success: false
+      plan_success: true
+      success: true
+      signals:
+        arm: right
+        arm_match: true
+        lifted: true
+        lift_delta: 0.09809613227844238
+        dist_cmd_tcp: 0.14071333307158068
+        dist_other_tcp: 0.5213023046643387
+      instruction: Pick up the block carefully with the right arm.
+      passed: true
+      oracle_info:
+        cluttered_table_info: []
+        texture_info:
+          wall_texture: null
+          table_texture: null
+        info:
+          '{A}': the block
+          '{a}': right
+        arm_select_scene:
+          version: jitter-v2
+          scene_seed: 100010
+          region: right
+          position:
+          - 0.008751131879368984
+          - 0.10963707773811565
+          - 0.842
+          quaternion:
+          - 0.9998647521514815
+          - 0
+          - 0
+          - 0.016446197282549074
+          yaw_degrees: 1.8846803537462926
+        mode: right
+        signals:
+          arm_match: true
+          lifted: true
+      elapsed_seconds: 2.967974636994768
+    - seed: 200022
+      phase: candidate
+      mode: left
+      version: jitter-v2
+      initial_rgb:
+        head_camera: e5c008af13c90d29d040f4d7ecceaf223b6ebd6a000d00fc42f64b958dff4f43
+        left_camera: 3c84fd615f4524acf5a6d70aa94fb582fddfd0a7ab2694aca2af06309729b081
+        right_camera: 0f3c90ec46aec34f0620f9bb03c49a311321c2514d93d16f8bd7fa5545f39390
+      initial_pose:
+      - -0.018147682771086693
+      - 0.11677443981170654
+      - 0.8400002121925354
+      - 0.9997578263282776
+      - -6.189648615873011e-07
+      - -3.6289247873355635e-06
+      - 0.022007472813129425
+      scene:
+        version: jitter-v2
+        scene_seed: 100011
+        region: left
+        position:
+        - -0.018146951601335757
+        - 0.11677431851734715
+        - 0.842
+        quaternion:
+        - 0.9997578065909167
+        - 0
+        - 0
+        - 0.022007456929849796
+        yaw_degrees: 2.522072412852253
+      initial_success: false
+      plan_success: true
+      success: true
+      signals:
+        arm: left
+        arm_match: true
+        lifted: true
+        lift_delta: 0.09880226850509644
+        dist_cmd_tcp: 0.14043772265912705
+        dist_other_tcp: 0.53985207455517
+      instruction: Scoop up the block with the left arm.
+      passed: true
+      oracle_info:
+        cluttered_table_info: []
+        texture_info:
+          wall_texture: null
+          table_texture: null
+        info:
+          '{A}': the block
+          '{a}': left
+        arm_select_scene:
+          version: jitter-v2
+          scene_seed: 100011
+          region: left
+          position:
+          - -0.018146951601335757
+          - 0.11677431851734715
+          - 0.842
+          quaternion:
+          - 0.9997578065909167
+          - 0
+          - 0
+          - 0.022007456929849796
+          yaw_degrees: 2.522072412852253
+        mode: left
+        signals:
+          arm_match: true
+          lifted: true
+      elapsed_seconds: 2.9911929829977453
+    - seed: 200023
+      phase: candidate
+      mode: right
+      version: jitter-v2
+      initial_rgb:
+        head_camera: e5c008af13c90d29d040f4d7ecceaf223b6ebd6a000d00fc42f64b958dff4f43
+        left_camera: 3c84fd615f4524acf5a6d70aa94fb582fddfd0a7ab2694aca2af06309729b081
+        right_camera: 0f3c90ec46aec34f0620f9bb03c49a311321c2514d93d16f8bd7fa5545f39390
+      initial_pose:
+      - -0.018147682771086693
+      - 0.11677443981170654
+      - 0.8400002121925354
+      - 0.9997578263282776
+      - -6.189648615873011e-07
+      - -3.6289247873355635e-06
+      - 0.022007472813129425
+      scene:
+        version: jitter-v2
+        scene_seed: 100011
+        region: left
+        position:
+        - -0.018146951601335757
+        - 0.11677431851734715
+        - 0.842
+        quaternion:
+        - 0.9997578065909167
+        - 0
+        - 0
+        - 0.022007456929849796
+        yaw_degrees: 2.522072412852253
+      initial_success: false
+      plan_success: true
+      success: true
+      signals:
+        arm: right
+        arm_match: true
+        lifted: true
+        lift_delta: 0.09797930717468262
+        dist_cmd_tcp: 0.1408330694548413
+        dist_other_tcp: 0.5115324934670843
+      instruction: Scoop up the block with the right arm.
+      passed: true
+      oracle_info:
+        cluttered_table_info: []
+        texture_info:
+          wall_texture: null
+          table_texture: null
+        info:
+          '{A}': the block
+          '{a}': right
+        arm_select_scene:
+          version: jitter-v2
+          scene_seed: 100011
+          region: left
+          position:
+          - -0.018146951601335757
+          - 0.11677431851734715
+          - 0.842
+          quaternion:
+          - 0.9997578065909167
+          - 0
+          - 0
+          - 0.022007456929849796
+          yaw_degrees: 2.522072412852253
+        mode: right
+        signals:
+          arm_match: true
+          lifted: true
+      elapsed_seconds: 2.2790328680130187
+    - seed: 200000
+      phase: repeat
+      mode: left
+      version: jitter-v2
+      initial_rgb:
+        head_camera: dca4d40b5fbaf425d3477bca33bce106e11f360b483f9b742acb4a9411c085c8
+        left_camera: a26a534158dd455f46d417dc41aef4a2f5922316fde0137cecf3bd391a353d6f
+        right_camera: 2e942a1ed2dca3e100e3f7a9ddedcaf7841a40636edecb17484279ab2b31276c
+      initial_pose:
+      - -0.002833652077242732
+      - 0.11016400158405304
+      - 0.8400006294250488
+      - 1.0
+      - 4.7694352360849734e-06
+      - -5.598029929387849e-06
+      - -0.00010251216735923663
+      scene:
+        version: jitter-v2
+        scene_seed: 100000
+        region: center
+        position:
+        - -0.002832521802241896
+        - 0.11016496381695566
+        - 0.842
+        quaternion:
+        - 0.9999999947395074
+        - 0
+        - 0
+        - -0.0001025718535720457
+        yaw_degrees: -0.011753868633634573
+      initial_success: false
+      plan_success: true
+      success: true
+      signals:
+        arm: left
+        arm_match: true
+        lifted: true
+        lift_delta: 0.09834116697311401
+        dist_cmd_tcp: 0.14087708404175495
+        dist_other_tcp: 0.5251681462141614
+      instruction: Have the left arm take the block.
+      passed: true
+      oracle_info:
+        cluttered_table_info: []
+        texture_info:
+          wall_texture: null
+          table_texture: null
+        info:
+          '{A}': the block
+          '{a}': left
+        arm_select_scene:
+          version: jitter-v2
+          scene_seed: 100000
+          region: center
+          position:
+          - -0.002832521802241896
+          - 0.11016496381695566
+          - 0.842
+          quaternion:
+          - 0.9999999947395074
+          - 0
+          - 0
+          - -0.0001025718535720457
+          yaw_degrees: -0.011753868633634573
+        mode: left
+        signals:
+          arm_match: true
+          lifted: true
+      elapsed_seconds: 2.6762761959980708
+    - seed: 200000
+      phase: wrong-arm
+      mode: left
+      version: jitter-v2
+      initial_rgb:
+        head_camera: dca4d40b5fbaf425d3477bca33bce106e11f360b483f9b742acb4a9411c085c8
+        left_camera: a26a534158dd455f46d417dc41aef4a2f5922316fde0137cecf3bd391a353d6f
+        right_camera: 2e942a1ed2dca3e100e3f7a9ddedcaf7841a40636edecb17484279ab2b31276c
+      initial_pose:
+      - -0.002833652077242732
+      - 0.11016400158405304
+      - 0.8400006294250488
+      - 1.0
+      - 4.7694352360849734e-06
+      - -5.598029929387849e-06
+      - -0.00010251216735923663
+      scene:
+        version: jitter-v2
+        scene_seed: 100000
+        region: center
+        position:
+        - -0.002832521802241896
+        - 0.11016496381695566
+        - 0.842
+        quaternion:
+        - 0.9999999947395074
+        - 0
+        - 0
+        - -0.0001025718535720457
+        yaw_degrees: -0.011753868633634573
+      initial_success: false
+      plan_success: true
+      success: false
+      signals:
+        arm: left
+        arm_match: false
+        lifted: true
+        lift_delta: 0.09849286079406738
+        dist_cmd_tcp: 0.5152448620303978
+        dist_other_tcp: 0.14077801734801154
+      instruction: Have the left arm take the block.
+      passed: true
+      oracle_info:
+        cluttered_table_info: []
+        texture_info:
+          wall_texture: null
+          table_texture: null
+        info:
+          '{A}': the block
+          '{a}': left
+        arm_select_scene:
+          version: jitter-v2
+          scene_seed: 100000
+          region: center
+          position:
+          - -0.002832521802241896
+          - 0.11016496381695566
+          - 0.842
+          quaternion:
+          - 0.9999999947395074
+          - 0
+          - 0
+          - -0.0001025718535720457
+          yaw_degrees: -0.011753868633634573
+        mode: left
+        signals:
+          arm_match: false
+          lifted: true
+      elapsed_seconds: 2.9066377519920934
+    - seed: 200001
+      phase: repeat
+      mode: right
+      version: jitter-v2
+      initial_rgb:
+        head_camera: dca4d40b5fbaf425d3477bca33bce106e11f360b483f9b742acb4a9411c085c8
+        left_camera: a26a534158dd455f46d417dc41aef4a2f5922316fde0137cecf3bd391a353d6f
+        right_camera: 2e942a1ed2dca3e100e3f7a9ddedcaf7841a40636edecb17484279ab2b31276c
+      initial_pose:
+      - -0.002833652077242732
+      - 0.11016400158405304
+      - 0.8400006294250488
+      - 1.0
+      - 4.7694352360849734e-06
+      - -5.598029929387849e-06
+      - -0.00010251216735923663
+      scene:
+        version: jitter-v2
+        scene_seed: 100000
+        region: center
+        position:
+        - -0.002832521802241896
+        - 0.11016496381695566
+        - 0.842
+        quaternion:
+        - 0.9999999947395074
+        - 0
+        - 0
+        - -0.0001025718535720457
+        yaw_degrees: -0.011753868633634573
+      initial_success: false
+      plan_success: true
+      success: true
+      signals:
+        arm: right
+        arm_match: true
+        lifted: true
+        lift_delta: 0.09864985942840576
+        dist_cmd_tcp: 0.14049649644167708
+        dist_other_tcp: 0.5152668273918805
+      instruction: Have the right arm take the block.
+      passed: true
+      oracle_info:
+        cluttered_table_info: []
+        texture_info:
+          wall_texture: null
+          table_texture: null
+        info:
+          '{A}': the block
+          '{a}': right
+        arm_select_scene:
+          version: jitter-v2
+          scene_seed: 100000
+          region: center
+          position:
+          - -0.002832521802241896
+          - 0.11016496381695566
+          - 0.842
+          quaternion:
+          - 0.9999999947395074
+          - 0
+          - 0
+          - -0.0001025718535720457
+          yaw_degrees: -0.011753868633634573
+        mode: right
+        signals:
+          arm_match: true
+          lifted: true
+      elapsed_seconds: 3.0013942299992777
+    - seed: 200001
+      phase: wrong-arm
+      mode: right
+      version: jitter-v2
+      initial_rgb:
+        head_camera: dca4d40b5fbaf425d3477bca33bce106e11f360b483f9b742acb4a9411c085c8
+        left_camera: a26a534158dd455f46d417dc41aef4a2f5922316fde0137cecf3bd391a353d6f
+        right_camera: 2e942a1ed2dca3e100e3f7a9ddedcaf7841a40636edecb17484279ab2b31276c
+      initial_pose:
+      - -0.002833652077242732
+      - 0.11016400158405304
+      - 0.8400006294250488
+      - 1.0
+      - 4.7694352360849734e-06
+      - -5.598029929387849e-06
+      - -0.00010251216735923663
+      scene:
+        version: jitter-v2
+        scene_seed: 100000
+        region: center
+        position:
+        - -0.002832521802241896
+        - 0.11016496381695566
+        - 0.842
+        quaternion:
+        - 0.9999999947395074
+        - 0
+        - 0
+        - -0.0001025718535720457
+        yaw_degrees: -0.011753868633634573
+      initial_success: false
+      plan_success: true
+      success: false
+      signals:
+        arm: right
+        arm_match: false
+        lifted: true
+        lift_delta: 0.09835058450698853
+        dist_cmd_tcp: 0.5251908498069281
+        dist_other_tcp: 0.1407254727175269
+      instruction: Have the right arm take the block.
+      passed: true
+      oracle_info:
+        cluttered_table_info: []
+        texture_info:
+          wall_texture: null
+          table_texture: null
+        info:
+          '{A}': the block
+          '{a}': right
+        arm_select_scene:
+          version: jitter-v2
+          scene_seed: 100000
+          region: center
+          position:
+          - -0.002832521802241896
+          - 0.11016496381695566
+          - 0.842
+          quaternion:
+          - 0.9999999947395074
+          - 0
+          - 0
+          - -0.0001025718535720457
+          yaw_degrees: -0.011753868633634573
+        mode: right
+        signals:
+          arm_match: false
+          lifted: true
+      elapsed_seconds: 2.9252140689932276
+    - seed: 200002
+      phase: repeat
+      mode: left
+      version: jitter-v2
+      initial_rgb:
+        head_camera: eff0ac2464158e00291cb7bb36488ad2b9d79755934647592d0da38fdb70d803
+        left_camera: cc78b4c9e9776accdfc22c1d6cc12a4cebe0f327ed7e1523b254022fc7b8508c
+        right_camera: 01b25574c75e989382a0945fd87d630fee1394a02f5665c3fd296c60927f96e7
+      initial_pose:
+      - 0.009106048382818699
+      - 0.10307853668928146
+      - 0.8400006294250488
+      - 0.9999831318855286
+      - 5.546979082282633e-06
+      - -5.615645932266489e-06
+      - 0.005809770431369543
+      scene:
+        version: jitter-v2
+        scene_seed: 100001
+        region: right
+        position:
+        - 0.009107174600749803
+        - 0.10307965823393728
+        - 0.842
+        quaternion:
+        - 0.999983123458989
+        - 0
+        - 0
+        - 0.005809715759340104
+        yaw_degrees: 0.6657481315410891
+      initial_success: false
+      plan_success: true
+      success: true
+      signals:
+        arm: left
+        arm_match: true
+        lifted: true
+        lift_delta: 0.09847187995910645
+        dist_cmd_tcp: 0.14077534839206113
+        dist_other_tcp: 0.5123733297728928
+      instruction: Use the left arm to retrieve the block.
+      passed: true
+      oracle_info:
+        cluttered_table_info: []
+        texture_info:
+          wall_texture: null
+          table_texture: null
+        info:
+          '{A}': the block
+          '{a}': left
+        arm_select_scene:
+          version: jitter-v2
+          scene_seed: 100001
+          region: right
+          position:
+          - 0.009107174600749803
+          - 0.10307965823393728
+          - 0.842
+          quaternion:
+          - 0.999983123458989
+          - 0
+          - 0
+          - 0.005809715759340104
+          yaw_degrees: 0.6657481315410891
+        mode: left
+        signals:
+          arm_match: true
+          lifted: true
+      elapsed_seconds: 2.9647047010075767
+    - seed: 200002
+      phase: wrong-arm
+      mode: left
+      version: jitter-v2
+      initial_rgb:
+        head_camera: eff0ac2464158e00291cb7bb36488ad2b9d79755934647592d0da38fdb70d803
+        left_camera: cc78b4c9e9776accdfc22c1d6cc12a4cebe0f327ed7e1523b254022fc7b8508c
+        right_camera: 01b25574c75e989382a0945fd87d630fee1394a02f5665c3fd296c60927f96e7
+      initial_pose:
+      - 0.009106048382818699
+      - 0.10307853668928146
+      - 0.8400006294250488
+      - 0.9999831318855286
+      - 5.546979082282633e-06
+      - -5.615645932266489e-06
+      - 0.005809770431369543
+      scene:
+        version: jitter-v2
+        scene_seed: 100001
+        region: right
+        position:
+        - 0.009107174600749803
+        - 0.10307965823393728
+        - 0.842
+        quaternion:
+        - 0.999983123458989
+        - 0
+        - 0
+        - 0.005809715759340104
+        yaw_degrees: 0.6657481315410891
+      initial_success: false
+      plan_success: true
+      success: false
+      signals:
+        arm: left
+        arm_match: false
+        lifted: true
+        lift_delta: 0.09802234172821045
+        dist_cmd_tcp: 0.5161912762848515
+        dist_other_tcp: 0.14110960706439832
+      instruction: Use the left arm to retrieve the block.
+      passed: true
+      oracle_info:
+        cluttered_table_info: []
+        texture_info:
+          wall_texture: null
+          table_texture: null
+        info:
+          '{A}': the block
+          '{a}': left
+        arm_select_scene:
+          version: jitter-v2
+          scene_seed: 100001
+          region: right
+          position:
+          - 0.009107174600749803
+          - 0.10307965823393728
+          - 0.842
+          quaternion:
+          - 0.999983123458989
+          - 0
+          - 0
+          - 0.005809715759340104
+          yaw_degrees: 0.6657481315410891
+        mode: left
+        signals:
+          arm_match: false
+          lifted: true
+      elapsed_seconds: 2.838237157993717
+    - seed: 200003
+      phase: repeat
+      mode: right
+      version: jitter-v2
+      initial_rgb:
+        head_camera: eff0ac2464158e00291cb7bb36488ad2b9d79755934647592d0da38fdb70d803
+        left_camera: cc78b4c9e9776accdfc22c1d6cc12a4cebe0f327ed7e1523b254022fc7b8508c
+        right_camera: 01b25574c75e989382a0945fd87d630fee1394a02f5665c3fd296c60927f96e7
+      initial_pose:
+      - 0.009106048382818699
+      - 0.10307853668928146
+      - 0.8400006294250488
+      - 0.9999831318855286
+      - 5.546979082282633e-06
+      - -5.615645932266489e-06
+      - 0.005809770431369543
+      scene:
+        version: jitter-v2
+        scene_seed: 100001
+        region: right
+        position:
+        - 0.009107174600749803
+        - 0.10307965823393728
+        - 0.842
+        quaternion:
+        - 0.999983123458989
+        - 0
+        - 0
+        - 0.005809715759340104
+        yaw_degrees: 0.6657481315410891
+      initial_success: false
+      plan_success: true
+      success: true
+      signals:
+        arm: right
+        arm_match: true
+        lifted: true
+        lift_delta: 0.09876453876495361
+        dist_cmd_tcp: 0.14045932801615868
+        dist_other_tcp: 0.5169400545773356
+      instruction: Use the right arm to retrieve the block.
+      passed: true
+      oracle_info:
+        cluttered_table_info: []
+        texture_info:
+          wall_texture: null
+          table_texture: null
+        info:
+          '{A}': the block
+          '{a}': right
+        arm_select_scene:
+          version: jitter-v2
+          scene_seed: 100001
+          region: right
+          position:
+          - 0.009107174600749803
+          - 0.10307965823393728
+          - 0.842
+          quaternion:
+          - 0.999983123458989
+          - 0
+          - 0
+          - 0.005809715759340104
+          yaw_degrees: 0.6657481315410891
+        mode: right
+        signals:
+          arm_match: true
+          lifted: true
+      elapsed_seconds: 1.9193496810039505
+    - seed: 200003
+      phase: wrong-arm
+      mode: right
+      version: jitter-v2
+      initial_rgb:
+        head_camera: eff0ac2464158e00291cb7bb36488ad2b9d79755934647592d0da38fdb70d803
+        left_camera: cc78b4c9e9776accdfc22c1d6cc12a4cebe0f327ed7e1523b254022fc7b8508c
+        right_camera: 01b25574c75e989382a0945fd87d630fee1394a02f5665c3fd296c60927f96e7
+      initial_pose:
+      - 0.009106048382818699
+      - 0.10307853668928146
+      - 0.8400006294250488
+      - 0.9999831318855286
+      - 5.546979082282633e-06
+      - -5.615645932266489e-06
+      - 0.005809770431369543
+      scene:
+        version: jitter-v2
+        scene_seed: 100001
+        region: right
+        position:
+        - 0.009107174600749803
+        - 0.10307965823393728
+        - 0.842
+        quaternion:
+        - 0.999983123458989
+        - 0
+        - 0
+        - 0.005809715759340104
+        yaw_degrees: 0.6657481315410891
+      initial_success: false
+      plan_success: true
+      success: false
+      signals:
+        arm: right
+        arm_match: false
+        lifted: true
+        lift_delta: 0.09839695692062378
+        dist_cmd_tcp: 0.5125350132624861
+        dist_other_tcp: 0.14095823196465224
+      instruction: Use the right arm to retrieve the block.
+      passed: true
+      oracle_info:
+        cluttered_table_info: []
+        texture_info:
+          wall_texture: null
+          table_texture: null
+        info:
+          '{A}': the block
+          '{a}': right
+        arm_select_scene:
+          version: jitter-v2
+          scene_seed: 100001
+          region: right
+          position:
+          - 0.009107174600749803
+          - 0.10307965823393728
+          - 0.842
+          quaternion:
+          - 0.999983123458989
+          - 0
+          - 0
+          - 0.005809715759340104
+          yaw_degrees: 0.6657481315410891
+        mode: right
+        signals:
+          arm_match: false
+          lifted: true
+      elapsed_seconds: 2.9869866569933947
+    - seed: 200004
+      phase: repeat
+      mode: left
+      version: jitter-v2
+      initial_rgb:
+        head_camera: c7c723485cd2ef403d36ef45559bf7d93b5909090618337b2cf4dc19ae92a0a5
+        left_camera: 41d03cd6de36ab5e182d375e0eac558b237cc4ac454b72098a89a16f68e45104
+        right_camera: b3592d218429dd1e82a3c3910028e191d8512fc5b82d17e580bd36592fc0c888
+      initial_pose:
+      - -0.007303883787244558
+      - 0.11605551838874817
+      - 0.840000569820404
+      - 0.9999950528144836
+      - 5.111250629852293e-06
+      - -5.573388989432715e-06
+      - 0.003141486318781972
+      scene:
+        version: jitter-v2
+        scene_seed: 100002
+        region: left
+        position:
+        - -0.007302760769294831
+        - 0.11605655528525692
+        - 0.842
+        quaternion:
+        - 0.9999950657171947
+        - 0
+        - 0
+        - 0.003141423445441122
+        yaw_degrees: 0.35998120225765745
+      initial_success: false
+      plan_success: true
+      success: true
+      signals:
+        arm: left
+        arm_match: true
+        lifted: true
+        lift_delta: 0.09843182563781738
+        dist_cmd_tcp: 0.1404773661937372
+        dist_other_tcp: 0.532317722618143
+      instruction: Let the left arm grab the block.
+      passed: true
+      oracle_info:
+        cluttered_table_info: []
+        texture_info:
+          wall_texture: null
+          table_texture: null
+        info:
+          '{A}': the block
+          '{a}': left
+        arm_select_scene:
+          version: jitter-v2
+          scene_seed: 100002
+          region: left
+          position:
+          - -0.007302760769294831
+          - 0.11605655528525692
+          - 0.842
+          quaternion:
+          - 0.9999950657171947
+          - 0
+          - 0
+          - 0.003141423445441122
+          yaw_degrees: 0.35998120225765745
+        mode: left
+        signals:
+          arm_match: true
+          lifted: true
+      elapsed_seconds: 2.9711093879886903
+    - seed: 200004
+      phase: wrong-arm
+      mode: left
+      version: jitter-v2
+      initial_rgb:
+        head_camera: c7c723485cd2ef403d36ef45559bf7d93b5909090618337b2cf4dc19ae92a0a5
+        left_camera: 41d03cd6de36ab5e182d375e0eac558b237cc4ac454b72098a89a16f68e45104
+        right_camera: b3592d218429dd1e82a3c3910028e191d8512fc5b82d17e580bd36592fc0c888
+      initial_pose:
+      - -0.007303883787244558
+      - 0.11605551838874817
+      - 0.840000569820404
+      - 0.9999950528144836
+      - 5.111250629852293e-06
+      - -5.573388989432715e-06
+      - 0.003141486318781972
+      scene:
+        version: jitter-v2
+        scene_seed: 100002
+        region: left
+        position:
+        - -0.007302760769294831
+        - 0.11605655528525692
+        - 0.842
+        quaternion:
+        - 0.9999950657171947
+        - 0
+        - 0
+        - 0.003141423445441122
+        yaw_degrees: 0.35998120225765745
+      initial_success: false
+      plan_success: true
+      success: false
+      signals:
+        arm: left
+        arm_match: false
+        lifted: true
+        lift_delta: 0.09862697124481201
+        dist_cmd_tcp: 0.5166941518354474
+        dist_other_tcp: 0.14088645918747872
+      instruction: Let the left arm grab the block.
+      passed: true
+      oracle_info:
+        cluttered_table_info: []
+        texture_info:
+          wall_texture: null
+          table_texture: null
+        info:
+          '{A}': the block
+          '{a}': left
+        arm_select_scene:
+          version: jitter-v2
+          scene_seed: 100002
+          region: left
+          position:
+          - -0.007302760769294831
+          - 0.11605655528525692
+          - 0.842
+          quaternion:
+          - 0.9999950657171947
+          - 0
+          - 0
+          - 0.003141423445441122
+          yaw_degrees: 0.35998120225765745
+        mode: left
+        signals:
+          arm_match: false
+          lifted: true
+      elapsed_seconds: 2.379725706996396
+    - seed: 200005
+      phase: repeat
+      mode: right
+      version: jitter-v2
+      initial_rgb:
+        head_camera: c7c723485cd2ef403d36ef45559bf7d93b5909090618337b2cf4dc19ae92a0a5
+        left_camera: 41d03cd6de36ab5e182d375e0eac558b237cc4ac454b72098a89a16f68e45104
+        right_camera: b3592d218429dd1e82a3c3910028e191d8512fc5b82d17e580bd36592fc0c888
+      initial_pose:
+      - -0.007303883787244558
+      - 0.11605551838874817
+      - 0.840000569820404
+      - 0.9999950528144836
+      - 5.111250629852293e-06
+      - -5.573388989432715e-06
+      - 0.003141486318781972
+      scene:
+        version: jitter-v2
+        scene_seed: 100002
+        region: left
+        position:
+        - -0.007302760769294831
+        - 0.11605655528525692
+        - 0.842
+        quaternion:
+        - 0.9999950657171947
+        - 0
+        - 0
+        - 0.003141423445441122
+        yaw_degrees: 0.35998120225765745
+      initial_success: false
+      plan_success: true
+      success: true
+      signals:
+        arm: right
+        arm_match: true
+        lifted: true
+        lift_delta: 0.0983743667602539
+        dist_cmd_tcp: 0.14084655795857287
+        dist_other_tcp: 0.5168187365389162
+      instruction: Let the right arm grab the block.
+      passed: true
+      oracle_info:
+        cluttered_table_info: []
+        texture_info:
+          wall_texture: null
+          table_texture: null
+        info:
+          '{A}': the block
+          '{a}': right
+        arm_select_scene:
+          version: jitter-v2
+          scene_seed: 100002
+          region: left
+          position:
+          - -0.007302760769294831
+          - 0.11605655528525692
+          - 0.842
+          quaternion:
+          - 0.9999950657171947
+          - 0
+          - 0
+          - 0.003141423445441122
+          yaw_degrees: 0.35998120225765745
+        mode: right
+        signals:
+          arm_match: true
+          lifted: true
+      elapsed_seconds: 2.913933616015129
+    - seed: 200005
+      phase: wrong-arm
+      mode: right
+      version: jitter-v2
+      initial_rgb:
+        head_camera: c7c723485cd2ef403d36ef45559bf7d93b5909090618337b2cf4dc19ae92a0a5
+        left_camera: 41d03cd6de36ab5e182d375e0eac558b237cc4ac454b72098a89a16f68e45104
+        right_camera: b3592d218429dd1e82a3c3910028e191d8512fc5b82d17e580bd36592fc0c888
+      initial_pose:
+      - -0.007303883787244558
+      - 0.11605551838874817
+      - 0.840000569820404
+      - 0.9999950528144836
+      - 5.111250629852293e-06
+      - -5.573388989432715e-06
+      - 0.003141486318781972
+      scene:
+        version: jitter-v2
+        scene_seed: 100002
+        region: left
+        position:
+        - -0.007302760769294831
+        - 0.11605655528525692
+        - 0.842
+        quaternion:
+        - 0.9999950657171947
+        - 0
+        - 0
+        - 0.003141423445441122
+        yaw_degrees: 0.35998120225765745
+      initial_success: false
+      plan_success: true
+      success: false
+      signals:
+        arm: right
+        arm_match: false
+        lifted: true
+        lift_delta: 0.09815424680709839
+        dist_cmd_tcp: 0.531963859217543
+        dist_other_tcp: 0.1407704915329836
+      instruction: Let the right arm grab the block.
+      passed: true
+      oracle_info:
+        cluttered_table_info: []
+        texture_info:
+          wall_texture: null
+          table_texture: null
+        info:
+          '{A}': the block
+          '{a}': right
+        arm_select_scene:
+          version: jitter-v2
+          scene_seed: 100002
+          region: left
+          position:
+          - -0.007302760769294831
+          - 0.11605655528525692
+          - 0.842
+          quaternion:
+          - 0.9999950657171947
+          - 0
+          - 0
+          - 0.003141423445441122
+          yaw_degrees: 0.35998120225765745
+        mode: right
+        signals:
+          arm_match: false
+          lifted: true
+      elapsed_seconds: 3.0709810910047963
+    unique_candidate_scenes: 12
+    repeat_initial_rgb_match: true
+    note: Small oracle feasibility probe, not policy success rates; all candidate
+      failures retained.
+  provenance:
+    argv:
+    - tools/probe_arm_select_variation.py
+    - --output
+    - outputs/policy-eval/arm-select-v2-formal-12blocks-001
+    - --blocks
+    - '12'
+    - --seed-start
+    - '200000'
+    python: /home/xichen6/miniconda3/envs/RoboTwin/bin/python
+    sources:
+      /home/xichen6/Documents/repos/robotwin-if/tasks/envs/arm_select.py: bf60650a26085b2acf873ebfd8181c4cedc0101ac46fdef41297160a9cd7d60d
+      /home/xichen6/Documents/repos/robotwin-if/policies/xvla/eval.py: fd9023de4a003d50d1686262331c0611ae7d836cdd8e6a1870cbe43089906262
+      /home/xichen6/Documents/repos/robotwin-if/third_party/robotwin/task_config/demo_clean_arm_select_v2.yml: 9f0983a73d0cb0ac34d39649db5e4a18cf2785687d44bc2d5c7ac6c94f707412
+      /home/xichen6/Documents/repos/robotwin-if/tools/probe_arm_select_variation.py: 74221fed1a1f86dde64008a649e409ee168e0c32ea8ce24e27f7cc1c82b511b5
+    simulators: 1
+    model_servers: 0
+  supervisor:
+    complete: true
+    exit_code: 2
+    elapsed_seconds: 158.8277199268341
+  artifact_sha256:
+    report.json: ca9655c3d8c83456a0f7f150d6fa4da09bc7ea891fd770d8a5438112d47a3e01
+    episodes.json: 38e54c9d12ddea9a6ce8dc0a9aa4f0a62545a8377522f0bfa21af59816ebbeaf
+    provenance.json: b0107d43241a5a4cc9848a827aad4dc795a71c9e47d2dd60c2a17e111b7095a8
+    supervisor.json: bab5902902341dd4ff0b3013eedc6ae0dec8e45edfb2440d3a92f9bbaf3188b0
+- directory: outputs/policy-eval/arm-select-v2-formal-12blocks-002
+  report:
+    complete: true
+    all_checks_passed: true
+    task: arm_select
+    task_config: demo_clean_arm_select_v2
+    pci: 0000:af:00.0
+    blocks:
+    - seeds: *id013
+      same_rgb: true
+      same_pose: true
+      same_template: true
+      region: center
+      accepted: true
+    - seeds: *id014
+      same_rgb: true
+      same_pose: true
+      same_template: true
+      region: right
+      accepted: true
+    - seeds: *id015
+      same_rgb: true
+      same_pose: true
+      same_template: true
+      region: left
+      accepted: true
+    episodes:
+    - seed: 100000
+      phase: fixed
+      mode: left
+      version: fixed-v1
+      initial_rgb:
+        head_camera: b600f83b98d4d152efbd1652750e8d01cb237130eda98d5a39d4c0ab81923af2
+        left_camera: 07c9764d0e9898730eb7617a3a24dd955f9fd1d89fb9121d9c45e40ba56fca5d
+        right_camera: 2991ffad492a309def1aea4882c0ec6cbf6e7db4a8c2e7b7c388d5cbbfd51054
+      initial_pose:
+      - -1.150382217929291e-06
+      - 0.09999887645244598
+      - 0.8400006294250488
+      - 1.0
+      - 5.4782040024292655e-06
+      - -5.616101589112077e-06
+      - 3.612565890875885e-08
+      scene:
+        version: fixed-v1
+        scene_seed: 50000
+        region: center
+        position:
+        - 0.0
+        - 0.1
+        - 0.842
+        quaternion:
+        - 1.0
+        - 0
+        - 0
+        - 0.0
+        yaw_degrees: 0.0
+      initial_success: false
+      matches_archived_v1: true
+      plan_success: true
+      success: true
+      signals:
+        arm: left
+        arm_match: true
+        lifted: true
+        lift_delta: 0.09829062223434448
+        dist_cmd_tcp: 0.14084547668185632
+        dist_other_tcp: 0.5153763901051135
+      instruction: Have the left arm take the block.
+      passed: true
+      oracle_info:
+        cluttered_table_info: []
+        texture_info:
+          wall_texture: null
+          table_texture: null
+        info:
+          '{A}': the block
+          '{a}': left
+        arm_select_scene:
+          version: fixed-v1
+          scene_seed: 50000
+          region: center
+          position:
+          - 0.0
+          - 0.1
+          - 0.842
+          quaternion:
+          - 1.0
+          - 0
+          - 0
+          - 0.0
+          yaw_degrees: 0.0
+        mode: left
+        signals:
+          arm_match: true
+          lifted: true
+      elapsed_seconds: 41.324598687002435
+    - seed: 100001
+      phase: fixed
+      mode: right
+      version: fixed-v1
+      initial_rgb:
+        head_camera: b600f83b98d4d152efbd1652750e8d01cb237130eda98d5a39d4c0ab81923af2
+        left_camera: 07c9764d0e9898730eb7617a3a24dd955f9fd1d89fb9121d9c45e40ba56fca5d
+        right_camera: 2991ffad492a309def1aea4882c0ec6cbf6e7db4a8c2e7b7c388d5cbbfd51054
+      initial_pose:
+      - -1.150382217929291e-06
+      - 0.09999887645244598
+      - 0.8400006294250488
+      - 1.0
+      - 5.4782040024292655e-06
+      - -5.616101589112077e-06
+      - 3.612565890875885e-08
+      scene:
+        version: fixed-v1
+        scene_seed: 50000
+        region: center
+        position:
+        - 0.0
+        - 0.1
+        - 0.842
+        quaternion:
+        - 1.0
+        - 0
+        - 0
+        - 0.0
+        yaw_degrees: 0.0
+      initial_success: false
+      matches_archived_v1: true
+      plan_success: true
+      success: true
+      signals:
+        arm: right
+        arm_match: true
+        lifted: true
+        lift_delta: 0.09883517026901245
+        dist_cmd_tcp: 0.14049631166300497
+        dist_other_tcp: 0.509156088576652
+      instruction: Use the right arm to retrieve the block.
+      passed: true
+      oracle_info:
+        cluttered_table_info: []
+        texture_info:
+          wall_texture: null
+          table_texture: null
+        info:
+          '{A}': the block
+          '{a}': right
+        arm_select_scene:
+          version: fixed-v1
+          scene_seed: 50000
+          region: center
+          position:
+          - 0.0
+          - 0.1
+          - 0.842
+          quaternion:
+          - 1.0
+          - 0
+          - 0
+          - 0.0
+          yaw_degrees: 0.0
+        mode: right
+        signals:
+          arm_match: true
+          lifted: true
+      elapsed_seconds: 3.715235018025851
+    - seed: 200024
+      phase: candidate
+      mode: left
+      version: jitter-v2
+      initial_rgb:
+        head_camera: 40a76fd67d2353c9d159410dfb99e900c6f69757a3025da708e65452ccb72a80
+        left_camera: 216a70e372a8e3ef0a526f290fb0479b9525e790ce0669d3211671f606baf868
+        right_camera: a45855bd090df03cb1021d7b90fc56c4e1c69eeb802c09276dc67daeec188389
+      initial_pose:
+      - 0.0017956877127289772
+      - 0.10150174796581268
+      - 0.8400006294250488
+      - 0.9999505281448364
+      - 5.674747626471799e-06
+      - -5.731022611143999e-06
+      - -0.009956208989024162
+      scene:
+        version: jitter-v2
+        scene_seed: 100012
+        region: center
+        position:
+        - 0.0017968529299423426
+        - 0.10150286706251149
+        - 0.842
+        quaternion:
+        - 0.9999504347402883
+        - 0
+        - 0
+        - -0.009956307684496306
+        yaw_degrees: -1.1409276698983268
+      initial_success: false
+      plan_success: true
+      success: true
+      signals:
+        arm: left
+        arm_match: true
+        lifted: true
+        lift_delta: 0.09842336177825928
+        dist_cmd_tcp: 0.1405421864816506
+        dist_other_tcp: 0.5152968273406863
+      instruction: With the left arm, grab the block.
+      passed: true
+      oracle_info:
+        cluttered_table_info: []
+        texture_info:
+          wall_texture: null
+          table_texture: null
+        info:
+          '{A}': the block
+          '{a}': left
+        arm_select_scene:
+          version: jitter-v2
+          scene_seed: 100012
+          region: center
+          position:
+          - 0.0017968529299423426
+          - 0.10150286706251149
+          - 0.842
+          quaternion:
+          - 0.9999504347402883
+          - 0
+          - 0
+          - -0.009956307684496306
+          yaw_degrees: -1.1409276698983268
+        mode: left
+        signals:
+          arm_match: true
+          lifted: true
+      elapsed_seconds: 2.6759744889859576
+    - seed: 200025
+      phase: candidate
+      mode: right
+      version: jitter-v2
+      initial_rgb:
+        head_camera: 40a76fd67d2353c9d159410dfb99e900c6f69757a3025da708e65452ccb72a80
+        left_camera: 216a70e372a8e3ef0a526f290fb0479b9525e790ce0669d3211671f606baf868
+        right_camera: a45855bd090df03cb1021d7b90fc56c4e1c69eeb802c09276dc67daeec188389
+      initial_pose:
+      - 0.0017956877127289772
+      - 0.10150174796581268
+      - 0.8400006294250488
+      - 0.9999505281448364
+      - 5.674747626471799e-06
+      - -5.731022611143999e-06
+      - -0.009956208989024162
+      scene:
+        version: jitter-v2
+        scene_seed: 100012
+        region: center
+        position:
+        - 0.0017968529299423426
+        - 0.10150286706251149
+        - 0.842
+        quaternion:
+        - 0.9999504347402883
+        - 0
+        - 0
+        - -0.009956307684496306
+        yaw_degrees: -1.1409276698983268
+      initial_success: false
+      plan_success: true
+      success: true
+      signals:
+        arm: right
+        arm_match: true
+        lifted: true
+        lift_delta: 0.09849059581756592
+        dist_cmd_tcp: 0.14097562687992873
+        dist_other_tcp: 0.5113348484296586
+      instruction: With the right arm, grab the block.
+      passed: true
+      oracle_info:
+        cluttered_table_info: []
+        texture_info:
+          wall_texture: null
+          table_texture: null
+        info:
+          '{A}': the block
+          '{a}': right
+        arm_select_scene:
+          version: jitter-v2
+          scene_seed: 100012
+          region: center
+          position:
+          - 0.0017968529299423426
+          - 0.10150286706251149
+          - 0.842
+          quaternion:
+          - 0.9999504347402883
+          - 0
+          - 0
+          - -0.009956307684496306
+          yaw_degrees: -1.1409276698983268
+        mode: right
+        signals:
+          arm_match: true
+          lifted: true
+      elapsed_seconds: 2.9554546180006582
+    - seed: 200026
+      phase: candidate
+      mode: left
+      version: jitter-v2
+      initial_rgb:
+        head_camera: 43ed2811ffbb7c832a707b995953cdeb10e51119642fa2d65a658d4bffa9036d
+        left_camera: e91eea6192d4298fdc5c05c938644d50fea245a749f79c64842651ede7f044a3
+        right_camera: df15820050def1f33830e44b18d3c05f976e83b25ed467cd6d9e7b6a4ad4854e
+      initial_pose:
+      - 0.00847791787236929
+      - 0.11879029124975204
+      - 0.8400005102157593
+      - 0.99968022108078
+      - 4.365175300335977e-06
+      - -5.636981313728029e-06
+      - -0.025288252159953117
+      scene:
+        version: jitter-v2
+        scene_seed: 100013
+        region: right
+        position:
+        - 0.00847906910647098
+        - 0.11879113783280872
+        - 0.842
+        quaternion:
+        - 0.999680200062479
+        - 0
+        - 0
+        - -0.02528828984019701
+        yaw_degrees: -2.898133505452141
+      initial_success: false
+      plan_success: true
+      success: true
+      signals:
+        arm: left
+        arm_match: true
+        lifted: true
+        lift_delta: 0.09861713647842407
+        dist_cmd_tcp: 0.14050248017727907
+        dist_other_tcp: 0.5254353061920991
+      instruction: Let the left arm grab the block.
+      passed: true
+      oracle_info:
+        cluttered_table_info: []
+        texture_info:
+          wall_texture: null
+          table_texture: null
+        info:
+          '{A}': the block
+          '{a}': left
+        arm_select_scene:
+          version: jitter-v2
+          scene_seed: 100013
+          region: right
+          position:
+          - 0.00847906910647098
+          - 0.11879113783280872
+          - 0.842
+          quaternion:
+          - 0.999680200062479
+          - 0
+          - 0
+          - -0.02528828984019701
+          yaw_degrees: -2.898133505452141
+        mode: left
+        signals:
+          arm_match: true
+          lifted: true
+      elapsed_seconds: 2.9757624049962033
+    - seed: 200027
+      phase: candidate
+      mode: right
+      version: jitter-v2
+      initial_rgb:
+        head_camera: 43ed2811ffbb7c832a707b995953cdeb10e51119642fa2d65a658d4bffa9036d
+        left_camera: e91eea6192d4298fdc5c05c938644d50fea245a749f79c64842651ede7f044a3
+        right_camera: df15820050def1f33830e44b18d3c05f976e83b25ed467cd6d9e7b6a4ad4854e
+      initial_pose:
+      - 0.00847791787236929
+      - 0.11879029124975204
+      - 0.8400005102157593
+      - 0.99968022108078
+      - 4.365175300335977e-06
+      - -5.636981313728029e-06
+      - -0.025288252159953117
+      scene:
+        version: jitter-v2
+        scene_seed: 100013
+        region: right
+        position:
+        - 0.00847906910647098
+        - 0.11879113783280872
+        - 0.842
+        quaternion:
+        - 0.999680200062479
+        - 0
+        - 0
+        - -0.02528828984019701
+        yaw_degrees: -2.898133505452141
+      initial_success: false
+      plan_success: true
+      success: true
+      signals:
+        arm: right
+        arm_match: true
+        lifted: true
+        lift_delta: 0.09862536191940308
+        dist_cmd_tcp: 0.14072858849333636
+        dist_other_tcp: 0.5291474758579481
+      instruction: Let the right arm grab the block.
+      passed: true
+      oracle_info:
+        cluttered_table_info: []
+        texture_info:
+          wall_texture: null
+          table_texture: null
+        info:
+          '{A}': the block
+          '{a}': right
+        arm_select_scene:
+          version: jitter-v2
+          scene_seed: 100013
+          region: right
+          position:
+          - 0.00847906910647098
+          - 0.11879113783280872
+          - 0.842
+          quaternion:
+          - 0.999680200062479
+          - 0
+          - 0
+          - -0.02528828984019701
+          yaw_degrees: -2.898133505452141
+        mode: right
+        signals:
+          arm_match: true
+          lifted: true
+      elapsed_seconds: 3.053738129994599
+    - seed: 200028
+      phase: candidate
+      mode: left
+      version: jitter-v2
+      initial_rgb:
+        head_camera: 18ae97f9df729a8d309843f8bdf564ae6c3047cec87adefad595cca30bababb4
+        left_camera: 89bf490932e2778a99285393126ff6e291707a9108f071eaa8b4ee112f96d493
+        right_camera: 9523ab6974964ba2466af6d992d33aa7ac4576c38740c83173e45479401adb85
+      initial_pose:
+      - -0.01270310953259468
+      - 0.10874855518341064
+      - 0.8400004506111145
+      - 0.9999999403953552
+      - 4.068805537826847e-06
+      - -5.471868917084066e-06
+      - 0.0003924231859855354
+      scene:
+        version: jitter-v2
+        scene_seed: 100014
+        region: left
+        position:
+        - -0.012702007640585572
+        - 0.10874939109828186
+        - 0.842
+        quaternion:
+        - 0.9999999230187578
+        - 0
+        - 0
+        - 0.0003923805274375499
+        yaw_degrees: 0.04496349752435958
+      initial_success: false
+      plan_success: true
+      success: true
+      signals:
+        arm: left
+        arm_match: true
+        lifted: true
+        lift_delta: 0.09811371564865112
+        dist_cmd_tcp: 0.14070244929686138
+        dist_other_tcp: 0.5293551599516029
+      instruction: Scoop up the block with the left arm.
+      passed: true
+      oracle_info:
+        cluttered_table_info: []
+        texture_info:
+          wall_texture: null
+          table_texture: null
+        info:
+          '{A}': the block
+          '{a}': left
+        arm_select_scene:
+          version: jitter-v2
+          scene_seed: 100014
+          region: left
+          position:
+          - -0.012702007640585572
+          - 0.10874939109828186
+          - 0.842
+          quaternion:
+          - 0.9999999230187578
+          - 0
+          - 0
+          - 0.0003923805274375499
+          yaw_degrees: 0.04496349752435958
+        mode: left
+        signals:
+          arm_match: true
+          lifted: true
+      elapsed_seconds: 2.992937679984607
+    - seed: 200029
+      phase: candidate
+      mode: right
+      version: jitter-v2
+      initial_rgb:
+        head_camera: 18ae97f9df729a8d309843f8bdf564ae6c3047cec87adefad595cca30bababb4
+        left_camera: 89bf490932e2778a99285393126ff6e291707a9108f071eaa8b4ee112f96d493
+        right_camera: 9523ab6974964ba2466af6d992d33aa7ac4576c38740c83173e45479401adb85
+      initial_pose:
+      - -0.01270310953259468
+      - 0.10874855518341064
+      - 0.8400004506111145
+      - 0.9999999403953552
+      - 4.068805537826847e-06
+      - -5.471868917084066e-06
+      - 0.0003924231859855354
+      scene:
+        version: jitter-v2
+        scene_seed: 100014
+        region: left
+        position:
+        - -0.012702007640585572
+        - 0.10874939109828186
+        - 0.842
+        quaternion:
+        - 0.9999999230187578
+        - 0
+        - 0
+        - 0.0003923805274375499
+        yaw_degrees: 0.04496349752435958
+      initial_success: false
+      plan_success: true
+      success: true
+      signals:
+        arm: right
+        arm_match: true
+        lifted: true
+        lift_delta: 0.09864932298660278
+        dist_cmd_tcp: 0.1408296866231287
+        dist_other_tcp: 0.507622557498658
+      instruction: Scoop up the block with the right arm.
+      passed: true
+      oracle_info:
+        cluttered_table_info: []
+        texture_info:
+          wall_texture: null
+          table_texture: null
+        info:
+          '{A}': the block
+          '{a}': right
+        arm_select_scene:
+          version: jitter-v2
+          scene_seed: 100014
+          region: left
+          position:
+          - -0.012702007640585572
+          - 0.10874939109828186
+          - 0.842
+          quaternion:
+          - 0.9999999230187578
+          - 0
+          - 0
+          - 0.0003923805274375499
+          yaw_degrees: 0.04496349752435958
+        mode: right
+        signals:
+          arm_match: true
+          lifted: true
+      elapsed_seconds: 2.749068867007736
+    - seed: 200024
+      phase: repeat
+      mode: left
+      version: jitter-v2
+      initial_rgb:
+        head_camera: 40a76fd67d2353c9d159410dfb99e900c6f69757a3025da708e65452ccb72a80
+        left_camera: 216a70e372a8e3ef0a526f290fb0479b9525e790ce0669d3211671f606baf868
+        right_camera: a45855bd090df03cb1021d7b90fc56c4e1c69eeb802c09276dc67daeec188389
+      initial_pose:
+      - 0.0017956877127289772
+      - 0.10150174796581268
+      - 0.8400006294250488
+      - 0.9999505281448364
+      - 5.674747626471799e-06
+      - -5.731022611143999e-06
+      - -0.009956208989024162
+      scene:
+        version: jitter-v2
+        scene_seed: 100012
+        region: center
+        position:
+        - 0.0017968529299423426
+        - 0.10150286706251149
+        - 0.842
+        quaternion:
+        - 0.9999504347402883
+        - 0
+        - 0
+        - -0.009956307684496306
+        yaw_degrees: -1.1409276698983268
+      initial_success: false
+      plan_success: true
+      success: true
+      signals:
+        arm: left
+        arm_match: true
+        lifted: true
+        lift_delta: 0.09853023290634155
+        dist_cmd_tcp: 0.14078673079044116
+        dist_other_tcp: 0.5153482806452047
+      instruction: With the left arm, grab the block.
+      passed: true
+      oracle_info:
+        cluttered_table_info: []
+        texture_info:
+          wall_texture: null
+          table_texture: null
+        info:
+          '{A}': the block
+          '{a}': left
+        arm_select_scene:
+          version: jitter-v2
+          scene_seed: 100012
+          region: center
+          position:
+          - 0.0017968529299423426
+          - 0.10150286706251149
+          - 0.842
+          quaternion:
+          - 0.9999504347402883
+          - 0
+          - 0
+          - -0.009956307684496306
+          yaw_degrees: -1.1409276698983268
+        mode: left
+        signals:
+          arm_match: true
+          lifted: true
+      elapsed_seconds: 2.998097058007261
+    - seed: 200024
+      phase: wrong-arm
+      mode: left
+      version: jitter-v2
+      initial_rgb:
+        head_camera: 40a76fd67d2353c9d159410dfb99e900c6f69757a3025da708e65452ccb72a80
+        left_camera: 216a70e372a8e3ef0a526f290fb0479b9525e790ce0669d3211671f606baf868
+        right_camera: a45855bd090df03cb1021d7b90fc56c4e1c69eeb802c09276dc67daeec188389
+      initial_pose:
+      - 0.0017956877127289772
+      - 0.10150174796581268
+      - 0.8400006294250488
+      - 0.9999505281448364
+      - 5.674747626471799e-06
+      - -5.731022611143999e-06
+      - -0.009956208989024162
+      scene:
+        version: jitter-v2
+        scene_seed: 100012
+        region: center
+        position:
+        - 0.0017968529299423426
+        - 0.10150286706251149
+        - 0.842
+        quaternion:
+        - 0.9999504347402883
+        - 0
+        - 0
+        - -0.009956307684496306
+        yaw_degrees: -1.1409276698983268
+      initial_success: false
+      plan_success: true
+      success: false
+      signals:
+        arm: left
+        arm_match: false
+        lifted: true
+        lift_delta: 0.09866315126419067
+        dist_cmd_tcp: 0.5111184088495826
+        dist_other_tcp: 0.14073177325114083
+      instruction: With the left arm, grab the block.
+      passed: true
+      oracle_info:
+        cluttered_table_info: []
+        texture_info:
+          wall_texture: null
+          table_texture: null
+        info:
+          '{A}': the block
+          '{a}': left
+        arm_select_scene:
+          version: jitter-v2
+          scene_seed: 100012
+          region: center
+          position:
+          - 0.0017968529299423426
+          - 0.10150286706251149
+          - 0.842
+          quaternion:
+          - 0.9999504347402883
+          - 0
+          - 0
+          - -0.009956307684496306
+          yaw_degrees: -1.1409276698983268
+        mode: left
+        signals:
+          arm_match: false
+          lifted: true
+      elapsed_seconds: 3.01105150100193
+    - seed: 200025
+      phase: repeat
+      mode: right
+      version: jitter-v2
+      initial_rgb:
+        head_camera: 40a76fd67d2353c9d159410dfb99e900c6f69757a3025da708e65452ccb72a80
+        left_camera: 216a70e372a8e3ef0a526f290fb0479b9525e790ce0669d3211671f606baf868
+        right_camera: a45855bd090df03cb1021d7b90fc56c4e1c69eeb802c09276dc67daeec188389
+      initial_pose:
+      - 0.0017956877127289772
+      - 0.10150174796581268
+      - 0.8400006294250488
+      - 0.9999505281448364
+      - 5.674747626471799e-06
+      - -5.731022611143999e-06
+      - -0.009956208989024162
+      scene:
+        version: jitter-v2
+        scene_seed: 100012
+        region: center
+        position:
+        - 0.0017968529299423426
+        - 0.10150286706251149
+        - 0.842
+        quaternion:
+        - 0.9999504347402883
+        - 0
+        - 0
+        - -0.009956307684496306
+        yaw_degrees: -1.1409276698983268
+      initial_success: false
+      plan_success: true
+      success: true
+      signals:
+        arm: right
+        arm_match: true
+        lifted: true
+        lift_delta: 0.09825795888900757
+        dist_cmd_tcp: 0.14085448405014683
+        dist_other_tcp: 0.51066585540766
+      instruction: With the right arm, grab the block.
+      passed: true
+      oracle_info:
+        cluttered_table_info: []
+        texture_info:
+          wall_texture: null
+          table_texture: null
+        info:
+          '{A}': the block
+          '{a}': right
+        arm_select_scene:
+          version: jitter-v2
+          scene_seed: 100012
+          region: center
+          position:
+          - 0.0017968529299423426
+          - 0.10150286706251149
+          - 0.842
+          quaternion:
+          - 0.9999504347402883
+          - 0
+          - 0
+          - -0.009956307684496306
+          yaw_degrees: -1.1409276698983268
+        mode: right
+        signals:
+          arm_match: true
+          lifted: true
+      elapsed_seconds: 3.020753065997269
+    - seed: 200025
+      phase: wrong-arm
+      mode: right
+      version: jitter-v2
+      initial_rgb:
+        head_camera: 40a76fd67d2353c9d159410dfb99e900c6f69757a3025da708e65452ccb72a80
+        left_camera: 216a70e372a8e3ef0a526f290fb0479b9525e790ce0669d3211671f606baf868
+        right_camera: a45855bd090df03cb1021d7b90fc56c4e1c69eeb802c09276dc67daeec188389
+      initial_pose:
+      - 0.0017956877127289772
+      - 0.10150174796581268
+      - 0.8400006294250488
+      - 0.9999505281448364
+      - 5.674747626471799e-06
+      - -5.731022611143999e-06
+      - -0.009956208989024162
+      scene:
+        version: jitter-v2
+        scene_seed: 100012
+        region: center
+        position:
+        - 0.0017968529299423426
+        - 0.10150286706251149
+        - 0.842
+        quaternion:
+        - 0.9999504347402883
+        - 0
+        - 0
+        - -0.009956307684496306
+        yaw_degrees: -1.1409276698983268
+      initial_success: false
+      plan_success: true
+      success: false
+      signals:
+        arm: right
+        arm_match: false
+        lifted: true
+        lift_delta: 0.09842556715011597
+        dist_cmd_tcp: 0.5153397055473686
+        dist_other_tcp: 0.14070462308540047
+      instruction: With the right arm, grab the block.
+      passed: true
+      oracle_info:
+        cluttered_table_info: []
+        texture_info:
+          wall_texture: null
+          table_texture: null
+        info:
+          '{A}': the block
+          '{a}': right
+        arm_select_scene:
+          version: jitter-v2
+          scene_seed: 100012
+          region: center
+          position:
+          - 0.0017968529299423426
+          - 0.10150286706251149
+          - 0.842
+          quaternion:
+          - 0.9999504347402883
+          - 0
+          - 0
+          - -0.009956307684496306
+          yaw_degrees: -1.1409276698983268
+        mode: right
+        signals:
+          arm_match: false
+          lifted: true
+      elapsed_seconds: 2.6971842189959716
+    - seed: 200026
+      phase: repeat
+      mode: left
+      version: jitter-v2
+      initial_rgb:
+        head_camera: 43ed2811ffbb7c832a707b995953cdeb10e51119642fa2d65a658d4bffa9036d
+        left_camera: e91eea6192d4298fdc5c05c938644d50fea245a749f79c64842651ede7f044a3
+        right_camera: df15820050def1f33830e44b18d3c05f976e83b25ed467cd6d9e7b6a4ad4854e
+      initial_pose:
+      - 0.00847791787236929
+      - 0.11879029124975204
+      - 0.8400005102157593
+      - 0.99968022108078
+      - 4.365175300335977e-06
+      - -5.636981313728029e-06
+      - -0.025288252159953117
+      scene:
+        version: jitter-v2
+        scene_seed: 100013
+        region: right
+        position:
+        - 0.00847906910647098
+        - 0.11879113783280872
+        - 0.842
+        quaternion:
+        - 0.999680200062479
+        - 0
+        - 0
+        - -0.02528828984019701
+        yaw_degrees: -2.898133505452141
+      initial_success: false
+      plan_success: true
+      success: true
+      signals:
+        arm: left
+        arm_match: true
+        lifted: true
+        lift_delta: 0.0983542799949646
+        dist_cmd_tcp: 0.1407381871141341
+        dist_other_tcp: 0.526072582622955
+      instruction: Let the left arm grab the block.
+      passed: true
+      oracle_info:
+        cluttered_table_info: []
+        texture_info:
+          wall_texture: null
+          table_texture: null
+        info:
+          '{A}': the block
+          '{a}': left
+        arm_select_scene:
+          version: jitter-v2
+          scene_seed: 100013
+          region: right
+          position:
+          - 0.00847906910647098
+          - 0.11879113783280872
+          - 0.842
+          quaternion:
+          - 0.999680200062479
+          - 0
+          - 0
+          - -0.02528828984019701
+          yaw_degrees: -2.898133505452141
+        mode: left
+        signals:
+          arm_match: true
+          lifted: true
+      elapsed_seconds: 3.049029736983357
+    - seed: 200026
+      phase: wrong-arm
+      mode: left
+      version: jitter-v2
+      initial_rgb:
+        head_camera: 43ed2811ffbb7c832a707b995953cdeb10e51119642fa2d65a658d4bffa9036d
+        left_camera: e91eea6192d4298fdc5c05c938644d50fea245a749f79c64842651ede7f044a3
+        right_camera: df15820050def1f33830e44b18d3c05f976e83b25ed467cd6d9e7b6a4ad4854e
+      initial_pose:
+      - 0.00847791787236929
+      - 0.11879029124975204
+      - 0.8400005102157593
+      - 0.99968022108078
+      - 4.365175300335977e-06
+      - -5.636981313728029e-06
+      - -0.025288252159953117
+      scene:
+        version: jitter-v2
+        scene_seed: 100013
+        region: right
+        position:
+        - 0.00847906910647098
+        - 0.11879113783280872
+        - 0.842
+        quaternion:
+        - 0.999680200062479
+        - 0
+        - 0
+        - -0.02528828984019701
+        yaw_degrees: -2.898133505452141
+      initial_success: false
+      plan_success: true
+      success: false
+      signals:
+        arm: left
+        arm_match: false
+        lifted: true
+        lift_delta: 0.09853851795196533
+        dist_cmd_tcp: 0.5283446842527018
+        dist_other_tcp: 0.14089386907679802
+      instruction: Let the left arm grab the block.
+      passed: true
+      oracle_info:
+        cluttered_table_info: []
+        texture_info:
+          wall_texture: null
+          table_texture: null
+        info:
+          '{A}': the block
+          '{a}': left
+        arm_select_scene:
+          version: jitter-v2
+          scene_seed: 100013
+          region: right
+          position:
+          - 0.00847906910647098
+          - 0.11879113783280872
+          - 0.842
+          quaternion:
+          - 0.999680200062479
+          - 0
+          - 0
+          - -0.02528828984019701
+          yaw_degrees: -2.898133505452141
+        mode: left
+        signals:
+          arm_match: false
+          lifted: true
+      elapsed_seconds: 3.030495796003379
+    - seed: 200027
+      phase: repeat
+      mode: right
+      version: jitter-v2
+      initial_rgb:
+        head_camera: 43ed2811ffbb7c832a707b995953cdeb10e51119642fa2d65a658d4bffa9036d
+        left_camera: e91eea6192d4298fdc5c05c938644d50fea245a749f79c64842651ede7f044a3
+        right_camera: df15820050def1f33830e44b18d3c05f976e83b25ed467cd6d9e7b6a4ad4854e
+      initial_pose:
+      - 0.00847791787236929
+      - 0.11879029124975204
+      - 0.8400005102157593
+      - 0.99968022108078
+      - 4.365175300335977e-06
+      - -5.636981313728029e-06
+      - -0.025288252159953117
+      scene:
+        version: jitter-v2
+        scene_seed: 100013
+        region: right
+        position:
+        - 0.00847906910647098
+        - 0.11879113783280872
+        - 0.842
+        quaternion:
+        - 0.999680200062479
+        - 0
+        - 0
+        - -0.02528828984019701
+        yaw_degrees: -2.898133505452141
+      initial_success: false
+      plan_success: true
+      success: true
+      signals:
+        arm: right
+        arm_match: true
+        lifted: true
+        lift_delta: 0.09835320711135864
+        dist_cmd_tcp: 0.14036971524683597
+        dist_other_tcp: 0.528403715788731
+      instruction: Let the right arm grab the block.
+      passed: true
+      oracle_info:
+        cluttered_table_info: []
+        texture_info:
+          wall_texture: null
+          table_texture: null
+        info:
+          '{A}': the block
+          '{a}': right
+        arm_select_scene:
+          version: jitter-v2
+          scene_seed: 100013
+          region: right
+          position:
+          - 0.00847906910647098
+          - 0.11879113783280872
+          - 0.842
+          quaternion:
+          - 0.999680200062479
+          - 0
+          - 0
+          - -0.02528828984019701
+          yaw_degrees: -2.898133505452141
+        mode: right
+        signals:
+          arm_match: true
+          lifted: true
+      elapsed_seconds: 3.1244715499924496
+    - seed: 200027
+      phase: wrong-arm
+      mode: right
+      version: jitter-v2
+      initial_rgb:
+        head_camera: 43ed2811ffbb7c832a707b995953cdeb10e51119642fa2d65a658d4bffa9036d
+        left_camera: e91eea6192d4298fdc5c05c938644d50fea245a749f79c64842651ede7f044a3
+        right_camera: df15820050def1f33830e44b18d3c05f976e83b25ed467cd6d9e7b6a4ad4854e
+      initial_pose:
+      - 0.00847791787236929
+      - 0.11879029124975204
+      - 0.8400005102157593
+      - 0.99968022108078
+      - 4.365175300335977e-06
+      - -5.636981313728029e-06
+      - -0.025288252159953117
+      scene:
+        version: jitter-v2
+        scene_seed: 100013
+        region: right
+        position:
+        - 0.00847906910647098
+        - 0.11879113783280872
+        - 0.842
+        quaternion:
+        - 0.999680200062479
+        - 0
+        - 0
+        - -0.02528828984019701
+        yaw_degrees: -2.898133505452141
+      initial_success: false
+      plan_success: true
+      success: false
+      signals:
+        arm: right
+        arm_match: false
+        lifted: true
+        lift_delta: 0.0984501838684082
+        dist_cmd_tcp: 0.5263573557064263
+        dist_other_tcp: 0.14102383957832385
+      instruction: Let the right arm grab the block.
+      passed: true
+      oracle_info:
+        cluttered_table_info: []
+        texture_info:
+          wall_texture: null
+          table_texture: null
+        info:
+          '{A}': the block
+          '{a}': right
+        arm_select_scene:
+          version: jitter-v2
+          scene_seed: 100013
+          region: right
+          position:
+          - 0.00847906910647098
+          - 0.11879113783280872
+          - 0.842
+          quaternion:
+          - 0.999680200062479
+          - 0
+          - 0
+          - -0.02528828984019701
+          yaw_degrees: -2.898133505452141
+        mode: right
+        signals:
+          arm_match: false
+          lifted: true
+      elapsed_seconds: 2.971147956995992
+    - seed: 200028
+      phase: repeat
+      mode: left
+      version: jitter-v2
+      initial_rgb:
+        head_camera: 18ae97f9df729a8d309843f8bdf564ae6c3047cec87adefad595cca30bababb4
+        left_camera: 89bf490932e2778a99285393126ff6e291707a9108f071eaa8b4ee112f96d493
+        right_camera: 9523ab6974964ba2466af6d992d33aa7ac4576c38740c83173e45479401adb85
+      initial_pose:
+      - -0.01270310953259468
+      - 0.10874855518341064
+      - 0.8400004506111145
+      - 0.9999999403953552
+      - 4.068805537826847e-06
+      - -5.471868917084066e-06
+      - 0.0003924231859855354
+      scene:
+        version: jitter-v2
+        scene_seed: 100014
+        region: left
+        position:
+        - -0.012702007640585572
+        - 0.10874939109828186
+        - 0.842
+        quaternion:
+        - 0.9999999230187578
+        - 0
+        - 0
+        - 0.0003923805274375499
+        yaw_degrees: 0.04496349752435958
+      initial_success: false
+      plan_success: true
+      success: true
+      signals:
+        arm: left
+        arm_match: true
+        lifted: true
+        lift_delta: 0.09817832708358765
+        dist_cmd_tcp: 0.14088284758493821
+        dist_other_tcp: 0.5300181238221697
+      instruction: Scoop up the block with the left arm.
+      passed: true
+      oracle_info:
+        cluttered_table_info: []
+        texture_info:
+          wall_texture: null
+          table_texture: null
+        info:
+          '{A}': the block
+          '{a}': left
+        arm_select_scene:
+          version: jitter-v2
+          scene_seed: 100014
+          region: left
+          position:
+          - -0.012702007640585572
+          - 0.10874939109828186
+          - 0.842
+          quaternion:
+          - 0.9999999230187578
+          - 0
+          - 0
+          - 0.0003923805274375499
+          yaw_degrees: 0.04496349752435958
+        mode: left
+        signals:
+          arm_match: true
+          lifted: true
+      elapsed_seconds: 2.9715980279725045
+    - seed: 200028
+      phase: wrong-arm
+      mode: left
+      version: jitter-v2
+      initial_rgb:
+        head_camera: 18ae97f9df729a8d309843f8bdf564ae6c3047cec87adefad595cca30bababb4
+        left_camera: 89bf490932e2778a99285393126ff6e291707a9108f071eaa8b4ee112f96d493
+        right_camera: 9523ab6974964ba2466af6d992d33aa7ac4576c38740c83173e45479401adb85
+      initial_pose:
+      - -0.01270310953259468
+      - 0.10874855518341064
+      - 0.8400004506111145
+      - 0.9999999403953552
+      - 4.068805537826847e-06
+      - -5.471868917084066e-06
+      - 0.0003924231859855354
+      scene:
+        version: jitter-v2
+        scene_seed: 100014
+        region: left
+        position:
+        - -0.012702007640585572
+        - 0.10874939109828186
+        - 0.842
+        quaternion:
+        - 0.9999999230187578
+        - 0
+        - 0
+        - 0.0003923805274375499
+        yaw_degrees: 0.04496349752435958
+      initial_success: false
+      plan_success: true
+      success: false
+      signals:
+        arm: left
+        arm_match: false
+        lifted: true
+        lift_delta: 0.09836840629577637
+        dist_cmd_tcp: 0.509519951099416
+        dist_other_tcp: 0.14182233860359011
+      instruction: Scoop up the block with the left arm.
+      passed: true
+      oracle_info:
+        cluttered_table_info: []
+        texture_info:
+          wall_texture: null
+          table_texture: null
+        info:
+          '{A}': the block
+          '{a}': left
+        arm_select_scene:
+          version: jitter-v2
+          scene_seed: 100014
+          region: left
+          position:
+          - -0.012702007640585572
+          - 0.10874939109828186
+          - 0.842
+          quaternion:
+          - 0.9999999230187578
+          - 0
+          - 0
+          - 0.0003923805274375499
+          yaw_degrees: 0.04496349752435958
+        mode: left
+        signals:
+          arm_match: false
+          lifted: true
+      elapsed_seconds: 3.0925505539926235
+    - seed: 200029
+      phase: repeat
+      mode: right
+      version: jitter-v2
+      initial_rgb:
+        head_camera: 18ae97f9df729a8d309843f8bdf564ae6c3047cec87adefad595cca30bababb4
+        left_camera: 89bf490932e2778a99285393126ff6e291707a9108f071eaa8b4ee112f96d493
+        right_camera: 9523ab6974964ba2466af6d992d33aa7ac4576c38740c83173e45479401adb85
+      initial_pose:
+      - -0.01270310953259468
+      - 0.10874855518341064
+      - 0.8400004506111145
+      - 0.9999999403953552
+      - 4.068805537826847e-06
+      - -5.471868917084066e-06
+      - 0.0003924231859855354
+      scene:
+        version: jitter-v2
+        scene_seed: 100014
+        region: left
+        position:
+        - -0.012702007640585572
+        - 0.10874939109828186
+        - 0.842
+        quaternion:
+        - 0.9999999230187578
+        - 0
+        - 0
+        - 0.0003923805274375499
+        yaw_degrees: 0.04496349752435958
+      initial_success: false
+      plan_success: true
+      success: true
+      signals:
+        arm: right
+        arm_match: true
+        lifted: true
+        lift_delta: 0.09854120016098022
+        dist_cmd_tcp: 0.14073415868114147
+        dist_other_tcp: 0.5081849852303034
+      instruction: Scoop up the block with the right arm.
+      passed: true
+      oracle_info:
+        cluttered_table_info: []
+        texture_info:
+          wall_texture: null
+          table_texture: null
+        info:
+          '{A}': the block
+          '{a}': right
+        arm_select_scene:
+          version: jitter-v2
+          scene_seed: 100014
+          region: left
+          position:
+          - -0.012702007640585572
+          - 0.10874939109828186
+          - 0.842
+          quaternion:
+          - 0.9999999230187578
+          - 0
+          - 0
+          - 0.0003923805274375499
+          yaw_degrees: 0.04496349752435958
+        mode: right
+        signals:
+          arm_match: true
+          lifted: true
+      elapsed_seconds: 3.0489187329949345
+    - seed: 200029
+      phase: wrong-arm
+      mode: right
+      version: jitter-v2
+      initial_rgb:
+        head_camera: 18ae97f9df729a8d309843f8bdf564ae6c3047cec87adefad595cca30bababb4
+        left_camera: 89bf490932e2778a99285393126ff6e291707a9108f071eaa8b4ee112f96d493
+        right_camera: 9523ab6974964ba2466af6d992d33aa7ac4576c38740c83173e45479401adb85
+      initial_pose:
+      - -0.01270310953259468
+      - 0.10874855518341064
+      - 0.8400004506111145
+      - 0.9999999403953552
+      - 4.068805537826847e-06
+      - -5.471868917084066e-06
+      - 0.0003924231859855354
+      scene:
+        version: jitter-v2
+        scene_seed: 100014
+        region: left
+        position:
+        - -0.012702007640585572
+        - 0.10874939109828186
+        - 0.842
+        quaternion:
+        - 0.9999999230187578
+        - 0
+        - 0
+        - 0.0003923805274375499
+        yaw_degrees: 0.04496349752435958
+      initial_success: false
+      plan_success: true
+      success: false
+      signals:
+        arm: right
+        arm_match: false
+        lifted: true
+        lift_delta: 0.09806948900222778
+        dist_cmd_tcp: 0.5296182591252536
+        dist_other_tcp: 0.1409653981432938
+      instruction: Scoop up the block with the right arm.
+      passed: true
+      oracle_info:
+        cluttered_table_info: []
+        texture_info:
+          wall_texture: null
+          table_texture: null
+        info:
+          '{A}': the block
+          '{a}': right
+        arm_select_scene:
+          version: jitter-v2
+          scene_seed: 100014
+          region: left
+          position:
+          - -0.012702007640585572
+          - 0.10874939109828186
+          - 0.842
+          quaternion:
+          - 0.9999999230187578
+          - 0
+          - 0
+          - 0.0003923805274375499
+          yaw_degrees: 0.04496349752435958
+        mode: right
+        signals:
+          arm_match: false
+          lifted: true
+      elapsed_seconds: 2.991871425998397
+    unique_candidate_scenes: 3
+    repeat_initial_rgb_match: true
+    note: Small oracle feasibility probe, not policy success rates; all candidate
+      failures retained.
+  provenance:
+    argv:
+    - tools/probe_arm_select_variation.py
+    - --output
+    - outputs/policy-eval/arm-select-v2-formal-12blocks-002
+    - --blocks
+    - '3'
+    - --seed-start
+    - '200024'
+    python: /home/xichen6/miniconda3/envs/RoboTwin/bin/python
+    sources:
+      /home/xichen6/Documents/repos/robotwin-if/tasks/envs/arm_select.py: bf60650a26085b2acf873ebfd8181c4cedc0101ac46fdef41297160a9cd7d60d
+      /home/xichen6/Documents/repos/robotwin-if/policies/xvla/eval.py: fd9023de4a003d50d1686262331c0611ae7d836cdd8e6a1870cbe43089906262
+      /home/xichen6/Documents/repos/robotwin-if/third_party/robotwin/task_config/demo_clean_arm_select_v2.yml: 9f0983a73d0cb0ac34d39649db5e4a18cf2785687d44bc2d5c7ac6c94f707412
+      /home/xichen6/Documents/repos/robotwin-if/tools/probe_arm_select_variation.py: 74221fed1a1f86dde64008a649e409ee168e0c32ea8ce24e27f7cc1c82b511b5
+    simulators: 1
+    model_servers: 0
+  supervisor:
+    complete: true
+    exit_code: 0
+    elapsed_seconds: 108.15998077392578
+  artifact_sha256:
+    report.json: 64ce50a3f91d85799bee1e50ce70cca0fb2d0eb4d83841b343f980dee7ffe3ab
+    episodes.json: bc3f80faf467bc26873e56074dd795439d6a957c2010a7c96dbcae6a8df58ecd
+    provenance.json: 51b63bfb7abc90378644b1c096dd0cd5ed7dc1abe98280c5e21524488038d61e
+    supervisor.json: 41d89e0b617243e269faeef735a79440e885f876a5d841914275a66635e98e8f

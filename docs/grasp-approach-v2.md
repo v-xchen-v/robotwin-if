@@ -63,11 +63,14 @@ supervisor 每 10 秒记录 GPU 状态，查询超时、显存超过 40,000 MiB�
 ```text
 --task grasp_cube_approach
 --task-config demo_clean_grasp_approach_v2
---seed-manifest outputs/policy-eval/grasp-approach-v2-probe-new/grasp_cube_approach.json
+--seed-manifest seed-manifests/if-ext-v2-12-per-mode/grasp_cube_approach.json
 --blocks 12
 ```
 
 模型连接参数沿用各 policy 配置。旧 `demo_clean` manifest 与新配置不能混用。
+正式评测使用 [七任务 12-block 清单](../seed-manifests/if-ext-v2-12-per-mode/README.md)，
+其中 grasp v2 的 seeds 独立于调试集。已验证的 12-block 开发集和完整 oracle 证据另存于
+[v2 manifest 目录](../seed-manifests/if-ext-v2-dev-12-per-mode/README.md)。
 当前渲染同步/oracle 缓存优化只对 `demo_clean` 启用，此试验配置使用原生执行路径。
 小样本 oracle 预检验证的是场景可执行性；扩大到 50 blocks 前应验证另一批预先固定的 seeds，
 六个 policy 使用同一份提前确定的完整 blocks，不按 policy 成败挑选场景。
