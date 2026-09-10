@@ -68,6 +68,7 @@ supervisor 每 10 秒记录 GPU 状态，查询超时、显存超过 40,000 MiB�
 ```
 
 模型连接参数沿用各 policy 配置。旧 `demo_clean` manifest 与新配置不能混用。
+当前渲染同步/oracle 缓存优化只对 `demo_clean` 启用，此试验配置使用原生执行路径。
 小样本 oracle 预检验证的是场景可执行性；扩大到 50 blocks 前应验证另一批预先固定的 seeds，
 六个 policy 使用同一份提前确定的完整 blocks，不按 policy 成败挑选场景。
 
@@ -84,7 +85,7 @@ supervisor 每 10 秒记录 GPU 状态，查询超时、显存超过 40,000 MiB�
 - 6/6 重复抓取成功；6/6 错误方向反例实际抬起但被成功判据拒绝。
 - 12/12 配对场景的三路初始 RGB、方块/底座位姿、关节状态完全一致，句式只替换 top/side。
 - 2/2 fixed-v1 回归抓取成功，初始三路 RGB 与旧归档逐像素一致。
-- grasp 场景的 6 项 CPU 检查通过。
+- 28 项 CPU 检查通过（grasp 6、arm_select 8、共享 IF 评测 6、评测优化 8）。
 - 单 sim、零 server，38 回合共 167.1 秒；GPU 0 每 10 秒采样的显存最大值 5,194 MiB。
 
 通过预检的 manifest：

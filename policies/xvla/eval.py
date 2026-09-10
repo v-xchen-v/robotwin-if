@@ -23,6 +23,8 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO_ROOT))
 
 from if_benchmark.seed_contracts import IF_SEED_CONTRACTS, describe_seed  # noqa: E402
+from policies.evaluation import (add_evaluation_arguments, prepare_evaluation, setup_episode,
+                                 render_counters)  # noqa: E402
 from if_benchmark.seed_manifest import load_manifest, manifest_sha256  # noqa: E402
 from policies.xvla.outputs import camera_strip, episode_path, write_episode_artifacts, write_json  # noqa: E402
 
@@ -128,36 +130,10 @@ def _run_episode(env, config, client, args, seed, split, directory, block):
     raw_chunks, decoded_actions, measured_poses, request_proprio, latencies = [], [], [], [], []
     timings = []
     writer = None
-    stage = "oracle_setup"
+    stage = "episode_setup"
     try:
-        random.seed(seed)
-        env.setup_demo(now_ep_num=0, seed=seed, is_test=True, **config)
-        if record["mode"] is not None and str(env.mode) != record["mode"]:
-            raise RuntimeError("Oracle scene mode does not match the seed contract")
-        stage = "oracle_qualification"
-        info = deepcopy(env.play_once())
-        record["oracle_success"] = bool(env.plan_success and env.check_success())
-        write_json(path("_oracle.json"), info)
-        if not record["oracle_success"]:
-            raise RuntimeError("Exact seed failed oracle qualification; no seed substitution")
-        env.close_env()
-
-        stage = "policy_setup"
-        random.seed(seed)
-        env.setup_demo(now_ep_num=0, seed=seed, is_test=True, **config)
-        if record["mode"] is not None and str(env.mode) != record["mode"]:
-            raise RuntimeError("Policy scene mode does not match the seed contract")
-        # The arm scene must initialize its success baseline before policy control.
-        if args.task == "arm_select" and env._init_box_z is None:
-            raise RuntimeError("arm_select did not initialize its policy success baseline")
-        if hasattr(env, "start_policy_rollout"):
-            env.start_policy_rollout()
-        instruction = instruction_for(args.task, info, split, seed)
-        env.set_instruction(instruction)
-        record["instruction"] = instruction
-        record["step_limit"] = env.step_lim
+        instruction, obs = setup_episode(env, config, args, seed, split, record, path)
         client.reset()
-        obs = env.get_obs()
         np.savez_compressed(path("_initial_observation.npz"), proprio=encode_proprio(obs),
                             **{name: obs["observation"][name]["rgb"] for name in CAMERAS})
         writer = imageio.get_writer(path("_rollout.mp4"), fps=10, codec="libx264")
@@ -219,6 +195,7 @@ def _run_episode(env, config, client, args, seed, split, directory, block):
         except Exception as exc:
             record["status"] = "error"
             record["close_error"] = str(exc)
+        record["render_sync"] = render_counters(env)
         record["elapsed_seconds"] = time.monotonic() - started
         np.savez_compressed(path("_actions.npz"),
                             raw_actions=np.concatenate(raw_chunks) if raw_chunks else np.empty((0, 20)),
@@ -254,11 +231,11 @@ def parse_args():
     parser.add_argument("--denoising-steps", type=int, default=10)
     parser.add_argument("--request-timeout", type=float, default=120)
     parser.add_argument("--sim-gpu", default="1", help="CUDA_VISIBLE_DEVICES for simulation only")
+    add_evaluation_arguments(parser)
     args = parser.parse_args()
+    args.oracle_cache_dir = args.oracle_cache_dir.resolve()
     if not args.task.isidentifier() or Path(args.task_config).name != args.task_config:
         parser.error("Task and task-config must be simple names")
-    if args.task in IF_SEED_CONTRACTS and args.task not in ("arm_select", "grasp_cube_approach"):
-        parser.error("This runner currently supports arm_select and grasp_cube_approach as IF validation tasks")
     return args
 
 
@@ -293,6 +270,8 @@ def main():
             client = XVLAClient(args.server_url, args.request_timeout, args.denoising_steps,
                                 args.feedback, args.gripper_threshold)
             env, config = load_task(target, args.task, args.task_config)
+            metadata["evaluation_optimizations"] = prepare_evaluation(env, config, args, robotwin=target)
+            write_json(output / "run.json", metadata)
             write_json(output / "resolved_config.json", config)
             for index, seed in enumerate(seeds):
                 block = index // IF_SEED_CONTRACTS[args.task].block_size if manifest else None

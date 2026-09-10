@@ -91,6 +91,9 @@ class attribute_select(Base_Task):
         self._demo_kwargs = dict(kwags)
         super()._init_task_env_(**kwags)
         apply_if_eval_step_limit(self)
+        # Policy control starts after setup, without running the oracle.
+        self._init_z = {name: float(actor.get_pose().p[2]) for name, actor in
+                        (("target", self.target), ("distractor", self.distractor))}
 
     def load_actors(self):
         scene_seed = self._seed // 2

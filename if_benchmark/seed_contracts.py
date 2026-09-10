@@ -98,6 +98,20 @@ def contract_for(task):
         raise ValueError(f"unknown maintained IF task: {task!r}") from exc
 
 
+def observed_mode(task_name, task):
+    """Read the actual scene mode using the same labels as the seed contract."""
+    contract_for(task_name)
+    if task_name in ("bottle_verb", "arm_select", "grasp_cube_approach"):
+        return str(task.mode)
+    if task_name == "pick_diverse_object":
+        return str(task.target_familiarity)
+    if task_name == "attribute_select":
+        return f"{task.axis}:{task.AXIS_VALUES[task.axis][int(task.value)]}"
+    if task_name == "stack_sequence":
+        return ">".join(task.COLOR_NAMES[int(index)] for index in task.perm)
+    return str(task.direction)
+
+
 def describe_seed(task, seed):
     contract = contract_for(task)
     seed = _seed(seed)

@@ -1,16 +1,20 @@
-"""Policy grasp scoring observes first contact without executing the oracle."""
+"""Policy setup must support every IF mode without executing the oracle."""
 
 import ast
+import importlib
 from pathlib import Path
 from types import SimpleNamespace
 import sys
 import unittest
+from unittest.mock import patch
 
 import numpy as np
 import transforms3d as t3d
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
+from if_benchmark.seed_contracts import IF_SEED_CONTRACTS, observed_mode
+from tools.generate_if_seed_manifest import _observed_mode
 
 
 class BaseTask:
@@ -46,6 +50,55 @@ def task_class(name):
 
 
 class PolicyEvaluationTests(unittest.TestCase):
+    def test_runtime_modes_agree_with_qualification(self):
+        scenes = {
+            'bottle_verb': SimpleNamespace(mode='shake'),
+            'arm_select': SimpleNamespace(mode='right'),
+            'grasp_cube_approach': SimpleNamespace(mode='side'),
+            'pick_diverse_object': SimpleNamespace(target_familiarity='unseen'),
+            'attribute_select': SimpleNamespace(axis='decal', value=1, AXIS_VALUES={'decal': ('cat','dog')}),
+            'stack_sequence': SimpleNamespace(perm=[2,0,1], COLOR_NAMES=['red','green','blue']),
+            'place_relative': SimpleNamespace(direction='on_top'),
+        }
+        expected = ['shake','right','side','unseen','decal:dog','blue>red>green','on_top']
+        for (name, scene), mode in zip(scenes.items(), expected):
+            with self.subTest(task=name):
+                self.assertEqual(observed_mode(name, scene), mode)
+                self.assertEqual(observed_mode(name, scene), _observed_mode(name, scene))
+        with self.assertRaises(ValueError):
+            observed_mode('unknown', SimpleNamespace())
+
+    def test_all_six_clis_accept_all_seven_tasks_and_two_blocks(self):
+        for policy in ('xvla','lingbot_va','lingbot_vla','vlact','dm05','hy_vla'):
+            module = importlib.import_module(f'policies.{policy}.eval')
+            for task, contract in IF_SEED_CONTRACTS.items():
+                with self.subTest(policy=policy, task=task), patch.object(sys, 'argv', [
+                    'eval.py','--task',task,'--seed-manifest',
+                    str(ROOT/'seed-manifests/if-ext-v1-100-per-mode'/f'{task}.json'),
+                    '--blocks','2','--output-dir','unused-test-output']):
+                    select = module.select_seeds
+                    with patch.object(module, 'select_seeds', side_effect=InterruptedError) as selected:
+                        with self.assertRaises(InterruptedError):
+                            module.main()
+                    args = selected.call_args.args[0]
+                    seeds, manifest, split = select(args)
+                    self.assertEqual(len(seeds), 2 * contract.block_size)
+                    self.assertEqual(seeds, manifest['seeds'][:len(seeds)])
+                    self.assertEqual(split, 'unseen')
+
+    def test_attribute_target_distractor_and_reset_without_oracle(self):
+        cls = task_class('attribute_select')
+        cls._pair_ok = {50000: True}
+        task = cls()
+        task.setup_demo(seed=100000)
+        self.assertFalse(task.check_success())
+        task.other_position[2] += 0.1
+        self.assertFalse(task.check_success())
+        task.position[2] += 0.1
+        self.assertTrue(task.check_success())
+        task.setup_demo(seed=100001)
+        self.assertFalse(task.check_success())
+
     def test_grasp_policy_approach_is_observed_before_lift(self):
         cls = task_class('grasp_cube_approach')
         for seed, rotation in [(100000, t3d.euler.euler2quat(0, np.pi/2, 0)),

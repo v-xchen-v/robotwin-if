@@ -3,13 +3,11 @@
 
 import argparse
 from contextlib import redirect_stderr, redirect_stdout
-from copy import deepcopy
 from datetime import datetime, timezone
 import hashlib
 import json
 import os
 from pathlib import Path
-import random
 import sys
 import time
 import traceback
@@ -18,8 +16,10 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO_ROOT))
 
 from if_benchmark.seed_contracts import IF_SEED_CONTRACTS, describe_seed  # noqa: E402
+from policies.evaluation import (add_evaluation_arguments, prepare_evaluation, setup_episode,
+                                 render_counters)  # noqa: E402
 from if_benchmark.seed_manifest import manifest_sha256  # noqa: E402
-from policies.xvla.eval import git_identity, instruction_for, load_task, select_seeds  # noqa: E402
+from policies.xvla.eval import git_identity, load_task, select_seeds  # noqa: E402
 from policies.xvla.outputs import camera_strip, episode_path, write_json  # noqa: E402
 from policies.dm05.outputs import write_episode_artifacts  # noqa: E402
 
@@ -51,33 +51,10 @@ def _run_episode(env, config, client, args, seed, split, directory, block):
     reset_started = False
     writer = None
     started = time.monotonic()
-    stage = "oracle_setup"
+    stage = "episode_setup"
     try:
         print(f"DM05 task={args.task} seed={seed}", flush=True)
-        random.seed(seed)
-        env.setup_demo(now_ep_num=0, seed=seed, is_test=True, **config)
-        if record["mode"] is not None and str(env.mode) != record["mode"]:
-            raise RuntimeError("Oracle mode does not match exact seed")
-        stage = "oracle_qualification"
-        info = deepcopy(env.play_once())
-        record["oracle_success"] = bool(env.plan_success and env.check_success())
-        write_json(path("_oracle.json"), info)
-        if not record["oracle_success"]:
-            raise RuntimeError("Exact seed failed oracle qualification; no replacement")
-        env.close_env()
-        stage = "policy_setup"
-        random.seed(seed)
-        env.setup_demo(now_ep_num=0, seed=seed, is_test=True, **config)
-        if record["mode"] is not None and str(env.mode) != record["mode"]:
-            raise RuntimeError("Policy mode does not match exact seed")
-        if args.task == "arm_select" and env._init_box_z is None:
-            raise RuntimeError("arm_select success baseline is not initialized")
-        if hasattr(env, "start_policy_rollout"):
-            env.start_policy_rollout()
-        instruction = instruction_for(args.task, info, split, seed)
-        record.update(instruction=instruction, step_limit=env.step_lim)
-        env.set_instruction(instruction)
-        obs = env.get_obs()
+        instruction, obs = setup_episode(env, config, args, seed, split, record, path)
         np.savez_compressed(path("_initial_observation.npz"), proprio=encode_proprio(obs),
                             joint_state=obs["joint_action"]["vector"],
                             **{name: obs["observation"][name]["rgb"] for name in CAMERAS})
@@ -133,6 +110,7 @@ def _run_episode(env, config, client, args, seed, split, directory, block):
             env.close_env()
         except Exception as exc:
             record.update(status="error", close_error=str(exc))
+        record["render_sync"] = render_counters(env)
         record["elapsed_seconds"] = time.monotonic() - started
         np.savez_compressed(path("_actions.npz"), raw_actions=np.asarray(raw_chunks).reshape(-1, client.use_length, 14),
                             measured_joints=np.asarray(measured_joints).reshape(-1, 14),
@@ -159,11 +137,11 @@ def main():
     parser.add_argument("--blocks", type=int)
     parser.add_argument("--instruction-type", choices=("seen", "unseen", "task-name"))
     parser.add_argument("--sim-gpu", default="0")
+    add_evaluation_arguments(parser)
     args = parser.parse_args()
+    args.oracle_cache_dir = args.oracle_cache_dir.resolve()
     if not args.task.isidentifier() or Path(args.task_config).name != args.task_config:
         parser.error("Task and task-config must be simple names")
-    if args.task in IF_SEED_CONTRACTS and args.task not in ("arm_select", "grasp_cube_approach"):
-        parser.error("Initial IF validation currently supports arm_select and grasp_cube_approach")
     if args.task not in IF_SEED_CONTRACTS and args.instruction_type is None:
         args.instruction_type = "seen"  # Official native evaluation uses generated seen instructions.
     seeds, manifest, split = select_seeds(args)
@@ -196,6 +174,8 @@ def main():
             write_json(output / "run.json", metadata)
             env, config = load_task(target, args.task, args.task_config)
             config["policy_name"] = "dm05"
+            metadata["evaluation_optimizations"] = prepare_evaluation(env, config, args, robotwin=target)
+            write_json(output / "run.json", metadata)
             write_json(output / "resolved_config.json", config)
             for index, seed in enumerate(seeds):
                 block = index // IF_SEED_CONTRACTS[args.task].block_size if manifest else None
