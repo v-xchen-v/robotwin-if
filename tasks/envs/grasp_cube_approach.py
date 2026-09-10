@@ -72,6 +72,13 @@ class grasp_cube_approach(Base_Task):
     # under jitter (x flips the arm), so only sweep faces with jitter off.
     POSE_JITTER = False
     FIXED_XY = (0.0, -0.05)      # front-center, axis-aligned when jitter is off
+    # Optional paired translation experiment. The original fixed scene remains
+    # the default; use a separate task_config and a newly qualified manifest.
+    SCENE_VERSIONS = ("fixed-v1", "translate-v2")
+    V2_X_BINS = ((-0.01, -0.01 / 3), (-0.01 / 3, 0.01 / 3), (0.01 / 3, 0.01))
+    # The initial [-.06, -.04] trial failed top lifts in the left stratum;
+    # restrict y to the front half before qualifying any evaluation seeds.
+    V2_Y_RANGE = (-0.06, -0.05)
 
     # Side-grasp reachability levers (swept by tests/grasp_cube_approach/sweep_side.py to
     # push the horizontal grasp from ~73% toward ~90%). All failures are
@@ -107,8 +114,54 @@ class grasp_cube_approach(Base_Task):
     def setup_demo(self, is_test=False, **kwags):
         # Capture the seed so mode/scene derive purely from it (IF wiring).
         self._seed = kwags.get("seed", 0)
+        self.scene_version = kwags.pop("grasp_approach_scene_version", "fixed-v1")
+        if self.scene_version not in self.SCENE_VERSIONS:
+            raise ValueError(f"Unknown grasp_approach_scene_version: {self.scene_version!r}")
+        if self.scene_version == "translate-v2" and self.POSE_JITTER:
+            raise ValueError("translate-v2 cannot be combined with the legacy POSE_JITTER override")
         super()._init_task_env_(**kwags)
         apply_if_eval_step_limit(self)
+        self._init_cube_z = float(self.cube.get_pose().p[2])
+        self._policy_control = False
+        self._policy_approach_observed = False
+        if self.scene_version == "translate-v2":
+            self.info["grasp_approach_scene"] = dict(self._scene_spec)
+
+    @classmethod
+    def translation_xy(cls, scene_seed):
+        """Local RNG; sampling never receives the commanded approach direction."""
+        rng = np.random.RandomState(scene_seed)
+        stratum = scene_seed % len(cls.V2_X_BINS)
+        return (float(rng.uniform(*cls.V2_X_BINS[stratum])),
+                float(rng.uniform(*cls.V2_Y_RANGE)),
+                ("left", "center", "right")[stratum])
+
+    def execution_arm(self):
+        """v2 keeps the arm fixed even when the object crosses the centerline."""
+        if self.scene_version == "translate-v2":
+            return ArmTag("right")
+        return ArmTag("left" if self.cube.get_pose().p[0] < 0 else "right")
+
+    def start_policy_rollout(self):
+        """Observe the policy's grasp instead of using oracle-only telemetry."""
+        self._policy_control = True
+
+    def _observe_policy_approach(self):
+        # Capture the approach at first gripper contact, before the lift. Keep
+        # it while contact persists so rotating an already grasped cube cannot
+        # turn a wrong approach into a correct one. A released, unlifted cube
+        # allows a fresh attempt. Arm identity comes from current TCP distance.
+        contact = bool(self.get_gripper_actor_contact_position("cube"))
+        if not contact:
+            if float(self.cube.get_pose().p[2]) - self._init_cube_z <= self.LIFT_THRESH:
+                self._policy_approach_observed = False
+            return
+        if not self._policy_approach_observed:
+            cube_p = self.cube.get_pose().p
+            arm = min((ArmTag("left"), ArmTag("right")),
+                      key=lambda tag: np.linalg.norm(np.asarray(self.get_arm_pose(tag)[:3]) - cube_p))
+            self._approach_axis_z = self._read_approach_axis_z(arm)
+            self._policy_approach_observed = True
 
     def load_actors(self):
         # IF wiring: scene depends only on seed//2 (a pair shares one scene);
@@ -126,7 +179,14 @@ class grasp_cube_approach(Base_Task):
 
         # One shared xy + yaw for riser and cube. Jittered for the spike's
         # reachability basin; fixed to FIXED_XY / axis-aligned for the task.
-        if self.POSE_JITTER:
+        if self.scene_version == "translate-v2":
+            x, y, region = self.translation_xy(scene_seed)
+            q = [1, 0, 0, 0]
+            self._scene_spec = {"version": self.scene_version, "scene_seed": scene_seed,
+                                "region": region, "cube_position": [x, y, cube_z],
+                                "riser_position": [x, y, riser_z], "quaternion": q,
+                                "yaw_degrees": 0.0, "oracle_arm": "right"}
+        elif self.POSE_JITTER:
             base = rand_pose(
                 xlim=[-0.05, 0.05],
                 ylim=[-0.1, 0.0],
@@ -170,12 +230,14 @@ class grasp_cube_approach(Base_Task):
         self._approach_axis_z = 0.0
 
     def _approach_phrase(self):
+        if self.scene_version == "translate-v2":
+            return "from the top" if self.mode == "top" else "from the side"
         pool = self.TOP_PHRASES if self.mode == "top" else self.SIDE_PHRASES
         return pool[(self._seed // 2) % len(pool)]
 
     def play_once(self):
         self._init_cube_z = float(self.cube.get_pose().p[2])
-        arm_tag = ArmTag("left" if self.cube.get_pose().p[0] < 0 else "right")
+        arm_tag = self.execution_arm()
         self.arm_tag = arm_tag
 
         if self.ORACLE_IDS is not None:
@@ -252,6 +314,8 @@ class grasp_cube_approach(Base_Task):
             oriented = az >= self.VERT_COS
         else:
             oriented = az <= self.HORIZ_COS
+        if self._policy_control and not self._policy_approach_observed:
+            oriented = False
         return lifted, oriented, lift_delta, az
 
     def eval_signals(self):
@@ -265,11 +329,14 @@ class grasp_cube_approach(Base_Task):
             "lifted": bool(lifted),
             "approach_axis_z": az,
             "lift_delta": lift_delta,
+            "policy_approach_observed": self._policy_approach_observed,
         }
 
     def check_success(self):
         # Strict AND: a *collectable demo* must both use the commanded approach
         # and lift the cube. Eval should prefer eval_signals() (split metric).
+        if self._policy_control:
+            self._observe_policy_approach()
         if self._init_cube_z is None:
             return False
         lifted, oriented, _, _ = self._compute_signals()

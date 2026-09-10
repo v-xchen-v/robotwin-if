@@ -72,6 +72,8 @@ def _run_episode(env, config, client, args, seed, split, directory, block):
             raise RuntimeError("Policy mode does not match exact seed")
         if args.task == "arm_select" and env._init_box_z is None:
             raise RuntimeError("arm_select success baseline is not initialized")
+        if hasattr(env, "start_policy_rollout"):
+            env.start_policy_rollout()
         instruction = instruction_for(args.task, info, split, seed)
         record.update(instruction=instruction, step_limit=env.step_lim)
         env.set_instruction(instruction)
@@ -161,8 +163,8 @@ def main():
     args = parser.parse_args()
     if not args.task.isidentifier() or Path(args.task_config).name != args.task_config:
         parser.error("Task and task-config must be simple names")
-    if args.task in IF_SEED_CONTRACTS and args.task != "arm_select":
-        parser.error("Initial IF validation currently supports arm_select")
+    if args.task in IF_SEED_CONTRACTS and args.task not in ("arm_select", "grasp_cube_approach"):
+        parser.error("Initial IF validation currently supports arm_select and grasp_cube_approach")
     if args.task not in IF_SEED_CONTRACTS and args.instruction_type is None:
         args.instruction_type = "seen"  # Official native evaluation uses generated seen instructions.
     seeds, manifest, split = select_seeds(args)

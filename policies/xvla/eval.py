@@ -87,9 +87,11 @@ def instruction_for(task, episode_info, split, seed):
     from generate_episode_instructions import generate_episode_descriptions
     state = random.getstate()
     try:
-        # Experimental arm pairs share a template, changing only the arm word.
-        paired = (task == "arm_select" and
-                  episode_info.get("arm_select_scene", {}).get("version") == "jitter-v2")
+        # Experimental pairs use one template, changing only the tested word.
+        paired = ((task == "arm_select" and
+                   episode_info.get("arm_select_scene", {}).get("version") == "jitter-v2") or
+                  (task == "grasp_cube_approach" and
+                   episode_info.get("grasp_approach_scene", {}).get("version") == "translate-v2"))
         random.seed(seed // 2 if paired else seed)
         descriptions = generate_episode_descriptions(task, [episode_info["info"]], 1)[0][split]
     finally:
@@ -145,10 +147,11 @@ def _run_episode(env, config, client, args, seed, split, directory, block):
         env.setup_demo(now_ep_num=0, seed=seed, is_test=True, **config)
         if record["mode"] is not None and str(env.mode) != record["mode"]:
             raise RuntimeError("Policy scene mode does not match the seed contract")
-        # This runner currently validates only arm_select among the IF tasks.
-        # Its scene must initialize the success baseline before policy control.
+        # The arm scene must initialize its success baseline before policy control.
         if args.task == "arm_select" and env._init_box_z is None:
             raise RuntimeError("arm_select did not initialize its policy success baseline")
+        if hasattr(env, "start_policy_rollout"):
+            env.start_policy_rollout()
         instruction = instruction_for(args.task, info, split, seed)
         env.set_instruction(instruction)
         record["instruction"] = instruction
@@ -254,8 +257,8 @@ def parse_args():
     args = parser.parse_args()
     if not args.task.isidentifier() or Path(args.task_config).name != args.task_config:
         parser.error("Task and task-config must be simple names")
-    if args.task in IF_SEED_CONTRACTS and args.task != "arm_select":
-        parser.error("This initial runner currently supports arm_select as its IF validation task")
+    if args.task in IF_SEED_CONTRACTS and args.task not in ("arm_select", "grasp_cube_approach"):
+        parser.error("This runner currently supports arm_select and grasp_cube_approach as IF validation tasks")
     return args
 
 

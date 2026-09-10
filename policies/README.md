@@ -5,6 +5,9 @@
 `arm_select` 的可选场景变化配置、双臂预检与独立 manifest 使用方式见
 [arm_select v2 试验说明](../docs/arm-select-v2.md)。
 
+`grasp_cube_approach` 的可选平移配置、顶抓/侧抓配对预检见
+[grasp approach v2 试验说明](../docs/grasp-approach-v2.md)。
+
 ```text
 policies/
 ├── README.md
