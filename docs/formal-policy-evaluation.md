@@ -20,6 +20,17 @@ python tools/run_formal_policy_suite.py prepare \
   --run-dir outputs/policy-eval/if-wide-example
 ```
 
+## 多机分片
+
+宽范围运行最初将 grasp 的六个 policies 全部放在 msrait-03 跑，其余六项全部在 msrait-04 跑。
+每台机器分别使用一张卡运行 sim、另一张卡运行模型。各任务跨 policy 的初始 RGB、状态与指令严格匹配；
+每个后续 policy 的初始场景均检查已归档的 X-VLA 参考。
+
+分片入口为 `tools/run_formal_policy_shard.py run --config <运行目录>/deployment/<主机名>.json`。
+部署配置指定 policy/task 所有权、GPU UUID/PCI、模型环境以及本地到远端的路径映射。
+每台机器的状态在 `shards/<主机名>/status.json`，中央结果汇总到 `status.json`。
+分片保留正式 runner 的不可覆盖导入与有限 oracle 重试预算。
+
 ## 初始单机流程（窄范围版本）
 
 以下表格和默认命令描述最初的 276 条复用基线。重放这一版时使用对应的旧源码与配置快照。
