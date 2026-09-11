@@ -1,6 +1,28 @@
 # 七任务 v2 正式评测：12 blocks
 
-## 单机正式评测
+## 宽范围 grasp 修订
+
+2026-09-10 宽范围修订使用 `seed-manifests/if-ext-v2-wide-12-per-mode/`，
+结果目录为 `/Data/robotwin-if/evaluations/if-seven-tasks-v2-wide-12blocks-001`。
+新版 grasp 配对范围 x=[0,8] cm、y=[-8.5,-3.5] cm；30 个独立候选 blocks 中 27 个合格，
+按三个 x 分层各选最先通过的 4 个完整 blocks。
+
+新运行已复用上轮通过完整性校验的 498 条完成结果（193 成功、305 失败），
+初始剩余 1446 条待运行，其中新版 grasp 为 144 条。复用详情见新运行 `support/migration.json`。
+源码、配置、manifest 和结果按运行归档；当前同名 v2 配置是宽范围版本，
+旧窄范围运行需使用其原始 source/config 快照。
+
+新建宽范围评测时显式指定 release 和尚不存在的结果目录：
+
+```bash
+python tools/run_formal_policy_suite.py prepare \
+  --release seed-manifests/if-ext-v2-wide-12-per-mode \
+  --run-dir outputs/policy-eval/if-wide-example
+```
+
+## 初始单机流程（窄范围版本）
+
+以下表格和默认命令描述最初的 276 条复用基线。重放这一版时使用对应的旧源码与配置快照。
 
 正式 seed 固定在 `seed-manifests/if-ext-v2-12-per-mode/`。六个 policies 为
 `xvla`、`lingbot_va`、`lingbot_vla`、`vlact`、`dm05`、`hy_vla`。

@@ -1,0 +1,1336 @@
+{
+  "blocks": [
+    {
+      "accepted": true,
+      "block_index": 12500,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "color:red",
+          "failure": null,
+          "observed_mode": "color:red",
+          "plan_success": true,
+          "seed": 100000,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "color:blue",
+          "failure": null,
+          "observed_mode": "color:blue",
+          "plan_success": true,
+          "seed": 100001,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "decal:cat",
+          "failure": null,
+          "observed_mode": "decal:cat",
+          "plan_success": true,
+          "seed": 100002,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "decal:dog",
+          "failure": null,
+          "observed_mode": "decal:dog",
+          "plan_success": true,
+          "seed": 100003,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "shape:block",
+          "failure": null,
+          "observed_mode": "shape:block",
+          "plan_success": true,
+          "seed": 100004,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "shape:bar",
+          "failure": null,
+          "observed_mode": "shape:bar",
+          "plan_success": true,
+          "seed": 100005,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "size:big",
+          "failure": null,
+          "observed_mode": "size:big",
+          "plan_success": true,
+          "seed": 100006,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "size:small",
+          "failure": null,
+          "observed_mode": "size:small",
+          "plan_success": true,
+          "seed": 100007,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100000,
+        100001,
+        100002,
+        100003,
+        100004,
+        100005,
+        100006,
+        100007
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 12501,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "color:red",
+          "failure": null,
+          "observed_mode": "color:red",
+          "plan_success": true,
+          "seed": 100008,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "color:blue",
+          "failure": null,
+          "observed_mode": "color:blue",
+          "plan_success": true,
+          "seed": 100009,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "decal:cat",
+          "failure": null,
+          "observed_mode": "decal:cat",
+          "plan_success": true,
+          "seed": 100010,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "decal:dog",
+          "failure": null,
+          "observed_mode": "decal:dog",
+          "plan_success": true,
+          "seed": 100011,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "shape:block",
+          "failure": null,
+          "observed_mode": "shape:block",
+          "plan_success": true,
+          "seed": 100012,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "shape:bar",
+          "failure": null,
+          "observed_mode": "shape:bar",
+          "plan_success": true,
+          "seed": 100013,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "size:big",
+          "failure": null,
+          "observed_mode": "size:big",
+          "plan_success": true,
+          "seed": 100014,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "size:small",
+          "failure": null,
+          "observed_mode": "size:small",
+          "plan_success": true,
+          "seed": 100015,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100008,
+        100009,
+        100010,
+        100011,
+        100012,
+        100013,
+        100014,
+        100015
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 12502,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "color:red",
+          "failure": null,
+          "observed_mode": "color:red",
+          "plan_success": true,
+          "seed": 100016,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "color:blue",
+          "failure": null,
+          "observed_mode": "color:blue",
+          "plan_success": true,
+          "seed": 100017,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "decal:cat",
+          "failure": null,
+          "observed_mode": "decal:cat",
+          "plan_success": true,
+          "seed": 100018,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "decal:dog",
+          "failure": null,
+          "observed_mode": "decal:dog",
+          "plan_success": true,
+          "seed": 100019,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "shape:block",
+          "failure": null,
+          "observed_mode": "shape:block",
+          "plan_success": true,
+          "seed": 100020,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "shape:bar",
+          "failure": null,
+          "observed_mode": "shape:bar",
+          "plan_success": true,
+          "seed": 100021,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "size:big",
+          "failure": null,
+          "observed_mode": "size:big",
+          "plan_success": true,
+          "seed": 100022,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "size:small",
+          "failure": null,
+          "observed_mode": "size:small",
+          "plan_success": true,
+          "seed": 100023,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100016,
+        100017,
+        100018,
+        100019,
+        100020,
+        100021,
+        100022,
+        100023
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 12503,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "color:red",
+          "failure": null,
+          "observed_mode": "color:red",
+          "plan_success": true,
+          "seed": 100024,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "color:blue",
+          "failure": null,
+          "observed_mode": "color:blue",
+          "plan_success": true,
+          "seed": 100025,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "decal:cat",
+          "failure": null,
+          "observed_mode": "decal:cat",
+          "plan_success": true,
+          "seed": 100026,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "decal:dog",
+          "failure": null,
+          "observed_mode": "decal:dog",
+          "plan_success": true,
+          "seed": 100027,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "shape:block",
+          "failure": null,
+          "observed_mode": "shape:block",
+          "plan_success": true,
+          "seed": 100028,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "shape:bar",
+          "failure": null,
+          "observed_mode": "shape:bar",
+          "plan_success": true,
+          "seed": 100029,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "size:big",
+          "failure": null,
+          "observed_mode": "size:big",
+          "plan_success": true,
+          "seed": 100030,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "size:small",
+          "failure": null,
+          "observed_mode": "size:small",
+          "plan_success": true,
+          "seed": 100031,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100024,
+        100025,
+        100026,
+        100027,
+        100028,
+        100029,
+        100030,
+        100031
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 12504,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "color:red",
+          "failure": null,
+          "observed_mode": "color:red",
+          "plan_success": true,
+          "seed": 100032,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "color:blue",
+          "failure": null,
+          "observed_mode": "color:blue",
+          "plan_success": true,
+          "seed": 100033,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "decal:cat",
+          "failure": null,
+          "observed_mode": "decal:cat",
+          "plan_success": true,
+          "seed": 100034,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "decal:dog",
+          "failure": null,
+          "observed_mode": "decal:dog",
+          "plan_success": true,
+          "seed": 100035,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "shape:block",
+          "failure": null,
+          "observed_mode": "shape:block",
+          "plan_success": true,
+          "seed": 100036,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "shape:bar",
+          "failure": null,
+          "observed_mode": "shape:bar",
+          "plan_success": true,
+          "seed": 100037,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "size:big",
+          "failure": null,
+          "observed_mode": "size:big",
+          "plan_success": true,
+          "seed": 100038,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "size:small",
+          "failure": null,
+          "observed_mode": "size:small",
+          "plan_success": true,
+          "seed": 100039,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100032,
+        100033,
+        100034,
+        100035,
+        100036,
+        100037,
+        100038,
+        100039
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 12505,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "color:red",
+          "failure": null,
+          "observed_mode": "color:red",
+          "plan_success": true,
+          "seed": 100040,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "color:blue",
+          "failure": null,
+          "observed_mode": "color:blue",
+          "plan_success": true,
+          "seed": 100041,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "decal:cat",
+          "failure": null,
+          "observed_mode": "decal:cat",
+          "plan_success": true,
+          "seed": 100042,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "decal:dog",
+          "failure": null,
+          "observed_mode": "decal:dog",
+          "plan_success": true,
+          "seed": 100043,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "shape:block",
+          "failure": null,
+          "observed_mode": "shape:block",
+          "plan_success": true,
+          "seed": 100044,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "shape:bar",
+          "failure": null,
+          "observed_mode": "shape:bar",
+          "plan_success": true,
+          "seed": 100045,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "size:big",
+          "failure": null,
+          "observed_mode": "size:big",
+          "plan_success": true,
+          "seed": 100046,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "size:small",
+          "failure": null,
+          "observed_mode": "size:small",
+          "plan_success": true,
+          "seed": 100047,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100040,
+        100041,
+        100042,
+        100043,
+        100044,
+        100045,
+        100046,
+        100047
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 12506,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "color:red",
+          "failure": null,
+          "observed_mode": "color:red",
+          "plan_success": true,
+          "seed": 100048,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "color:blue",
+          "failure": null,
+          "observed_mode": "color:blue",
+          "plan_success": true,
+          "seed": 100049,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "decal:cat",
+          "failure": null,
+          "observed_mode": "decal:cat",
+          "plan_success": true,
+          "seed": 100050,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "decal:dog",
+          "failure": null,
+          "observed_mode": "decal:dog",
+          "plan_success": true,
+          "seed": 100051,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "shape:block",
+          "failure": null,
+          "observed_mode": "shape:block",
+          "plan_success": true,
+          "seed": 100052,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "shape:bar",
+          "failure": null,
+          "observed_mode": "shape:bar",
+          "plan_success": true,
+          "seed": 100053,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "size:big",
+          "failure": null,
+          "observed_mode": "size:big",
+          "plan_success": true,
+          "seed": 100054,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "size:small",
+          "failure": null,
+          "observed_mode": "size:small",
+          "plan_success": true,
+          "seed": 100055,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100048,
+        100049,
+        100050,
+        100051,
+        100052,
+        100053,
+        100054,
+        100055
+      ]
+    },
+    {
+      "accepted": false,
+      "block_index": 12507,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "color:red",
+          "failure": null,
+          "observed_mode": "color:red",
+          "plan_success": true,
+          "seed": 100056,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "color:blue",
+          "failure": null,
+          "observed_mode": "color:blue",
+          "plan_success": true,
+          "seed": 100057,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "decal:cat",
+          "failure": null,
+          "observed_mode": "decal:cat",
+          "plan_success": true,
+          "seed": 100058,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "decal:dog",
+          "failure": null,
+          "observed_mode": "decal:dog",
+          "plan_success": true,
+          "seed": 100059,
+          "setup_ok": true
+        },
+        {
+          "accepted": false,
+          "check_success": false,
+          "expected_mode": "shape:block",
+          "failure": {
+            "category": "check_success",
+            "message": "task.check_success() is false"
+          },
+          "observed_mode": "shape:block",
+          "plan_success": true,
+          "seed": 100060,
+          "setup_ok": true
+        },
+        {
+          "accepted": false,
+          "check_success": false,
+          "expected_mode": "shape:bar",
+          "failure": {
+            "category": "check_success",
+            "message": "task.check_success() is false"
+          },
+          "observed_mode": "shape:bar",
+          "plan_success": true,
+          "seed": 100061,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "size:big",
+          "failure": null,
+          "observed_mode": "size:big",
+          "plan_success": true,
+          "seed": 100062,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "size:small",
+          "failure": null,
+          "observed_mode": "size:small",
+          "plan_success": true,
+          "seed": 100063,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100056,
+        100057,
+        100058,
+        100059,
+        100060,
+        100061,
+        100062,
+        100063
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 12508,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "color:red",
+          "failure": null,
+          "observed_mode": "color:red",
+          "plan_success": true,
+          "seed": 100064,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "color:blue",
+          "failure": null,
+          "observed_mode": "color:blue",
+          "plan_success": true,
+          "seed": 100065,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "decal:cat",
+          "failure": null,
+          "observed_mode": "decal:cat",
+          "plan_success": true,
+          "seed": 100066,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "decal:dog",
+          "failure": null,
+          "observed_mode": "decal:dog",
+          "plan_success": true,
+          "seed": 100067,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "shape:block",
+          "failure": null,
+          "observed_mode": "shape:block",
+          "plan_success": true,
+          "seed": 100068,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "shape:bar",
+          "failure": null,
+          "observed_mode": "shape:bar",
+          "plan_success": true,
+          "seed": 100069,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "size:big",
+          "failure": null,
+          "observed_mode": "size:big",
+          "plan_success": true,
+          "seed": 100070,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "size:small",
+          "failure": null,
+          "observed_mode": "size:small",
+          "plan_success": true,
+          "seed": 100071,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100064,
+        100065,
+        100066,
+        100067,
+        100068,
+        100069,
+        100070,
+        100071
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 12509,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "color:red",
+          "failure": null,
+          "observed_mode": "color:red",
+          "plan_success": true,
+          "seed": 100072,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "color:blue",
+          "failure": null,
+          "observed_mode": "color:blue",
+          "plan_success": true,
+          "seed": 100073,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "decal:cat",
+          "failure": null,
+          "observed_mode": "decal:cat",
+          "plan_success": true,
+          "seed": 100074,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "decal:dog",
+          "failure": null,
+          "observed_mode": "decal:dog",
+          "plan_success": true,
+          "seed": 100075,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "shape:block",
+          "failure": null,
+          "observed_mode": "shape:block",
+          "plan_success": true,
+          "seed": 100076,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "shape:bar",
+          "failure": null,
+          "observed_mode": "shape:bar",
+          "plan_success": true,
+          "seed": 100077,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "size:big",
+          "failure": null,
+          "observed_mode": "size:big",
+          "plan_success": true,
+          "seed": 100078,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "size:small",
+          "failure": null,
+          "observed_mode": "size:small",
+          "plan_success": true,
+          "seed": 100079,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100072,
+        100073,
+        100074,
+        100075,
+        100076,
+        100077,
+        100078,
+        100079
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 12510,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "color:red",
+          "failure": null,
+          "observed_mode": "color:red",
+          "plan_success": true,
+          "seed": 100080,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "color:blue",
+          "failure": null,
+          "observed_mode": "color:blue",
+          "plan_success": true,
+          "seed": 100081,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "decal:cat",
+          "failure": null,
+          "observed_mode": "decal:cat",
+          "plan_success": true,
+          "seed": 100082,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "decal:dog",
+          "failure": null,
+          "observed_mode": "decal:dog",
+          "plan_success": true,
+          "seed": 100083,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "shape:block",
+          "failure": null,
+          "observed_mode": "shape:block",
+          "plan_success": true,
+          "seed": 100084,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "shape:bar",
+          "failure": null,
+          "observed_mode": "shape:bar",
+          "plan_success": true,
+          "seed": 100085,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "size:big",
+          "failure": null,
+          "observed_mode": "size:big",
+          "plan_success": true,
+          "seed": 100086,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "size:small",
+          "failure": null,
+          "observed_mode": "size:small",
+          "plan_success": true,
+          "seed": 100087,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100080,
+        100081,
+        100082,
+        100083,
+        100084,
+        100085,
+        100086,
+        100087
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 12511,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "color:red",
+          "failure": null,
+          "observed_mode": "color:red",
+          "plan_success": true,
+          "seed": 100088,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "color:blue",
+          "failure": null,
+          "observed_mode": "color:blue",
+          "plan_success": true,
+          "seed": 100089,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "decal:cat",
+          "failure": null,
+          "observed_mode": "decal:cat",
+          "plan_success": true,
+          "seed": 100090,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "decal:dog",
+          "failure": null,
+          "observed_mode": "decal:dog",
+          "plan_success": true,
+          "seed": 100091,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "shape:block",
+          "failure": null,
+          "observed_mode": "shape:block",
+          "plan_success": true,
+          "seed": 100092,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "shape:bar",
+          "failure": null,
+          "observed_mode": "shape:bar",
+          "plan_success": true,
+          "seed": 100093,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "size:big",
+          "failure": null,
+          "observed_mode": "size:big",
+          "plan_success": true,
+          "seed": 100094,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "size:small",
+          "failure": null,
+          "observed_mode": "size:small",
+          "plan_success": true,
+          "seed": 100095,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100088,
+        100089,
+        100090,
+        100091,
+        100092,
+        100093,
+        100094,
+        100095
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 12512,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "color:red",
+          "failure": null,
+          "observed_mode": "color:red",
+          "plan_success": true,
+          "seed": 100096,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "color:blue",
+          "failure": null,
+          "observed_mode": "color:blue",
+          "plan_success": true,
+          "seed": 100097,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "decal:cat",
+          "failure": null,
+          "observed_mode": "decal:cat",
+          "plan_success": true,
+          "seed": 100098,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "decal:dog",
+          "failure": null,
+          "observed_mode": "decal:dog",
+          "plan_success": true,
+          "seed": 100099,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "shape:block",
+          "failure": null,
+          "observed_mode": "shape:block",
+          "plan_success": true,
+          "seed": 100100,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "shape:bar",
+          "failure": null,
+          "observed_mode": "shape:bar",
+          "plan_success": true,
+          "seed": 100101,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "size:big",
+          "failure": null,
+          "observed_mode": "size:big",
+          "plan_success": true,
+          "seed": 100102,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "size:small",
+          "failure": null,
+          "observed_mode": "size:small",
+          "plan_success": true,
+          "seed": 100103,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100096,
+        100097,
+        100098,
+        100099,
+        100100,
+        100101,
+        100102,
+        100103
+      ]
+    }
+  ],
+  "contract_schema_version": 1,
+  "derivation": {
+    "compatibility_review": "Oracle task sources unchanged since the source run except attribute_select setup now initializes the height baseline; play_once still resets that baseline before grasping. demo_clean episode_num changed 50 to 2, affecting collection count only, not exact-seed oracle execution. Language utilities only gained explicit UTF-8 encoding.",
+    "current_config_sha256": "ae893a209ed2425d1a4d2cd7046187d60a566fc715aa88447901335ea2900f82",
+    "current_task_sha256": "e131b241425a38759045a9bfab934bb66067aa2c914820f2c0209bd7994c53df",
+    "method": "First 12 accepted complete blocks of an existing completed oracle run; no new oracle execution",
+    "parent_parameters": {
+      "accepted_blocks": 100,
+      "candidate_floor": 100000,
+      "first_block": 12500,
+      "max_candidate_blocks": 500,
+      "task": "attribute_select",
+      "task_config": "demo_clean"
+    },
+    "parent_timing": {
+      "elapsed_seconds": 12827.812134642154,
+      "started_at": "2026-09-03T15:10:49.798127+00:00",
+      "updated_at": "2026-09-03T18:44:37.641700+00:00"
+    },
+    "source_evidence_sha256": "7c5c3a5d6250893ea44f289a266143ea226c1d1c2cb162afd7d92cf9dd77ad7d",
+    "source_manifest": "seed-manifests/if-ext-v1-100-per-mode/attribute_select.json",
+    "source_manifest_sha256": "a4922579f54951804565eeaa73de99273295985073c02014e95195621298eff2"
+  },
+  "manifest_sha256": "bd658f43a77cca15d8218aa1b7ea39fc5914285f4d0dd8df9f7bef44c81d517b",
+  "next_block": 12513,
+  "parameters": {
+    "accepted_blocks": 12,
+    "candidate_floor": 100000,
+    "first_block": 12500,
+    "max_candidate_blocks": 500,
+    "task": "attribute_select",
+    "task_config": "demo_clean"
+  },
+  "provenance": {
+    "bridge_allow_compatible_commit": true,
+    "generator": {
+      "generation_schema_version": 1,
+      "manifest_schema_version": 1,
+      "name": "tools/generate_if_seed_manifest.py",
+      "version": 1
+    },
+    "source_commit": "6fd624fd03b0c49e60adb9ee4204031556712431",
+    "source_digest": "719c3f43818403d33f2a79f7a44aed0068a4b5a958fac0bf9b994c23343684bb",
+    "source_dirty": false,
+    "source_root": "/home/xichen6/Documents/repos/robotwin-if",
+    "target_commit": "b82ffb81d291d14c24be444bb7b6f81719481e0f",
+    "target_contract_dirty": false,
+    "target_root": "/home/xichen6/Documents/repos/robotwin-if/third_party/robotwin-manifest-clean",
+    "task_config_path": "task_config/demo_clean.yml",
+    "task_config_sha256": "8ee5d0d07daecf7599b8d89b44776b700c7c60da24cd6317e176e6798d8cb11e"
+  },
+  "schema_version": 1,
+  "status": "complete",
+  "summary": {
+    "accepted_block_ids": [
+      12500,
+      12501,
+      12502,
+      12503,
+      12504,
+      12505,
+      12506,
+      12508,
+      12509,
+      12510,
+      12511,
+      12512
+    ],
+    "accepted_blocks": 12,
+    "candidate_blocks": 13,
+    "failure_categories": {
+      "check_success": 2
+    },
+    "rejected_block_ids": [
+      12507
+    ],
+    "rejected_blocks": 1
+  }
+}

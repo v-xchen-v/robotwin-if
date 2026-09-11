@@ -2,13 +2,15 @@
 
 `grasp_cube_approach` 默认使用 `fixed-v1`。新配置
 `demo_clean_grasp_approach_v2` 通过 `grasp_approach_scene_version: translate-v2`
-启用小范围平移，使用独立 task_config 和重新验证的 seed manifest。
+启用配对平移。当前配置指定 `grasp_approach_translation_profile: wide-r1`，
+使用重新验证的宽范围 seed manifest；不指定 profile 的旧配置仍使用 `narrow-v2`。
 
 ## 场景与配对
 
 - `scene_seed = seed // 2`，偶数 seed 为 top，奇数为 side。
-- 方块和静态底座一起平移。x 在 `[-1, 1] cm` 内分左、中、右三个等宽区间，
-  按 scene_seed 轮换；区间内部均匀采样。y 在 `[-6, -5] cm` 内均匀采样。
+- 方块和静态底座一起平移。当前 wide-r1 的 x 在 `[0, 8] cm` 内分左、中、右三个等宽区间，
+  按 scene_seed 轮换；区间内部均匀采样。y 在 `[-8.5, -3.5] cm` 内均匀采样。
+  左/中/右指该采样区域的三个分层；范围偏向右臂可达侧。旧 narrow-v2 的 x 为 `[-1, 1] cm`、y 为 `[-6, -5] cm`。
 - 不施加旋转，生成四元数固定为 `[1, 0, 0, 0]`。
 - 两种模式的 oracle 都固定右臂，不再因 x 跨过零而切换手臂。
 - 同一 block 的场景完全相同。六个 evaluator 的共享指令入口按 scene_seed 选择模板，
@@ -20,7 +22,7 @@
 - 成功仍要求抬升超过 5 cm 且抓取方向正确：top 的 `|approach_z| >= 0.7`，
   side 的 `|approach_z| <= 0.3`。policy 仍读取首次接触时的方向，后续旋转不能补救错误接近方向。
   固定右臂是 oracle 的执行设置，未新增 policy 手臂成功判据。
-- `env.info['grasp_approach_scene']` 保存版本、scene_seed、位置分区、方块和底座生成位置、四元数、yaw 及 oracle 手臂。
+- `env.info['grasp_approach_scene']` 保存版本、translation_profile、scene_seed、位置分区、方块和底座生成位置、四元数、yaw 及 oracle 手臂。
   实际仿真稳定后的位姿另存于预检记录。诊断字段不进入模板参数 `info['info']`。
 
 旧 `POSE_JITTER` 开关是不同的历史实验；与 translate-v2 同时开启会报错。
@@ -63,15 +65,16 @@ supervisor 每 10 秒记录 GPU 状态，查询超时、显存超过 40,000 MiB�
 ```text
 --task grasp_cube_approach
 --task-config demo_clean_grasp_approach_v2
---seed-manifest seed-manifests/if-ext-v2-12-per-mode/grasp_cube_approach.json
+--seed-manifest seed-manifests/if-ext-v2-wide-12-per-mode/grasp_cube_approach.json
 --blocks 12
 ```
 
 模型连接参数沿用各 policy 配置。旧 `demo_clean` manifest 与新配置不能混用。
-正式评测使用 [七任务 12-block 清单](../seed-manifests/if-ext-v2-12-per-mode/README.md)，
-其中 grasp v2 的 seeds 独立于调试集。已验证的 12-block 开发集和完整 oracle 证据另存于
+正式评测使用 [宽范围七任务 12-block 清单](../seed-manifests/if-ext-v2-wide-12-per-mode/README.md)，
+其中 grasp v2 的 seeds 从 500000 开始独立资格校验，按三个 x 区域各选最先通过的 4 个完整 blocks。
+当前同名 v2 配置不能与旧窄范围 manifest 混用；旧结果需使用原评测的 source/config 快照重放。已验证的 12-block 开发集和完整 oracle 证据另存于
 [v2 manifest 目录](../seed-manifests/if-ext-v2-dev-12-per-mode/README.md)。
-当前渲染同步/oracle 缓存优化只对 `demo_clean` 启用，此试验配置使用原生执行路径。
+正式 runner 冻结源码和 manifest 的哈希，避免运行中修改范围造成结果混用。
 小样本 oracle 预检验证的是场景可执行性；扩大到 50 blocks 前应验证另一批预先固定的 seeds，
 六个 policy 使用同一份提前确定的完整 blocks，不按 policy 成败挑选场景。
 

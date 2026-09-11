@@ -45,6 +45,33 @@ Task = namespace["grasp_cube_approach"]
 
 
 class TranslationTests(unittest.TestCase):
+    def test_wide_profile_is_paired_and_keeps_old_profile_replayable(self):
+        wide_positions = []
+        for scene_seed in range(250000, 250120):
+            a, b = Task(), Task()
+            for offset, task in enumerate((a, b)):
+                task.setup_demo(seed=2 * scene_seed + offset,
+                                grasp_approach_scene_version="translate-v2",
+                                grasp_approach_translation_profile="wide-r1")
+            np.testing.assert_array_equal(a.cube.get_pose().p, b.cube.get_pose().p)
+            np.testing.assert_array_equal(a.riser.get_pose().p[:2], a.cube.get_pose().p[:2])
+            np.testing.assert_array_equal(a.cube.get_pose().q, [1, 0, 0, 0])
+            self.assertEqual((a.mode, b.mode), ("top", "side"))
+            self.assertEqual((a.execution_arm(), b.execution_arm()), ("right", "right"))
+            self.assertEqual(a._scene_spec['translation_profile'], 'wide-r1')
+            x, y = a.cube.get_pose().p[:2]
+            self.assertTrue(0 <= x <= .08 and -.085 <= y <= -.035)
+            wide_positions.append([x, y])
+            old = Task.translation_xy(scene_seed)
+            self.assertTrue(-.01 <= old[0] <= .01 and -.06 <= old[1] <= -.05)
+        self.assertGreater(np.ptp(wide_positions, axis=0)[0], .07)
+        self.assertGreater(np.ptp(wide_positions, axis=0)[1], .045)
+
+    def test_unknown_translation_profile_rejected(self):
+        with self.assertRaisesRegex(ValueError, 'translation_profile'):
+            Task().setup_demo(seed=0, grasp_approach_scene_version='translate-v2',
+                              grasp_approach_translation_profile='typo')
+
     def test_paired_geometry_varies_without_rotation_or_arm_switch(self):
         positions, regions = set(), []
         for block in range(50000, 50012):

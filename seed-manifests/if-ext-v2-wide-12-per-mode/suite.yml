@@ -1,0 +1,481 @@
+schema_version: 1
+release: if-ext-v2-wide-12-per-mode
+purpose: formal_policy_evaluation
+created_at: '2026-09-10T13:48:09.965174+00:00'
+instruction_type: unseen
+blocks_per_task: 12
+tasks:
+- task: bottle_verb
+  task_config: demo_clean
+  manifest: bottle_verb.json
+  manifest_sha256: 8ced7b1e50a1dc5c2b0775b4d4c26c42e3c1f7b4a9032aeac416814ac854aec2
+  blocks: 12
+  episodes_per_policy: 24
+  modes:
+    pick: 12
+    shake: 12
+  qualification:
+    type: reused_oracle_generation
+    parent_manifest: seed-manifests/if-ext-v1-100-per-mode/bottle_verb.json
+  reusable_seeds_per_policy:
+  - 100002
+  - 100003
+  - 100004
+  - 100005
+  pending_seeds_per_policy:
+  - 100006
+  - 100007
+  - 100008
+  - 100009
+  - 100010
+  - 100011
+  - 100016
+  - 100017
+  - 100018
+  - 100019
+  - 100020
+  - 100021
+  - 100022
+  - 100023
+  - 100024
+  - 100025
+  - 100026
+  - 100027
+  - 100030
+  - 100031
+- task: pick_diverse_object
+  task_config: demo_clean
+  manifest: pick_diverse_object.json
+  manifest_sha256: 9e304da320d84319dad7dcbbdeabc2108663fa80e0eef7c4a62c41f499fe2da8
+  blocks: 12
+  episodes_per_policy: 24
+  modes:
+    seen: 12
+    unseen: 12
+  qualification:
+    type: reused_oracle_generation
+    parent_manifest: seed-manifests/if-ext-v1-100-per-mode/pick_diverse_object.json
+  reusable_seeds_per_policy:
+  - 100002
+  - 100003
+  - 100004
+  - 100005
+  pending_seeds_per_policy:
+  - 100006
+  - 100007
+  - 100008
+  - 100009
+  - 100012
+  - 100013
+  - 100014
+  - 100015
+  - 100018
+  - 100019
+  - 100020
+  - 100021
+  - 100024
+  - 100025
+  - 100034
+  - 100035
+  - 100036
+  - 100037
+  - 100038
+  - 100039
+- task: attribute_select
+  task_config: demo_clean
+  manifest: attribute_select.json
+  manifest_sha256: bd658f43a77cca15d8218aa1b7ea39fc5914285f4d0dd8df9f7bef44c81d517b
+  blocks: 12
+  episodes_per_policy: 96
+  modes:
+    color:red: 12
+    color:blue: 12
+    decal:cat: 12
+    decal:dog: 12
+    shape:block: 12
+    shape:bar: 12
+    size:big: 12
+    size:small: 12
+  qualification:
+    type: reused_oracle_generation
+    parent_manifest: seed-manifests/if-ext-v1-100-per-mode/attribute_select.json
+  reusable_seeds_per_policy:
+  - 100000
+  - 100001
+  - 100002
+  - 100003
+  - 100004
+  - 100005
+  - 100006
+  - 100007
+  - 100008
+  - 100009
+  - 100010
+  - 100011
+  - 100012
+  - 100013
+  - 100014
+  - 100015
+  pending_seeds_per_policy:
+  - 100016
+  - 100017
+  - 100018
+  - 100019
+  - 100020
+  - 100021
+  - 100022
+  - 100023
+  - 100024
+  - 100025
+  - 100026
+  - 100027
+  - 100028
+  - 100029
+  - 100030
+  - 100031
+  - 100032
+  - 100033
+  - 100034
+  - 100035
+  - 100036
+  - 100037
+  - 100038
+  - 100039
+  - 100040
+  - 100041
+  - 100042
+  - 100043
+  - 100044
+  - 100045
+  - 100046
+  - 100047
+  - 100048
+  - 100049
+  - 100050
+  - 100051
+  - 100052
+  - 100053
+  - 100054
+  - 100055
+  - 100064
+  - 100065
+  - 100066
+  - 100067
+  - 100068
+  - 100069
+  - 100070
+  - 100071
+  - 100072
+  - 100073
+  - 100074
+  - 100075
+  - 100076
+  - 100077
+  - 100078
+  - 100079
+  - 100080
+  - 100081
+  - 100082
+  - 100083
+  - 100084
+  - 100085
+  - 100086
+  - 100087
+  - 100088
+  - 100089
+  - 100090
+  - 100091
+  - 100092
+  - 100093
+  - 100094
+  - 100095
+  - 100096
+  - 100097
+  - 100098
+  - 100099
+  - 100100
+  - 100101
+  - 100102
+  - 100103
+- task: arm_select
+  task_config: demo_clean_arm_select_v2
+  manifest: arm_select.json
+  manifest_sha256: b0603546bdb2342c03db3fd5f473ba20aede083b2ca782010c1d21562f0b4b0b
+  blocks: 12
+  episodes_per_policy: 24
+  modes:
+    left: 12
+    right: 12
+  qualification:
+    type: new_independent_v2_oracle
+    regions:
+      center: 4
+      right: 4
+      left: 4
+    candidate_blocks: 15
+    failed_blocks: 1
+  reusable_seeds_per_policy: []
+  pending_seeds_per_policy:
+  - 200000
+  - 200001
+  - 200002
+  - 200003
+  - 200004
+  - 200005
+  - 200006
+  - 200007
+  - 200008
+  - 200009
+  - 200010
+  - 200011
+  - 200012
+  - 200013
+  - 200016
+  - 200017
+  - 200018
+  - 200019
+  - 200020
+  - 200021
+  - 200022
+  - 200023
+  - 200026
+  - 200027
+- task: stack_sequence
+  task_config: demo_clean
+  manifest: stack_sequence.json
+  manifest_sha256: 7f97e732797ac93f374e771155477b1c5bfb3698ff0cb79d36b408c64f7fa49d
+  blocks: 12
+  episodes_per_policy: 72
+  modes:
+    red>green>blue: 12
+    red>blue>green: 12
+    green>red>blue: 12
+    green>blue>red: 12
+    blue>red>green: 12
+    blue>green>red: 12
+  qualification:
+    type: reused_oracle_generation
+    parent_manifest: seed-manifests/if-ext-v1-100-per-mode/stack_sequence.json
+  reusable_seeds_per_policy:
+  - 100008
+  - 100009
+  - 100010
+  - 100011
+  - 100012
+  - 100013
+  - 100014
+  - 100015
+  - 100016
+  - 100017
+  - 100018
+  - 100019
+  pending_seeds_per_policy:
+  - 100020
+  - 100021
+  - 100022
+  - 100023
+  - 100024
+  - 100025
+  - 100026
+  - 100027
+  - 100028
+  - 100029
+  - 100030
+  - 100031
+  - 100032
+  - 100033
+  - 100034
+  - 100035
+  - 100036
+  - 100037
+  - 100038
+  - 100039
+  - 100040
+  - 100041
+  - 100042
+  - 100043
+  - 100050
+  - 100051
+  - 100052
+  - 100053
+  - 100054
+  - 100055
+  - 100062
+  - 100063
+  - 100064
+  - 100065
+  - 100066
+  - 100067
+  - 100068
+  - 100069
+  - 100070
+  - 100071
+  - 100072
+  - 100073
+  - 100080
+  - 100081
+  - 100082
+  - 100083
+  - 100084
+  - 100085
+  - 100092
+  - 100093
+  - 100094
+  - 100095
+  - 100096
+  - 100097
+  - 100098
+  - 100099
+  - 100100
+  - 100101
+  - 100102
+  - 100103
+- task: place_relative
+  task_config: demo_clean
+  manifest: place_relative.json
+  manifest_sha256: 762fd8dbbee56493f695b372401fab0dc29c660e8f33078e2c91ac9945fc57c4
+  blocks: 12
+  episodes_per_policy: 60
+  modes:
+    left: 12
+    right: 12
+    front: 12
+    back: 12
+    on_top: 12
+  qualification:
+    type: reused_oracle_generation
+    parent_manifest: seed-manifests/if-ext-v1-100-per-mode/place_relative.json
+  reusable_seeds_per_policy:
+  - 100005
+  - 100006
+  - 100007
+  - 100008
+  - 100009
+  - 100010
+  - 100011
+  - 100012
+  - 100013
+  - 100014
+  pending_seeds_per_policy:
+  - 100015
+  - 100016
+  - 100017
+  - 100018
+  - 100019
+  - 100020
+  - 100021
+  - 100022
+  - 100023
+  - 100024
+  - 100025
+  - 100026
+  - 100027
+  - 100028
+  - 100029
+  - 100030
+  - 100031
+  - 100032
+  - 100033
+  - 100034
+  - 100040
+  - 100041
+  - 100042
+  - 100043
+  - 100044
+  - 100045
+  - 100046
+  - 100047
+  - 100048
+  - 100049
+  - 100050
+  - 100051
+  - 100052
+  - 100053
+  - 100054
+  - 100055
+  - 100056
+  - 100057
+  - 100058
+  - 100059
+  - 100060
+  - 100061
+  - 100062
+  - 100063
+  - 100064
+  - 100065
+  - 100066
+  - 100067
+  - 100068
+  - 100069
+- task: grasp_cube_approach
+  task_config: demo_clean_grasp_approach_v2
+  manifest: grasp_cube_approach.json
+  manifest_sha256: 0c5407c87e778667008a04ab8283ae3b555a25ca4f47641ffa60aa571a45b7b0
+  blocks: 12
+  episodes_per_policy: 24
+  modes:
+    top: 12
+    side: 12
+  qualification:
+    type: new_independent_wide_v2_oracle
+    regions:
+      center: 4
+      left: 4
+      right: 4
+    candidate_blocks: 30
+    failed_blocks: 3
+    translation_profile: wide-r1
+    x_range_m:
+    - 0
+    - 0.08
+    y_range_m:
+    - -0.085
+    - -0.035
+  reusable_seeds_per_policy: []
+  pending_seeds_per_policy:
+  - 500000
+  - 500001
+  - 500004
+  - 500005
+  - 500006
+  - 500007
+  - 500008
+  - 500009
+  - 500010
+  - 500011
+  - 500012
+  - 500013
+  - 500016
+  - 500017
+  - 500018
+  - 500019
+  - 500020
+  - 500021
+  - 500022
+  - 500023
+  - 500026
+  - 500027
+  - 500032
+  - 500033
+policies:
+- xvla
+- lingbot_va
+- lingbot_vla
+- vlact
+- dm05
+- hy_vla
+episodes_per_policy: 324
+episodes_all_six_policies: 1944
+reusable_episodes: 276
+pending_episodes: 1668
+reuse_index: reusable-results.yml
+reuse_condition: Use the checkpoint revisions, model IO, instruction split and rollout
+  options recorded in reusable-results.yml for continuation. Prior failures remain
+  failures. Runtime comparisons must account for later evaluator optimizations.
+qualification_note: Existing five-task oracle evidence is reused with the documented
+  compatibility review. Two v2 tasks use newly probed seeds disjoint from development
+  seeds. No new policy rollouts were run for this release.
+supersedes: if-ext-v2-12-per-mode
+scene_snapshot_sha256:
+  scene-snapshot/tasks/envs/grasp_cube_approach.py: 2465d47a000da340c13c5996cb9d9dc3bb9e5ace82c7da594d8b8823e5369f2f
+  scene-snapshot/tasks/task_config/demo_clean_grasp_approach_v2.yml: e9f04e3ad989a00e92b2eedbfa3403f09a1c159e4085d7a74e2348f0c5a9d3dd
