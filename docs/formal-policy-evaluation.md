@@ -48,6 +48,26 @@ GPU 1 先对六项任务各两个 seeds 验证初始三路 RGB 逐像素一致�
 Hy-VLA 排在 DM05 前；grasp 已完成全部 144 回合，任务清单保持 grasp 最后。
 当前启动记录位于配置目录的 `dual-queues-launch.json`，其中 `log` 指向当前 scheduler 日志。
 
+## 分轴结果与完成进度
+
+`tools/summarize_formal_policy_results.py` 读取中央 summary 的单次快照，核对已归档结果的
+SHA-256、provenance、mode 和计数，生成 Markdown、两 panel 合并表头 HTML、JSON 与分模式 CSV。
+
+```bash
+python tools/summarize_formal_policy_results.py \
+  --run-dir /Data/robotwin-if/evaluations/if-seven-tasks-v2-wide-12blocks-001 \
+  --output notes/2026-09-01-if-ext-tasklist/results-current.md
+```
+
+主表为 policy × task/mode，每格写 SR (%) 与成功数/纳入统计回合数，每项附完整 blocks 和
+已完成/计划回合数。SR 只使用完整、均衡的 blocks；半个 block 中已完成的回合仍计入进度，
+标为待成组。暂定 Task Avg. 标 `†`，没有完整 block 时用 `—`，不把未跑回合视为 failure。
+
+Attribute 的 Color/Decal/Shape/Size 各平均两个 target values，Task Avg. 对全部 modes 等权；
+Overall 仅在该 policy 的七个任务各完成 12 blocks 后显示，按七个 Task Avg. 等权平均。
+JSON 记录计入评分的 seeds 和 block 序号，CSV 同时保留全部已完成计数与评分纳入计数。
+报告是带时间戳的快照，刷新时重新执行命令；生成文件位于已忽略的 notes/outputs 目录。
+
 ## 初始单机流程（窄范围版本）
 
 以下表格和默认命令描述最初的 276 条复用基线。重放这一版时使用对应的旧源码与配置快照。
