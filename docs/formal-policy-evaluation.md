@@ -31,6 +31,23 @@ python tools/run_formal_policy_suite.py prepare \
 每台机器的状态在 `shards/<主机名>/status.json`，中央结果汇总到 `status.json`。
 分片保留正式 runner 的不可覆盖导入与有限 oracle 重试预算。
 
+## 本机双 sim 与远端模型队列
+
+2026-09-11 进一步改为 `tools/run_remote_policy_queues.py`：本机 GPU 0/1 各运行一个 simulator，
+msrait-03 GPU 0/1 各运行一个独占模型服务，SSH 转发只绑定 localhost。剩余 policies 由单个中央调度器分配，
+同一 policy 同时仅属于一条队列；空闲队列领取下一项。模型 checkpoint、参数、完整 manifest、原结果和 oracle 重试预算保留。
+GPU 1 先对六项任务各两个 seeds 验证初始三路 RGB 逐像素一致、机器人状态 atol=1e-6、指令与步数上限相同，
+正式运行中仍逐回合检查。任何基础设施错误或 GPU 阈值异常会停止双队列；不自动重跑 policy failure。
+
+配置与切换证据在 `/Data/robotwin-if/evaluations/dual-queue-setup-001/`；当前队列状态在正式运行目录的 `queues/status.json`，
+原 `shards/` 状态作为上一阶段记录。中央结果直接写本机，grasp 的 144 条已回传结果保持归档；原回传循环在切换时结束。
+两条队列均结束后自动进行 1944 回合的完整校验，通过才标记完成。
+
+等待 policies 的顺序由部署配置的 `policies` 数组决定；启动后不热加载排序。
+调整顺序需在当前回合结束后恢复调度，并保留已经完成的回合。2026-09-11 的后续调整将
+Hy-VLA 排在 DM05 前；grasp 已完成全部 144 回合，任务清单保持 grasp 最后。
+当前启动记录位于配置目录的 `dual-queues-launch.json`，其中 `log` 指向当前 scheduler 日志。
+
 ## 初始单机流程（窄范围版本）
 
 以下表格和默认命令描述最初的 276 条复用基线。重放这一版时使用对应的旧源码与配置快照。
