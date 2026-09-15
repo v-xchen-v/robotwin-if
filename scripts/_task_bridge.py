@@ -32,6 +32,7 @@ MAINTAINED_TASKS = (
 ENV_HELPERS = (
     "_if_grounding.py",
     "_if_relative.py",
+    "_if_bottle_verb.py",
     "_pick_diverse_object_pool.py",
     "_if_eval.py",
 )

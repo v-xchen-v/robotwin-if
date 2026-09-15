@@ -96,6 +96,43 @@ def validate_episode(directory, task, seed, config):
     return record
 
 
+def matches_success_checker(spec, record):
+    expected = spec.get('success_checker_version')
+    signals = record.get('signals') or {}
+    if expected is None:
+        return True  # Historical plan: validate using its original recorded contract.
+    if not isinstance(signals, dict) or signals.get('checker_version') != expected:
+        return False
+    parameters = spec.get('success_checker_parameters')
+    if parameters is not None and signals.get('thresholds') != parameters:
+        return False
+    if expected == 'relative-lift-hold-v6-terminal' and record.get('mode') == 'pick':
+        # A physical hold / diagnostic replay is not a terminal policy verdict.
+        return (signals.get('pick_verdict_protocol') == 'action-budget-end'
+                and signals.get('pick_terminal_evaluation') is True
+                and signals.get('pick_verdict_finalized') is True
+                and signals.get('pick_final_success') is record.get('success')
+                and record.get('action_calls') == record.get('step_limit') == 700
+                and signals.get('policy_action_count') == signals.get('policy_action_limit') == 700)
+    return True
+
+
+def compatible_reuse(specs, episodes):
+    """Old success labels cannot be reused under a changed task predicate."""
+    by_task = {s['task']: s for s in specs}
+    accepted, excluded = [], []
+    for row in episodes:
+        spec = by_task[row['task']]
+        if spec.get('success_checker_version'):
+            record = read(ROOT / row['source_directory'] / (prefix(row['task'], row['seed']) + '_result.json'))
+            if not matches_success_checker(spec, record):
+                excluded.append(dict(policy=row['policy'], task=row['task'], seed=row['seed'],
+                    reason='success_checker_changed', expected=spec['success_checker_version']))
+                continue
+        accepted.append(row)
+    return accepted, excluded
+
+
 def import_episode(base, policy, spec, seed, source, origin, expected_hashes=None):
     """Commit the provenance marker last, so partial copies never count as results."""
     task = spec['task']
@@ -104,6 +141,7 @@ def import_episode(base, policy, spec, seed, source, origin, expected_hashes=Non
     if marker.exists():
         return False
     record = validate_episode(source, task, seed, spec['task_config'])
+    assert matches_success_checker(spec, record), 'Result uses an incompatible success checker; rerun the exact seed'
     files = episode_files(source, task, seed)
     hashes = {p.name: digest(p) for p in files}
     for name, sha in (expected_hashes or {}).items():
@@ -143,6 +181,14 @@ def check_sources(base):
         assert digest(base / name) == sha, f'Frozen manifest changed: {name}'
 
 
+def prior_metadata_directory(old, policy, task):
+    """Accept direct evaluator runs and formal archives that retain run metadata."""
+    for source in (old / policy / task, old / 'provenance/reused' / policy / task):
+        if all((source / name).is_file() for name in ('run.json', 'resolved_config.json', 'summary.json')):
+            return source
+    raise FileNotFoundError(f'Missing complete prior run metadata for {policy}/{task} in {old}')
+
+
 def prepare(base, release, old):
     import yaml
     subprocess.run([PYTHON, str(release / 'verify.py')], cwd=ROOT, check=True)
@@ -150,9 +196,23 @@ def prepare(base, release, old):
     reuse = yaml.safe_load((release / 'reusable-results.yml').read_text())
     assert suite['policies'] == POLICIES
     check_active_tasks(suite['tasks'])
+    metadata = {(p, s['task']): prior_metadata_directory(old, p, s['task'])
+                for p in POLICIES for s in suite['tasks']}
     base.mkdir(parents=True, exist_ok=False)
     shutil.copytree(release, base / 'manifests')
-    specs = [dict(s, seeds=read(release / s['manifest'])['seeds']) for s in suite['tasks']]
+    from dataclasses import asdict
+    from tasks.envs._if_bottle_verb import PickHoldMonitor, PickHoldRules
+    specs = [dict(s, seeds=read(release / s['manifest'])['seeds'],
+                  success_checker_version=PickHoldMonitor.VERSION if s['task'] == 'bottle_verb' else None,
+                  success_checker_parameters=asdict(PickHoldRules()) if s['task'] == 'bottle_verb' else None)
+             for s in suite['tasks']]
+    compatible, excluded = compatible_reuse(specs, reuse['episodes'])
+    for spec in specs:
+        shared = set(spec['seeds'])
+        for policy in POLICIES:
+            shared &= {r['seed'] for r in compatible if r['policy'] == policy and r['task'] == spec['task']}
+        spec['reusable_seeds_per_policy'] = [s for s in spec['seeds'] if s in shared]
+        spec['pending_seeds_per_policy'] = [s for s in spec['seeds'] if s not in shared]
     assert all(block_count(s) == suite['blocks_per_task'] for s in specs)
     plan = dict(repo_root=str(ROOT), policies=POLICIES, tasks=specs,
                 expected_episodes=len(POLICIES) * sum(len(s['seeds']) for s in specs),
@@ -161,13 +221,14 @@ def prepare(base, release, old):
                 created_at=datetime.datetime.now(datetime.timezone.utc).isoformat())
     write(base / 'plan.json', plan)
     (base / 'support').mkdir()
+    write(base / 'support/excluded-checker-reuse.json', excluded)
     for s in specs:
         write(base / 'pending-manifests' / s['manifest'],
               dict(schema_version=read(release / s['manifest'])['schema_version'], task=s['task'], task_config=s['task_config'],
                    seeds=s['pending_seeds_per_policy']))
     for policy in POLICIES:
         for spec in specs:
-            source = old / policy / spec['task']
+            source = metadata[policy, spec['task']]
             dest = base / 'provenance/reused' / policy / spec['task']
             for name in ('run.json', 'resolved_config.json', 'summary.json'):
                 dest.mkdir(parents=True, exist_ok=True)
@@ -187,11 +248,11 @@ def prepare(base, release, old):
         patch = subprocess.check_output(['git', '-C', str(directory), 'diff', 'HEAD'])
         (base / 'support' / (name + '-source.patch')).write_bytes(patch)
     by_task = {s['task']: s for s in specs}
-    for i, row in enumerate(reuse['episodes'], 1):
+    for i, row in enumerate(compatible, 1):
         import_episode(base, row['policy'], by_task[row['task']], row['seed'],
                        ROOT / row['source_directory'], 'reused', row['files_sha256'])
         if i % 46 == 0:
-            print(f'Copied and checksum-verified {i}/{len(reuse["episodes"])} episodes', flush=True)
+            print(f'Copied and checksum-verified {i}/{len(compatible)} compatible episodes', flush=True)
     alias = ROOT / 'outputs/policy-eval' / base.name
     if alias != base and not alias.exists():
         alias.symlink_to(base, target_is_directory=True)
@@ -264,7 +325,9 @@ def completed_record(base, policy, spec, seed):
     provenance = read(marker)
     name = prefix(spec['task'], seed) + '_result.json'
     assert digest(directory / name) == provenance['files_sha256'][name]
-    return validate_episode(directory, spec['task'], seed, spec['task_config'])
+    record = validate_episode(directory, spec['task'], seed, spec['task_config'])
+    assert matches_success_checker(spec, record), 'Committed result uses an incompatible success checker'
+    return record
 
 
 def check_scene(base, policy, spec, seed, instruction, obs, env, path):

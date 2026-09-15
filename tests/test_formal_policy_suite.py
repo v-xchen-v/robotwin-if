@@ -26,6 +26,117 @@ class FormalReuseTest(unittest.TestCase):
         suite.write(self.base / 'provenance/reused/xvla/bottle_verb/run.json',
                     dict(arguments=dict(server_url='http://127.0.0.1:8010', request_timeout=600)))
 
+    def test_changed_checker_excludes_old_success_and_failure_from_reuse(self):
+        self.spec['success_checker_version'] = 'relative-lift-hold-v3'
+        episodes = []
+        for seed, success in ((100002, True), (100003, False), (100004, True)):
+            source = self.episode(seed, success)
+            if seed == 100004:
+                path = source / 'bottle_verb_ep100004_result.json'
+                record = suite.read(path)
+                record['signals'] = {'checker_version': 'relative-lift-hold-v3'}
+                suite.write(path, record)
+            episodes.append(dict(policy='xvla', task='bottle_verb', seed=seed,
+                                 source_directory=str(source)))
+        accepted, excluded = suite.compatible_reuse([self.spec], episodes)
+        self.assertEqual([r['seed'] for r in accepted], [100004])
+        self.assertEqual([r['seed'] for r in excluded], [100002, 100003])
+        self.assertTrue(all(r['reason'] == 'success_checker_changed' for r in excluded))
+
+    def test_prior_metadata_accepts_direct_and_formal_archive_layouts(self):
+        direct = self.base / 'xvla/bottle_verb'
+        archived = self.base / 'provenance/reused/xvla/bottle_verb'
+        with self.assertRaises(FileNotFoundError):
+            suite.prior_metadata_directory(self.base, 'xvla', 'bottle_verb')
+        for name in ('resolved_config.json', 'summary.json'):
+            suite.write(archived / name, {})
+        self.assertEqual(suite.prior_metadata_directory(self.base, 'xvla', 'bottle_verb'), archived)
+        suite.write(direct / 'run.json', {})
+        self.assertEqual(suite.prior_metadata_directory(self.base, 'xvla', 'bottle_verb'), archived)
+        for name in ('resolved_config.json', 'summary.json'):
+            suite.write(direct / name, {})
+        self.assertEqual(suite.prior_metadata_directory(self.base, 'xvla', 'bottle_verb'), direct)
+
+    def test_same_checker_version_with_changed_thresholds_is_not_reused(self):
+        spec = dict(self.spec, success_checker_version='relative-lift-hold-v3',
+                    success_checker_parameters={'hold_seconds': 1.0})
+        record = dict(signals={'checker_version': 'relative-lift-hold-v3',
+                               'thresholds': {'hold_seconds': 2.0}})
+        self.assertFalse(suite.matches_success_checker(spec, record))
+        record['signals']['thresholds']['hold_seconds'] = 1.0
+        self.assertTrue(suite.matches_success_checker(spec, record))
+
+    def test_current_three_second_contract_rejects_one_second_results(self):
+        from dataclasses import asdict
+        from tasks.envs._if_bottle_verb import PickHoldMonitor, PickHoldRules
+        parameters = asdict(PickHoldRules())
+        self.assertEqual(parameters['hold_seconds'], 3.0)
+        self.assertNotIn('position_travel', parameters)
+        self.assertEqual(parameters['rotation_travel_degrees'], 135.0)
+        spec = dict(self.spec, success_checker_version=PickHoldMonitor.VERSION,
+                    success_checker_parameters=parameters)
+        old_parameters = dict(parameters, hold_seconds=1.0)
+        for version in ('relative-lift-hold-v3', PickHoldMonitor.VERSION):
+            for success in (True, False):
+                record = dict(success=success, signals=dict(checker_version=version, thresholds=old_parameters))
+                self.assertFalse(suite.matches_success_checker(spec, record))
+        self.assertTrue(suite.matches_success_checker(spec, dict(signals=dict(
+            checker_version=PickHoldMonitor.VERSION, thresholds=parameters))))
+        for version in ('relative-lift-hold-v4', PickHoldMonitor.VERSION):
+            old_budget = dict(parameters, position_travel=0.04, rotation_travel_degrees=45.0)
+            self.assertFalse(suite.matches_success_checker(spec, dict(signals=dict(
+                checker_version=version, thresholds=old_budget))))
+
+    def test_terminal_contract_rejects_early_stop_v5_even_with_matching_thresholds(self):
+        from dataclasses import asdict
+        from tasks.envs._if_bottle_verb import PickHoldMonitor, PickHoldRules
+        parameters=asdict(PickHoldRules())
+        self.assertNotIn('position_radius',parameters)
+        self.assertNotIn('reversal_distance',parameters)
+        self.assertEqual(parameters['rotation_radius_degrees'],10)
+        spec=dict(self.spec,success_checker_version=PickHoldMonitor.VERSION,
+                  success_checker_parameters=parameters)
+        for version in ('relative-lift-hold-v5',PickHoldMonitor.VERSION):
+            old=dict(parameters,position_radius=.015,rotation_radius_degrees=15,
+                     reversal_distance=.025,reversal_angle_degrees=20)
+            self.assertFalse(suite.matches_success_checker(spec,dict(signals=dict(
+                checker_version=version,thresholds=old))))
+        self.assertFalse(suite.matches_success_checker(spec,dict(signals=dict(
+            checker_version='relative-lift-hold-v5',thresholds=parameters))))
+
+    def test_import_rejects_old_checker_before_copying_any_artifacts(self):
+        self.spec['success_checker_version'] = 'relative-lift-hold-v3'
+        source = self.episode(100002, True)
+        with self.assertRaisesRegex(AssertionError, 'incompatible success checker'):
+            suite.import_episode(self.base, 'xvla', self.spec, 100002, source, 'reused')
+        self.assertFalse((self.base / 'xvla/bottle_verb').exists())
+
+    def test_terminal_pick_requires_a_full_finalized_policy_rollout(self):
+        from dataclasses import asdict
+        from tasks.envs._if_bottle_verb import PickHoldMonitor, PickHoldRules
+        parameters=asdict(PickHoldRules())
+        spec=dict(self.spec,success_checker_version=PickHoldMonitor.VERSION,
+                  success_checker_parameters=parameters)
+        for success in (True,False):
+            record=dict(mode='pick',success=success,action_calls=700,step_limit=700,
+                signals=dict(checker_version=PickHoldMonitor.VERSION,thresholds=parameters,
+                    pick_verdict_protocol='action-budget-end',pick_terminal_evaluation=True,
+                    pick_verdict_finalized=True,pick_final_success=success,
+                    policy_action_count=700,policy_action_limit=700))
+            self.assertTrue(suite.matches_success_checker(spec,record))
+            for key in ('pick_verdict_finalized','pick_terminal_evaluation'):
+                signals=dict(record['signals'],**{key:False})
+                self.assertFalse(suite.matches_success_checker(spec,dict(record,signals=signals)))
+            self.assertFalse(suite.matches_success_checker(spec,dict(record,action_calls=106)))
+
+    def test_legacy_run_validation_remains_readable_but_new_resume_rejects_old_checker(self):
+        source = self.episode(100002, False)
+        suite.import_episode(self.base, 'xvla', self.spec, 100002, source, 'reused')
+        self.assertIsNotNone(suite.completed_record(self.base, 'xvla', self.spec, 100002))
+        self.spec['success_checker_version'] = 'relative-lift-hold-v3'
+        with self.assertRaisesRegex(AssertionError, 'incompatible success checker'):
+            suite.completed_record(self.base, 'xvla', self.spec, 100002)
+
     def episode(self, seed, success):
         directory = self.base / 'source'
         directory.mkdir(exist_ok=True)

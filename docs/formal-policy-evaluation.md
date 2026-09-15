@@ -3,7 +3,9 @@
 当前任务为 bottle_verb、pick_diverse_object、attribute_select、arm_select、stack_sequence、place_relative。
 Grasp-Approach 已暂时下线，见 [归档说明](../bak/grasp_cube_approach/README.md)。
 使用 [六任务 20-block manifest](../seed-manifests/if-ext-v2-six-tasks-spatial3-20-per-mode/README.md)，
-各 policy 460 回合，全套 2,760 回合、720 blocks。原七任务归档中这些回合均已完成，无需重跑。
+各 policy 460 回合，全套 2,760 回合、720 blocks。原七任务归档中这些回合均已完成，但使用旧 Bottle-Verb 判定。
+[新的 pick 稳定保持判定](bottle-verb-pick-hold.md)下，prepare 会排除旧 Bottle-Verb 结果并保留原 seed 重测；其余任务可复用。
+当前 v6 的 pick 允许平移，在完整执行 700 个动作后判断末尾姿态保持和全程旋转摇晃；不再提前成功。shake 及其他任务保留原终止方式。
 
 ## 当前入口：单机串行
 
@@ -27,6 +29,7 @@ SAPIEN 的显式设备绑定由仓库内 `tools/sim_device.py` 提供，无需�
 哈希及快照，按 release 的 `reusable-results.yml` 校验并复制已有结果。
 `--old-run` 提供原来的每 policy/task `run.json`、resolved config 及
 `support/services-before-recovery.json`，用于保留模型启动参数与 checkpoint 身份。
+同时支持元数据保存在 `provenance/reused/<policy>/<task>/` 的正式归档目录。
 这是一条已有正式评测的迁移/续跑入口；单独测试新模型可直接用 [policy evaluator](../policies/README.md)。
 
 ```bash

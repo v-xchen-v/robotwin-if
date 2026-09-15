@@ -7,6 +7,20 @@ import time
 from if_benchmark.seed_contracts import observed_mode
 
 
+def finalize_episode_success(env, record):
+    """Finalize a normal rollout after its last complete action, never on error.
+
+    Tasks with deferred verdicts can assess the full trace. All other tasks keep
+    their existing early-success behavior. Call before serializing any artifacts.
+    """
+    succeeded_during_actions = record['success']
+    finalize = getattr(env, 'finalize_policy_success', None)
+    if finalize is not None:
+        record['success'] = bool(finalize())
+    record['status'] = 'success' if record['success'] else 'failure'
+    record['termination'] = 'task_success' if succeeded_during_actions else 'action_limit'
+
+
 def setup_episode(env, config, args, seed, split, record, path):
     """Qualify the exact seed, then reset it for a fresh policy rollout.
 

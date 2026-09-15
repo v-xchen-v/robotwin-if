@@ -85,7 +85,7 @@ bash scripts/bridge_tasks.sh --check
 `--check` 应显示：
 
 ```text
-check passed: 16 owned links
+check passed: 17 owned links
 ```
 
 生成期间不要修改以下输入：

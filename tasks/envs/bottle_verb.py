@@ -1,5 +1,6 @@
 from ._base_task import Base_Task
 from ._if_eval import apply_if_eval_step_limit
+from ._if_bottle_verb import PickHoldMonitor, PickHoldRules
 from .utils import *
 import sapien
 import math
@@ -17,27 +18,23 @@ class bottle_verb(Base_Task):
     under both verbs (pixel-identical initial frames, only the verb differs):
         scene_seed = seed // 2 ,  mode = ["pick","shake"][seed % 2]
 
-    THE CRUX: pick and shake share the same end-state ("bottle held in the air") —
-    native shake's own check is just bottle.z>0.8, which can't tell them apart. So
-    success keys on the TRAJECTORY:
-      - pick  = bottle reaches a HIGH z that a shake never reaches (a positive
-                end-state, robust to eval's first-True latching).
-      - shake = the bottle's cumulative vertical travel over the episode exceeds a
-                threshold (oscillation), accumulated in _record() which runs both in
-                the oracle play_once (collection) and in check_success (eval, called
-                every physics substep).
+    Pick allows translation above the relative lift threshold, with a tolerant
+    orientation hold. Angular excursions reset the hold; repeated rotation
+    reversals veto pick for the rest of the episode. Policy pick is judged after
+    the full action budget, never at the first transient hold. Hold duration
+    advances only with physics steps. Shake retains its vertical-travel rule.
     NOTE: check_success is pair-gated UNIFORMLY (collection AND eval) — a seed's
     success counts only if the OTHER verb is oracle-feasible on the SAME scene, so
     an unpairable scene is dropped entirely (both seeds fail) and collection/eval
     use the identical set of two-way-doable scenes. The partner is trial-run by the
     oracle (cached per scene_seed), so the gate reflects SCENE feasibility, not the
-    policy. Cost: a second sapien.Engine runs once per episode when _raw_success
-    first passes (during eval too) — eval must use the validated pairable seed set.
+    policy. On a cache miss, a second environment checks the partner when
+    _raw_success first passes; formal eval qualifies the pair before rollout.
     """
 
     ALLOWED_MODEL_IDS = list(range(20))  # native tasks use range(20); narrow via sweep if needed
-    PICK_LIFT = 0.2         # pick lifts distinctly higher than shake's ~0.1
-    PICK_HIGH = 0.95        # pick success: bottle.z above this (above shake's peak); tune from spike
+    PICK_LIFT = 0.2         # Preserve the existing oracle lift trajectory.
+    PICK_RULES = PickHoldRules()
     SHAKE_TRAVEL = 0.30     # shake success: cumulative |Δz| above this (pick monotonic ~0.2, shake ~0.4)
 
     # Pair-gate cache (class-level, per scene_seed): "is the OTHER verb also
@@ -46,10 +43,83 @@ class bottle_verb(Base_Task):
     _pair_ok = {}
 
     def setup_demo(self, **kwags):
+        self._detach_pick_observer()
+        self._pick_monitor = None
+        self._pick_terminal_evaluation = False
+        self._pick_verdict_finalized = False
+        self._pick_verdict_success = None
         self._seed = kwags.get("seed", 0)
         self._demo_kwargs = dict(kwags)  # so the partner trial-run rebuilds an identical env
         super()._init_task_env_(**kwags)
         apply_if_eval_step_limit(self)
+        # Capture the settled baseline in BOTH oracle and policy setups.
+        self._pick_monitor = PickHoldMonitor(self.bottle.get_pose().p, self.PICK_RULES)
+        self._pick_sim_time = 0.0
+        self._attach_pick_observer()
+
+    def _attach_pick_observer(self):
+        # Local to this task instance; records physics, never polls/latches success.
+        # RoboTwin has no step counter and check_success is also called without a
+        # step. Hook the scene's real step to share one clock with oracle moves.
+        scene = self.scene
+        original_step = scene.step
+        def observed_step():
+            result = original_step()
+            self._pick_sim_time += float(scene.get_timestep())
+            pose = self.bottle.get_pose()
+            self._pick_monitor.observe(self._pick_sim_time, pose.p, pose.q)
+            return result
+        self._pick_observer = (scene, original_step, observed_step)
+        scene.step = observed_step
+
+    def _detach_pick_observer(self):
+        observer = getattr(self, "_pick_observer", None)
+        if observer is not None:
+            scene, original_step, observed_step = observer
+            if scene.step is observed_step:
+                scene.step = original_step
+            self._pick_observer = None
+
+    def close_env(self, clear_cache=False):
+        self._detach_pick_observer()
+        return super().close_env(clear_cache=clear_cache)
+
+    def _hold_pick_oracle(self):
+        # Hold the existing robot drive targets; no model actions or fake elapsed time.
+        seconds = self.PICK_RULES.hold_seconds + 0.25
+        for i in range(math.ceil(seconds / self.scene.get_timestep())):
+            self.scene.step()
+            if self.save_data and self.save_freq and i % self.save_freq == 0:
+                self._update_render()
+                self._take_picture()
+
+    def eval_signals(self):
+        return dict(self._pick_monitor.signals(), mode=self.mode,
+                    pick_verdict_protocol='action-budget-end',
+                    pick_terminal_evaluation=self._pick_terminal_evaluation,
+                    pick_verdict_finalized=self._pick_verdict_finalized,
+                    pick_final_success=self._pick_verdict_success,
+                    pick_translation_allowed=True,
+                    policy_action_count=getattr(self, 'take_action_cnt', 0),
+                    policy_action_limit=getattr(self, 'step_lim', None),
+                    shake_vertical_travel_m=self._z_cum,
+                    shake_travel_threshold_m=self.SHAKE_TRAVEL)
+
+    def start_policy_rollout(self):
+        # Oracle/collection still checks the raw physical predicate. Only policy
+        # pick rollouts defer their verdict; shake keeps its existing early stop.
+        self._pick_terminal_evaluation = self.mode == 'pick'
+
+    def finalize_policy_success(self):
+        if not self._pick_terminal_evaluation:
+            return bool(self.eval_success or self.check_success())
+        if self.take_action_cnt != self.step_lim:
+            raise RuntimeError('Pick verdict requires the complete action budget')
+        self._record()
+        result = bool(self._raw_success('pick') and self._partner_ok())
+        self._pick_verdict_finalized = True
+        self._pick_verdict_success = result
+        return result
 
     def load_actors(self):
         # Decouple scene from verb: scene depends only on seed//2 so (2k,2k+1) share
@@ -104,13 +174,13 @@ class bottle_verb(Base_Task):
         self._record()
 
         if self.mode == "pick":
-            # Lift HIGH and hold — reaches a z a shake never does. Reuse shake's
-            # proven reorient-lift (z=0.1 + upright wrist quat), then continue up.
+            # Keep the proven reorient/lift, then physically hold for the new check.
             target_quat = [0.707, 0, 0, 0.707]
             self.move(self.move_by_displacement(arm_tag=arm_tag, z=0.1, quat=target_quat))
             self._record()
             self.move(self.move_by_displacement(arm_tag=arm_tag, z=self.PICK_LIFT - 0.1, quat=target_quat))
             self._record()
+            self._hold_pick_oracle()
         else:
             # Shake: reuse native shake_bottle motion verbatim (lift + ±7π/8 y-swings x3).
             target_quat = [0.707, 0, 0, 0.707]
@@ -132,6 +202,7 @@ class bottle_verb(Base_Task):
             self._record()
 
         self.info["mode"] = self.mode
+        self.info["signals"] = self.eval_signals()
         self.info["info"] = {
             "{A}": f"{self.model_name}/base{self.bottle_id}",
             "{a}": str(arm_tag),
@@ -140,10 +211,9 @@ class bottle_verb(Base_Task):
         return self.info
 
     def _raw_success(self, mode):
-        """Pure single-direction check (no side effects). Reads the trajectory
-        accumulators updated by _record()."""
+        """Read the physics-clock pick monitor or the unchanged shake accumulator."""
         if mode == "pick":
-            return self._z_peak > self.PICK_HIGH + self.table_z_bias
+            return self._pick_monitor is not None and self._pick_monitor.success
         return self._z_cum >= self.SHAKE_TRAVEL
 
     def _partner_ok(self):
@@ -179,13 +249,15 @@ class bottle_verb(Base_Task):
         # Record every call so eval (which polls check_success every physics substep)
         # accumulates the full trajectory.
         self._record()
+        # Returning True here would stop inside take_action, possibly halfway
+        # through the last action. The evaluator finalizes after it fully returns.
+        if self._pick_terminal_evaluation:
+            return False
         if not self._raw_success(self.mode):
             return False
         # Scene-validity pair-gate (uniform, collection AND eval): this verb
         # succeeded AND the partner verb is oracle-feasible on this scene. The buddy
-        # runs at most once per episode (right when _raw_success first passes) and
-        # is cached. NOTE: this runs the oracle buddy during eval too (a second
-        # sapien.Engine, once per episode) — eval must be run on the validated
-        # pairable seed set, else a non-pairable scene reads as a policy failure.
+        # runs on a scene cache miss (right when _raw_success first passes).
+        # Formal evaluation qualifies the oracle pair before policy rollout,
+        # so an infeasible scene is reported as a setup error, not policy failure.
         return bool(self._raw_success(self.mode)) and self._partner_ok()
-

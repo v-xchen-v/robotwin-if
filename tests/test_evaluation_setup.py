@@ -7,7 +7,30 @@ from types import SimpleNamespace
 import unittest
 from unittest.mock import patch
 
-from policies.evaluation import setup_episode
+from policies.evaluation import finalize_episode_success, setup_episode
+
+
+class FinalVerdictTests(unittest.TestCase):
+    def test_terminal_success_is_still_an_action_limit_termination(self):
+        for success in (True, False):
+            env=SimpleNamespace(take_action_cnt=700,step_lim=700,
+                                finalize_policy_success=lambda: success)
+            record={'success':False}
+            finalize_episode_success(env,record)
+            self.assertEqual(record,dict(success=success,status='success' if success else 'failure',
+                                          termination='action_limit'))
+
+    def test_early_success_and_timeout_are_unchanged_for_other_tasks(self):
+        for count,success in ((50,True),(700,True),(700,False)):
+            record={'success':success}
+            finalize_episode_success(SimpleNamespace(take_action_cnt=count,step_lim=700),record)
+            self.assertEqual(record['success'],success)
+            self.assertEqual(record['termination'],'task_success' if success else 'action_limit')
+
+    def test_finalization_error_is_not_silently_converted_to_policy_failure(self):
+        def finalize():raise RuntimeError('Incomplete action budget')
+        with self.assertRaisesRegex(RuntimeError,'Incomplete action budget'):
+            finalize_episode_success(SimpleNamespace(finalize_policy_success=finalize),{'success':False})
 
 
 class OracleEnv:

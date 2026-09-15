@@ -95,6 +95,7 @@ INACTIVE_TASKS = {
 BRIDGE_HELPERS = (
     "_if_grounding.py",
     "_if_relative.py",
+    "_if_bottle_verb.py",
     "_pick_diverse_object_pool.py",
     "_if_eval.py",
 )
@@ -193,7 +194,7 @@ def main():
     )
     check("bridge env task order is canonical", desired_env_tasks == IF_TASKS)
     check("bridge instruction order is canonical", desired_instructions == IF_TASKS)
-    check("bridge owns exactly 16 task plugin links", len(desired) == 16)
+    check("bridge owns exactly 17 task plugin links", len(desired) == 17)
 
     for helper in BRIDGE_HELPERS:
         check(f"bridge helper exists: {helper}", (REPO / "tasks/envs" / helper).is_file())

@@ -16,7 +16,7 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO_ROOT))
 
 from if_benchmark.seed_contracts import IF_SEED_CONTRACTS, describe_seed  # noqa: E402
-from policies.evaluation import setup_episode  # noqa: E402
+from policies.evaluation import finalize_episode_success, setup_episode  # noqa: E402
 from if_benchmark.seed_manifest import manifest_sha256  # noqa: E402
 from policies.xvla.eval import git_identity, load_task, select_seeds  # noqa: E402
 from policies.xvla.outputs import camera_strip, episode_path, write_json  # noqa: E402
@@ -91,8 +91,8 @@ def _run_episode(env, config, client, args, seed, split, directory, block):
                 client.observe_execution(obs)
                 writer.append_data(frame(obs))
                 record["success"] = bool(env.eval_success or env.check_success())
-        record["status"] = "success" if record["success"] else "failure"
-        record["termination"] = "task_success" if record["success"] else "action_limit"
+        stage = "episode_finalization"
+        finalize_episode_success(env, record)
         if hasattr(env, "eval_signals"):
             record["signals"] = env.eval_signals()
     except (Exception, SystemExit) as exc:

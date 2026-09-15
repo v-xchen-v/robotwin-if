@@ -19,13 +19,15 @@ Grasp-Approach 已于 2026-09-15 暂时下线；实现、配置、测试和 prob
 
 正式评测结果见 [`result/`](result/README.md)，当前 [六任务结果表](#policy-results) 已从原归档提取。历史七任务 [IF-Ext v2 wide 20-block 结果](result/if-ext-v2-wide-20blocks/README.md)
 保留六个 policies × 七任务的 3240 回合，包含报表、逐回合 CSV、冻结 seed manifest 和校验证据。
-当前六任务使用 [20-block 清单](seed-manifests/if-ext-v2-six-tasks-spatial3-20-per-mode/README.md)：460 回合/policy、总计 2760 回合和 720 blocks，均可复用原归档结果。Spatial 仅包含 left/right/on_top；旧五模式与七任务 Overall 均属于不同评测范围。
+当前六任务使用 [20-block 清单](seed-manifests/if-ext-v2-six-tasks-spatial3-20-per-mode/README.md)：460 回合/policy、总计 2760 回合和 720 blocks，历史统计来自原归档；新 Bottle-Verb 判定下需重测该任务。Spatial 仅包含 left/right/on_top；旧五模式与七任务 Overall 均属于不同评测范围。
 
 <a id="policy-results"></a>
 
 ## 六个 Policies 的评测结果
 
 2026-09-15 归档快照：**六任务 × 每任务 20 blocks × 六个 policies**，已完成 **2760/2760 回合、720/720 blocks**。
+**判定版本说明：** 下表 Bottle-Verb 和 Overall 仍基于旧 pick 高度判定；[稳定拿起修复](docs/bottle-verb-pick-hold.md)已改为 v6：pick 跑满 700 个动作后判定，允许平移并排除旋转摇晃。六 policy 的 20-block 正式重测共 240 回合，保留已验证的 2 个 X-VLA v6 回合、补跑 238 回合；其他五项复用 2520 个历史结果。当前进度见本机 `outputs/policy-eval/if-six-tasks-spatial3-bottle-v6-terminal-20blocks-001/report.md`；全部完成且校验通过后更新下表和 Overall。
+
 Arm-Select 使用 v2；VLAct 使用 `StarVLA/VLAct_Qwen3OFT_Robotwin_all_Finetune`（All 100K）。
 
 **微调数据差异：** X-VLA 使用在 RoboTwin **clean** 数据上微调的 checkpoint，其余五个 policies 使用在
@@ -142,7 +144,8 @@ Spatial 从五模式收缩为 **left/right/on_top**；这是视频复核后的�
 ### 1. Bottle-Verb：根据动词选择动作
 
 面对同一瓶子和初始场景，执行 **pick（拿起）** 或 **shake（摇动）**。
-任务区分抬高瓶子与摇动过程，检验模型是否根据动词改变行为。
+pick 跑满 700 个动作后判定：允许拿起后平移，末尾保持抬升至少 3 cm、连续 3 秒姿态稳定；回合中明显旋转摇晃不能算 pick。
+详见 [成功判定与历史结果说明](docs/bottle-verb-pick-hold.md)。
 下例左右分别为 pick / shake；一个 block 包含两个回合。
 
 [![Bottle-Verb：同一场景中的拿起与摇动](docs/assets/task-demos/bottle_verb.gif)](docs/assets/task-demos/bottle_verb.mp4)
@@ -426,7 +429,7 @@ third_party/xvla/        setup 获取的固定版本 X-VLA 源码（Git 忽略�
 
 当前维护六项任务；inventory、bridge 与 seed contracts 由静态检查保持一致。
 Grasp-Approach 已归档，不参与默认安装、生成、评测或当前 Overall。
-六个 policies 的 20-block 结果已完成，六任务范围可复用 2760 回合、720 个完整 blocks。
+六个 policies 的 20-block 结果已完成，六任务历史范围包含 2760 回合、720 个完整 blocks；新 Bottle-Verb 判定需要重测该任务。
 当前入口见 [正式评测说明](docs/formal-policy-evaluation.md) 和 [结果目录](result/README.md)。
 
 任务执行使用固定 manifest，成功和 policy failure 都保留，基础设施错误不替换 seed。
