@@ -15,7 +15,6 @@ TASKS = (
     "arm_select",
     "stack_sequence",
     "place_relative",
-    "grasp_cube_approach",
 )
 EXPECTED = {
     "bottle_verb": 700,
@@ -24,7 +23,6 @@ EXPECTED = {
     "arm_select": 400,
     "stack_sequence": 1200,
     "place_relative": 400,
-    "grasp_cube_approach": 400,
 }
 
 
@@ -147,8 +145,11 @@ def make_wiring_test(task):
             ast.Match,
             ast.Raise,
         )
+        # Config validation may branch before initialization. Once initialization
+        # succeeds, no control flow may bypass the policy step-limit helper.
         self.assertFalse(
-            any(isinstance(statement, unsafe_control_flow) for statement in definition.body[:helper_index])
+            any(isinstance(statement, unsafe_control_flow)
+                for statement in definition.body[init_index + 1:helper_index])
         )
         self.assertEqual(len(helper_call.args), 1)
         self.assertIsInstance(helper_call.args[0], ast.Name)

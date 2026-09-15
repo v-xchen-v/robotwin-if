@@ -22,9 +22,8 @@ import traceback
 REPO_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO_ROOT))
 
-from if_benchmark.seed_contracts import IF_SEED_CONTRACTS, describe_seed  # noqa: E402
-from policies.evaluation import (add_evaluation_arguments, prepare_evaluation, setup_episode,
-                                 render_counters)  # noqa: E402
+from if_benchmark.seed_contracts import ARCHIVED_SEED_CONTRACTS, IF_SEED_CONTRACTS, describe_seed  # noqa: E402
+from policies.evaluation import setup_episode  # noqa: E402
 from if_benchmark.seed_manifest import load_manifest, manifest_sha256  # noqa: E402
 from policies.xvla.outputs import camera_strip, episode_path, write_episode_artifacts, write_json  # noqa: E402
 
@@ -38,6 +37,8 @@ def git_identity(path):
 
 
 def select_seeds(args):
+    if args.task in ARCHIVED_SEED_CONTRACTS:
+        raise ValueError(f"Task {args.task} is retired; see bak/{args.task}/README.md")
     manifest = None
     is_if = args.task in IF_SEED_CONTRACTS
     if args.seed_manifest:
@@ -65,6 +66,8 @@ def select_seeds(args):
 
 
 def load_task(target, task_name, task_config):
+    if task_name in ARCHIVED_SEED_CONTRACTS:
+        raise ValueError(f"Task {task_name} is retired; see bak/{task_name}/README.md")
     # Reuse RoboTwin's config/embodiment resolution, without running collection.
     os.chdir(target)
     sys.path[:0] = [str(target / "script"), str(target), str(target / "description/utils")]
@@ -90,10 +93,8 @@ def instruction_for(task, episode_info, split, seed):
     state = random.getstate()
     try:
         # Experimental pairs use one template, changing only the tested word.
-        paired = ((task == "arm_select" and
-                   episode_info.get("arm_select_scene", {}).get("version") == "jitter-v2") or
-                  (task == "grasp_cube_approach" and
-                   episode_info.get("grasp_approach_scene", {}).get("version") == "translate-v2"))
+        paired = (task == "arm_select" and
+                  episode_info.get("arm_select_scene", {}).get("version") == "jitter-v2")
         random.seed(seed // 2 if paired else seed)
         descriptions = generate_episode_descriptions(task, [episode_info["info"]], 1)[0][split]
     finally:
@@ -195,7 +196,6 @@ def _run_episode(env, config, client, args, seed, split, directory, block):
         except Exception as exc:
             record["status"] = "error"
             record["close_error"] = str(exc)
-        record["render_sync"] = render_counters(env)
         record["elapsed_seconds"] = time.monotonic() - started
         np.savez_compressed(path("_actions.npz"),
                             raw_actions=np.concatenate(raw_chunks) if raw_chunks else np.empty((0, 20)),
@@ -231,9 +231,7 @@ def parse_args():
     parser.add_argument("--denoising-steps", type=int, default=10)
     parser.add_argument("--request-timeout", type=float, default=120)
     parser.add_argument("--sim-gpu", default="1", help="CUDA_VISIBLE_DEVICES for simulation only")
-    add_evaluation_arguments(parser)
     args = parser.parse_args()
-    args.oracle_cache_dir = args.oracle_cache_dir.resolve()
     if not args.task.isidentifier() or Path(args.task_config).name != args.task_config:
         parser.error("Task and task-config must be simple names")
     return args
@@ -258,6 +256,7 @@ def main():
                                   for name in ("client.py", "eval.py", "outputs.py")},
                 "task_config_sha256": hashlib.sha256((target / "task_config" / f"{args.task_config}.yml").read_bytes()).hexdigest(),
                 "task_source_sha256": hashlib.sha256((target / "envs" / f"{args.task}.py").read_bytes()).hexdigest(),
+                "evaluation_source_sha256": hashlib.sha256((REPO_ROOT / "policies/evaluation.py").read_bytes()).hexdigest(),
                 "manifest_sha256": manifest_sha256(manifest) if manifest else None}
     write_json(output / "run.json", metadata)
     records = []
@@ -270,8 +269,6 @@ def main():
             client = XVLAClient(args.server_url, args.request_timeout, args.denoising_steps,
                                 args.feedback, args.gripper_threshold)
             env, config = load_task(target, args.task, args.task_config)
-            metadata["evaluation_optimizations"] = prepare_evaluation(env, config, args, robotwin=target)
-            write_json(output / "run.json", metadata)
             write_json(output / "resolved_config.json", config)
             for index, seed in enumerate(seeds):
                 block = index // IF_SEED_CONTRACTS[args.task].block_size if manifest else None

@@ -1,6 +1,6 @@
 # Task manifests
 
-`eval_cfg/if_tasks.yml` is the canonical machine-readable inventory of RoboTwin-IF tasks maintained by this repository. It contains exactly seven single-axis diagnostics:
+`eval_cfg/if_tasks.yml` is the canonical machine-readable inventory of RoboTwin-IF tasks maintained by this repository. It contains exactly six single-axis diagnostics:
 
 | Axis | Task name | Values / contrast |
 |---|---|---|
@@ -10,9 +10,10 @@
 | Arm-Select | `arm_select` | left / right |
 | Sequence | `stack_sequence` | six bottom-to-top orders |
 | Spatial-Direction | `place_relative` | left / right / front / back / on top |
-| Grasp-Approach | `grasp_cube_approach` | top / side |
 
-`eval_cfg/all_tasks_plus_if.yml` is a compatibility list for callers that want one loop over the locked RoboTwin native 50 followed by the maintained IF seven. Its final seven entries must exactly equal `if_tasks.yml`; `tests/test_task_manifests.py` enforces this relationship.
+`eval_cfg/all_tasks_plus_if.yml` is a compatibility list for callers that want one loop over the locked RoboTwin native 50 followed by the maintained IF six. Its final six entries must exactly equal `if_tasks.yml`; `tests/test_task_manifests.py` enforces this relationship.
+
+`grasp_cube_approach` was retired on 2026-09-15 and moved to [bak/](../bak/grasp_cube_approach/README.md). It is excluded from generation, installation, evaluation and current Overall scores. Historical seven-task results remain archived.
 
 ## Membership and readiness
 
@@ -22,7 +23,7 @@ Conversely, manifest membership describes the suite this repository maintains; i
 
 ## Runtime installation
 
-The bridge inventory is contract-tested against this exact seven-task list; inactive source files are not installed. The locked nested runtime is the default:
+The bridge inventory is contract-tested against this exact six-task list; inactive source files are not installed. The locked nested runtime is the default:
 
 ```bash
 bash scripts/bridge_tasks.sh --dry-run
@@ -30,7 +31,7 @@ bash scripts/bridge_tasks.sh
 bash scripts/bridge_tasks.sh --check
 ```
 
-For an external runtime, pass `--robotwin-dir PATH` or set `ROBOTWIN_DIR`. A non-locked/unknown target commit or locally modified compatibility-contract file is rejected by default and requires explicit `--allow-compatible-commit`; static RoboTwin API checks always remain mandatory. The target-side `.robotwin-if-bridge.json` owns the 18 env/helper/instruction links, records source/target dirty provenance plus an exact linked-source digest, and makes stale cleanup and unbridge independent of the current source inventory. A target-scoped operation lock serializes bridge/check/unbridge transactions.
+For an external runtime, pass `--robotwin-dir PATH` or set `ROBOTWIN_DIR`. A non-locked/unknown target commit or locally modified compatibility-contract file is rejected by default and requires explicit `--allow-compatible-commit`; static RoboTwin API checks always remain mandatory. The target-side `.robotwin-if-bridge.json` owns the 16 env/helper/instruction links, records source/target dirty provenance plus an exact linked-source digest, and makes stale cleanup and unbridge independent of the current source inventory. A target-scoped operation lock serializes bridge/check/unbridge transactions.
 
 ## Using the task inventory
 
@@ -59,7 +60,6 @@ The task-local `_if_eval.py` helper applies these limits only after RoboTwin ini
 | `arm_select` | 400 |
 | `stack_sequence` | 1200 |
 | `place_relative` | 400 |
-| `grasp_cube_approach` | 400 |
 
 These are analog-derived runtime budgets, not seed manifests or benchmark metrics. Oracle trajectory frame maxima support their relative ordering but do not measure policy calls; a future CogACT rollout must monitor truncation and update the central map plus its contract test if needed.
 
@@ -90,7 +90,6 @@ Formal IF results instead replay one precomputed list shared by every policy. `t
 | `arm_select` | 2 | one left/right pair |
 | `stack_sequence` | 6 | one six-order scene |
 | `place_relative` | 5 | one five-direction scene |
-| `grasp_cube_approach` | 2 | one top/side pair |
 
 Example pilot generation and independent validation:
 

@@ -1,5 +1,7 @@
 # Balanced Seed Manifest 使用指南
 
+当前维护六项任务；Grasp-Approach 已归档到 [bak/](../bak/grasp_cube_approach/README.md)。旧七任务发布目录仅作历史证据，当前正式清单见 [六任务 20-block release](../seed-manifests/if-ext-v2-six-tasks-20-per-mode/README.md)。
+
 本文面向两类使用者：
 
 1. **Manifest 生成者**：使用 RoboTwin oracle 生成一组固定、均衡、可审计的 episode seeds；
@@ -50,13 +52,12 @@ Manifest 中的 seed 是直接传给 `task.setup_demo(seed=...)` 的 **exact epi
 | `arm_select` | left / right | 2 | 200 |
 | `stack_sequence` | 六种堆叠顺序 | 6 | 600 |
 | `place_relative` | left / right / front / back / on_top | 5 | 500 |
-| `grasp_cube_approach` | top / side | 2 | 200 |
 
-七项都生成 100 blocks 时：
+六项都生成 100 blocks 时：
 
 ```text
 每个 mode = 100 episodes
-七项合计 = 2700 policy-evaluation episodes
+六项合计 = 2500 policy-evaluation episodes
 ```
 
 例如 `bottle_verb --accepted-blocks 100` 的结果是：
@@ -84,7 +85,7 @@ bash scripts/bridge_tasks.sh --check
 `--check` 应显示：
 
 ```text
-check passed: 18 owned links
+check passed: 16 owned links
 ```
 
 生成期间不要修改以下输入：
@@ -98,7 +99,7 @@ check passed: 18 owned links
 
 ---
 
-## 4. 一条命令生成七项、每个 mode 100 episodes
+## 4. 一条命令生成六项、每个 mode 100 episodes
 
 使用仓库提供的 wrapper：
 
@@ -116,9 +117,9 @@ Candidate cap/task      500
 Candidate seed floor    100000
 ```
 
-脚本会按 canonical inventory 依次处理七项。某个 task 失败时，它会保留 checkpoint、继续处理后续 task，并在最后返回 nonzero。
+脚本会按 canonical inventory 依次处理六项。某个 task 失败时，它会保留 checkpoint、继续处理后续 task，并在最后返回 nonzero。
 
-生成可能持续数小时，建议在稳定的终端/tmux 中运行。`100 blocks` 的真实耗时取决于每项 oracle rejection rate，不能只用最终 2700 个 policy episodes 估算。
+生成可能持续数小时，建议在稳定的终端/tmux 中运行。`100 blocks` 的真实耗时取决于每项 oracle rejection rate，不能只用最终 2500 个 policy episodes 估算。
 
 ### 修改默认配置
 
@@ -208,7 +209,7 @@ setup_demo(seed)
 
 ## 7. 输出文件
 
-七项全部成功时，输出目录包含：
+六项全部成功时，输出目录包含：
 
 ```text
 outputs/if-seeds-100-per-mode/
@@ -224,8 +225,6 @@ outputs/if-seeds-100-per-mode/
 ├── stack_sequence.generation.json
 ├── place_relative.json
 ├── place_relative.generation.json
-├── grasp_cube_approach.json
-└── grasp_cube_approach.generation.json
 ```
 
 ### `<task>.json`：给 evaluator 使用
@@ -432,7 +431,6 @@ seed-manifests/
 ├── bottle_verb.json
 ├── bottle_verb.generation.json
 ├── ...
-└── grasp_cube_approach.generation.json
 ```
 
 同时固定：

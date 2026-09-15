@@ -16,8 +16,7 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO_ROOT))
 
 from if_benchmark.seed_contracts import IF_SEED_CONTRACTS, describe_seed  # noqa: E402
-from policies.evaluation import (add_evaluation_arguments, prepare_evaluation, setup_episode,
-                                 render_counters)  # noqa: E402
+from policies.evaluation import setup_episode  # noqa: E402
 from if_benchmark.seed_manifest import manifest_sha256  # noqa: E402
 from policies.xvla.eval import git_identity, load_task, select_seeds  # noqa: E402
 from policies.xvla.outputs import camera_strip, episode_path, write_json  # noqa: E402
@@ -111,7 +110,6 @@ def _run_episode(env, config, client, args, seed, split, directory, block):
             env.close_env()
         except Exception as exc:
             record.update(status="error", close_error=str(exc))
-        record["render_sync"] = render_counters(env)
         record["elapsed_seconds"] = time.monotonic() - started
         np.savez_compressed(path("_actions.npz"), raw_actions=np.asarray(raw_chunks).reshape(-1, 16, 2, 16),
                             skipped_frames=np.asarray(skipped_frames),
@@ -138,9 +136,7 @@ def main():
     parser.add_argument("--blocks", type=int)
     parser.add_argument("--instruction-type", choices=("seen", "unseen", "task-name"))
     parser.add_argument("--sim-gpu", default="0")
-    add_evaluation_arguments(parser)
     args = parser.parse_args()
-    args.oracle_cache_dir = args.oracle_cache_dir.resolve()
     if not args.task.isidentifier() or Path(args.task_config).name != args.task_config:
         parser.error("Task and task-config must be simple names")
     if args.task not in IF_SEED_CONTRACTS and args.instruction_type is None:
@@ -161,6 +157,7 @@ def main():
                                             REPO_ROOT / "policies/xvla/eval.py", REPO_ROOT / "policies/xvla/outputs.py"]},
                 "task_config_sha256": hashlib.sha256((target / "task_config" / f"{args.task_config}.yml").read_bytes()).hexdigest(),
                 "task_source_sha256": hashlib.sha256((target / "envs" / f"{args.task}.py").read_bytes()).hexdigest(),
+                "evaluation_source_sha256": hashlib.sha256((REPO_ROOT / "policies/evaluation.py").read_bytes()).hexdigest(),
                 "manifest_sha256": manifest_sha256(manifest) if manifest else None}
     write_json(output / "run.json", metadata)
     records, failure = [], None
@@ -174,8 +171,6 @@ def main():
             write_json(output / "run.json", metadata)
             env, config = load_task(target, args.task, args.task_config)
             config["policy_name"] = "lingbot_va"
-            metadata["evaluation_optimizations"] = prepare_evaluation(env, config, args, robotwin=target)
-            write_json(output / "run.json", metadata)
             write_json(output / "resolved_config.json", config)
             for index, seed in enumerate(seeds):
                 block = index // IF_SEED_CONTRACTS[args.task].block_size if manifest else None

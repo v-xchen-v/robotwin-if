@@ -9,7 +9,6 @@ import unittest
 from unittest.mock import patch
 
 import numpy as np
-import transforms3d as t3d
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
@@ -43,7 +42,7 @@ def task_class(name):
     path = ROOT / 'tasks/envs' / f'{name}.py'
     tree = ast.parse(path.read_text())
     tree.body = [node for node in tree.body if isinstance(node, ast.ClassDef)]
-    namespace = dict(Base_Task=BaseTask, np=np, t3d=t3d, ArmTag=str,
+    namespace = dict(Base_Task=BaseTask, np=np, ArmTag=str,
                      apply_if_eval_step_limit=lambda task: None)
     exec(compile(tree, str(path), 'exec'), namespace)
     return namespace[name]
@@ -54,13 +53,12 @@ class PolicyEvaluationTests(unittest.TestCase):
         scenes = {
             'bottle_verb': SimpleNamespace(mode='shake'),
             'arm_select': SimpleNamespace(mode='right'),
-            'grasp_cube_approach': SimpleNamespace(mode='side'),
             'pick_diverse_object': SimpleNamespace(target_familiarity='unseen'),
             'attribute_select': SimpleNamespace(axis='decal', value=1, AXIS_VALUES={'decal': ('cat','dog')}),
             'stack_sequence': SimpleNamespace(perm=[2,0,1], COLOR_NAMES=['red','green','blue']),
             'place_relative': SimpleNamespace(direction='on_top'),
         }
-        expected = ['shake','right','side','unseen','decal:dog','blue>red>green','on_top']
+        expected = ['shake','right','unseen','decal:dog','blue>red>green','on_top']
         for (name, scene), mode in zip(scenes.items(), expected):
             with self.subTest(task=name):
                 self.assertEqual(observed_mode(name, scene), mode)
@@ -68,7 +66,7 @@ class PolicyEvaluationTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             observed_mode('unknown', SimpleNamespace())
 
-    def test_all_six_clis_accept_all_seven_tasks_and_two_blocks(self):
+    def test_all_six_clis_accept_all_six_tasks_and_two_blocks(self):
         for policy in ('xvla','lingbot_va','lingbot_vla','vlact','dm05','hy_vla'):
             module = importlib.import_module(f'policies.{policy}.eval')
             for task, contract in IF_SEED_CONTRACTS.items():
@@ -99,46 +97,6 @@ class PolicyEvaluationTests(unittest.TestCase):
         task.setup_demo(seed=100001)
         self.assertFalse(task.check_success())
 
-    def test_grasp_policy_approach_is_observed_before_lift(self):
-        cls = task_class('grasp_cube_approach')
-        for seed, rotation in [(100000, t3d.euler.euler2quat(0, np.pi/2, 0)),
-                               (100001, [1.,0.,0.,0.])]:
-            with self.subTest(seed=seed):
-                task = cls()
-                task.setup_demo(seed=seed)
-                task.start_policy_rollout()
-                self.assertFalse(task.check_success())
-                self.assertFalse(task.eval_signals()['orientation_match'])
-                task.contact = True
-                task.rotation = rotation
-                self.assertFalse(task.check_success())
-                self.assertTrue(task.eval_signals()['orientation_match'])
-                task.position[2] += 0.1
-                self.assertTrue(task.check_success())
-                task.setup_demo(seed=seed)
-                task.start_policy_rollout()
-                self.assertFalse(task.check_success())
-                self.assertFalse(task.eval_signals()['policy_approach_observed'])
-
-    def test_wrong_approach_cannot_be_fixed_by_rotating_after_contact(self):
-        task = task_class('grasp_cube_approach')()
-        task.setup_demo(seed=100000)
-        task.start_policy_rollout()
-        task.contact = True
-        self.assertFalse(task.check_success())
-        task.rotation = t3d.euler.euler2quat(0, np.pi/2, 0)
-        task.position[2] += 0.1
-        self.assertFalse(task.check_success())
-        self.assertTrue(task.eval_signals()['lifted'])
-        self.assertFalse(task.eval_signals()['orientation_match'])
-
-    def test_no_contact_lift_does_not_inherit_an_oracle_orientation(self):
-        task = task_class('grasp_cube_approach')()
-        task.setup_demo(seed=100001)
-        task.start_policy_rollout()
-        task.position[2] += 0.1
-        self.assertFalse(task.check_success())
-        self.assertFalse(task.eval_signals()['orientation_match'])
 
 
 if __name__ == '__main__':

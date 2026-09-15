@@ -1,4 +1,6 @@
 ---
+
+> 历史设计记录：2026-09-15 起当前任务集为六项，Grasp-Approach 暂时下线并归档到 [bak/](../../bak/grasp_cube_approach/README.md)。下文七任务设计仅供追溯。
 status: sop
 area: robotics / benchmark-design
 created: 2026-09-01

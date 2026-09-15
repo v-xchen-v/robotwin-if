@@ -26,9 +26,8 @@ TASKS = (
     "arm_select",
     "stack_sequence",
     "place_relative",
-    "grasp_cube_approach",
 )
-SIZES = (2, 2, 8, 2, 6, 5, 2)
+SIZES = (2, 2, 8, 2, 6, 5)
 
 
 class SeedContractTests(unittest.TestCase):

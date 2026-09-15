@@ -69,8 +69,8 @@ mapfile -t TASKS < <(
   PYTHONPATH="$REPO_ROOT${PYTHONPATH:+:$PYTHONPATH}" python3 -c \
     'from if_benchmark.seed_contracts import IF_SEED_CONTRACTS; print(*IF_SEED_CONTRACTS, sep="\n")'
 )
-if [[ ${#TASKS[@]} -ne 7 ]]; then
-  echo "error: expected exactly seven maintained IF tasks, got ${#TASKS[@]}" >&2
+if [[ ${#TASKS[@]} -ne 6 ]]; then
+  echo "error: expected exactly six maintained IF tasks, got ${#TASKS[@]}" >&2
   exit 2
 fi
 
@@ -114,4 +114,4 @@ if [[ ${#failed[@]} -ne 0 ]]; then
   exit 1
 fi
 
-echo "All seven manifests generated and independently validated: $OUTPUT_DIR"
+echo "All six manifests generated and independently validated: $OUTPUT_DIR"

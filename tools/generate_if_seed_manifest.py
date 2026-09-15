@@ -46,7 +46,7 @@ def _utc_now():
 
 
 def _observed_mode(task_name, task):
-    if task_name in ("bottle_verb", "arm_select", "grasp_cube_approach"):
+    if task_name in ("bottle_verb", "arm_select"):
         return str(task.mode)
     if task_name == "pick_diverse_object":
         return str(task.target_familiarity)

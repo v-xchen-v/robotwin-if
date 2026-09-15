@@ -1,0 +1,1023 @@
+{
+  "blocks": [
+    {
+      "accepted": false,
+      "block_index": 50000,
+      "episodes": [
+        {
+          "accepted": false,
+          "check_success": false,
+          "expected_mode": "pick",
+          "failure": {
+            "category": "check_success",
+            "message": "task.check_success() is false"
+          },
+          "observed_mode": "pick",
+          "plan_success": true,
+          "seed": 100000,
+          "setup_ok": true
+        },
+        {
+          "accepted": false,
+          "check_success": false,
+          "expected_mode": "shake",
+          "failure": {
+            "category": "check_success",
+            "message": "task.check_success() is false"
+          },
+          "observed_mode": "shake",
+          "plan_success": true,
+          "seed": 100001,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100000,
+        100001
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50001,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "pick",
+          "failure": null,
+          "observed_mode": "pick",
+          "plan_success": true,
+          "seed": 100002,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "shake",
+          "failure": null,
+          "observed_mode": "shake",
+          "plan_success": true,
+          "seed": 100003,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100002,
+        100003
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50002,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "pick",
+          "failure": null,
+          "observed_mode": "pick",
+          "plan_success": true,
+          "seed": 100004,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "shake",
+          "failure": null,
+          "observed_mode": "shake",
+          "plan_success": true,
+          "seed": 100005,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100004,
+        100005
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50003,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "pick",
+          "failure": null,
+          "observed_mode": "pick",
+          "plan_success": true,
+          "seed": 100006,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "shake",
+          "failure": null,
+          "observed_mode": "shake",
+          "plan_success": true,
+          "seed": 100007,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100006,
+        100007
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50004,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "pick",
+          "failure": null,
+          "observed_mode": "pick",
+          "plan_success": true,
+          "seed": 100008,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "shake",
+          "failure": null,
+          "observed_mode": "shake",
+          "plan_success": true,
+          "seed": 100009,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100008,
+        100009
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50005,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "pick",
+          "failure": null,
+          "observed_mode": "pick",
+          "plan_success": true,
+          "seed": 100010,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "shake",
+          "failure": null,
+          "observed_mode": "shake",
+          "plan_success": true,
+          "seed": 100011,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100010,
+        100011
+      ]
+    },
+    {
+      "accepted": false,
+      "block_index": 50006,
+      "episodes": [
+        {
+          "accepted": false,
+          "check_success": false,
+          "expected_mode": "pick",
+          "failure": {
+            "category": "setup",
+            "message": "UnStableError: Objects is unstable in seed(100012), unstable objects: 001_bottle"
+          },
+          "observed_mode": null,
+          "plan_success": false,
+          "seed": 100012,
+          "setup_ok": false
+        },
+        {
+          "accepted": false,
+          "check_success": false,
+          "expected_mode": "shake",
+          "failure": {
+            "category": "setup",
+            "message": "UnStableError: Objects is unstable in seed(100013), unstable objects: 001_bottle"
+          },
+          "observed_mode": null,
+          "plan_success": false,
+          "seed": 100013,
+          "setup_ok": false
+        }
+      ],
+      "seeds": [
+        100012,
+        100013
+      ]
+    },
+    {
+      "accepted": false,
+      "block_index": 50007,
+      "episodes": [
+        {
+          "accepted": false,
+          "check_success": false,
+          "expected_mode": "pick",
+          "failure": {
+            "category": "setup",
+            "message": "UnStableError: Objects is unstable in seed(100014), unstable objects: 001_bottle"
+          },
+          "observed_mode": null,
+          "plan_success": false,
+          "seed": 100014,
+          "setup_ok": false
+        },
+        {
+          "accepted": false,
+          "check_success": false,
+          "expected_mode": "shake",
+          "failure": {
+            "category": "setup",
+            "message": "UnStableError: Objects is unstable in seed(100015), unstable objects: 001_bottle"
+          },
+          "observed_mode": null,
+          "plan_success": false,
+          "seed": 100015,
+          "setup_ok": false
+        }
+      ],
+      "seeds": [
+        100014,
+        100015
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50008,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "pick",
+          "failure": null,
+          "observed_mode": "pick",
+          "plan_success": true,
+          "seed": 100016,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "shake",
+          "failure": null,
+          "observed_mode": "shake",
+          "plan_success": true,
+          "seed": 100017,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100016,
+        100017
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50009,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "pick",
+          "failure": null,
+          "observed_mode": "pick",
+          "plan_success": true,
+          "seed": 100018,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "shake",
+          "failure": null,
+          "observed_mode": "shake",
+          "plan_success": true,
+          "seed": 100019,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100018,
+        100019
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50010,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "pick",
+          "failure": null,
+          "observed_mode": "pick",
+          "plan_success": true,
+          "seed": 100020,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "shake",
+          "failure": null,
+          "observed_mode": "shake",
+          "plan_success": true,
+          "seed": 100021,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100020,
+        100021
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50011,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "pick",
+          "failure": null,
+          "observed_mode": "pick",
+          "plan_success": true,
+          "seed": 100022,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "shake",
+          "failure": null,
+          "observed_mode": "shake",
+          "plan_success": true,
+          "seed": 100023,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100022,
+        100023
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50012,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "pick",
+          "failure": null,
+          "observed_mode": "pick",
+          "plan_success": true,
+          "seed": 100024,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "shake",
+          "failure": null,
+          "observed_mode": "shake",
+          "plan_success": true,
+          "seed": 100025,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100024,
+        100025
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50013,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "pick",
+          "failure": null,
+          "observed_mode": "pick",
+          "plan_success": true,
+          "seed": 100026,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "shake",
+          "failure": null,
+          "observed_mode": "shake",
+          "plan_success": true,
+          "seed": 100027,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100026,
+        100027
+      ]
+    },
+    {
+      "accepted": false,
+      "block_index": 50014,
+      "episodes": [
+        {
+          "accepted": false,
+          "check_success": false,
+          "expected_mode": "pick",
+          "failure": {
+            "category": "setup",
+            "message": "UnStableError: Objects is unstable in seed(100028), unstable objects: 001_bottle"
+          },
+          "observed_mode": null,
+          "plan_success": false,
+          "seed": 100028,
+          "setup_ok": false
+        },
+        {
+          "accepted": false,
+          "check_success": false,
+          "expected_mode": "shake",
+          "failure": {
+            "category": "setup",
+            "message": "UnStableError: Objects is unstable in seed(100029), unstable objects: 001_bottle"
+          },
+          "observed_mode": null,
+          "plan_success": false,
+          "seed": 100029,
+          "setup_ok": false
+        }
+      ],
+      "seeds": [
+        100028,
+        100029
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50015,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "pick",
+          "failure": null,
+          "observed_mode": "pick",
+          "plan_success": true,
+          "seed": 100030,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "shake",
+          "failure": null,
+          "observed_mode": "shake",
+          "plan_success": true,
+          "seed": 100031,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100030,
+        100031
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50016,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "pick",
+          "failure": null,
+          "observed_mode": "pick",
+          "plan_success": true,
+          "seed": 100032,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "shake",
+          "failure": null,
+          "observed_mode": "shake",
+          "plan_success": true,
+          "seed": 100033,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100032,
+        100033
+      ]
+    },
+    {
+      "accepted": false,
+      "block_index": 50017,
+      "episodes": [
+        {
+          "accepted": false,
+          "check_success": false,
+          "expected_mode": "pick",
+          "failure": {
+            "category": "setup",
+            "message": "UnStableError: Objects is unstable in seed(100034), unstable objects: 001_bottle"
+          },
+          "observed_mode": null,
+          "plan_success": false,
+          "seed": 100034,
+          "setup_ok": false
+        },
+        {
+          "accepted": false,
+          "check_success": false,
+          "expected_mode": "shake",
+          "failure": {
+            "category": "setup",
+            "message": "UnStableError: Objects is unstable in seed(100035), unstable objects: 001_bottle"
+          },
+          "observed_mode": null,
+          "plan_success": false,
+          "seed": 100035,
+          "setup_ok": false
+        }
+      ],
+      "seeds": [
+        100034,
+        100035
+      ]
+    },
+    {
+      "accepted": false,
+      "block_index": 50018,
+      "episodes": [
+        {
+          "accepted": false,
+          "check_success": false,
+          "expected_mode": "pick",
+          "failure": {
+            "category": "setup",
+            "message": "UnStableError: Objects is unstable in seed(100036), unstable objects: 001_bottle"
+          },
+          "observed_mode": null,
+          "plan_success": false,
+          "seed": 100036,
+          "setup_ok": false
+        },
+        {
+          "accepted": false,
+          "check_success": false,
+          "expected_mode": "shake",
+          "failure": {
+            "category": "setup",
+            "message": "UnStableError: Objects is unstable in seed(100037), unstable objects: 001_bottle"
+          },
+          "observed_mode": null,
+          "plan_success": false,
+          "seed": 100037,
+          "setup_ok": false
+        }
+      ],
+      "seeds": [
+        100036,
+        100037
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50019,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "pick",
+          "failure": null,
+          "observed_mode": "pick",
+          "plan_success": true,
+          "seed": 100038,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "shake",
+          "failure": null,
+          "observed_mode": "shake",
+          "plan_success": true,
+          "seed": 100039,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100038,
+        100039
+      ]
+    },
+    {
+      "accepted": false,
+      "block_index": 50020,
+      "episodes": [
+        {
+          "accepted": false,
+          "check_success": false,
+          "expected_mode": "pick",
+          "failure": {
+            "category": "setup",
+            "message": "UnStableError: Objects is unstable in seed(100040), unstable objects: 001_bottle"
+          },
+          "observed_mode": null,
+          "plan_success": false,
+          "seed": 100040,
+          "setup_ok": false
+        },
+        {
+          "accepted": false,
+          "check_success": false,
+          "expected_mode": "shake",
+          "failure": {
+            "category": "setup",
+            "message": "UnStableError: Objects is unstable in seed(100041), unstable objects: 001_bottle"
+          },
+          "observed_mode": null,
+          "plan_success": false,
+          "seed": 100041,
+          "setup_ok": false
+        }
+      ],
+      "seeds": [
+        100040,
+        100041
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50021,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "pick",
+          "failure": null,
+          "observed_mode": "pick",
+          "plan_success": true,
+          "seed": 100042,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "shake",
+          "failure": null,
+          "observed_mode": "shake",
+          "plan_success": true,
+          "seed": 100043,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100042,
+        100043
+      ]
+    },
+    {
+      "accepted": false,
+      "block_index": 50022,
+      "episodes": [
+        {
+          "accepted": false,
+          "check_success": false,
+          "expected_mode": "pick",
+          "failure": {
+            "category": "setup",
+            "message": "UnStableError: Objects is unstable in seed(100044), unstable objects: 001_bottle"
+          },
+          "observed_mode": null,
+          "plan_success": false,
+          "seed": 100044,
+          "setup_ok": false
+        },
+        {
+          "accepted": false,
+          "check_success": false,
+          "expected_mode": "shake",
+          "failure": {
+            "category": "setup",
+            "message": "UnStableError: Objects is unstable in seed(100045), unstable objects: 001_bottle"
+          },
+          "observed_mode": null,
+          "plan_success": false,
+          "seed": 100045,
+          "setup_ok": false
+        }
+      ],
+      "seeds": [
+        100044,
+        100045
+      ]
+    },
+    {
+      "accepted": false,
+      "block_index": 50023,
+      "episodes": [
+        {
+          "accepted": false,
+          "check_success": false,
+          "expected_mode": "pick",
+          "failure": {
+            "category": "setup",
+            "message": "UnStableError: Objects is unstable in seed(100046), unstable objects: 001_bottle"
+          },
+          "observed_mode": null,
+          "plan_success": false,
+          "seed": 100046,
+          "setup_ok": false
+        },
+        {
+          "accepted": false,
+          "check_success": false,
+          "expected_mode": "shake",
+          "failure": {
+            "category": "setup",
+            "message": "UnStableError: Objects is unstable in seed(100047), unstable objects: 001_bottle"
+          },
+          "observed_mode": null,
+          "plan_success": false,
+          "seed": 100047,
+          "setup_ok": false
+        }
+      ],
+      "seeds": [
+        100046,
+        100047
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50024,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "pick",
+          "failure": null,
+          "observed_mode": "pick",
+          "plan_success": true,
+          "seed": 100048,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "shake",
+          "failure": null,
+          "observed_mode": "shake",
+          "plan_success": true,
+          "seed": 100049,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100048,
+        100049
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50025,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "pick",
+          "failure": null,
+          "observed_mode": "pick",
+          "plan_success": true,
+          "seed": 100050,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "shake",
+          "failure": null,
+          "observed_mode": "shake",
+          "plan_success": true,
+          "seed": 100051,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100050,
+        100051
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50026,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "pick",
+          "failure": null,
+          "observed_mode": "pick",
+          "plan_success": true,
+          "seed": 100052,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "shake",
+          "failure": null,
+          "observed_mode": "shake",
+          "plan_success": true,
+          "seed": 100053,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100052,
+        100053
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50027,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "pick",
+          "failure": null,
+          "observed_mode": "pick",
+          "plan_success": true,
+          "seed": 100054,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "shake",
+          "failure": null,
+          "observed_mode": "shake",
+          "plan_success": true,
+          "seed": 100055,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100054,
+        100055
+      ]
+    },
+    {
+      "accepted": true,
+      "block_index": 50028,
+      "episodes": [
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "pick",
+          "failure": null,
+          "observed_mode": "pick",
+          "plan_success": true,
+          "seed": 100056,
+          "setup_ok": true
+        },
+        {
+          "accepted": true,
+          "check_success": true,
+          "expected_mode": "shake",
+          "failure": null,
+          "observed_mode": "shake",
+          "plan_success": true,
+          "seed": 100057,
+          "setup_ok": true
+        }
+      ],
+      "seeds": [
+        100056,
+        100057
+      ]
+    }
+  ],
+  "contract_schema_version": 1,
+  "manifest_sha256": "8b709174d715181b5a08f70af3adfbed06d7da338814014b61c62566f238a231",
+  "next_block": 50029,
+  "parameters": {
+    "accepted_blocks": 20,
+    "candidate_floor": 100000,
+    "first_block": 50000,
+    "max_candidate_blocks": 500,
+    "task": "bottle_verb",
+    "task_config": "demo_clean"
+  },
+  "provenance": {
+    "bridge_allow_compatible_commit": true,
+    "generator": {
+      "generation_schema_version": 1,
+      "manifest_schema_version": 1,
+      "name": "tools/generate_if_seed_manifest.py",
+      "version": 1
+    },
+    "source_commit": "6fd624fd03b0c49e60adb9ee4204031556712431",
+    "source_digest": "719c3f43818403d33f2a79f7a44aed0068a4b5a958fac0bf9b994c23343684bb",
+    "source_dirty": false,
+    "source_root": "/home/xichen6/Documents/repos/robotwin-if",
+    "target_commit": "b82ffb81d291d14c24be444bb7b6f81719481e0f",
+    "target_contract_dirty": false,
+    "target_root": "/home/xichen6/Documents/repos/robotwin-if/third_party/robotwin-manifest-clean",
+    "task_config_path": "task_config/demo_clean.yml",
+    "task_config_sha256": "8ee5d0d07daecf7599b8d89b44776b700c7c60da24cd6317e176e6798d8cb11e"
+  },
+  "schema_version": 1,
+  "status": "complete",
+  "summary": {
+    "candidate_blocks": 29,
+    "accepted_blocks": 20,
+    "rejected_blocks": 9,
+    "accepted_block_ids": [
+      50001,
+      50002,
+      50003,
+      50004,
+      50005,
+      50008,
+      50009,
+      50010,
+      50011,
+      50012,
+      50013,
+      50015,
+      50016,
+      50019,
+      50021,
+      50024,
+      50025,
+      50026,
+      50027,
+      50028
+    ],
+    "rejected_block_ids": [
+      50000,
+      50006,
+      50007,
+      50014,
+      50017,
+      50018,
+      50020,
+      50022,
+      50023
+    ],
+    "failure_categories": {
+      "check_success": 2,
+      "setup": 16
+    }
+  },
+  "derivation": {
+    "compatibility_review": "Oracle task sources unchanged since the source run except attribute_select setup now initializes the height baseline; play_once still resets that baseline before grasping. demo_clean episode_num changed 50 to 2, affecting collection count only, not exact-seed oracle execution. Language utilities only gained explicit UTF-8 encoding.",
+    "current_config_sha256": "ae893a209ed2425d1a4d2cd7046187d60a566fc715aa88447901335ea2900f82",
+    "current_task_sha256": "18ebf738f03bf2666662c7e1844403f8dc8ab16587472baff68eb2b63a4bbff2",
+    "method": "First 20 accepted complete blocks of the same oracle run; retain the 12-block prefix; no new oracle execution",
+    "parent_parameters": {
+      "accepted_blocks": 100,
+      "candidate_floor": 100000,
+      "first_block": 50000,
+      "max_candidate_blocks": 500,
+      "task": "bottle_verb",
+      "task_config": "demo_clean"
+    },
+    "parent_timing": {
+      "elapsed_seconds": 4495.112413171679,
+      "started_at": "2026-09-03T13:41:01.757020+00:00",
+      "updated_at": "2026-09-03T14:55:56.883361+00:00"
+    },
+    "source_evidence_sha256": "6331271ddf02ee6ace0fe496d79e29570be7c5a8da335a57e5c357ac4cd72171",
+    "source_manifest": "seed-manifests/if-ext-v1-100-per-mode/bottle_verb.json",
+    "source_manifest_sha256": "7b6896e1c721323799547ffa450bc8621f292eac19058095b0541d344d2799af"
+  }
+}

@@ -5,7 +5,9 @@ from pathlib import Path
 import tempfile
 from types import SimpleNamespace
 import unittest
-from unittest.mock import patch
+
+from tools import sim_device
+from unittest.mock import Mock, patch
 
 PATH = Path(__file__).resolve().parents[1] / 'tools/run_formal_policy_suite.py'
 SPEC = importlib.util.spec_from_file_location('formal_suite', PATH)
@@ -69,23 +71,82 @@ class FormalReuseTest(unittest.TestCase):
         def original(env, config, client, args, seed, split, directory, block=None):
             executed.append((seed, block))
             return dict(seed=seed, status='new')
-        fake = SimpleNamespace(__file__='fake_eval.py', run_episode=original)
+        fake = SimpleNamespace(__file__='fake_eval.py', run_episode=original,
+                               setup_episode=lambda *args: ('instruction', {}))
         def main():
             for i, seed in enumerate(self.spec['seeds']):
                 returned.append(fake.run_episode(None, None, None, None, seed, 'unseen', None, block=i // 2))
             return 0
         fake.main = main
-        loader = SimpleNamespace(create_module=lambda spec: None, exec_module=lambda module: setattr(module, 'pin_renderer',
-                                 lambda: SimpleNamespace(pci_string='0000:af:00.0')))
-        adapter = importlib.util.spec_from_loader('fake_adapter', loader)
         with patch.object(suite.importlib, 'import_module', return_value=fake), \
-             patch.object(suite.importlib.util, 'spec_from_file_location', return_value=adapter), \
+             patch.object(sim_device, 'pin_renderer', return_value='0000:af:00.0'), \
              patch.object(suite.sys, 'argv', []), patch.dict(suite.os.environ):
             self.assertEqual(suite.worker(self.base, 'xvla', 'bottle_verb', self.base / 'batch/bottle_verb'), 0)
+        self.assertIs(fake.run_episode, original)
         self.assertEqual(executed, [(100003, 0), (100004, 1)])
         self.assertEqual([r['status'] for r in returned], ['failure', 'new', 'new', 'success'])
         resume = suite.read(self.base / 'batch/bottle_verb-resume.json')
         self.assertEqual(resume['skipped_seeds'], [100002, 100005])
+        self.assertEqual(resume['argv'][resume['argv'].index('--blocks') + 1], '2')
+
+    def test_twenty_blocks_reports_new_target_and_keeps_old_failures(self):
+        self.spec['seeds'] = list(range(100002, 100042))
+        self.spec['blocks'] = 20
+        suite.write(self.base / 'plan.json', dict(tasks=[self.spec], policies=['xvla'], expected_episodes=40))
+        for seed in self.spec['seeds'][:24]:
+            source = self.episode(seed, False)
+            suite.import_episode(self.base, 'xvla', self.spec, seed, source, 'reused')
+        status = suite.report(self.base)
+        self.assertEqual((status['completed_blocks'], status['expected_blocks']), (12, 20))
+        self.assertEqual((status['completed_episodes'], status['pending_episodes']), (24, 16))
+        self.assertEqual(status['policy_failures'], 24)
+        row = suite.read(self.base / 'summary.json')['tasks'][0]
+        self.assertEqual(row['per_mode']['pick']['expected'], 20)
+        self.assertIn('completed 24/40', (self.base / 'report.md').read_text())
+        self.assertIn('20 blocks', (self.base / 'report.md').read_text())
+        self.spec['blocks'] = 12
+        with self.assertRaisesRegex(AssertionError, 'disagrees'):
+            suite.block_count(self.spec)
+
+    def test_worker_checks_scene_before_inference_and_restores_hooks(self):
+        policy = 'dm05'
+        suite.write(self.base / f'provenance/reused/{policy}/bottle_verb/run.json',
+                    dict(arguments=dict(server_url='http://127.0.0.1:8014', request_timeout=600)))
+        setup = Mock(return_value=('instruction', {}))
+        inference = Mock()
+        def episode(env, config, client, args, seed, split, directory, block=None):
+            fake.setup_episode(env, config, args, seed, split, {}, lambda suffix: directory / suffix)
+            inference()
+        fake = SimpleNamespace(__file__='fake_eval.py', run_episode=episode, setup_episode=setup)
+        fake.main = lambda: fake.run_episode(None, {}, None, None, 100002, 'unseen', self.base)
+        with patch.object(suite.importlib, 'import_module', return_value=fake), \
+             patch.object(sim_device, 'pin_renderer'), patch.dict(suite.os.environ), \
+             patch.object(suite, 'check_scene', side_effect=AssertionError('Initial RGB mismatch')) as guard:
+            with self.assertRaisesRegex(AssertionError, 'Initial RGB mismatch'):
+                suite.worker(self.base, policy, 'bottle_verb', self.base / 'batch/bottle_verb')
+        guard.assert_called_once()
+        setup.assert_called_once()
+        inference.assert_not_called()
+        self.assertIs(fake.run_episode, episode)
+        self.assertIs(fake.setup_episode, setup)
+
+    def test_gpu_pressure_or_other_jobs_prevent_execution(self):
+        (self.base / 'support').mkdir()
+        healthy = '0, 100, 49140, 40, 0\n1, 100, 49140, 40, 0\n'
+        cases = ((healthy, True, True),
+                 (healthy.replace('40, 0', '87, 0', 1), False, False),
+                 (healthy.replace('100, 49140', '24576, 49140', 1), False, False),
+                 (healthy.replace('1, 100', '1, 48000'), False, False),
+                 (healthy.replace('40, 0', '40, 90', 1), True, False))
+        for rows, idle, valid in cases:
+            with self.subTest(rows=rows, idle=idle), \
+                 patch.object(suite.subprocess, 'run', return_value=SimpleNamespace(stdout=rows)), \
+                 patch.object(suite.shutil, 'disk_usage', return_value=SimpleNamespace(free=500 * 1024**3)):
+                if valid:
+                    suite.gpu_check(self.base, 'test', idle=idle)
+                else:
+                    with self.assertRaises(AssertionError):
+                        suite.gpu_check(self.base, 'test', idle=idle)
 
     def oracle_error(self):
         return dict(task='bottle_verb', seed=100002, status='error', oracle_success=False,
@@ -143,6 +204,45 @@ class FormalReuseTest(unittest.TestCase):
         self.assertEqual(status['completed_blocks'], 1)
         self.assertEqual(status['policy_failures'], 3)
         self.assertEqual(status['complete_task_policy_runs'], 0)
+
+    def test_scene_guard_rejects_rgb_or_state_changes_before_inference(self):
+        import numpy as np
+        from policies.xvla import client
+        spec = dict(task='arm_select')
+        pre = self.base / 'xvla/arm_select/arm_select_ep500000'
+        pre.parent.mkdir(parents=True)
+        cameras = ('head_camera', 'left_camera', 'right_camera')
+        images = {c: np.zeros((2, 2, 3), dtype=np.uint8) for c in cameras}
+        proprio = np.zeros(20)
+        initial = Path(str(pre) + '_initial_observation.npz')
+        np.savez(initial, **images, proprio=proprio)
+        suite.write(str(pre) + '_provenance.json',
+                          dict(files_sha256={initial.name: suite.digest(initial)}))
+        obs = dict(observation={c: dict(rgb=im.copy()) for c, im in images.items()})
+        record = dict(instruction='use left arm', step_limit=400)
+        def path(suffix):
+            return self.base / ('guard' + suffix)
+        with patch.object(suite, 'completed_record', return_value=record), \
+             patch.object(client, 'encode_proprio', return_value=proprio):
+            def check():
+                suite.check_scene(self.base, 'dm05', spec, 500000,
+                                  'use left arm', obs, SimpleNamespace(step_lim=400), path)
+            check()
+            self.assertTrue(path('_same_host_scene.json').exists())
+            obs['observation']['head_camera']['rgb'][0, 0, 0] = 1
+            with self.assertRaises(AssertionError):
+                check()
+            obs['observation']['head_camera']['rgb'][0, 0, 0] = 0
+            proprio[0] = .01
+            with self.assertRaises(AssertionError):
+                check()
+            proprio[0] = 0
+            for key, wrong in (('instruction', 'wrong instruction'), ('step_limit', 401)):
+                with patch.dict(record, {key: wrong}), self.assertRaises(AssertionError):
+                    check()
+            initial.write_bytes(initial.read_bytes() + b'changed')
+            with self.assertRaisesRegex(AssertionError, 'Reference checksum changed'):
+                check()
 
 
 if __name__ == '__main__':

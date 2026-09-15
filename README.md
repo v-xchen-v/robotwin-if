@@ -1,9 +1,6 @@
 # robotwin-if
 
-在 [RoboTwin 2.0](https://github.com/RoboTwin-Platform/RoboTwin) 上实现单轴 instruction-following diagnostic tasks。
-RoboTwin 以 git submodule 锁定；任务通过软链注入。
-
-本页展示当前评测采用的**六个任务**。Grasp-Approach 暂时退出本页的评测范围；历史七任务实现与结果保留用于追溯。
+在 [RoboTwin 2.0](https://github.com/RoboTwin-Platform/RoboTwin) 上维护六个单轴 instruction-following diagnostic tasks。RoboTwin 以 git submodule 锁定；任务通过软链注入，**不 fork、不修改上游源码**。
 
 | 诊断轴 | Task name | 对比值 |
 |---|---|---|
@@ -14,12 +11,15 @@ RoboTwin 以 git submodule 锁定；任务通过软链注入。
 | Sequence | [`stack_sequence`](#stack-sequence) | 六种 bottom-to-top 顺序 |
 | Spatial-Direction | [`place_relative`](#place-relative) | left / right / front / back / on top |
 
-本仓库维护任务场景、指令模板、成功判定及开源 policy 的推理适配，不在本仓库训练模型。
-各 policy 的安装和推理说明见 [policies/](policies/README.md)。
+Grasp-Approach 已于 2026-09-15 暂时下线；实现、配置、测试和 probe 归档到 [`bak/grasp_cube_approach/`](bak/grasp_cube_approach/README.md)。当前默认生成、安装与评测均只包含以上六项。
 
-当前 [六任务结果表](#policy-results) 与 [任务视频](#task-videos) 均可在本页查看。
-[六任务 20-block seed/mode 清单](seed-manifests/if-ext-v2-six-tasks-20-per-mode/README.md) 对应每个 policy 500 回合，合计 3000 回合、720 blocks。
-[结果目录](result/README.md) 同时保留当前六任务与历史七任务归档；两者的 Overall 按各自任务范围计算。
+唯一正式维护的 IF inventory 是 [`eval_cfg/if_tasks.yml`](eval_cfg/if_tasks.yml)。其他 env/JSON 可以为历史或实验目的留在仓库中，但只要没有列入该文件，就不属于 active suite。Manifest membership 与 production readiness 分开管理：例如 `pick_diverse_object` 属于上述六项，其已锁定的四类 Unseen production pool 仍由独立测试 gate 持续约束。
+
+本仓库维护 benchmark task（场景、干扰物、指令模板、成功判定与评测语义），并在 [`policies/`](policies/README.md) 中维护 X-VLA、LingBot-VA 等开源策略的独立推理环境与适配代码，**不在本仓库训练模型**。模型服务与 RoboTwin 仿真使用不同的 Conda 环境；也可由外部 CogACT/X-VLA 集成提供推理。
+
+正式评测结果见 [`result/`](result/README.md)，当前 [六任务结果表](#policy-results) 已从原归档提取。历史七任务 [IF-Ext v2 wide 20-block 结果](result/if-ext-v2-wide-20blocks/README.md)
+保留六个 policies × 七任务的 3240 回合，包含报表、逐回合 CSV、冻结 seed manifest 和校验证据。
+当前六任务使用 [20-block 清单](seed-manifests/if-ext-v2-six-tasks-20-per-mode/README.md)：500 回合/policy、总计 3000 回合和 720 blocks，均可复用原归档结果。六任务 Overall 与原七任务分数属于不同评测范围。
 
 <a id="policy-results"></a>
 
@@ -128,8 +128,6 @@ Spatial 的 Top 表示 on_top。每个 policy 的每项任务均已完成 20/20 
 [逐回合 CSV](result/if-ext-v2-six-tasks-20blocks/episodes.csv) ·
 [Checkpoint 版本](result/if-ext-v2-six-tasks-20blocks/checkpoints.json)。
 
-<a id="task-videos"></a>
-
 ## 六个任务与视频
 
 每项任务聚焦一种指令差异：做什么动作、抓哪个物体、按什么属性选择、用哪只手、按什么顺序、放在哪个方向。
@@ -208,17 +206,15 @@ Spatial 的 Top 表示 on_top。每个 policy 的每项任务均已完成 20/20 
 
 [观看 MP4](docs/assets/task-demos/place_relative.mp4) · 示例 policy：VLAct All · 存档视频 1.5× 播放。
 
-以下运行与实现说明对应本次文档提交所保留的七任务代码入口；本页的结果和演示采用上面的六任务范围。
-
 ## 设计原则：零改上游
 
-任务源码维护在 `tasks/` 下；安全 installer 只把 canonical IF 七项及其四个 helper 软链到 RoboTwin：
+任务源码维护在 `tasks/` 下；安全 installer 只把 canonical IF 六项及其四个 helper 软链到 RoboTwin：
 
-- `envs/<task_name>.py`（七项）；
+- `envs/<task_name>.py`（六项）；
 - `envs/_if_grounding.py`、`_if_relative.py`、`_pick_diverse_object_pool.py`、`_if_eval.py`；
-- `description/task_instruction/<task_name>.json`（七项）。
+- `description/task_instruction/<task_name>.json`（六项）。
 
-历史/实验 env 即使仍在 `tasks/` 中也不会被安装；当前七项不依赖额外 object-description bridge。Installer 不修改 RoboTwin tracked 文件，尤其不会 merge 或替换 `task_config/_eval_step_limit.yml`。
+历史/实验 env 即使仍在 `tasks/` 中也不会被安装；当前六项不依赖额外 object-description bridge。Installer 不修改 RoboTwin tracked 文件，尤其不会 merge 或替换 `task_config/_eval_step_limit.yml`。
 
 Bridge 之后，RoboTwin 的 collect/eval harness 可像发现 raw task 一样通过 task name 加载新增任务。Bridge 只负责 runtime discovery；它不负责选择 balanced seeds 或计算 per-mode IF 指标。
 
@@ -269,13 +265,13 @@ bash scripts/bridge_tasks.sh \
   --allow-compatible-commit --check
 ```
 
-即使显式放行，Base_Task、instruction generator、`envs.utils` 的实际 package exports 与目录布局等静态 API contract 仍必须全部通过。Ownership manifest 记录实际 target/source commits、`source_dirty`、18 个 linked sources 的 deterministic `source_digest`、`target_contract_dirty` 和每个链接的精确 raw target；它不会把 dirty source 错写成可由 commit 单独复现，`--check` 也能发现 dirty source 内容再次变化。
+即使显式放行，Base_Task、instruction generator、`envs.utils` 的实际 package exports 与目录布局等静态 API contract 仍必须全部通过。Ownership manifest 记录实际 target/source commits、`source_dirty`、16 个 linked sources 的 deterministic `source_digest`、`target_contract_dirty` 和每个链接的精确 raw target；它不会把 dirty source 错写成可由 commit 单独复现，`--check` 也能发现 dirty source 内容再次变化。
 
 Bridge 在写入前对所有 destination 做完整 preflight：正确旧链接会被 adopt，missing link 才新增，foreign/dangling symlink、真实文件或目录都会使整次安装在 mutation 前失败；不提供 `--force`。重跑 bridge 会安全清理 manifest-owned stale links 和仍指向本 source 的旧 inactive glob links。Unbridge 以 manifest 为准，因此 source 文件重命名/删除后仍可清理；被外部修改的 destination 一律 `skip-modified` 并保留 ownership 记录，绝不误删。Bridge/check/unbridge 通过 target-directory lock 串行化完整 transaction，dry-run 不新增 lock 文件。
 
 ### 3. 采集 oracle 专家演示
 
-锁定版本的 RoboTwin collect 是单任务入口。遍历七项 IF manifest：
+锁定版本的 RoboTwin collect 是单任务入口。遍历六项 IF manifest：
 
 ```bash
 bash scripts/bridge_tasks.sh
@@ -288,8 +284,8 @@ done
 
 可执行清单：
 
-- [`eval_cfg/if_tasks.yml`](eval_cfg/if_tasks.yml)：维护中的 IF 七项；
-- [`eval_cfg/all_tasks_plus_if.yml`](eval_cfg/all_tasks_plus_if.yml)：锁定的 native 50 + 同一 IF 七项，共 57 项。
+- [`eval_cfg/if_tasks.yml`](eval_cfg/if_tasks.yml)：维护中的 IF 六项；
+- [`eval_cfg/all_tasks_plus_if.yml`](eval_cfg/all_tasks_plus_if.yml)：锁定的 native 50 + 同一 IF 六项，共 56 项。
 
 每个任务 collect 结束时会调用 RoboTwin 原生指令生成管线，无需单独执行 instruction generator。
 
@@ -318,7 +314,7 @@ bash eval.sh <task_name> demo_randomized <ckpt_setting> <expert_data_num> <seed>
 - 各 policy 的 `deploy_policy.yml` 通常以 `instruction_type: unseen` 做正式 IF 评测；`seen` 只用于 sanity check。
 - 原生 eval 会跳过 oracle-invalid candidate seeds，适合 smoke test，但不能保证每个 mode denominator 均衡。
 
-七项 task 在 eval mode 使用集中维护的 policy-action budget（collect 不受影响）：
+六项 task 在 eval mode 使用集中维护的 policy-action budget（collect 不受影响）：
 
 | Task | `step_lim` | Native structural analog |
 |---|---:|---|
@@ -328,9 +324,8 @@ bash eval.sh <task_name> demo_randomized <ckpt_setting> <expert_data_num> <seed>
 | `arm_select` | 400 | single grasp/lift |
 | `stack_sequence` | 1200 | `stack_blocks_three` |
 | `place_relative` | 400 | `place_a2b_left` |
-| `grasp_cube_approach` | 400 | single grasp/lift |
 
-Mapping 位于 `tasks/envs/_if_eval.py`，task 在 `_init_task_env_` 返回后覆盖 eval limit，因此不修改 upstream config。Locked Base_Task 对未知 task 可能先打印 fallback-to-1000 提示，但 policy rollout 实际读取的是随后覆盖的固定值。现有 oracle trajectory 最大 recorded frames（按表中 task 顺序）为 255/103/89/89/479/163/99，只能支持相对复杂度判断；`step_lim` 统计 policy action calls，仍需在后续 CogACT rollout 中监测是否有 episode 撞到 limit。
+Mapping 位于 `tasks/envs/_if_eval.py`，task 在 `_init_task_env_` 返回后覆盖 eval limit，因此不修改 upstream config。Locked Base_Task 对未知 task 可能先打印 fallback-to-1000 提示，但 policy rollout 实际读取的是随后覆盖的固定值。现有 oracle trajectory 最大 recorded frames（按表中 task 顺序）为 255/103/89/89/479/163，只能支持相对复杂度判断；`step_lim` 统计 policy action calls，仍需在后续 CogACT rollout 中监测是否有 episode 撞到 limit。
 
 正式 IF 结果不能任意跳过单个 seed。应先按 task 的完整 balance block 验证并固化 seed manifest，再让所有 policy 重放同一批 episodes。这里的 block 不一定是同一物理场景：`attribute_select` 的 8-seed block 包含四个 same-scene pair，`pick_diverse_object` 的 seen/unseen block 则是两个独立 familiarity scenes。具体 contract 见 [`eval_cfg/README.md`](eval_cfg/README.md)。
 
@@ -391,18 +386,24 @@ python tests/<task>/test_check_success.py
 tasks/                  任务 env、instruction JSON 与对象描述；bridge 的 source of truth
 policies/               每个开源策略的独立推理环境、说明与后续 adapter
 if_benchmark/           simulator-free seed contracts、manifest 与 generation state
-eval_cfg/               canonical IF 七项与 native 50 + IF 七项 task inventory
+eval_cfg/               canonical IF 六项与 native 50 + IF 六项 task inventory
 scripts/                thin shell entrypoints + stdlib ownership installer
 tests/                  inventory、seed pipeline、routing 与 success invariants
 tools/                  seed generator/validator、probe、report 与可视化工具
+bak/                    暂时下线任务的源码、配置与专用材料
 docs/                   设计及逐任务实现记录
 notes/                  实验、评审与集成证据
 third_party/robotwin/    锁定的 RoboTwin 2.0 submodule
 third_party/xvla/        setup 获取的固定版本 X-VLA 源码（Git 忽略）
 ```
 
-## 当前结果
+## 当前状态
 
-六个 policies 的六任务 20-block 结果已完成，共 3000 回合、720 个完整 blocks。
-成功和已完成的 policy failure 均保留，当前数值沿用自动判定归档，已知待复核记录在结果表旁注明。
-历史七任务结果、原始 checkpoint 身份和各版冻结 manifest 见 [result/](result/README.md)。
+当前维护六项任务；inventory、bridge 与 seed contracts 由静态检查保持一致。
+Grasp-Approach 已归档，不参与默认安装、生成、评测或当前 Overall。
+六个 policies 的 20-block 结果已完成，六任务范围可复用 3000 回合、720 个完整 blocks。
+当前入口见 [正式评测说明](docs/formal-policy-evaluation.md) 和 [结果目录](result/README.md)。
+
+任务执行使用固定 manifest，成功和 policy failure 都保留，基础设施错误不替换 seed。
+正式 runner 使用单机串行、一个 sim 与一个模型服务，保留场景/结果校验和 GPU 安全停止。
+历史七任务 release、原始输出与源码快照继续保留，供追溯原评测范围。

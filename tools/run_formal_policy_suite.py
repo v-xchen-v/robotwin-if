@@ -32,7 +32,7 @@ ENVS = {p: Path('/home/xichen6/miniconda3/envs') / ('robotwin-if-' + p.replace('
         for p in POLICIES}
 ENVS.update({p: Path('/Data/robotwin-if/envs') / ('robotwin-if-' + p.replace('_', '-'))
              for p in ('dm05', 'hy_vla')})
-DEFAULT_RUN = Path('/Data/robotwin-if/evaluations/if-seven-tasks-v2-12blocks-001')
+DEFAULT_RUN = Path('/Data/robotwin-if/evaluations/if-six-tasks-v2-20blocks-001')
 MAX_ORACLE_ATTEMPTS = 3  # Initial attempt plus at most two retries; never policy retries.
 
 
@@ -54,6 +54,13 @@ def digest(path):
         for chunk in iter(lambda: stream.read(4 * 1024**2), b''):
             h.update(chunk)
     return h.hexdigest()
+
+
+def block_count(spec):
+    from if_benchmark.seed_contracts import validate_complete_blocks
+    count = len(validate_complete_blocks(spec['task'], spec['seeds']))
+    assert spec.get('blocks', count) == count, 'Task block count disagrees with manifest'
+    return count
 
 
 def prefix(task, seed):
@@ -111,11 +118,11 @@ def import_episode(base, policy, spec, seed, source, origin, expected_hashes=Non
             shutil.copy2(file, temporary)
             assert digest(temporary) == hashes[file.name], ('copy checksum mismatch', file)
             temporary.replace(destination)
-    from if_benchmark.seed_contracts import IF_SEED_CONTRACTS
+    from if_benchmark.seed_contracts import contract_for
     write(marker, dict(policy=policy, task=task, seed=seed, origin=origin,
                        source_directory=str(Path(source).resolve()), files_sha256=hashes,
                        success=record['success'], mode=record['mode'],
-                       formal_block=spec['seeds'].index(seed) // IF_SEED_CONTRACTS[task].block_size))
+                       formal_block=spec['seeds'].index(seed) // contract_for(task).block_size))
     return True
 
 
@@ -125,7 +132,7 @@ def source_paths():
                    'third_party/robotwin/task_config', 'third_party/robotwin/description'):
         paths.update(p for p in (ROOT / folder).rglob('*')
                      if p.is_file() and p.suffix in ('.py', '.json', '.yml', '.yaml'))
-    paths.add(Path(__file__).resolve())
+    paths.update((Path(__file__).resolve(), ROOT / 'tools/sim_device.py'))
     return sorted(paths)
 
 
@@ -142,11 +149,14 @@ def prepare(base, release, old):
     suite = yaml.safe_load((release / 'suite.yml').read_text())
     reuse = yaml.safe_load((release / 'reusable-results.yml').read_text())
     assert suite['policies'] == POLICIES
+    check_active_tasks(suite['tasks'])
     base.mkdir(parents=True, exist_ok=False)
     shutil.copytree(release, base / 'manifests')
     specs = [dict(s, seeds=read(release / s['manifest'])['seeds']) for s in suite['tasks']]
-    plan = dict(repo_root=str(ROOT), policies=POLICIES, tasks=specs, expected_episodes=1944,
-                blocks_per_task=12, instruction_type='unseen', old_run=str(old),
+    assert all(block_count(s) == suite['blocks_per_task'] for s in specs)
+    plan = dict(repo_root=str(ROOT), policies=POLICIES, tasks=specs,
+                expected_episodes=len(POLICIES) * sum(len(s['seeds']) for s in specs),
+                blocks_per_task=suite['blocks_per_task'], instruction_type='unseen', old_run=str(old),
                 sim_gpu=0, model_gpu=1, parallel_simulators=1, parallel_model_servers=1,
                 created_at=datetime.datetime.now(datetime.timezone.utc).isoformat())
     write(base / 'plan.json', plan)
@@ -162,8 +172,7 @@ def prepare(base, release, old):
             for name in ('run.json', 'resolved_config.json', 'summary.json'):
                 dest.mkdir(parents=True, exist_ok=True)
                 shutil.copy2(source / name, dest / name)
-    for name in ('services-before-recovery.json', 'sim_device.py'):
-        shutil.copy2(old / 'support' / name, base / 'support' / name)
+    shutil.copy2(old / 'support/services-before-recovery.json', base / 'support/services-before-recovery.json')
     hashes = {}
     for file in source_paths():
         relative = file.relative_to(ROOT)
@@ -182,7 +191,7 @@ def prepare(base, release, old):
         import_episode(base, row['policy'], by_task[row['task']], row['seed'],
                        ROOT / row['source_directory'], 'reused', row['files_sha256'])
         if i % 46 == 0:
-            print(f'Copied and checksum-verified {i}/276 episodes', flush=True)
+            print(f'Copied and checksum-verified {i}/{len(reuse["episodes"])} episodes', flush=True)
     alias = ROOT / 'outputs/policy-eval' / base.name
     if alias != base and not alias.exists():
         alias.symlink_to(base, target_is_directory=True)
@@ -190,7 +199,7 @@ def prepare(base, release, old):
 
 
 def report(base, state=None, current=None, error=None):
-    from if_benchmark.seed_contracts import IF_SEED_CONTRACTS
+    from if_benchmark.seed_contracts import contract_for
     plan = read(base / 'plan.json')
     previous = read(base / 'status.json') if (base / 'status.json').exists() else {}
     totals = Counter()
@@ -203,7 +212,7 @@ def report(base, state=None, current=None, error=None):
             assert len({r['seed'] for r in records}) == len(records)
             assert all(r['seed'] in spec['seeds'] for r in records)
             done = {r['seed'] for r in records}
-            size = IF_SEED_CONTRACTS[task].block_size
+            size = contract_for(task).block_size
             blocks = [spec['seeds'][i:i + size] for i in range(0, len(spec['seeds']), size)]
             complete_blocks = sum(all(seed in done for seed in block) for block in blocks)
             row = dict(policy=policy, task=task, expected_episodes=len(spec['seeds']),
@@ -215,9 +224,9 @@ def report(base, state=None, current=None, error=None):
                        partial_blocks=sum(any(seed in done for seed in block) and
                                           not all(seed in done for seed in block) for block in blocks),
                        pending_seeds=[s for s in spec['seeds'] if s not in done], per_mode={})
-            for mode in IF_SEED_CONTRACTS[task].modes:
+            for mode in contract_for(task).modes:
                 selected = [r for r in records if r['mode'] == mode]
-                row['per_mode'][mode] = dict(expected=12, recorded=len(selected),
+                row['per_mode'][mode] = dict(expected=block_count(spec), recorded=len(selected),
                                              successes=sum(r['success'] for r in selected))
             for key in ('recorded_episodes', 'successes', 'reused', 'new', 'completed_blocks', 'expected_blocks'):
                 totals[key] += row[key]
@@ -232,13 +241,15 @@ def report(base, state=None, current=None, error=None):
                   complete_task_policy_runs=sum(r['complete'] for r in rows),
                   completed_blocks=totals['completed_blocks'], expected_blocks=totals['expected_blocks'],
                   current=current if current is not None else previous.get('current'),
-                  error=error, sim_gpu=0, model_gpu=1)
+                  error=error, sim_gpu=plan.get('sim_gpu'), model_gpu=plan.get('model_gpu'),
+                  execution_topology=plan.get('execution_topology'))
     write(base / 'summary.json', dict(**status, tasks=rows))
     write(base / 'status.json', status)
-    text = ['# Formal IF v2: 12 blocks', '',
-            f"State: {status['status']}; completed {status['completed_episodes']}/1944; reused {totals['reused']}; new {totals['new']}.",
+    targets = ', '.join(str(n) for n in sorted({block_count(s) for s in plan['tasks']}))
+    text = [f'# Formal IF v2: {targets} blocks', '',
+            f"State: {status['status']}; completed {status['completed_episodes']}/{status['expected_episodes']}; reused {totals['reused']}; new {totals['new']}.",
             '', 'Policy failures count as completed. Missing/error episodes remain pending.',
-            'Old and new runtime measurements use different evaluation optimizations and must be reported separately.', '',
+            'Runtime measurements from different evaluator versions must be reported separately.', '',
             '| Policy | Task | Complete blocks | Episodes | Success | Reused | New |', '|---|---|---:|---:|---:|---:|---:|']
     text.extend(f"| {r['policy']} | {r['task']} | {r['completed_blocks']}/{r['expected_blocks']} | {r['recorded_episodes']}/{r['expected_episodes']} | {r['successes']} | {r['reused']} | {r['new']} |" for r in rows)
     (base / 'report.md').write_text('\n'.join(text) + '\n')
@@ -254,6 +265,34 @@ def completed_record(base, policy, spec, seed):
     name = prefix(spec['task'], seed) + '_result.json'
     assert digest(directory / name) == provenance['files_sha256'][name]
     return validate_episode(directory, spec['task'], seed, spec['task_config'])
+
+
+def check_scene(base, policy, spec, seed, instruction, obs, env, path):
+    """X-VLA establishes each scene; subsequent policies must match it exactly."""
+    if policy == 'xvla':
+        return
+    import numpy as np
+    from policies.xvla.client import encode_proprio
+    task = spec['task']
+    reference = completed_record(base, 'xvla', spec, seed)
+    assert reference is not None, ('Missing canonical X-VLA scene', task, seed)
+    pre = base / 'xvla' / task / prefix(task, seed)
+    marker = read(str(pre) + '_provenance.json')
+    initial_path = Path(str(pre) + '_initial_observation.npz')
+    expected_sha = marker['files_sha256'][initial_path.name]
+    assert digest(initial_path) == expected_sha, 'Reference checksum changed'
+    assert instruction == reference['instruction'] and env.step_lim == reference['step_limit']
+    with np.load(initial_path) as expected:
+        for camera in ('head_camera', 'left_camera', 'right_camera'):
+            assert np.array_equal(obs['observation'][camera]['rgb'], expected[camera]), (task, seed, camera, 'Initial RGB mismatch')
+        np.testing.assert_allclose(encode_proprio(obs), expected['proprio'], atol=1e-6, rtol=0, equal_nan=False)
+    write(path('_same_host_scene.json'), dict(reference=str(pre), host=socket.gethostname(),
+                initial_sha256=expected_sha, exact_rgb=True, instruction=True, state_atol=1e-6))
+
+
+def check_active_tasks(specs):
+    from if_benchmark.seed_contracts import IF_SEED_CONTRACTS
+    assert [s['task'] for s in specs] == list(IF_SEED_CONTRACTS), 'Formal runs require the current six-task inventory'
 
 
 def worker(base, policy, task, output):
@@ -274,12 +313,15 @@ def worker(base, policy, task, output):
             print(f'REUSE committed seed={seed} status={retained[seed]["status"]}', flush=True)
             return retained[seed].copy()
         return original(env, config, client, args, seed, split, directory, block=block)
-    module.run_episode = resume_episode
+    original_setup = module.setup_episode
+    def checked_setup(env, config, args, seed, split, record, path):
+        instruction, obs = original_setup(env, config, args, seed, split, record, path)
+        check_scene(base, policy, spec, seed, instruction, obs, env, path)
+        return instruction, obs
     argv = [str(module.__file__), '--task', task, '--task-config', spec['task_config'],
-            '--seed-manifest', str(base / 'manifests' / spec['manifest']), '--blocks', '12',
+            '--seed-manifest', str(base / 'manifests' / spec['manifest']), '--blocks', str(block_count(spec)),
             '--instruction-type', 'unseen', '--sim-gpu', '0', '--output-dir', str(output),
-            '--server-url', old_args['server_url'], '--request-timeout', str(old_args['request_timeout']),
-            '--oracle-cache-dir', str(base / 'oracle-cache'), '--render-sync', 'observation']
+            '--server-url', old_args['server_url'], '--request-timeout', str(old_args['request_timeout'])]
     for option in ('checkpoint', 'checkpoint_revision', 'feedback', 'gripper_threshold', 'denoising_steps'):
         if option in old_args:
             argv += ['--' + option.replace('_', '-'), str(old_args[option])]
@@ -287,13 +329,18 @@ def worker(base, policy, task, output):
           canonical_directory=str(base / policy / task), argv=argv,
           note='Batch summary/results.jsonl include retained records; only new episodes have files in this batch.'))
     os.environ['CUDA_VISIBLE_DEVICES'] = '0'
-    adapter_spec = importlib.util.spec_from_file_location('formal_sim_device', base / 'support/sim_device.py')
-    adapter = importlib.util.module_from_spec(adapter_spec)
-    adapter_spec.loader.exec_module(adapter)
-    device = adapter.pin_renderer()
-    assert device.pci_string == '0000:af:00.0', device.pci_string
-    sys.argv = argv
-    return module.main()
+    from tools.sim_device import pin_renderer
+    previous_argv = sys.argv
+    try:
+        pin_renderer()
+        module.run_episode = resume_episode
+        module.setup_episode = checked_setup
+        sys.argv = argv
+        return module.main()
+    finally:
+        module.run_episode = original
+        module.setup_episode = original_setup
+        sys.argv = previous_argv
 
 
 def port_open(port):
@@ -409,6 +456,7 @@ def run(base):
     lock = (base / 'scheduler.lock').open('a')
     fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
     plan = read(base / 'plan.json')
+    check_active_tasks(plan['tasks'])
     check_sources(base)
     session = datetime.datetime.now(datetime.timezone.utc).strftime('%Y%m%dT%H%M%S')
     session_dir = base / 'batches' / session
@@ -530,8 +578,9 @@ def run(base):
             time.sleep(5)
             gpu_check(base, 'stopped ' + policy, idle=True)
         status = report(base, state='validating', current={})
-        assert status['completed_episodes'] == 1944
-        assert status['complete_task_policy_runs'] == 42 and status['completed_blocks'] == 504
+        assert status['completed_episodes'] == plan['expected_episodes']
+        assert status['complete_task_policy_runs'] == len(plan['policies']) * len(plan['tasks'])
+        assert status['completed_blocks'] == status['expected_blocks']
         verify(base, require_complete=True)
         check_sources(base)
         report(base, state='complete', current={})
@@ -601,7 +650,7 @@ def verify(base, require_complete=False):
                     with imageio.get_reader(str(pre) + f"_{int(record['success'])}.mp4") as video:
                         assert video.count_frames() == record['action_calls'] + 1
                 counts[marker['origin']] += 1
-    write(base / 'validation.json', dict(complete=sum(counts.values()) == 1944,
+    write(base / 'validation.json', dict(complete=sum(counts.values()) == plan['expected_episodes'],
           validated_episodes=sum(counts.values()), counts=dict(counts), artifacts_sha256_verified=True,
           action_traces_verified=True, cross_policy_initial_rgb_and_instructions_verified=True,
           new_video_frame_counts_verified=True))
@@ -612,14 +661,17 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('command', choices=('prepare', 'run', 'status', 'verify', 'worker'))
     parser.add_argument('--run-dir', type=Path, default=DEFAULT_RUN)
-    parser.add_argument('--release', type=Path, default=ROOT / 'seed-manifests/if-ext-v2-12-per-mode')
-    parser.add_argument('--old-run', type=Path, default=ROOT / 'outputs/policy-eval/if-seven-tasks-2blocks-001')
+    parser.add_argument('--release', type=Path, default=ROOT / 'seed-manifests/if-ext-v2-six-tasks-20-per-mode')
+    parser.add_argument('--old-run', type=Path,
+                        help='Prepare: prior run with matching checkpoint and inference metadata')
     parser.add_argument('--policy', choices=POLICIES)
     parser.add_argument('--task')
     parser.add_argument('--output', type=Path)
     args = parser.parse_args()
     base = args.run_dir.resolve()
     if args.command == 'prepare':
+        if args.old_run is None:
+            parser.error('prepare requires --old-run with matching checkpoint and inference metadata')
         prepare(base, args.release.resolve(), args.old_run.resolve())
     elif args.command == 'run':
         run(base)

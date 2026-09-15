@@ -28,7 +28,6 @@ MAINTAINED_TASKS = (
     "arm_select",
     "stack_sequence",
     "place_relative",
-    "grasp_cube_approach",
 )
 ENV_HELPERS = (
     "_if_grounding.py",

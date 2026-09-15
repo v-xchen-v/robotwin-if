@@ -2,7 +2,7 @@
 """Static contract tests for the maintained task manifests.
 
 This test does not import task envs or start the simulator. It locks the native-50
-prefix, the canonical IF-seven suffix, and each maintained task's discovery files.
+prefix, the canonical IF-six suffix, and each maintained task's discovery files.
 
     python tests/test_task_manifests.py
 """
@@ -81,10 +81,10 @@ IF_TASKS = (
     "arm_select",
     "stack_sequence",
     "place_relative",
-    "grasp_cube_approach",
 )
 
 INACTIVE_TASKS = {
+    "grasp_cube_approach",
     "laptop_verb",
     "operate_stapler",
     "operate_tabletop",
@@ -124,33 +124,33 @@ def main():
     merged_tasks = load_tasks(merged_manifest)
 
     check(
-        "if_tasks.yml is the exact maintained IF-seven inventory",
+        "if_tasks.yml is the exact maintained IF-six inventory",
         tuple(if_tasks) == IF_TASKS,
         note=f"got={if_tasks}",
     )
     check(
-        "if_tasks.yml has seven unique entries",
-        len(if_tasks) == 7 and len(set(if_tasks)) == 7,
+        "if_tasks.yml has six unique entries",
+        len(if_tasks) == 6 and len(set(if_tasks)) == 6,
         note=f"count={len(if_tasks)}, unique={len(set(if_tasks))}",
     )
     check(
-        "seed-contract inventory equals canonical IF-seven",
+        "seed-contract inventory equals canonical IF-six",
         tuple(IF_SEED_CONTRACTS) == IF_TASKS,
         note=f"got={tuple(IF_SEED_CONTRACTS)}",
     )
     check(
         "seed-contract balance block sizes are exact",
         tuple(contract.block_size for contract in IF_SEED_CONTRACTS.values())
-        == (2, 2, 8, 2, 6, 5, 2),
+        == (2, 2, 8, 2, 6, 5),
     )
     check(
-        "all_tasks_plus_if.yml is exact native-50 + IF-seven",
+        "all_tasks_plus_if.yml is exact native-50 + IF-six",
         tuple(merged_tasks) == NATIVE_TASKS + IF_TASKS,
         note=f"count={len(merged_tasks)}",
     )
     check(
-        "merged manifest has 57 unique entries",
-        len(merged_tasks) == 57 and len(set(merged_tasks)) == 57,
+        "merged manifest has 56 unique entries",
+        len(merged_tasks) == 56 and len(set(merged_tasks)) == 56,
         note=f"count={len(merged_tasks)}, unique={len(set(merged_tasks))}",
     )
     check(
@@ -171,7 +171,7 @@ def main():
     bridge = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(bridge)
     check(
-        "bridge task inventory equals canonical IF-seven",
+        "bridge task inventory equals canonical IF-six",
         bridge.MAINTAINED_TASKS == IF_TASKS,
         note=f"got={bridge.MAINTAINED_TASKS}",
     )
@@ -193,7 +193,7 @@ def main():
     )
     check("bridge env task order is canonical", desired_env_tasks == IF_TASKS)
     check("bridge instruction order is canonical", desired_instructions == IF_TASKS)
-    check("bridge owns exactly 18 task plugin links", len(desired) == 18)
+    check("bridge owns exactly 16 task plugin links", len(desired) == 16)
 
     for helper in BRIDGE_HELPERS:
         check(f"bridge helper exists: {helper}", (REPO / "tasks/envs" / helper).is_file())

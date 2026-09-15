@@ -7,7 +7,6 @@ IF_EVAL_STEP_LIMITS = {
     "arm_select": 400,
     "stack_sequence": 1200,
     "place_relative": 400,
-    "grasp_cube_approach": 400,
 }
 
 

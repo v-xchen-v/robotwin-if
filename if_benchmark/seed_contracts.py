@@ -77,6 +77,10 @@ IF_SEED_CONTRACTS = {
         modes=("left", "right", "front", "back", "on_top"),
         scene_span=5,
     ),
+}
+
+# Read-only metadata for validating archived manifests/results. Not an active task.
+ARCHIVED_SEED_CONTRACTS = {
     "grasp_cube_approach": SeedContract(
         task="grasp_cube_approach",
         modes=("top", "side"),
@@ -92,16 +96,18 @@ def _seed(value):
 
 
 def contract_for(task):
+    """Describe active or archived data; use IF_SEED_CONTRACTS for runnable tasks."""
     try:
-        return IF_SEED_CONTRACTS[task]
+        return (IF_SEED_CONTRACTS | ARCHIVED_SEED_CONTRACTS)[task]
     except KeyError as exc:
         raise ValueError(f"unknown maintained IF task: {task!r}") from exc
 
 
 def observed_mode(task_name, task):
     """Read the actual scene mode using the same labels as the seed contract."""
-    contract_for(task_name)
-    if task_name in ("bottle_verb", "arm_select", "grasp_cube_approach"):
+    if task_name not in IF_SEED_CONTRACTS:
+        raise ValueError(f"Task is not active: {task_name}")
+    if task_name in ("bottle_verb", "arm_select"):
         return str(task.mode)
     if task_name == "pick_diverse_object":
         return str(task.target_familiarity)

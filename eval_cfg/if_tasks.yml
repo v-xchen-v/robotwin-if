@@ -1,7 +1,7 @@
 # RoboTwin-IF · canonical maintained IF task suite
 #
 # This is the sole machine-readable inventory of maintained IF tasks. The order follows
-# the seven diagnostic axes documented in notes/2026-09-01-if-ext-tasklist/tasks.html.
+# the six remaining diagnostic axes; Grasp-Approach is archived under bak/.
 # Other task envs may remain in tasks/envs/ for provenance or experimentation; an env is
 # active only when it appears in this list.
 #
@@ -29,4 +29,3 @@ tasks:
   - arm_select
   - stack_sequence
   - place_relative
-  - grasp_cube_approach
