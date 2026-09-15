@@ -1,0 +1,12 @@
+{
+  "complete": true,
+  "retained_episodes": 1944,
+  "new_episodes": 1296,
+  "all_parent_markers_unchanged": true,
+  "handoff_markers_preserved": 2456,
+  "vlact_all_episodes": 540,
+  "clean_vlact_reused": 0,
+  "remote_models": true,
+  "simulators_on_original_host": true,
+  "strict_per_episode_scene_checks": true
+}

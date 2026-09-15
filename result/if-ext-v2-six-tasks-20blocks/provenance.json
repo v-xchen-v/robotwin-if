@@ -1,0 +1,13 @@
+{
+  "scope": "six maintained IF tasks, selected 2026-09-15",
+  "excluded_tasks": [
+    "grasp_cube_approach"
+  ],
+  "source_run": "/Data/robotwin-if/evaluations/if-seven-tasks-v2-wide-20blocks-001",
+  "source_package": "result/if-ext-v2-wide-20blocks",
+  "source_episodes_csv_sha256": "fc918323f0444118b135c9b8da21dc595db7c5c9ddba9adee018027f38ec557b",
+  "source_report_json_sha256": "aa07519e98099e42ddbefd2a4d599f8f5840d56b44f4cdf85c1410ad5a21bab1",
+  "included_rows_unchanged": true,
+  "historical_seven_task_scores_verified": true,
+  "new_evaluation": false
+}

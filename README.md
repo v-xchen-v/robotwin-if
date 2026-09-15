@@ -1,20 +1,214 @@
 # robotwin-if
 
-在 [RoboTwin 2.0](https://github.com/RoboTwin-Platform/RoboTwin) 上维护七个单轴 instruction-following diagnostic tasks。RoboTwin 以 git submodule 锁定；任务通过软链注入，**不 fork、不修改上游源码**。
+在 [RoboTwin 2.0](https://github.com/RoboTwin-Platform/RoboTwin) 上实现单轴 instruction-following diagnostic tasks。
+RoboTwin 以 git submodule 锁定；任务通过软链注入。
+
+本页展示当前评测采用的**六个任务**。Grasp-Approach 暂时退出本页的评测范围；历史七任务实现与结果保留用于追溯。
 
 | 诊断轴 | Task name | 对比值 |
 |---|---|---|
-| Verb-Select | `bottle_verb` | pick / shake |
-| Noun-Grounding | `pick_diverse_object` | 仅按名词从同 familiarity group 中选择目标 |
-| Attribute-Select | `attribute_select` | color / decal / shape / size |
-| Arm-Select | `arm_select` | left / right |
-| Sequence | `stack_sequence` | 六种 bottom-to-top 顺序 |
-| Spatial-Direction | `place_relative` | left / right / front / back / on top |
-| Grasp-Approach | `grasp_cube_approach` | top / side |
+| Verb-Select | [`bottle_verb`](#bottle-verb) | pick / shake |
+| Noun-Grounding | [`pick_diverse_object`](#pick-diverse-object) | 仅按名词从同 familiarity group 中选择目标 |
+| Attribute-Select | [`attribute_select`](#attribute-select) | color / decal / shape / size |
+| Arm-Select | [`arm_select`](#arm-select) | left / right |
+| Sequence | [`stack_sequence`](#stack-sequence) | 六种 bottom-to-top 顺序 |
+| Spatial-Direction | [`place_relative`](#place-relative) | left / right / front / back / on top |
 
-唯一正式维护的 IF inventory 是 [`eval_cfg/if_tasks.yml`](eval_cfg/if_tasks.yml)。其他 env/JSON 可以为历史或实验目的留在仓库中，但只要没有列入该文件，就不属于 active suite。Manifest membership 与 production readiness 分开管理：例如 `pick_diverse_object` 属于上述七项，其已锁定的四类 Unseen production pool 仍由独立测试 gate 持续约束。
+本仓库维护任务场景、指令模板、成功判定及开源 policy 的推理适配，不在本仓库训练模型。
+各 policy 的安装和推理说明见 [policies/](policies/README.md)。
 
-本仓库维护 benchmark task（场景、干扰物、指令模板、成功判定与评测语义），并在 [`policies/`](policies/README.md) 中维护 X-VLA、LingBot-VA 等开源策略的独立推理环境与适配代码，**不在本仓库训练模型**。模型服务与 RoboTwin 仿真使用不同的 Conda 环境；也可由外部 CogACT/X-VLA 集成提供推理。
+当前 [六任务结果表](#policy-results) 与 [任务视频](#task-videos) 均可在本页查看。
+[六任务 20-block seed/mode 清单](seed-manifests/if-ext-v2-six-tasks-20-per-mode/README.md) 对应每个 policy 500 回合，合计 3000 回合、720 blocks。
+[结果目录](result/README.md) 同时保留当前六任务与历史七任务归档；两者的 Overall 按各自任务范围计算。
+
+<a id="policy-results"></a>
+
+## 六个 Policies 的评测结果
+
+2026-09-15 归档快照：**六任务 × 每任务 20 blocks × 六个 policies**，已完成 **3000/3000 回合、720/720 blocks**。
+Arm-Select 使用 v2；VLAct 使用 `StarVLA/VLAct_Qwen3OFT_Robotwin_all_Finetune`（All 100K）。
+
+**微调数据差异：** X-VLA 使用在 RoboTwin **clean** 数据上微调的 checkpoint，其余五个 policies 使用在
+**clean + randomized** 数据上微调的 checkpoint。由于 X-VLA 目前没有开源的 clean + randomized checkpoint，
+本次比较采用其公开的 clean checkpoint。因此，各模型的微调数据设置并不完全一致，解读结果时需考虑这一差异。
+
+任务列为**成功数 / 已评测回合数**，成功与已完成的 policy failure 均计入分母。
+**Overall (%) = 六个任务成功率的等权平均**，每个任务内部对 modes 等权；它不等于把 500 个回合合并后的成功率。
+
+| Policy | Verb | Noun | Attribute | Arm v2 | Sequence | Spatial | Overall (%) | 完成回合 | 完成 blocks |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| [X-VLA](policies/xvla/README.md) | 25/40 | 15/40 | 100/160 | 25/40 | 0/120 | 6/100 | 38.5 | 500/500 | 120/120 |
+| [LingBot-VA](policies/lingbot_va/README.md) | 23/40 | 30/40 | 145/160 | 37/40 | 17/120 | 26/100 | 59.3 | 500/500 | 120/120 |
+| [LingBot-VLA](policies/lingbot_vla/README.md) | 25/40 | 13/40 | 93/160 | 15/40 | 14/120 | 3/100 | 34.2 | 500/500 | 120/120 |
+| [VLAct All](policies/vlact/README.md) | 20/40 | 28/40 | 133/160 | 0/40 | 15/120 | 20/100 | 39.3 | 500/500 | 120/120 |
+| [DM05](policies/dm05/README.md) | 20/40 | 25/40 | 112/160 | 39/40 | 9/120 | 21/100 | 51.4 | 500/500 | 120/120 |
+| [Hy-VLA](policies/hy_vla/README.md) | 23/40 | 11/40 | 143/160 | 8/40 | 15/120 | 7/100 | 35.6 | 500/500 | 120/120 |
+
+**待复核记录：** Hy-VLA 的 `pick_diverse_object` seed `100052`（coffee box）被用户指出视频表现失败，
+其归档自动判定仍为成功；该片段已从 README 演示中撤下。上表保持归档计数，尚未据此人工修订分数，
+详见 [例子替换记录](docs/assets/task-demos/README.md)。
+
+<details>
+<summary>展开各任务、各模式的成功个数</summary>
+
+下表仍为成功数 / 已评测回合数，Avg. 为任务成功率（%）。Attribute 按子轴合并两个 target values，
+每个子轴共 40 回合；其余每个 mode 共 20 回合。Sequence 的 R/G/B 表示从底层到顶层的颜色顺序，
+Spatial 的 Top 表示 on_top。每个 policy 的每项任务均已完成 20/20 blocks。
+
+### Verb — `bottle_verb`
+
+| Policy | Pick | Shake | Avg. (%) |
+|---|---:|---:|---:|
+| X-VLA | 5/20 | 20/20 | 62.5 |
+| LingBot-VA | 3/20 | 20/20 | 57.5 |
+| LingBot-VLA | 5/20 | 20/20 | 62.5 |
+| VLAct All | 0/20 | 20/20 | 50.0 |
+| DM05 | 0/20 | 20/20 | 50.0 |
+| Hy-VLA | 3/20 | 20/20 | 57.5 |
+
+### Noun — `pick_diverse_object`
+
+| Policy | Seen | Unseen | Avg. (%) |
+|---|---:|---:|---:|
+| X-VLA | 7/20 | 8/20 | 37.5 |
+| LingBot-VA | 14/20 | 16/20 | 75.0 |
+| LingBot-VLA | 10/20 | 3/20 | 32.5 |
+| VLAct All | 16/20 | 12/20 | 70.0 |
+| DM05 | 18/20 | 7/20 | 62.5 |
+| Hy-VLA | 7/20 | 4/20 | 27.5 |
+
+### Attribute — `attribute_select`
+
+| Policy | Color | Decal | Shape | Size | Avg. (%) |
+|---|---:|---:|---:|---:|---:|
+| X-VLA | 31/40 | 24/40 | 20/40 | 25/40 | 62.5 |
+| LingBot-VA | 38/40 | 35/40 | 37/40 | 35/40 | 90.6 |
+| LingBot-VLA | 35/40 | 21/40 | 16/40 | 21/40 | 58.1 |
+| VLAct All | 39/40 | 33/40 | 35/40 | 26/40 | 83.1 |
+| DM05 | 36/40 | 25/40 | 28/40 | 23/40 | 70.0 |
+| Hy-VLA | 36/40 | 35/40 | 34/40 | 38/40 | 89.4 |
+
+### Arm v2 — `arm_select`
+
+| Policy | Left | Right | Avg. (%) |
+|---|---:|---:|---:|
+| X-VLA | 20/20 | 5/20 | 62.5 |
+| LingBot-VA | 20/20 | 17/20 | 92.5 |
+| LingBot-VLA | 9/20 | 6/20 | 37.5 |
+| VLAct All | 0/20 | 0/20 | 0.0 |
+| DM05 | 20/20 | 19/20 | 97.5 |
+| Hy-VLA | 1/20 | 7/20 | 20.0 |
+
+### Sequence — `stack_sequence`
+
+| Policy | RGB | RBG | GRB | GBR | BRG | BGR | Avg. (%) |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| X-VLA | 0/20 | 0/20 | 0/20 | 0/20 | 0/20 | 0/20 | 0.0 |
+| LingBot-VA | 17/20 | 0/20 | 0/20 | 0/20 | 0/20 | 0/20 | 14.2 |
+| LingBot-VLA | 14/20 | 0/20 | 0/20 | 0/20 | 0/20 | 0/20 | 11.7 |
+| VLAct All | 10/20 | 0/20 | 1/20 | 2/20 | 0/20 | 2/20 | 12.5 |
+| DM05 | 9/20 | 0/20 | 0/20 | 0/20 | 0/20 | 0/20 | 7.5 |
+| Hy-VLA | 15/20 | 0/20 | 0/20 | 0/20 | 0/20 | 0/20 | 12.5 |
+
+### Spatial — `place_relative`
+
+| Policy | Left | Right | Front | Back | Top | Avg. (%) |
+|---|---:|---:|---:|---:|---:|---:|
+| X-VLA | 4/20 | 2/20 | 0/20 | 0/20 | 0/20 | 6.0 |
+| LingBot-VA | 12/20 | 7/20 | 0/20 | 0/20 | 7/20 | 26.0 |
+| LingBot-VLA | 1/20 | 2/20 | 0/20 | 0/20 | 0/20 | 3.0 |
+| VLAct All | 11/20 | 7/20 | 1/20 | 0/20 | 1/20 | 20.0 |
+| DM05 | 12/20 | 8/20 | 1/20 | 0/20 | 0/20 | 21.0 |
+| Hy-VLA | 2/20 | 5/20 | 0/20 | 0/20 | 0/20 | 7.0 |
+
+</details>
+
+数据来源：[完整结果表](result/if-ext-v2-six-tasks-20blocks/results.md) ·
+[分模式 CSV](result/if-ext-v2-six-tasks-20blocks/results.csv) ·
+[逐回合 CSV](result/if-ext-v2-six-tasks-20blocks/episodes.csv) ·
+[Checkpoint 版本](result/if-ext-v2-six-tasks-20blocks/checkpoints.json)。
+
+<a id="task-videos"></a>
+
+## 六个任务与视频
+
+每项任务聚焦一种指令差异：做什么动作、抓哪个物体、按什么属性选择、用哪只手、按什么顺序、放在哪个方向。
+下方动态预览可点击打开 MP4；素材随仓库提供。视频选自正式评测中的成功回合，用于展示任务行为，
+整体表现见 [完整结果](result/if-ext-v2-six-tasks-20blocks/README.md)。原始指令、seed、policy 和视频处理说明见 [素材来源](docs/assets/task-demos/README.md)。
+
+<a id="bottle-verb"></a>
+
+### 1. Bottle-Verb：根据动词选择动作
+
+面对同一瓶子和初始场景，执行 **pick（拿起）** 或 **shake（摇动）**。
+任务区分抬高瓶子与摇动过程，检验模型是否根据动词改变行为。
+下例左右分别为 pick / shake；一个 block 包含两个回合。
+
+[![Bottle-Verb：同一场景中的拿起与摇动](docs/assets/task-demos/bottle_verb.gif)](docs/assets/task-demos/bottle_verb.mp4)
+
+[观看 MP4](docs/assets/task-demos/bottle_verb.mp4) · 示例 policy：Hy-VLA。
+
+<a id="pick-diverse-object"></a>
+
+### 2. Pick-Diverse-Object：根据名词找到目标
+
+桌上放置四个不同类别的物体，机器人需要根据指令中的**物体名词**选中并抓起目标。
+**Seen / Unseen** 分别使用熟悉与未见物体池；一个 block 包含两个独立场景，每个场景内的四个物体属于同一 familiarity group。
+下例分别抓取 mug 与 wooden mallet。
+
+[![Pick-Diverse-Object：Seen 场景抓取 mug，Unseen 场景抓取 wooden mallet](docs/assets/task-demos/pick_diverse_object.gif)](docs/assets/task-demos/pick_diverse_object.mp4)
+
+[观看 MP4](docs/assets/task-demos/pick_diverse_object.mp4) · 左：DM05（Seen mug）；右：Hy-VLA（Unseen wooden mallet）。
+
+<a id="attribute-select"></a>
+
+### 3. Attribute-Select：根据视觉属性选择目标
+
+在两个物体中按指定属性选择并抓起目标：**颜色**（red / blue）、**图案**（cat / dog）、
+**形状**（block / bar）或**大小**（big / small）。同一属性的两个指令共享场景、切换目标；
+一个 block 包含四组对比、共八个回合。下例依次展示 red、cat、long bar、small 四类属性指令。
+
+[![Attribute-Select：颜色、图案、形状和大小四种属性的抓取示例](docs/assets/task-demos/attribute_select.gif)](docs/assets/task-demos/attribute_select.mp4)
+
+[观看 MP4](docs/assets/task-demos/attribute_select.mp4) · 示例 policy：Hy-VLA。
+
+<a id="arm-select"></a>
+
+### 4. Arm-Select：使用指定的机械臂
+
+对同一目标方块，分别要求用**左臂 / 右臂**抓起；用错机械臂即使抬起方块也不算成功。
+当前采用 **v2** 配置：不同 blocks 改变方块的位置和朝向，同一 block 的两个回合共享布局。
+下例左右分别为 left arm / right arm。
+
+[![Arm-Select v2：同一方块分别由指定的左臂和右臂抓起](docs/assets/task-demos/arm_select.gif)](docs/assets/task-demos/arm_select.mp4)
+
+[观看 MP4](docs/assets/task-demos/arm_select.mp4) · 示例 policy：DM05 · [v2 场景说明](docs/arm-select-v2.md)。
+
+<a id="stack-sequence"></a>
+
+### 5. Stack-Sequence：按照指定顺序堆叠
+
+将红、绿、蓝三个方块按指令指定的**自下而上顺序**堆成三层。
+同一场景对应六种排列，一个 block 包含六个回合；仅堆成塔、颜色顺序错误不算成功。
+下例分别为 red → green → blue 和 green → blue → red（箭头均表示从底层到顶层）。
+
+[![Stack-Sequence：红绿蓝与绿蓝红两种自下而上的堆叠顺序](docs/assets/task-demos/stack_sequence.gif)](docs/assets/task-demos/stack_sequence.mp4)
+
+[观看 MP4](docs/assets/task-demos/stack_sequence.mp4) · 示例 policy：VLAct All · 存档视频 3× 播放。
+
+<a id="place-relative"></a>
+
+### 6. Place-Relative：理解相对空间方向
+
+将物体 A 放到参考物体 B 的 **left / right / front / back / on top**，场景中另有一个干扰物。
+同一布局对应五种方向，一个 block 包含五个回合，检验目标放置关系是否符合指令。
+下例将绿色 toycar 分别放到红色 tea-box 的左侧和顶部。
+
+[![Place-Relative：将同一绿色 toycar 放到红色 tea-box 左侧或顶部](docs/assets/task-demos/place_relative.gif)](docs/assets/task-demos/place_relative.mp4)
+
+[观看 MP4](docs/assets/task-demos/place_relative.mp4) · 示例 policy：VLAct All · 存档视频 1.5× 播放。
+
+以下运行与实现说明对应本次文档提交所保留的七任务代码入口；本页的结果和演示采用上面的六任务范围。
 
 ## 设计原则：零改上游
 
@@ -207,6 +401,8 @@ third_party/robotwin/    锁定的 RoboTwin 2.0 submodule
 third_party/xvla/        setup 获取的固定版本 X-VLA 源码（Git 忽略）
 ```
 
-## 当前状态
+## 当前结果
 
-七项维护范围已固定，task inventory、bridge inventory 与 seed-contract inventory 由同一静态 gate 锁定。`pick_diverse_object` 的四类 production Unseen pool 已通过独立 gate。Bridge 已具备 external target、commit/API compatibility、collision preflight、ownership manifest、check/dry-run、stale cleanup 和安全 unbridge；七项 eval limit 也已集中固定。P2 seed pipeline 已提供 flat manifest、完整 block oracle generator、checkpoint/evidence 与 simulator-free validator。2026-09-03 的 1-block / 2-candidate bounded pilot 已完成：六项发布并独立验证了完整 manifest，`pick_diverse_object` 两组均被 whole-block rejection、未发布 partial manifest；详见 [`notes/2026-09-03-if-seed-manifest-pilot/`](notes/2026-09-03-if-seed-manifest-pilot/)。这仍不是 production freeze；task config 发布、production accepted-block 规模、`eval_signals()`/per-mode policy reporter 与 CogACT replay wrapper 尚未完成，不能由“原生 eval 能跑”替代。
+六个 policies 的六任务 20-block 结果已完成，共 3000 回合、720 个完整 blocks。
+成功和已完成的 policy failure 均保留，当前数值沿用自动判定归档，已知待复核记录在结果表旁注明。
+历史七任务结果、原始 checkpoint 身份和各版冻结 manifest 见 [result/](result/README.md)。

@@ -1,0 +1,301 @@
+{
+  "schema_version": 1,
+  "purpose": "Task illustrations selected from successful policy episodes; not a representative performance sample.",
+  "source_run": "if-seven-tasks-v2-wide-20blocks-001",
+  "source_results": "../../../result/if-ext-v2-six-tasks-20blocks/episodes.csv",
+  "processing": {
+    "camera": "head only: crop=320:240:0:0 from the 960x240 three-camera archive",
+    "layout": "two columns; attribute_select has two rows; panel order is row-major",
+    "mp4": "H.264, yuv420p, 20 fps, CRF 22, faststart, no audio",
+    "gif": "8 fps, 480 px wide, 96-color palette",
+    "padding": "Shorter panels hold their final frame; all panels hold for 1.5s at the end.",
+    "timing": "Playback speed is relative to archived video; not inference wall-clock time."
+  },
+  "tasks": [
+    {
+      "task": "bottle_verb",
+      "policy": "hy_vla",
+      "playback_speed": 1,
+      "mp4": "bottle_verb.mp4",
+      "gif": "bottle_verb.gif",
+      "duration_seconds": 7.7,
+      "episodes": [
+        {
+          "policy": "hy_vla",
+          "seed": 100026,
+          "mode": "pick",
+          "instruction": "pick up the bottle with curved neck design using one arm.",
+          "record": "hy_vla/bottle_verb/bottle_verb_ep100026_result.json",
+          "record_sha256": "48c3f3a16073188767ff9e69273e88fe87780990306c1449c02a431e728fccb0",
+          "source_video": "hy_vla/bottle_verb/bottle_verb_ep100026_1.mp4",
+          "source_video_sha256": "7dc22f6f2834fda8a8803ec9721df0c0d70c389f8181f0884630e75a7415bdd4",
+          "source_duration_seconds": 5.0,
+          "label": "PICK"
+        },
+        {
+          "policy": "hy_vla",
+          "seed": 100027,
+          "mode": "shake",
+          "instruction": "shake the blue-capped plastic bottle carefully now.",
+          "record": "hy_vla/bottle_verb/bottle_verb_ep100027_result.json",
+          "record_sha256": "0ec7c9f9e77fbec4f7d9fcd90e80b7dfd8e15bf0124c31601f9475d43aca6e43",
+          "source_video": "hy_vla/bottle_verb/bottle_verb_ep100027_1.mp4",
+          "source_video_sha256": "85328cc34012556f6d06bfd985f37d091d966732d31cc77ffecf70bc26b4602a",
+          "source_duration_seconds": 6.2,
+          "label": "SHAKE"
+        }
+      ],
+      "sha256": {
+        "bottle_verb.mp4": "82e5c2fa8bda94d10aff492d8bea9e380a761ccd2e90dd04378c699a3fbd7bb3",
+        "bottle_verb.gif": "144e0b11e5464fe59ac60cedbdb5aff97e2693e342e62fdffaa233e17a0c3760"
+      }
+    },
+    {
+      "task": "pick_diverse_object",
+      "playback_speed": 1,
+      "mp4": "pick_diverse_object.mp4",
+      "gif": "pick_diverse_object.gif",
+      "duration_seconds": 8.7,
+      "episodes": [
+        {
+          "policy": "dm05",
+          "seed": 100014,
+          "mode": "seen",
+          "instruction": "Pick up the mug carefully using the left arm",
+          "record": "dm05/pick_diverse_object/pick_diverse_object_ep100014_result.json",
+          "record_sha256": "2ee3ac0587e00fbe88df61d8a9166b03c934e607af49654bb108bb189ac77690",
+          "source_video": "dm05/pick_diverse_object/pick_diverse_object_ep100014_1.mp4",
+          "source_video_sha256": "cc8ddb30a49288b33abf9f538825318c4fcf41958c106967bb262d42973a755d",
+          "source_duration_seconds": 7.2,
+          "label": "SEEN: mug",
+          "trace_check": {
+            "actions_sha256": "96a3cda8d542d135cdcf6437079112d97857e8a0cb9d65aa5290aafc4a999ca4",
+            "left_gripper_last_12_max": 0.002190452069044113,
+            "left_tcp_z_last_5_m": [
+              0.9585317373275757,
+              0.9596129059791565,
+              0.9629349708557129,
+              0.9683266878128052,
+              0.9758259654045105
+            ],
+            "scope": "Measured pre-action robot state; not object-pose tracking or a sustained-hold test."
+          }
+        },
+        {
+          "policy": "hy_vla",
+          "seed": 100053,
+          "mode": "unseen",
+          "instruction": "Pick up the wooden mallet using the correct arm",
+          "record": "hy_vla/pick_diverse_object/pick_diverse_object_ep100053_result.json",
+          "record_sha256": "1cbe7ab0e9f1f2559fb6d49138404cfd0b50c9d3de15f27373c4621bc38230d4",
+          "source_video": "hy_vla/pick_diverse_object/pick_diverse_object_ep100053_1.mp4",
+          "source_video_sha256": "a7b5ca943e43cc3bbc9c629353a721e658770cb618ecbc08d4c6b4e7aec902b6",
+          "source_duration_seconds": 3.2,
+          "label": "UNSEEN: wooden mallet"
+        }
+      ],
+      "sha256": {
+        "pick_diverse_object.mp4": "fc6d6c5e4eb142bd553dd00a86918e7a899ad2f69c7674efb1e1a18eb0a9eafb",
+        "pick_diverse_object.gif": "73b2b6007479e72d2274bf92be3b5f036403e11c1005b48d9f083edbbbdca848"
+      },
+      "policies": [
+        "dm05",
+        "hy_vla"
+      ]
+    },
+    {
+      "task": "attribute_select",
+      "policy": "hy_vla",
+      "playback_speed": 1,
+      "mp4": "attribute_select.mp4",
+      "gif": "attribute_select.gif",
+      "duration_seconds": 4.8,
+      "episodes": [
+        {
+          "policy": "hy_vla",
+          "seed": 100080,
+          "mode": "color:red",
+          "instruction": "Fetch the red block.",
+          "record": "hy_vla/attribute_select/attribute_select_ep100080_result.json",
+          "record_sha256": "1695e9c45b8f704255cd48a707ec370af1489bc7bdd10f75b471f179b651ccdc",
+          "source_video": "hy_vla/attribute_select/attribute_select_ep100080_1.mp4",
+          "source_video_sha256": "4f63ee3e447f8f49328df9779e2f665c995d8ec20616b79137a82a2c770725bd",
+          "source_duration_seconds": 3.2,
+          "label": "COLOR: red"
+        },
+        {
+          "policy": "hy_vla",
+          "seed": 100082,
+          "mode": "decal:cat",
+          "instruction": "Reach for the block with a cat on it and lift it.",
+          "record": "hy_vla/attribute_select/attribute_select_ep100082_result.json",
+          "record_sha256": "8a0a3bdd0f2b044c7412fd4819940fdac37f05e44f8359ba797363355afb4c04",
+          "source_video": "hy_vla/attribute_select/attribute_select_ep100082_1.mp4",
+          "source_video_sha256": "8abeabd1d2b4678f636a133e75902139dba8880010497da5004d92eafeff8850",
+          "source_duration_seconds": 3.2,
+          "label": "DECAL: cat"
+        },
+        {
+          "policy": "hy_vla",
+          "seed": 100085,
+          "mode": "shape:bar",
+          "instruction": "Fetch the long bar.",
+          "record": "hy_vla/attribute_select/attribute_select_ep100085_result.json",
+          "record_sha256": "cae6dd4c07acfa73f7e0dcbe0f95c6b085b5834c606f1cd3155b68267d0826c3",
+          "source_video": "hy_vla/attribute_select/attribute_select_ep100085_1.mp4",
+          "source_video_sha256": "c49e595c86acd227524adb30c34924b7dc12901e63fe1612d8fb776b738ff567",
+          "source_duration_seconds": 3.3,
+          "label": "SHAPE: long bar"
+        },
+        {
+          "policy": "hy_vla",
+          "seed": 100087,
+          "mode": "size:small",
+          "instruction": "Reach for the small block and lift it.",
+          "record": "hy_vla/attribute_select/attribute_select_ep100087_result.json",
+          "record_sha256": "ef26479fe284b787375ef1f55df4b0d4ac1745c6e6e4e5778cfa6ac50a87340f",
+          "source_video": "hy_vla/attribute_select/attribute_select_ep100087_1.mp4",
+          "source_video_sha256": "374e067ad0fe321e02bcf7bd3a1763d7c9747f84b682b7ca38e2e60a8032ac40",
+          "source_duration_seconds": 3.2,
+          "label": "SIZE: small"
+        }
+      ],
+      "sha256": {
+        "attribute_select.mp4": "d17da1c997814aea86df1a3a865b91baf0c6e345df10c97c80a38e14ee72da84",
+        "attribute_select.gif": "4c26caceac7279caa54af18a628cc656b2c116da0a82330c1fdbf5a4c9d38077"
+      }
+    },
+    {
+      "task": "arm_select",
+      "policy": "dm05",
+      "playback_speed": 1,
+      "mp4": "arm_select.mp4",
+      "gif": "arm_select.gif",
+      "duration_seconds": 9.6,
+      "episodes": [
+        {
+          "policy": "dm05",
+          "seed": 200010,
+          "mode": "left",
+          "instruction": "Employ the left arm to lift the block.",
+          "record": "dm05/arm_select/arm_select_ep200010_result.json",
+          "record_sha256": "609c69fbbdf4aaf77f948a3ab77c0f07ba9c2a511a68766a2f844178418d6099",
+          "source_video": "dm05/arm_select/arm_select_ep200010_1.mp4",
+          "source_video_sha256": "a120f6cbc7c62a896de82a758e8b75158541fa9ba3b7be28ff78798e898de341",
+          "source_duration_seconds": 7.9,
+          "label": "LEFT ARM"
+        },
+        {
+          "policy": "dm05",
+          "seed": 200011,
+          "mode": "right",
+          "instruction": "Employ the right arm to lift the block.",
+          "record": "dm05/arm_select/arm_select_ep200011_result.json",
+          "record_sha256": "35f38d71b669909aeb7b7712784a624ef6781ce359556c5b2ece7b29916951fd",
+          "source_video": "dm05/arm_select/arm_select_ep200011_1.mp4",
+          "source_video_sha256": "67164d542aba386585261fa53327f7f57f1059dc4adcdfb3fac52c89e4c6167f",
+          "source_duration_seconds": 8.1,
+          "label": "RIGHT ARM"
+        }
+      ],
+      "sha256": {
+        "arm_select.mp4": "879030f07fa08aa1e0416c00f88ed6a55b14d26e5740243e02c2f279a100459a",
+        "arm_select.gif": "ad34fd9fc2256d8552071d60a7be8a3fd9ddd70e6d92a7ad1c88a79dda31055b"
+      }
+    },
+    {
+      "task": "stack_sequence",
+      "policy": "vlact",
+      "playback_speed": 3,
+      "mp4": "stack_sequence.mp4",
+      "gif": "stack_sequence.gif",
+      "duration_seconds": 15.9,
+      "episodes": [
+        {
+          "policy": "vlact",
+          "seed": 100014,
+          "mode": "red>green>blue",
+          "instruction": "First set red block, then green block, then blue block at the very top.",
+          "record": "vlact/stack_sequence/stack_sequence_ep100014_result.json",
+          "record_sha256": "a8771fd4dcb784f2b9d909ec4024e41ede9f08fd802ab9f4500bbbcdad6d6402",
+          "source_video": "vlact/stack_sequence/stack_sequence_ep100014_1.mp4",
+          "source_video_sha256": "c1d77d98ed59e8984cbb78fc4579b23d3f0518afc12941fd44f57af4649e8853",
+          "source_duration_seconds": 43.2,
+          "label": "red > green > blue"
+        },
+        {
+          "policy": "vlact",
+          "seed": 100017,
+          "mode": "green>blue>red",
+          "instruction": "Put green block down, blue block on green block, red block on blue block.",
+          "record": "vlact/stack_sequence/stack_sequence_ep100017_result.json",
+          "record_sha256": "29817f0aa0fca281332f905bf9b9d02b21c0b760fec7168b525a02dcaa6e3990",
+          "source_video": "vlact/stack_sequence/stack_sequence_ep100017_1.mp4",
+          "source_video_sha256": "5c79ac0c6d61233bc1c568fb9b87c6500118e6b6cb98eec24ecd6cdc5ce77323",
+          "source_duration_seconds": 41.4,
+          "label": "green > blue > red"
+        }
+      ],
+      "sha256": {
+        "stack_sequence.mp4": "7ac1462e60e241234d4ec196487afa029c5fc2a5a741cf403b8c011d8a897f77",
+        "stack_sequence.gif": "b2da4ed080cfee8921d39faa0cfdcd6e37b6fe04ea3fb8ce94070bb89e1eb267"
+      }
+    },
+    {
+      "task": "place_relative",
+      "policy": "vlact",
+      "playback_speed": 1.5,
+      "mp4": "place_relative.mp4",
+      "gif": "place_relative.gif",
+      "duration_seconds": 9.5,
+      "episodes": [
+        {
+          "policy": "vlact",
+          "seed": 100055,
+          "mode": "left",
+          "instruction": "Grab the green toycar and set it to the left of the red tea-box",
+          "record": "vlact/place_relative/place_relative_ep100055_result.json",
+          "record_sha256": "df681bedb2c35e76abf0fc43d003985d5a079e7286b6a374f3704862fd465ce1",
+          "source_video": "vlact/place_relative/place_relative_ep100055_1.mp4",
+          "source_video_sha256": "69c8550d123d9a0cf69c9edffbbfbf46ac9fe654ba208779c957aec0a102d853",
+          "source_duration_seconds": 12.0,
+          "label": "LEFT OF"
+        },
+        {
+          "policy": "vlact",
+          "seed": 100059,
+          "mode": "on_top",
+          "instruction": "Pick up the green toycar and move it on top of the red tea-box",
+          "record": "vlact/place_relative/place_relative_ep100059_result.json",
+          "record_sha256": "d219c85e5d52e682e3d361f36964ca6eacb6301f33a3f754235fec3f35e7e7c7",
+          "source_video": "vlact/place_relative/place_relative_ep100059_1.mp4",
+          "source_video_sha256": "071ac037948e7f82ec1a6316e13728314ef36e9b45dbf8b20c13b592eb20be61",
+          "source_duration_seconds": 11.8,
+          "label": "ON TOP OF"
+        }
+      ],
+      "sha256": {
+        "place_relative.mp4": "3d3f6cf5f40d130f7c585df84c84951defda7889b78ca592b6c8a201978144d2",
+        "place_relative.gif": "129034e40326c328be028e89517237163dc18d5b48e45b7bed173c98c5a5a0b8"
+      }
+    }
+  ],
+  "excluded_examples": [
+    {
+      "task": "pick_diverse_object",
+      "policy": "hy_vla",
+      "seed": 100052,
+      "record": "hy_vla/pick_diverse_object/pick_diverse_object_ep100052_result.json",
+      "record_sha256": "b65ce6eb059138379f4a2d9bce6435fac753ca50b26d125476b58c33ed96eee0",
+      "source_video": "hy_vla/pick_diverse_object/pick_diverse_object_ep100052_1.mp4",
+      "source_video_sha256": "020129ebd8f00069d0160d0a7c86583d611091644351d0d555c0546b72e1e4d2",
+      "reason": "User identified the coffee-box demo as a failure despite its archived success flag. Removed from README examples; the original evaluation record is retained for review.",
+      "supporting_observation": "Measured left gripper is open (about 0.997 to 1.0) over the final five pre-action states.",
+      "replacement": {
+        "policy": "dm05",
+        "seed": 100014,
+        "target": "mug"
+      }
+    }
+  ]
+}
