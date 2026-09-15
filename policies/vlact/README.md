@@ -1,6 +1,8 @@
 # VLAct Qwen3OFT RoboTwin inference
 
-Checkpoint: [`StarVLA/VLAct_Qwen3OFT_Robotwin_Finetune`](https://huggingface.co/StarVLA/VLAct_Qwen3OFT_Robotwin_Finetune), revision `dcf0f1d7239b28ae81a039c8d05bdfcd1d4792a5`. This is the **50K-step Base / Clean** checkpoint. [Official VLAct source](https://github.com/starVLA/VLAct/tree/621b01bb830e1a400f12f4c05262add55ae3003a) is pinned to `621b01bb830e1a400f12f4c05262add55ae3003a`.
+Default checkpoint: [`StarVLA/VLAct_Qwen3OFT_Robotwin_all_Finetune`](https://huggingface.co/StarVLA/VLAct_Qwen3OFT_Robotwin_all_Finetune), revision `999b37d4d7c1bd0f5588f78d72a185f6f052bf83`. This is the **100K-step All / Data Scaling** checkpoint (`robotwin_all_wrap_32`), selected for the formal evaluation. [Official VLAct source](https://github.com/starVLA/VLAct/tree/621b01bb830e1a400f12f4c05262add55ae3003a) remains pinned to `621b01bb830e1a400f12f4c05262add55ae3003a`.
+
+The previous **50K-step Base / Clean** checkpoint, `StarVLA/VLAct_Qwen3OFT_Robotwin_Finetune` at `dcf0f1d7239b28ae81a039c8d05bdfcd1d4792a5`, remains available with `download_checkpoint.py --variant clean`. Use separate checkpoint and result directories. The server selects the pinned variant from `checkpoint.json`, verifies its weights, and requires that variant's training mix; old Clean results cannot count toward an All rerun.
 
 ## Setup and serve
 
@@ -13,18 +15,18 @@ conda run --no-capture-output -n RoboTwin python -m pip install \
 
 conda run --no-capture-output -n robotwin-if-vlact \
   python policies/vlact/download_checkpoint.py \
-  --output-dir /Data/robotwin-if/checkpoints/VLAct_Qwen3OFT_Robotwin_Finetune
+  --variant all --output-dir /Data/robotwin-if/checkpoints/VLAct_Qwen3OFT_Robotwin_all_Finetune
 
 conda run --no-capture-output -n robotwin-if-vlact \
   python policies/vlact/serve.py \
-  --checkpoint-dir /Data/robotwin-if/checkpoints/VLAct_Qwen3OFT_Robotwin_Finetune \
+  --checkpoint-dir /Data/robotwin-if/checkpoints/VLAct_Qwen3OFT_Robotwin_all_Finetune \
   --gpu 0 --port 8013 \
   --output-dir outputs/policy-eval/servers/vlact-001
 ```
 
 Setup creates the independent `robotwin-if-vlact` Conda environment: Python 3.10, Torch 2.6.0 / torchvision 0.21.0 CUDA 12.4, Transformers 4.57.0. These match upstream's inference versions. Transformers 4.57.0 is marked yanked on PyPI for packaging issues; it is explicitly pinned to reproduce upstream. Direct dependencies are pinned; transitive dependencies are recorded separately by `pip freeze`. Training and other framework dependencies are omitted. Setup accepts `--env-name` and `--source-dir`. Use a writable external `TMPDIR` for installation if the system disk is small.
 
-The download needs about **20 GiB** for the fine-tuned state dict and base model. The base assets are `StarVLA/Qwen3-VL-4B-Instruct-Action` revision `c41500cf1d287cd79e9f6602f419937b05048bd8`, kept in a nested directory. The official constructor initially loads base weights; **all model parameters are then replaced by the fine-tuned checkpoint with `strict=True`**. The `.pt` file's SHA-256 is checked against the published `e3823ca683057371ab94d4d66434538e2e2a53b861a87ee77a1981f941209873` during download and startup. The packaged config is preserved; only the in-memory base-model location and training resume path are overridden. Runtime uses local files with Hub offline mode.
+The download needs about **20 GiB** for the fine-tuned state dict and base model. The base assets are `StarVLA/Qwen3-VL-4B-Instruct-Action` revision `c41500cf1d287cd79e9f6602f419937b05048bd8`, kept in a nested directory. The official constructor initially loads base weights; **all model parameters are then replaced by the fine-tuned checkpoint with `strict=True`**. The All `steps_100000_pytorch_model.pt` SHA-256 is checked against the published `beb2c0ec39c3bc7173a5bd90eb59ef99854b73ca1aa3bf50fb6ffc353f477c2a` during download and startup. Clean retains its separate 50K weight hash. The packaged config is preserved; only the in-memory base-model location and training resume path are overridden. Runtime uses local files with Hub offline mode.
 
 [`patch_source.py`](patch_source.py) applies three checked, idempotent inference patches:
 
@@ -46,7 +48,7 @@ The default endpoint is `ws://127.0.0.1:8013`, with `/healthz` available after m
 
 ### Why this checkpoint uses angular wrap
 
-The packaged config selects `robotwin_wrap_32`. Its official `AgilexWrapData32Config` inherits a transform that stores joint targets as radians wrapped to `[-π, π)`, without scaling to `[-1, 1]`. The stats mask selects the first 12 angular joints. Our decoder applies the **official RoboTwin wrap branch**, then reorders channels. Grippers are clipped to `[-1, 1]` as in that branch and are not binarized.
+The packaged config selects `robotwin_all_wrap_32` (All) or `robotwin_wrap_32` (Clean). Both use wrap-aware absolute-joint actions and the same 32×14 action contract. Joint targets are radians wrapped to `[-π, π)`, without scaling to `[-1, 1]`. The stats mask selects the first 12 angular joints. Our decoder applies the **official RoboTwin wrap branch**, then reorders channels. Grippers are clipped to `[-1, 1]` as in that branch and are not binarized.
 
 The model card's generic `q01/q99` description differs from this training configuration. Upstream's evaluation client selects wrap by checking whether the **checkpoint pathname contains `wrap`**, so renaming the published directory can silently choose the wrong decoder. This integration explicitly validates the training config and fixes wrap semantics independently of the path. Tests compare decoding and resized pixels directly with the pinned official implementation. No min/max or percentile rescaling is applied to this checkpoint's angular outputs.
 
@@ -77,9 +79,11 @@ conda run --no-capture-output -n RoboTwin \
 ruff check policies/vlact tests/vlact
 ```
 
-Eight tests cover angular wrap, asymmetric arm/gripper ordering, official decoder/image/wire parity, fresh image observations without state input, episode reset, protocol errors, partial-chunk action limits and failure evidence.
+Tests cover pinned All/Clean identities and rejection of mixed revisions or weight hashes, angular wrap, asymmetric arm/gripper ordering, official decoder/image/wire parity, fresh image observations without state input, episode reset, protocol errors, partial-chunk action limits and failure evidence.
 
 ## Validation results (2026-09-07)
+
+These are historical results from the **Clean 50K** checkpoint, not results from the All rerun.
 
 Environment installation, `pip check`, the full official QwenOFT import path, CUDA SDPA, eight client/runner/codec tests and Ruff passed. The pinned checkpoint loaded with strict parameter checking on an RTX A6000. A saved real observation returned finite `(32, 14)` predictions; repeated reset with seed 2000 produced bitwise-identical actions. First prediction took 2.52 seconds and the warmed prediction 0.12 seconds. Live checks also verified that inference requires reset, a second client is rejected, and an invalid reset invalidates the episode.
 

@@ -27,16 +27,14 @@ def main():
     if args.cpu_threads < 1:
         parser.error("CPU threads must be positive")
     source, checkpoint, output = args.source_dir.resolve(), args.checkpoint_dir.resolve(), args.output_dir.resolve()
-    from download_checkpoint import (CHECKPOINT, REVISION, QWEN, QWEN_REVISION, QWEN_DIRECTORY,
-                                     WEIGHTS, WEIGHTS_SHA256, sha256)
+    from download_checkpoint import (QWEN, QWEN_REVISION, QWEN_DIRECTORY, checkpoint_spec, sha256)
     from patch_source import patch_source
     patch_source(source)
     identity = json.loads((checkpoint / "checkpoint.json").read_text())
-    if (identity.get("repo_id"), identity.get("revision")) != (CHECKPOINT, REVISION):
-        raise ValueError("Use the pinned VLAct RoboTwin checkpoint")
+    spec = checkpoint_spec(identity)
     if identity.get("base_model") != {"repo_id": QWEN, "revision": QWEN_REVISION, "directory": QWEN_DIRECTORY}:
         raise ValueError("Use the pinned Qwen3 base model assets")
-    if sha256(checkpoint / WEIGHTS) != WEIGHTS_SHA256:
+    if sha256(checkpoint / spec["weights"]) != spec["weights_sha256"]:
         raise ValueError("Checkpoint SHA-256 mismatch")
     os.environ["CUDA_VISIBLE_DEVICES"] = args.gpu
     os.environ["HF_HUB_OFFLINE"] = "1"
@@ -58,7 +56,7 @@ def main():
     config = OmegaConf.load(checkpoint / "config.yaml")
     if (config.framework.name, config.datasets.vla_data.data_mix, config.datasets.vla_data.action_mode,
         config.framework.action_model.action_dim, config.framework.action_model.future_action_window_size,
-        config.framework.action_model.past_action_window_size) != ("QwenOFT", "robotwin_wrap_32", "abs", 14, 31, 0):
+        config.framework.action_model.past_action_window_size) != ("QwenOFT", spec["data_mix"], "abs", 14, 31, 0):
         raise ValueError("Unexpected checkpoint configuration")
     if OmegaConf.to_container(config.datasets.vla_data.image_size_buckets) != IMAGE_BUCKETS:
         raise ValueError("Unexpected image buckets")
@@ -80,14 +78,14 @@ def main():
         "use_length": 32, "action_type": "qpos", "action_dim": 14, "joint_action_mode": "wrap",
         "unnorm_key": "new_embodiment", "image_size_buckets": IMAGE_BUCKETS,
         "state_input": False, "single_client": True, "action_ensemble": False,
-        "normalization": "Explicit wrap from robotwin_wrap_32; no checkpoint-path heuristic or percentile scaling",
+        "normalization": f"Explicit wrap from {spec['data_mix']}; no checkpoint-path heuristic or percentile scaling",
         "gripper": "Official wrap decoder clips to [-1, 1]; no binarization",
         "seed_control": "Reset seeds Python/NumPy/Torch; full kernel determinism not enforced",
     }
     (output / "server.json").write_text(json.dumps(metadata, indent=2) + "\n")
     model = build_framework(config)
     model.norm_stats = stats
-    state = torch.load(checkpoint / WEIGHTS, map_location="cpu", weights_only=True, mmap=True)
+    state = torch.load(checkpoint / spec["weights"], map_location="cpu", weights_only=True, mmap=True)
     model.load_state_dict(state, strict=True)
     del state
     model.to(device="cuda", dtype=torch.bfloat16).eval()
