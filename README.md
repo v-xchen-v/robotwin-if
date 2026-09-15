@@ -206,6 +206,17 @@ Spatial 的 Top 表示 on_top。每个 policy 的每项任务均已完成 20/20 
 
 [观看 MP4](docs/assets/task-demos/place_relative.mp4) · 示例 policy：VLAct All · 存档视频 1.5× 播放。
 
+## 分支交付内容
+
+| 交付项 | 入口 |
+|---|---|
+| 六个 policy 的 inference code / setup / eval adapter | [`policies/`](policies/README.md) |
+| 统一 bash 评测入口（单个模型服务 + 串行 sim） | [`scripts/eval.sh`](scripts/eval.sh) |
+| 六任务 × 20 blocks：flat seeds 与显式 seed/mode JSON、CSV | [`seed-manifests/if-ext-v2-six-tasks-20-per-mode/`](seed-manifests/if-ext-v2-six-tasks-20-per-mode/README.md) |
+| 已完成结果、逐回合 CSV、checkpoint 与校验证据 | [`result/if-ext-v2-six-tasks-20blocks/`](result/if-ext-v2-six-tasks-20blocks/README.md) |
+
+接收方从 [分支交付说明](docs/branch-delivery.md) 开始；运行新评测不依赖本机 `/Data` 下的旧运行目录。
+
 ## 设计原则：零改上游
 
 任务源码维护在 `tasks/` 下；安全 installer 只把 canonical IF 六项及其四个 helper 软链到 RoboTwin：
