@@ -4,7 +4,7 @@ import io
 import json
 from pathlib import Path
 
-from .seed_contracts import IF_SEED_CONTRACTS, describe_seed
+from .seed_contracts import IF_SEED_CONTRACTS, contract_for, describe_seed
 from .seed_manifest import load_manifest, manifest_sha256, validate_manifest
 
 CSV_FIELDS = ('task', 'task_config', 'block', 'seed', 'mode', 'block_offset', 'scene_index', 'scene_offset')
@@ -18,7 +18,7 @@ def build_seed_modes(directory):
         checked = validate_manifest(manifest)
         if manifest['task'] != task or len(checked['block_ids']) != 20:
             raise ValueError(f'{task}: expected the complete 20-block manifest')
-        size = IF_SEED_CONTRACTS[task].block_size
+        size = contract_for(task, legacy=manifest["schema_version"] == 1).block_size
         episodes = []
         for index, seed in enumerate(manifest['seeds']):
             description = describe_seed(task, seed)

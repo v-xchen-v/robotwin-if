@@ -147,6 +147,26 @@ class VideoReviewTest(unittest.TestCase):
         self.assertEqual(row["source_signature"], row["review_signature"])
         self.assertEqual(len(json.loads(self.request("/api/export.json?archived=1")[2])), 3)
 
+    def test_retired_spatial_modes_remain_reviewable_and_labels_survive_scope_filter(self):
+        identifiers=[]
+        for seed,mode in ((100005,"left"),(100006,"right"),(100007,"front"),(100008,"back"),(100009,"on_top")):
+            identifier=self.episode("vlact","place_relative",seed,False)
+            path=self.run/"vlact/place_relative"/f"place_relative_ep{seed}_result.json"
+            record=json.loads(path.read_text());record["mode"]=mode;path.write_text(json.dumps(record))
+            identifiers.append(identifier)
+        self.catalog.refresh()
+        front=identifiers[2]
+        signature=self.catalog.rows[front]["source_signature"]
+        self.assertEqual(self.save(front,"uncertain")[0],200)
+        rows=json.loads(self.request("/api/episodes")[2])["episodes"]
+        self.assertEqual({r["mode"] for r in rows if r["task"]=="place_relative" and not r["archived"]}, {"left","right","on_top"})
+        current=json.loads(self.request("/api/export.json")[2])
+        self.assertNotIn(front,{r["id"] for r in current})
+        full=json.loads(self.request("/api/export.json?archived=1")[2])
+        saved=next(r for r in full if r["id"]==front)
+        self.assertEqual(saved["human"],"uncertain")
+        self.assertEqual(self.catalog.rows[front]["source_signature"],signature)
+
     def test_unknown_files_traversal_and_outside_symlinks_are_not_served(self):
         self.assertEqual(self.request("/media/../../etc/passwd")[0], 404)
         self.assertEqual(self.request("/.git/config")[0], 404)

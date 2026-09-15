@@ -1,0 +1,28 @@
+{
+  "task": "place_relative",
+  "seed": 100007,
+  "status": "failure",
+  "success": false,
+  "instruction_type": "unseen",
+  "instruction": "Use the right arm to grab the black remotecontrol and place it in front of the red tea-box",
+  "action_calls": 400,
+  "chunks": 13,
+  "oracle_success": true,
+  "mode": "front",
+  "oracle_cache": {
+    "status": "miss",
+    "key": "3f5772e56c71607d55f2ff904b66facf645b5b70255365bfa8a1fead9f4e1718",
+    "identity_sha256": "3ce2d65d0956cfa3e79158a29a01ac20e43507270cad82a56ccef4eb5ca55da1",
+    "initial_verified": false
+  },
+  "oracle_seconds": 2.53483739803778,
+  "step_limit": 400,
+  "policy_setup_seconds": 0.9207380389561877,
+  "termination": "action_limit",
+  "render_sync": {
+    "mode": "observation",
+    "skipped_updates": 16139,
+    "performed_updates": 547
+  },
+  "elapsed_seconds": 73.378522265004
+}

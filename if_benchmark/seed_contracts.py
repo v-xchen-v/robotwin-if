@@ -3,7 +3,7 @@
 from dataclasses import dataclass
 
 
-CONTRACT_SCHEMA_VERSION = 1
+CONTRACT_SCHEMA_VERSION = 2
 
 
 @dataclass(frozen=True)
@@ -13,6 +13,16 @@ class SeedContract:
     task: str
     modes: tuple[str, ...]
     scene_span: int
+    seed_offsets: tuple[int, ...] = ()
+    seed_stride: int = 0
+
+    @property
+    def offsets(self):
+        return self.seed_offsets or tuple(range(self.block_size))
+
+    @property
+    def stride(self):
+        return self.seed_stride or self.block_size
 
     @property
     def block_size(self):
@@ -74,8 +84,10 @@ IF_SEED_CONTRACTS = {
     ),
     "place_relative": SeedContract(
         task="place_relative",
-        modes=("left", "right", "front", "back", "on_top"),
+        modes=("left", "right", "on_top"),
         scene_span=5,
+        seed_offsets=(0, 1, 4),
+        seed_stride=5,
     ),
 }
 
@@ -95,8 +107,14 @@ def _seed(value):
     return value
 
 
-def contract_for(task):
+LEGACY_SPATIAL_CONTRACT = SeedContract(
+    "place_relative", ("left", "right", "front", "back", "on_top"), 5)
+
+
+def contract_for(task, *, legacy=False):
     """Describe active or archived data; use IF_SEED_CONTRACTS for runnable tasks."""
+    if task == "place_relative" and legacy:
+        return LEGACY_SPATIAL_CONTRACT
     try:
         return (IF_SEED_CONTRACTS | ARCHIVED_SEED_CONTRACTS)[task]
     except KeyError as exc:
@@ -119,7 +137,12 @@ def observed_mode(task_name, task):
 
 
 def describe_seed(task, seed):
-    contract = contract_for(task)
+    """Stable physical seed identity, including retired modes for archive readers.
+
+    block_offset is the original seed slot; active on_top retains slot 4.
+    Use validate_active_seeds before running a task.
+    """
+    contract = contract_for(task, legacy=True)
     seed = _seed(seed)
     offset = seed % contract.block_size
     return SeedDescription(
@@ -133,25 +156,25 @@ def describe_seed(task, seed):
     )
 
 
-def expand_block(task, block_index):
-    contract = contract_for(task)
+def expand_block(task, block_index, *, legacy=False):
+    contract = contract_for(task, legacy=legacy)
     if isinstance(block_index, bool) or not isinstance(block_index, int) or block_index < 0:
         raise ValueError(
             f"block index must be a non-negative integer, got {block_index!r}"
         )
-    start = block_index * contract.block_size
-    return tuple(range(start, start + contract.block_size))
+    start = block_index * contract.stride
+    return tuple(start + offset for offset in contract.offsets)
 
 
 def first_block_at_or_above(task, candidate_floor):
     contract = contract_for(task)
     candidate_floor = _seed(candidate_floor)
-    return (candidate_floor + contract.block_size - 1) // contract.block_size
+    return (candidate_floor + contract.stride - 1) // contract.stride
 
 
-def validate_complete_blocks(task, seeds):
+def validate_complete_blocks(task, seeds, *, legacy=False):
     """Return retained block ids, rejecting any reordered or partial block."""
-    contract = contract_for(task)
+    contract = contract_for(task, legacy=legacy)
     values = tuple(_seed(seed) for seed in seeds)
     if not values:
         raise ValueError("seed list must not be empty")
@@ -163,8 +186,8 @@ def validate_complete_blocks(task, seeds):
     block_ids = []
     cursor = 0
     while cursor < len(values):
-        block_index = values[cursor] // contract.block_size
-        expected = expand_block(task, block_index)
+        block_index = values[cursor] // contract.stride
+        expected = expand_block(task, block_index, legacy=legacy)
         actual = values[cursor:cursor + contract.block_size]
         if actual != expected:
             raise ValueError(
@@ -176,10 +199,26 @@ def validate_complete_blocks(task, seeds):
     return tuple(block_ids)
 
 
-def mode_denominators(task, seeds):
-    contract = contract_for(task)
-    validate_complete_blocks(task, seeds)
+def mode_denominators(task, seeds, *, legacy=False):
+    contract = contract_for(task, legacy=legacy)
+    validate_complete_blocks(task, seeds, legacy=legacy)
     counts = {mode: 0 for mode in contract.modes}
     for seed in seeds:
         counts[describe_seed(task, seed).mode] += 1
     return counts
+
+
+def contract_for_seeds(task, seeds):
+    """Read balanced historical plans whose schema predates sparse spatial blocks."""
+    legacy = task == "place_relative" and any(seed % 5 in (2, 3) for seed in seeds)
+    validate_complete_blocks(task, seeds, legacy=legacy)
+    return contract_for(task, legacy=legacy)
+
+
+def validate_active_seeds(task, seeds):
+    if task not in IF_SEED_CONTRACTS:
+        raise ValueError(f"Task is retired: {task}")
+    for seed in seeds:
+        if describe_seed(task, seed).mode not in IF_SEED_CONTRACTS[task].modes:
+            raise ValueError(f"Retired mode for {task} seed {seed}; use the spatial3 manifest")
+    return validate_complete_blocks(task, seeds)

@@ -1,0 +1,15 @@
+{
+  "task": "place_relative",
+  "seed": 100008,
+  "status": "failure",
+  "success": false,
+  "instruction_type": "unseen",
+  "instruction": "Pick up the black remotecontrol and move it behind the red tea-box",
+  "action_calls": 400,
+  "chunks": 58,
+  "oracle_success": true,
+  "mode": "back",
+  "step_limit": 400,
+  "termination": "action_limit",
+  "elapsed_seconds": 205.20328424200125
+}

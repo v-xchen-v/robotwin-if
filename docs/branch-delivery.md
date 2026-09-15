@@ -16,7 +16,7 @@ Grasp-Approach 暂时下线，保存在 `bak/`，不进入当前默认评测。
 
 各目录提供 `setup_env.sh`、依赖声明、`client.py`、`eval.py` 和输出适配；五个模型还有本仓库的
 `serve.py` 包装，X-VLA 使用 setup 获取的固定上游 server。模型权重由各 README 的下载流程获取。
-实际用于已交付结果的 checkpoint revisions 记录在 [checkpoints.json](../result/if-ext-v2-six-tasks-20blocks/checkpoints.json)。
+实际用于已交付结果的 checkpoint revisions 记录在 [checkpoints.json](../result/if-ext-v2-six-tasks-spatial3-20blocks/checkpoints.json)。
 VLAct 使用 All 100K，不能用旧 Clean 50K 代替。
 
 运行需要 Linux、NVIDIA GPU、Bash、`setsid`、`flock`、`timeout`、`nvidia-smi`，以及已安装的
@@ -51,7 +51,7 @@ python tools/export_seed_modes.py --check
 # 查看默认六任务、20 blocks 的命令；不连接模型、不调用 GPU、不创建输出。
 bash scripts/eval.sh --policy vlact --output-dir outputs/policy-eval/vlact-new --dry-run
 
-# 每个 task 20 blocks；按固定清单串行完成 500 个 episodes。
+# 每个 task 20 blocks；按固定清单串行完成 460 个 episodes。
 bash scripts/eval.sh --policy vlact --sim-gpu 0 --model-gpu 1 \
   --output-dir outputs/policy-eval/vlact-new
 
@@ -76,7 +76,7 @@ GPU 查询超过 8 秒、温度达到 87°C 或显存超限会停止本次 sim�
 
 ## 2. 六任务 × 20 blocks 的 seed + mode manifest
 
-目录：[`seed-manifests/if-ext-v2-six-tasks-20-per-mode/`](../seed-manifests/if-ext-v2-six-tasks-20-per-mode/README.md)。
+目录：[`seed-manifests/if-ext-v2-six-tasks-spatial3-20-per-mode/`](../seed-manifests/if-ext-v2-six-tasks-spatial3-20-per-mode/README.md)。
 
 | Task | Modes/block | 20 blocks 的回合数 | Task config |
 |---|---:|---:|---|
@@ -85,31 +85,32 @@ GPU 查询超过 8 秒、温度达到 87°C 或显存超限会停止本次 sim�
 | attribute_select | 8 | 160 | demo_clean |
 | arm_select | 2 | 40 | demo_clean_arm_select_v2 |
 | stack_sequence | 6 | 120 | demo_clean |
-| place_relative | 5 | 100 | demo_clean |
-| 每个 policy 合计 | 25 | 500 | |
+| place_relative | 3 | 60 | demo_clean |
+| 每个 policy 合计 | 23 | 460 | |
 
-- `<task>.json` 是原格式 flat manifest，evaluator 直接读取原始 `seeds`。
-- [`seed-modes.json`](../seed-manifests/if-ext-v2-six-tasks-20-per-mode/seed-modes.json) 给出每个任务的
+- `<task>.json` 是 flat manifest，evaluator 直接读取原始 `seeds`。Spatial 使用 schema 2，
+  每组 seeds 为 `[5k, 5k+1, 5k+4]`；其他五项清单不变。旧 Spatial schema 1 仅供五模式历史校验。
+- [`seed-modes.json`](../seed-manifests/if-ext-v2-six-tasks-spatial3-20-per-mode/seed-modes.json) 给出每个任务的
   config、manifest SHA-256、mode 分母及逐 episode 的 `seed`、`mode`、`block`、`block_offset`、scene 信息。
-- [`seed-modes.csv`](../seed-manifests/if-ext-v2-six-tasks-20-per-mode/seed-modes.csv) 为相同信息的 500 行平表。
+- [`seed-modes.csv`](../seed-manifests/if-ext-v2-six-tasks-spatial3-20-per-mode/seed-modes.csv) 为相同信息的 460 行平表。
 - `block` 是清单内从 **0 到 19** 的顺序编号；候选 seed 可能有间隔，不等于 `seed // block_size`。
 - `suite.yml`、`qualification-files.json`、`reusable-results.yml` 保留正式发布及历史复用证据。
   接收方启动新评测只需 flat manifests 与 seed/mode 导出，不需要访问复用索引中的原机器路径。
 
 `python tools/export_seed_modes.py --check` 检查 JSON/CSV 与 flat seeds/modes 一致；
-完整发布检查使用 `python seed-manifests/if-ext-v2-six-tasks-20-per-mode/verify.py`。
+完整发布检查使用 `python seed-manifests/if-ext-v2-six-tasks-spatial3-20-per-mode/verify.py`。
 
 ## 3. Result
 
-当前交付结果：[`result/if-ext-v2-six-tasks-20blocks/`](../result/if-ext-v2-six-tasks-20blocks/README.md)。
-六个 policies 已完成 **3000/3000 episodes、720/720 blocks**，每个 policy 为 500 episodes。
+当前交付结果：[`result/if-ext-v2-six-tasks-spatial3-20blocks/`](../result/if-ext-v2-six-tasks-spatial3-20blocks/README.md)。
+六个 policies 已完成 **2760/2760 episodes、720/720 blocks**，每个 policy 为 460 episodes。
 
 提供 `results.html/md/json/csv`、`episodes.csv`、六份 frozen manifests、checkpoint 身份、
 provenance 与 `SHA256SUMS`。可离线查看汇总表和逐回合计数，不依赖原机器。
 `Overall` 对六个任务的 `Task Avg.` 等权，成功与已完成的 policy failure 都保留。
 
 ```bash
-(cd result/if-ext-v2-six-tasks-20blocks && sha256sum -c SHA256SUMS)
+(cd result/if-ext-v2-six-tasks-spatial3-20blocks && sha256sum -c SHA256SUMS)
 ```
 
 完整视频和动作轨迹体积较大，仍保存在结果 README 指定的原始评测目录，不包含在此轻量结果包中。
@@ -129,5 +130,5 @@ python -m unittest discover -s tests -p test_branch_delivery.py
 # 以下使用安装好客户端依赖的 RoboTwin 环境。
 python -m unittest discover -s tests -p test_if_policy_evaluation.py
 python tools/export_seed_modes.py --check
-python seed-manifests/if-ext-v2-six-tasks-20-per-mode/verify.py
+python seed-manifests/if-ext-v2-six-tasks-spatial3-20-per-mode/verify.py
 ```

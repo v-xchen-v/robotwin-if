@@ -62,7 +62,7 @@ supervisor 每 10 秒记录 GPU 利用率和显存；查询超时、显存超过
 ```
 
 其余模型连接参数沿用各 policy 的配置。旧 `demo_clean` manifest 与新配置不能混用。
-正式评测使用 [六任务 20-block 清单](../seed-manifests/if-ext-v2-six-tasks-20-per-mode/README.md)，
+正式评测使用 [六任务 20-block 清单](../seed-manifests/if-ext-v2-six-tasks-spatial3-20-per-mode/README.md)，
 其中 arm v2 的 seeds 独立于调试集。已验证的 12-block 开发集和完整 oracle 证据另存于
 [v2 manifest 目录](../seed-manifests/if-ext-v2-dev-12-per-mode/README.md)。
 当前六个 evaluator 统一使用原生渲染，并在每个新回合执行 oracle qualification。

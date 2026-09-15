@@ -57,8 +57,8 @@ def digest(path):
 
 
 def block_count(spec):
-    from if_benchmark.seed_contracts import validate_complete_blocks
-    count = len(validate_complete_blocks(spec['task'], spec['seeds']))
+    from if_benchmark.seed_contracts import contract_for_seeds
+    count = len(spec["seeds"]) // contract_for_seeds(spec["task"], spec["seeds"]).block_size
     assert spec.get('blocks', count) == count, 'Task block count disagrees with manifest'
     return count
 
@@ -118,11 +118,11 @@ def import_episode(base, policy, spec, seed, source, origin, expected_hashes=Non
             shutil.copy2(file, temporary)
             assert digest(temporary) == hashes[file.name], ('copy checksum mismatch', file)
             temporary.replace(destination)
-    from if_benchmark.seed_contracts import contract_for
+    from if_benchmark.seed_contracts import contract_for_seeds
     write(marker, dict(policy=policy, task=task, seed=seed, origin=origin,
                        source_directory=str(Path(source).resolve()), files_sha256=hashes,
                        success=record['success'], mode=record['mode'],
-                       formal_block=spec['seeds'].index(seed) // contract_for(task).block_size))
+                       formal_block=spec['seeds'].index(seed) // contract_for_seeds(task, spec['seeds']).block_size))
     return True
 
 
@@ -163,7 +163,7 @@ def prepare(base, release, old):
     (base / 'support').mkdir()
     for s in specs:
         write(base / 'pending-manifests' / s['manifest'],
-              dict(schema_version=1, task=s['task'], task_config=s['task_config'],
+              dict(schema_version=read(release / s['manifest'])['schema_version'], task=s['task'], task_config=s['task_config'],
                    seeds=s['pending_seeds_per_policy']))
     for policy in POLICIES:
         for spec in specs:
@@ -199,7 +199,7 @@ def prepare(base, release, old):
 
 
 def report(base, state=None, current=None, error=None):
-    from if_benchmark.seed_contracts import contract_for
+    from if_benchmark.seed_contracts import contract_for_seeds
     plan = read(base / 'plan.json')
     previous = read(base / 'status.json') if (base / 'status.json').exists() else {}
     totals = Counter()
@@ -212,7 +212,7 @@ def report(base, state=None, current=None, error=None):
             assert len({r['seed'] for r in records}) == len(records)
             assert all(r['seed'] in spec['seeds'] for r in records)
             done = {r['seed'] for r in records}
-            size = contract_for(task).block_size
+            size = contract_for_seeds(task, spec['seeds']).block_size
             blocks = [spec['seeds'][i:i + size] for i in range(0, len(spec['seeds']), size)]
             complete_blocks = sum(all(seed in done for seed in block) for block in blocks)
             row = dict(policy=policy, task=task, expected_episodes=len(spec['seeds']),
@@ -224,7 +224,7 @@ def report(base, state=None, current=None, error=None):
                        partial_blocks=sum(any(seed in done for seed in block) and
                                           not all(seed in done for seed in block) for block in blocks),
                        pending_seeds=[s for s in spec['seeds'] if s not in done], per_mode={})
-            for mode in contract_for(task).modes:
+            for mode in contract_for_seeds(task, spec['seeds']).modes:
                 selected = [r for r in records if r['mode'] == mode]
                 row['per_mode'][mode] = dict(expected=block_count(spec), recorded=len(selected),
                                              successes=sum(r['success'] for r in selected))
@@ -293,6 +293,12 @@ def check_scene(base, policy, spec, seed, instruction, obs, env, path):
 def check_active_tasks(specs):
     from if_benchmark.seed_contracts import IF_SEED_CONTRACTS
     assert [s['task'] for s in specs] == list(IF_SEED_CONTRACTS), 'Formal runs require the current six-task inventory'
+    from if_benchmark.seed_contracts import validate_active_seeds
+    for spec in specs:
+        if 'modes' in spec:
+            assert set(spec['modes']) == set(IF_SEED_CONTRACTS[spec['task']].modes), 'Retired modes; use the spatial3 release'
+        if 'seeds' in spec:
+            validate_active_seeds(spec['task'], spec['seeds'])
 
 
 def worker(base, policy, task, output):
@@ -661,7 +667,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('command', choices=('prepare', 'run', 'status', 'verify', 'worker'))
     parser.add_argument('--run-dir', type=Path, default=DEFAULT_RUN)
-    parser.add_argument('--release', type=Path, default=ROOT / 'seed-manifests/if-ext-v2-six-tasks-20-per-mode')
+    parser.add_argument('--release', type=Path, default=ROOT / 'seed-manifests/if-ext-v2-six-tasks-spatial3-20-per-mode')
     parser.add_argument('--old-run', type=Path,
                         help='Prepare: prior run with matching checkpoint and inference metadata')
     parser.add_argument('--policy', choices=POLICIES)

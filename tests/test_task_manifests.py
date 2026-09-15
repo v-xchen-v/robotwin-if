@@ -141,7 +141,7 @@ def main():
     check(
         "seed-contract balance block sizes are exact",
         tuple(contract.block_size for contract in IF_SEED_CONTRACTS.values())
-        == (2, 2, 8, 2, 6, 5),
+        == (2, 2, 8, 2, 6, 3),
     )
     check(
         "all_tasks_plus_if.yml is exact native-50 + IF-six",

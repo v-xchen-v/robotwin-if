@@ -74,7 +74,7 @@ def validate_generation_state(state):
         raise GenerationError("generation checkpoint must be an object")
     if state.get("schema_version") != GENERATION_SCHEMA_VERSION:
         raise GenerationError("generation checkpoint schema mismatch")
-    if state.get("contract_schema_version") != CONTRACT_SCHEMA_VERSION:
+    if state.get("contract_schema_version") not in (1, CONTRACT_SCHEMA_VERSION):
         raise GenerationError("seed contract schema mismatch")
 
     params = state.get("parameters")
@@ -118,7 +118,7 @@ def validate_generation_state(state):
         block_index = expected_first + position
         if block.get("block_index") != block_index:
             raise GenerationError("generation checkpoint block order is inconsistent")
-        expected_seeds = list(expand_block(params["task"], block_index))
+        expected_seeds = list(expand_block(params["task"], block_index, legacy=state["contract_schema_version"] == 1))
         if block.get("seeds") != expected_seeds:
             raise GenerationError("generation checkpoint block seeds are inconsistent")
         episodes = block.get("episodes")
@@ -178,7 +178,7 @@ def validate_generation_state(state):
 def validate_resume_state(state, expected):
     validate_generation_state(state)
     validate_generation_state(expected)
-    for field in ("parameters", "provenance"):
+    for field in ("contract_schema_version", "parameters", "provenance"):
         if state.get(field) != expected.get(field):
             raise GenerationError(f"resume {field} do not match the requested run")
     return state
@@ -427,6 +427,8 @@ def write_generation_state(path, state, overwrite=False):
 
 def run_generation(state, probe, checkpoint=None):
     validate_generation_state(state)
+    if state["contract_schema_version"] != CONTRACT_SCHEMA_VERSION:
+        raise GenerationError("Historical seed contract is read-only; start a new generation")
     params = state["parameters"]
     task = params["task"]
     target = params["accepted_blocks"]

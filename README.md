@@ -9,7 +9,7 @@
 | Attribute-Select | [`attribute_select`](#attribute-select) | color / decal / shape / size |
 | Arm-Select | [`arm_select`](#arm-select) | left / right |
 | Sequence | [`stack_sequence`](#stack-sequence) | 六种 bottom-to-top 顺序 |
-| Spatial-Direction | [`place_relative`](#place-relative) | left / right / front / back / on top |
+| Spatial-Direction | [`place_relative`](#place-relative) | left / right / on top |
 
 Grasp-Approach 已于 2026-09-15 暂时下线；实现、配置、测试和 probe 归档到 [`bak/grasp_cube_approach/`](bak/grasp_cube_approach/README.md)。当前默认生成、安装与评测均只包含以上六项。
 
@@ -19,13 +19,13 @@ Grasp-Approach 已于 2026-09-15 暂时下线；实现、配置、测试和 prob
 
 正式评测结果见 [`result/`](result/README.md)，当前 [六任务结果表](#policy-results) 已从原归档提取。历史七任务 [IF-Ext v2 wide 20-block 结果](result/if-ext-v2-wide-20blocks/README.md)
 保留六个 policies × 七任务的 3240 回合，包含报表、逐回合 CSV、冻结 seed manifest 和校验证据。
-当前六任务使用 [20-block 清单](seed-manifests/if-ext-v2-six-tasks-20-per-mode/README.md)：500 回合/policy、总计 3000 回合和 720 blocks，均可复用原归档结果。六任务 Overall 与原七任务分数属于不同评测范围。
+当前六任务使用 [20-block 清单](seed-manifests/if-ext-v2-six-tasks-spatial3-20-per-mode/README.md)：460 回合/policy、总计 2760 回合和 720 blocks，均可复用原归档结果。Spatial 仅包含 left/right/on_top；旧五模式与七任务 Overall 均属于不同评测范围。
 
 <a id="policy-results"></a>
 
 ## 六个 Policies 的评测结果
 
-2026-09-15 归档快照：**六任务 × 每任务 20 blocks × 六个 policies**，已完成 **3000/3000 回合、720/720 blocks**。
+2026-09-15 归档快照：**六任务 × 每任务 20 blocks × 六个 policies**，已完成 **2760/2760 回合、720/720 blocks**。
 Arm-Select 使用 v2；VLAct 使用 `StarVLA/VLAct_Qwen3OFT_Robotwin_all_Finetune`（All 100K）。
 
 **微调数据差异：** X-VLA 使用在 RoboTwin **clean** 数据上微调的 checkpoint，其余五个 policies 使用在
@@ -33,16 +33,16 @@ Arm-Select 使用 v2；VLAct 使用 `StarVLA/VLAct_Qwen3OFT_Robotwin_all_Finetun
 本次比较采用其公开的 clean checkpoint。因此，各模型的微调数据设置并不完全一致，解读结果时需考虑这一差异。
 
 任务列为**成功数 / 已评测回合数**，成功与已完成的 policy failure 均计入分母。
-**Overall (%) = 六个任务成功率的等权平均**，每个任务内部对 modes 等权；它不等于把 500 个回合合并后的成功率。
+**Overall (%) = 六个任务成功率的等权平均**，每个任务内部对 modes 等权；它不等于把 460 个回合合并后的成功率。
 
 | Policy | Verb | Noun | Attribute | Arm v2 | Sequence | Spatial | Overall (%) | 完成回合 | 完成 blocks |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| [X-VLA](policies/xvla/README.md) | 25/40 | 15/40 | 100/160 | 25/40 | 0/120 | 6/100 | 38.5 | 500/500 | 120/120 |
-| [LingBot-VA](policies/lingbot_va/README.md) | 23/40 | 30/40 | 145/160 | 37/40 | 17/120 | 26/100 | 59.3 | 500/500 | 120/120 |
-| [LingBot-VLA](policies/lingbot_vla/README.md) | 25/40 | 13/40 | 93/160 | 15/40 | 14/120 | 3/100 | 34.2 | 500/500 | 120/120 |
-| [VLAct All](policies/vlact/README.md) | 20/40 | 28/40 | 133/160 | 0/40 | 15/120 | 20/100 | 39.3 | 500/500 | 120/120 |
-| [DM05](policies/dm05/README.md) | 20/40 | 25/40 | 112/160 | 39/40 | 9/120 | 21/100 | 51.4 | 500/500 | 120/120 |
-| [Hy-VLA](policies/hy_vla/README.md) | 23/40 | 11/40 | 143/160 | 8/40 | 15/120 | 7/100 | 35.6 | 500/500 | 120/120 |
+| [X-VLA](policies/xvla/README.md) | 25/40 | 15/40 | 100/160 | 25/40 | 0/120 | 6/60 | 39.2 | 460/460 | 120/120 |
+| [LingBot-VA](policies/lingbot_va/README.md) | 23/40 | 30/40 | 145/160 | 37/40 | 17/120 | 26/60 | 62.2 | 460/460 | 120/120 |
+| [LingBot-VLA](policies/lingbot_vla/README.md) | 25/40 | 13/40 | 93/160 | 15/40 | 14/120 | 3/60 | 34.5 | 460/460 | 120/120 |
+| [VLAct All](policies/vlact/README.md) | 20/40 | 28/40 | 133/160 | 0/40 | 15/120 | 19/60 | 41.2 | 460/460 | 120/120 |
+| [DM05](policies/dm05/README.md) | 20/40 | 25/40 | 112/160 | 39/40 | 9/120 | 20/60 | 53.5 | 460/460 | 120/120 |
+| [Hy-VLA](policies/hy_vla/README.md) | 23/40 | 11/40 | 143/160 | 8/40 | 15/120 | 7/60 | 36.4 | 460/460 | 120/120 |
 
 **待复核记录：** Hy-VLA 的 `pick_diverse_object` seed `100052`（coffee box）被用户指出视频表现失败，
 其归档自动判定仍为成功；该片段已从 README 演示中撤下。上表保持归档计数，尚未据此人工修订分数，
@@ -112,27 +112,30 @@ Spatial 的 Top 表示 on_top。每个 policy 的每项任务均已完成 20/20 
 
 ### Spatial — `place_relative`
 
-| Policy | Left | Right | Front | Back | Top | Avg. (%) |
-|---|---:|---:|---:|---:|---:|---:|
-| X-VLA | 4/20 | 2/20 | 0/20 | 0/20 | 0/20 | 6.0 |
-| LingBot-VA | 12/20 | 7/20 | 0/20 | 0/20 | 7/20 | 26.0 |
-| LingBot-VLA | 1/20 | 2/20 | 0/20 | 0/20 | 0/20 | 3.0 |
-| VLAct All | 11/20 | 7/20 | 1/20 | 0/20 | 1/20 | 20.0 |
-| DM05 | 12/20 | 8/20 | 1/20 | 0/20 | 0/20 | 21.0 |
-| Hy-VLA | 2/20 | 5/20 | 0/20 | 0/20 | 0/20 | 7.0 |
+Spatial 从五模式收缩为 **left/right/on_top**；这是视频复核后的评测范围调整，分数变化不表示模型性能提升。front/back 原始自动结果与视频索引见 [决策与证据](docs/place-relative-spatial3.md)，旧五模式结果完整保留。
+
+
+| Policy | Left | Right | Top | Avg. (%) |
+|---|---:|---:|---:|---:|
+| X-VLA | 4/20 | 2/20 | 0/20 | 10.0 |
+| LingBot-VA | 12/20 | 7/20 | 7/20 | 43.3 |
+| LingBot-VLA | 1/20 | 2/20 | 0/20 | 5.0 |
+| VLAct All | 11/20 | 7/20 | 1/20 | 31.7 |
+| DM05 | 12/20 | 8/20 | 0/20 | 33.3 |
+| Hy-VLA | 2/20 | 5/20 | 0/20 | 11.7 |
 
 </details>
 
-数据来源：[完整结果表](result/if-ext-v2-six-tasks-20blocks/results.md) ·
-[分模式 CSV](result/if-ext-v2-six-tasks-20blocks/results.csv) ·
-[逐回合 CSV](result/if-ext-v2-six-tasks-20blocks/episodes.csv) ·
-[Checkpoint 版本](result/if-ext-v2-six-tasks-20blocks/checkpoints.json)。
+数据来源：[完整结果表](result/if-ext-v2-six-tasks-spatial3-20blocks/results.md) ·
+[分模式 CSV](result/if-ext-v2-six-tasks-spatial3-20blocks/results.csv) ·
+[逐回合 CSV](result/if-ext-v2-six-tasks-spatial3-20blocks/episodes.csv) ·
+[Checkpoint 版本](result/if-ext-v2-six-tasks-spatial3-20blocks/checkpoints.json)。
 
 ## 六个任务与视频
 
 每项任务聚焦一种指令差异：做什么动作、抓哪个物体、按什么属性选择、用哪只手、按什么顺序、放在哪个方向。
 下方动态预览可点击打开 MP4；素材随仓库提供。视频选自正式评测中的成功回合，用于展示任务行为，
-整体表现见 [完整结果](result/if-ext-v2-six-tasks-20blocks/README.md)。原始指令、seed、policy 和视频处理说明见 [素材来源](docs/assets/task-demos/README.md)。
+整体表现见 [完整结果](result/if-ext-v2-six-tasks-spatial3-20blocks/README.md)。原始指令、seed、policy 和视频处理说明见 [素材来源](docs/assets/task-demos/README.md)。
 
 <a id="bottle-verb"></a>
 
@@ -198,8 +201,8 @@ Spatial 的 Top 表示 on_top。每个 policy 的每项任务均已完成 20/20 
 
 ### 6. Place-Relative：理解相对空间方向
 
-将物体 A 放到参考物体 B 的 **left / right / front / back / on top**，场景中另有一个干扰物。
-同一布局对应五种方向，一个 block 包含五个回合，检验目标放置关系是否符合指令。
+将物体 A 放到参考物体 B 的 **left / right / on top**，场景中另有一个干扰物。
+同一布局对应三种方向，一个 block 包含三个回合，检验目标放置关系是否符合指令。
 下例将绿色 toycar 分别放到红色 tea-box 的左侧和顶部。
 
 [![Place-Relative：将同一绿色 toycar 放到红色 tea-box 左侧或顶部](docs/assets/task-demos/place_relative.gif)](docs/assets/task-demos/place_relative.mp4)
@@ -213,8 +216,8 @@ Spatial 的 Top 表示 on_top。每个 policy 的每项任务均已完成 20/20 
 | 六个 policy 的 inference code / setup / eval adapter | [`policies/`](policies/README.md) |
 | 统一 bash 评测入口（单个模型服务 + 串行 sim） | [`scripts/eval.sh`](scripts/eval.sh) |
 | 视频人工复核、Success/Fail 标注与判定分歧导出 | [`tools/policy-video-review/`](tools/policy-video-review/README.md) |
-| 六任务 × 20 blocks：flat seeds 与显式 seed/mode JSON、CSV | [`seed-manifests/if-ext-v2-six-tasks-20-per-mode/`](seed-manifests/if-ext-v2-six-tasks-20-per-mode/README.md) |
-| 已完成结果、逐回合 CSV、checkpoint 与校验证据 | [`result/if-ext-v2-six-tasks-20blocks/`](result/if-ext-v2-six-tasks-20blocks/README.md) |
+| 六任务 × 20 blocks：flat seeds 与显式 seed/mode JSON、CSV | [`seed-manifests/if-ext-v2-six-tasks-spatial3-20-per-mode/`](seed-manifests/if-ext-v2-six-tasks-spatial3-20-per-mode/README.md) |
+| 已完成结果、逐回合 CSV、checkpoint 与校验证据 | [`result/if-ext-v2-six-tasks-spatial3-20blocks/`](result/if-ext-v2-six-tasks-spatial3-20blocks/README.md) |
 
 接收方从 [分支交付说明](docs/branch-delivery.md) 开始；运行新评测不依赖本机 `/Data` 下的旧运行目录。
 
@@ -423,7 +426,7 @@ third_party/xvla/        setup 获取的固定版本 X-VLA 源码（Git 忽略�
 
 当前维护六项任务；inventory、bridge 与 seed contracts 由静态检查保持一致。
 Grasp-Approach 已归档，不参与默认安装、生成、评测或当前 Overall。
-六个 policies 的 20-block 结果已完成，六任务范围可复用 3000 回合、720 个完整 blocks。
+六个 policies 的 20-block 结果已完成，六任务范围可复用 2760 回合、720 个完整 blocks。
 当前入口见 [正式评测说明](docs/formal-policy-evaluation.md) 和 [结果目录](result/README.md)。
 
 任务执行使用固定 manifest，成功和 policy failure 都保留，基础设施错误不替换 seed。

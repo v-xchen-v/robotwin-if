@@ -116,7 +116,8 @@ class Catalog:
                         identifier = f"{policy}/{task}/{seed}"
                         row = dict(id=identifier, policy=policy, task=task, seed=seed,
                                    mode=record.get("mode"), instruction=record.get("instruction") or "",
-                                   automatic=automatic, archived=task == "grasp_cube_approach",
+                                   automatic=automatic, archived=(task == "grasp_cube_approach" or
+                                       (task == "place_relative" and record.get("mode") in ("front", "back"))),
                                    block=block_indices.get((task, seed), provenance.get("formal_block", status_info.get("block"))),
                                    steps=record.get("action_calls"), step_limit=record.get("step_limit"),
                                    termination=record.get("termination"),

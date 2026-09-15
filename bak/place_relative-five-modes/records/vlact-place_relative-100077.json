@@ -1,0 +1,28 @@
+{
+  "task": "place_relative",
+  "seed": 100077,
+  "status": "success",
+  "success": true,
+  "instruction_type": "unseen",
+  "instruction": "Lift the blue soap and set it in front of the red tea-box",
+  "action_calls": 147,
+  "chunks": 5,
+  "oracle_success": true,
+  "mode": "front",
+  "oracle_cache": {
+    "status": "hit",
+    "key": "a4c3d0f20a408fa981bdef754281832bfa14c64796b5364619a77174a52c61c5",
+    "identity_sha256": "3ce2d65d0956cfa3e79158a29a01ac20e43507270cad82a56ccef4eb5ca55da1",
+    "initial_verified": true
+  },
+  "oracle_seconds": 0.00023612205404788256,
+  "step_limit": 400,
+  "policy_setup_seconds": 1.2027598000131547,
+  "termination": "task_success",
+  "render_sync": {
+    "mode": "observation",
+    "skipped_updates": 11770,
+    "performed_updates": 149
+  },
+  "elapsed_seconds": 50.28654984792229
+}

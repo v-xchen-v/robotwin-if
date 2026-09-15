@@ -4,7 +4,7 @@ from pathlib import Path
 import tempfile
 import unittest
 
-from if_benchmark.seed_contracts import contract_for, describe_seed
+from if_benchmark.seed_contracts import contract_for, describe_seed, expand_block
 from tools import summarize_formal_policy_results as report
 
 
@@ -16,7 +16,7 @@ class ResultScopeTest(unittest.TestCase):
 
     def fixture(self, historical=True, incomplete_grasp=False):
         tasks = list(report.TASKS) + (list(report.ARCHIVED_TASKS) if historical else [])
-        specs = [dict(task=t, seeds=list(range(contract_for(t).block_size))) for t in tasks]
+        specs = [dict(task=t, seeds=list(expand_block(t, 0, legacy=historical))) for t in tasks]
         rows = []
         for policy in report.POLICIES:
             for spec in specs:
@@ -49,8 +49,8 @@ class ResultScopeTest(unittest.TestCase):
     def test_six_task_projection_and_explicit_seven_task_average(self):
         self.fixture()
         current = report.snapshot(self.base)
-        legacy = report.snapshot(self.base, include_archived_tasks=True)
-        self.assertEqual(current['summary']['expected_episodes'], 150)
+        legacy = report.snapshot(self.base, include_archived_tasks=True, include_archived_modes=True)
+        self.assertEqual(current['summary']['expected_episodes'], 138)
         self.assertEqual(legacy['summary']['expected_episodes'], 162)
         self.assertEqual(current['summary']['expected_blocks'], 36)
         self.assertEqual(legacy['summary']['expected_blocks'], 42)
@@ -59,7 +59,7 @@ class ResultScopeTest(unittest.TestCase):
         self.assertEqual(current['source_summary'], legacy['source_summary'])
         report.generate(current, self.base / 'current.md')
         text = (self.base / 'current.md').read_text()
-        self.assertIn('150/150', text)
+        self.assertIn('138/138', text)
         self.assertIn('36/36', text)
         self.assertIn('6 个 Task Avg.', text)
         self.assertNotIn('Grasp v2', (self.base / 'current.html').read_text())

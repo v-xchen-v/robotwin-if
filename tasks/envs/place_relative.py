@@ -12,38 +12,18 @@ from ._GLOBAL_CONFIGS import *
 
 
 class place_relative(Base_Task):
-    """Place-Relative IF task: spatial-DIRECTION understanding (IF-Spatial-Direction).
+    """Place A left/right/on top of B in an otherwise identical scene.
 
-    A mover A and a reference/receiver B (flat-top base) plus ONE distractor are on the
-    table. The instruction tells the robot to pick up A and place it in a spatial
-    DIRECTION relative to B: one of five values -- left / right / front / back / on top.
-    The direction word is the SOLE scored axis: the SAME physical scene is used for all
-    five, so nothing in the pixels leaks which direction is asked -- only the instruction
-    decides.
-
-    Scene and direction are DECOUPLED through the seed so the same scene appears under
-    ALL five directions:
-
-        scene_seed = seed // 5            # identical for the 5-tuple (5k..5k+4)
-        direction  = [left,right,front,back,on_top][seed % 5]
-
-    So eval seeds (0..4),(5..9),... give scene #0,#1,... each once per direction, with
-    pixel-identical initial frames -- the only difference the policy sees is the
-    direction phrase {D}. Mirrors laptop_verb ({V}) / grasp_cube_approach ({D}).
-
-    Axis convention (native place_a2b_left): left/right = signed world x, front/back =
-    signed world y (FRONT_SIGN in _if_relative pins which y points at the robot),
-    on-top = elevation. Objects/colors are self-designed (texture-verified); color is a
-    grounding aid, not a scored axis.
+    Preserve the original physical seed mapping: scene_seed = seed // 5,
+    and each active block contains seeds (5k, 5k+1, 5k+4). Slots 2/3
+    (front/back) are retired. Never remap to seed // 3 or seed % 3.
+    The archived five-mode task is in bak/place_relative-five-modes/.
     """
 
-    ORDER = ["left", "right", "front", "back", "on_top"]
+    ORDER = ["left", "right", "on_top"]
+    SEED_MODES = {0: "left", 1: "right", 4: "on_top"}
 
-    # Placement offset from B along the commanded axis. 0.11 (native place_a2b uses
-    # 0.13) so that BOTH front (+y) and back (-y) targets fall inside the reachable
-    # placement band y in [-0.28, -0.01] (measured): with B centered near y=-0.14,
-    # front -> ~-0.03 and back -> ~-0.25, both well within reach. Still lands in the
-    # lateral check band [0.08, 0.20].
+    # Preserve the qualified lateral placement offset and reachable scene layout.
     OFFSET = 0.11
 
     # {D} direction-phrase pools -- the ONLY instruction signal of the placement
@@ -52,8 +32,6 @@ class place_relative(Base_Task):
     PHRASES = {
         "left":   ["to the left of"],
         "right":  ["to the right of"],
-        "front":  ["in front of"],
-        "back":   ["behind"],
         "on_top": ["on top of"],
     }
 
@@ -92,6 +70,10 @@ class place_relative(Base_Task):
         # Capture seed so episode composition is a pure function of it (eval calls
         # setup_demo twice with the same seed and both must match).
         self._seed = kwags.get("seed", 0)
+        if self._seed % 5 not in self.SEED_MODES:
+            raise ValueError("place_relative front/back seeds are retired; use the spatial3 manifest")
+        if self.DIRECTION is not None and self.DIRECTION not in self.ORDER:
+            raise ValueError("place_relative supports only left/right/on_top")
         super()._init_task_env_(**kwags)
         apply_if_eval_step_limit(self)
 
@@ -119,13 +101,13 @@ class place_relative(Base_Task):
 
     def load_actors(self):
         # Decouple scene from direction: the scene depends only on seed//5 so the
-        # 5-tuple (5k..5k+4) share ONE scene; the direction comes from seed%5. Re-seed
+        # retained seeds (5k,5k+1,5k+4) share ONE scene; the direction comes from seed%5. Re-seed
         # here so paired seeds get an identical scene under every direction. DIRECTION,
         # if set, forces the mode (harness/testing only).
         scene_seed = self._seed // 5
         np.random.seed(scene_seed)
         rng = np.random.default_rng(scene_seed)
-        self.direction = self.DIRECTION if self.DIRECTION in self.ORDER else self.ORDER[self._seed % 5]
+        self.direction = self.DIRECTION if self.DIRECTION in self.ORDER else self.SEED_MODES[self._seed % 5]
 
         mover_nouns = list(self.MOVERS.keys())
         base_nouns = list(self.BASES.keys())
@@ -167,12 +149,7 @@ class place_relative(Base_Task):
             self.add_prohibit_area(actor, padding=0.05)
             return actor
 
-        # Reference B: CENTRAL in x and set DEEP in y (toward the far side) so that both
-        # the front (+y) and back (-y) placement targets stay inside the reachable band
-        # y in [-0.28, -0.01] (measured). Centering at y~-0.14 with OFFSET 0.11 puts
-        # front at ~-0.03 (near the reachable front edge) and back at ~-0.25 (far), both
-        # plannable; a shallower B would push the front target past +y into unreachable
-        # space. Tight limits keep it near the middle in x.
+        # Preserve the original reference band so retained seeds reproduce their scenes.
         self.reference = _spawn(b_obj, b_mid, xlim=[-0.08, 0.08], ylim=[-0.15, -0.13],
                                 min_sep=0.0, min_abs_x=0.0)
         self.reference_modelname, self.reference_id = b_obj, b_mid
@@ -247,4 +224,4 @@ class place_relative(Base_Task):
         if self.direction in DIRECTIONS:
             axis, sign = DIRECTIONS[self.direction]
             return placed_in_direction(self, self.mover, self.reference, axis, sign)
-        return placed_on_top(self, self.mover, self.reference)
+        return self.direction == "on_top" and placed_on_top(self, self.mover, self.reference)

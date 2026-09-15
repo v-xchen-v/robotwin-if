@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 """Layer-A instruction-pool invariants for place_relative.json.
 
-All five placement directions share one template family:
+All three placement directions share one template family:
   - {A}: mover
   - {B}: reference
   - {D}: seed-selected direction phrase
   - {a}: optional arm
 
 The test exercises RoboTwin's real filter_instructions and placeholder renderer for
-all five directions. It does not require the simulator.
+all three directions. It does not require the simulator.
 
     python tests/place_relative/test_instructions.py
 """
@@ -31,8 +31,6 @@ from generate_episode_instructions import filter_instructions, replace_placehold
 DIRECTION_PHRASES = (
     "to the left of",
     "to the right of",
-    "in front of",
-    "behind",
     "on top of",
 )
 BASE_PARAMS = {

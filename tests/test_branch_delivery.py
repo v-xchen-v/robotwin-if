@@ -15,7 +15,7 @@ from if_benchmark.seed_contracts import IF_SEED_CONTRACTS
 from if_benchmark.seed_modes import build_seed_modes, check_seed_modes, export_texts
 
 ROOT = Path(__file__).resolve().parents[1]
-RELEASE = ROOT / 'seed-manifests/if-ext-v2-six-tasks-20-per-mode'
+RELEASE = ROOT / 'seed-manifests/if-ext-v2-six-tasks-spatial3-20-per-mode'
 POLICIES = ('xvla', 'lingbot_va', 'lingbot_vla', 'vlact', 'dm05', 'hy_vla')
 
 
@@ -23,10 +23,10 @@ class SeedModeDeliveryTest(unittest.TestCase):
     def test_export_matches_frozen_results_and_twenty_balanced_blocks(self):
         check_seed_modes(RELEASE)
         data = build_seed_modes(RELEASE)
-        self.assertEqual(data['episodes_per_policy'], 500)
+        self.assertEqual(data['episodes_per_policy'], 460)
         self.assertEqual([t['task'] for t in data['tasks']], list(IF_SEED_CONTRACTS))
         for task in data['tasks']:
-            frozen = json.loads((ROOT / 'result/if-ext-v2-six-tasks-20blocks/manifests' / task['manifest']).read_text())
+            frozen = json.loads((ROOT / 'result/if-ext-v2-six-tasks-spatial3-20blocks/manifests' / task['manifest']).read_text())
             self.assertEqual([r['seed'] for r in task['episodes']], frozen['seeds'])
             self.assertEqual(task['mode_counts'], dict.fromkeys(IF_SEED_CONTRACTS[task['task']].modes, 20))
             blocks = {i: [r for r in task['episodes'] if r['block'] == i] for i in range(20)}
@@ -36,7 +36,7 @@ class SeedModeDeliveryTest(unittest.TestCase):
             self.assertEqual(task['episodes'][0]['block'], 0)
             self.assertNotEqual(task['episodes'][0]['seed'] // len(task['mode_counts']), 0)
         csv_rows = list(csv.DictReader(io.StringIO(export_texts(RELEASE)['seed-modes.csv'])))
-        self.assertEqual(len(csv_rows), 500)
+        self.assertEqual(len(csv_rows), 460)
         self.assertEqual([(r['task'], int(r['seed']), r['mode']) for r in csv_rows],
                          [(t['task'], r['seed'], r['mode']) for t in data['tasks'] for r in t['episodes']])
 

@@ -1,6 +1,6 @@
 # Balanced Seed Manifest 使用指南
 
-当前维护六项任务；Grasp-Approach 已归档到 [bak/](../bak/grasp_cube_approach/README.md)。旧七任务发布目录仅作历史证据，当前正式清单见 [六任务 20-block release](../seed-manifests/if-ext-v2-six-tasks-20-per-mode/README.md)。
+当前维护六项任务；Grasp-Approach 已归档到 [bak/](../bak/grasp_cube_approach/README.md)。旧七任务发布目录仅作历史证据，当前正式清单见 [六任务 20-block release](../seed-manifests/if-ext-v2-six-tasks-spatial3-20-per-mode/README.md)。
 
 本文面向两类使用者：
 
@@ -19,7 +19,7 @@ Balanced seed manifest 改为提前生成一份固定列表：
 
 ```json
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "task": "bottle_verb",
   "task_config": "demo_clean",
   "seeds": [100002, 100003, 100006, 100007]
@@ -51,13 +51,13 @@ Manifest 中的 seed 是直接传给 `task.setup_demo(seed=...)` 的 **exact epi
 | `attribute_select` | color:red/blue、decal:cat/dog、shape:block/bar、size:big/small | 8 | 800 |
 | `arm_select` | left / right | 2 | 200 |
 | `stack_sequence` | 六种堆叠顺序 | 6 | 600 |
-| `place_relative` | left / right / front / back / on_top | 5 | 500 |
+| `place_relative` | left / right / on_top | 3 | 300 |
 
 六项都生成 100 blocks 时：
 
 ```text
 每个 mode = 100 episodes
-六项合计 = 2500 policy-evaluation episodes
+六项合计 = 2300 policy-evaluation episodes
 ```
 
 例如 `bottle_verb --accepted-blocks 100` 的结果是：
@@ -119,7 +119,7 @@ Candidate seed floor    100000
 
 脚本会按 canonical inventory 依次处理六项。某个 task 失败时，它会保留 checkpoint、继续处理后续 task，并在最后返回 nonzero。
 
-生成可能持续数小时，建议在稳定的终端/tmux 中运行。`100 blocks` 的真实耗时取决于每项 oracle rejection rate，不能只用最终 2500 个 policy episodes 估算。
+生成可能持续数小时，建议在稳定的终端/tmux 中运行。`100 blocks` 的真实耗时取决于每项 oracle rejection rate，不能只用最终 2300 个 policy episodes 估算。
 
 ### 修改默认配置
 
@@ -233,7 +233,7 @@ outputs/if-seeds-100-per-mode/
 
 ```json
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "task": "bottle_verb",
   "task_config": "demo_clean",
   "seeds": [100002, 100003, 100006, 100007]
@@ -443,3 +443,7 @@ seed-manifests/
 - 所有 manifest 与 sidecar。
 
 不要把只有 bounded-pilot evidence、缺少 flat manifest 的目录当作 production seed release。
+
+当前 Spatial 每个 block 使用稀疏 seeds `[5k, 5k+1, 5k+4]`，保持原 `seed // 5` 场景。
+Schema 1 保留原五模式归档含义；schema 2 使用当前三模式契约。旧五模式清单只能做归档校验，
+不能交给当前评测入口。生成器的新 checkpoint 使用 contract schema 2，旧 checkpoint 只读、不可续跑。

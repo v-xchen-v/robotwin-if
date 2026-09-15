@@ -2,6 +2,7 @@
 """Snapshot the formal IF run into balanced, fine-grained result tables."""
 import argparse
 import csv
+from copy import deepcopy
 import hashlib
 import html
 import json
@@ -11,7 +12,7 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
-from if_benchmark.seed_contracts import contract_for, describe_seed  # noqa: E402
+from if_benchmark.seed_contracts import contract_for_seeds, describe_seed, IF_SEED_CONTRACTS  # noqa: E402
 
 POLICIES = dict(xvla='X-VLA', lingbot_va='LingBot-VA', lingbot_vla='LingBot-VLA',
                 vlact='VLAct', dm05='DM05', hy_vla='Hy-VLA')
@@ -26,13 +27,19 @@ TASKS = {
         ('RGB', ['red>green>blue']), ('RBG', ['red>blue>green']),
         ('GRB', ['green>red>blue']), ('GBR', ['green>blue>red']),
         ('BRG', ['blue>red>green']), ('BGR', ['blue>green>red'])]),
-    'place_relative': ('Spatial', [(x.title(), [x]) for x in ('left', 'right', 'front', 'back')]
+    'place_relative': ('Spatial', [(x.title(), [x]) for x in ('left', 'right')]
                        + [('Top', ['on_top'])]),
 }
 ARCHIVED_TASKS = {
     'grasp_cube_approach': ('Grasp v2 wide-r1', [('Top', ['top']), ('Side', ['side'])]),
 }
 TASK_COLUMNS = TASKS | ARCHIVED_TASKS
+LEGACY_SPATIAL_COLUMNS = [(x.title(), [x]) for x in ("left", "right", "front", "back")] + [("Top", ["on_top"])]
+
+def columns_for(task, modes):
+    if task == "place_relative" and "front" in modes:
+        return LEGACY_SPATIAL_COLUMNS
+    return TASK_COLUMNS[task][1]
 
 
 def read(path):
@@ -42,7 +49,7 @@ def read(path):
 def balanced_row(spec, source, records):
     """Exclude partial groups from scores, retaining all finished work in progress."""
     task = spec['task']
-    contract = contract_for(task)
+    contract = contract_for_seeds(task, spec["seeds"])
     size = contract.block_size
     blocks = [spec['seeds'][i:i + size] for i in range(0, len(spec['seeds']), size)]
     assert all(len(block) == size for block in blocks)
@@ -65,7 +72,7 @@ def balanced_row(spec, source, records):
         modes[mode] = dict(successes=k, included=n, sr_pct=100*k/n if n else None,
                            recorded=len(raw), recorded_successes=sum(r['success'] for r in raw))
     columns = []
-    for label, keys in TASK_COLUMNS[task][1]:
+    for label, keys in columns_for(task, contract.modes):
         values = [modes[key] for key in keys]
         columns.append(dict(label=label, modes=keys, successes=sum(v['successes'] for v in values),
             included=sum(v['included'] for v in values),
@@ -79,7 +86,7 @@ def balanced_row(spec, source, records):
         avg_pct=statistics.mean(v['sr_pct'] for v in modes.values()) if used else None)
 
 
-def snapshot(base, include_archived_tasks=False):
+def snapshot(base, include_archived_tasks=False, include_archived_modes=False):
     # summary.json is atomically replaced by the scheduler. Use only its recorded seeds.
     source = read(base/'summary.json')
     plan = read(base/'plan.json')
@@ -92,6 +99,7 @@ def snapshot(base, include_archived_tasks=False):
     assert len(source['tasks']) == len(POLICIES) * len(planned)
     specs = {r['task']: r for r in plan['tasks']}
     rows = []
+    spatial_records = {}
     for row in source['tasks']:
         spec = specs[row['task']]
         records = {}
@@ -110,13 +118,37 @@ def snapshot(base, include_archived_tasks=False):
             assert r['status'] in ('success', 'failure') and r['oracle_success']
             assert marker['success'] == r['success'] == (r['status'] == 'success')
             assert marker['mode'] == r['mode'] == describe_seed(row['task'], seed).mode
-            assert marker['formal_block'] == spec['seeds'].index(seed)//contract_for(row['task']).block_size
+            assert marker['formal_block'] == spec['seeds'].index(seed)//contract_for_seeds(row['task'], spec['seeds']).block_size
             records[seed] = r
         rows.append(balanced_row(spec, row, records))
+        if row["task"] == "place_relative":
+            spatial_records[row["policy"]] = records
     assert sum(r['recorded_episodes'] for r in rows) == source['completed_episodes']
     assert sum(r['recorded_successes'] for r in rows) == source['successes']
     assert sum(r['completed_blocks'] for r in rows) == source['completed_blocks']
     rows = [r for r in rows if r['task'] in task_names]
+    excluded_modes = {}
+    if not include_archived_modes and any(s % 5 in (2, 3) for s in specs['place_relative']['seeds']):
+        excluded_modes = {'place_relative': ['front', 'back']}
+        spec = deepcopy(specs['place_relative'])
+        spec['seeds'] = [s for s in spec['seeds'] if describe_seed('place_relative', s).mode in IF_SEED_CONTRACTS['place_relative'].modes]
+        projected = []
+        for row in rows:
+            if row['task'] != 'place_relative':
+                projected.append(row)
+                continue
+            records = {s: r for s, r in spatial_records[row['policy']].items() if s in spec['seeds']}
+            size = IF_SEED_CONTRACTS['place_relative'].block_size
+            blocks = [spec['seeds'][i:i+size] for i in range(0, len(spec['seeds']), size)]
+            counters = dict(policy=row['policy'], recorded_episodes=len(records),
+                successes=sum(r['success'] for r in records.values()),
+                complete=len(records) == len(spec['seeds']),
+                completed_blocks=sum(all(s in records for s in b) for b in blocks),
+                per_mode={m: dict(recorded=sum(r['mode'] == m for r in records.values()),
+                    successes=sum(r['success'] for r in records.values() if r['mode'] == m))
+                    for m in IF_SEED_CONTRACTS['place_relative'].modes})
+            projected.append(balanced_row(spec, counters, records))
+        rows = projected
     totals = {}
     for policy in POLICIES:
         selected = [r for r in rows if r['policy'] == policy]
@@ -134,7 +166,7 @@ def snapshot(base, include_archived_tasks=False):
                    expected_blocks=sum(r['expected_blocks'] for r in rows),
                    complete_task_policy_runs=sum(r['complete'] for r in rows))
     return dict(updated_at=source['updated_at'], run_dir=str(base),
-                tasks=task_names, excluded_tasks=sorted(planned - set(task_names)), summary=summary,
+                tasks=task_names, excluded_modes=excluded_modes, spatial_scope=("five-modes" if include_archived_modes else "spatial3"), excluded_tasks=sorted(planned - set(task_names)), summary=summary,
                 checkpoint_replacement=plan.get('checkpoint_replacement'),
                 block_extension=plan.get('block_extension'),
                 source_summary=source, rows=rows, policies=totals)
@@ -178,6 +210,8 @@ def generate(data, output):
         f'Overall 仅在该 policy 的 {task_count} 项任务全部跑齐后填写，按 {task_count} 个 Task Avg. 等权平均；不同任务范围的 Overall 不直接比较。',
         'Sequence 缩写为从下往上的颜色顺序；Spatial Top 指 on_top。',
     ]
+    if data.get('excluded_modes'):
+        legend.insert(0, 'Spatial 当前仅统计 left/right/on_top；front/back 的历史回合保留但排除计分。这是评测后的范围调整，不代表模型性能提升。')
     if data['excluded_tasks']:
         legend.insert(0, '当前范围排除已下线任务：' + ', '.join(data['excluded_tasks']) + '；原始七任务结果未改写。')
     if replacement := data.get('checkpoint_replacement'):
@@ -201,7 +235,8 @@ def generate(data, output):
         first = '<tr><th rowspan="2">Policy</th>'
         second = '<tr>'
         for task in tasks:
-            label, cols = TASK_COLUMNS[task]
+            label = TASK_COLUMNS[task][0]
+            cols = columns_for(task, rows[next(iter(POLICIES)), task]["modes"])
             first += f'<th colspan="{len(cols)+2}">{html.escape(label)}</th>'
             second += ''.join(f'<th>{html.escape(name)}</th>' for name, _ in cols)
             second += '<th>Avg.</th><th>完成进度</th>'
@@ -221,7 +256,8 @@ def generate(data, output):
             table += '</tr>'
         panels.append('<h2>'+html.escape(title)+'</h2><div class="scroll">'+table+'</tbody></table></div>')
         for task in tasks:
-            label, cols = TASK_COLUMNS[task]
+            label = TASK_COLUMNS[task][0]
+            cols = columns_for(task, rows[next(iter(POLICIES)), task]["modes"])
             md += ['', f'### {label} — `{task}`', '',
                    '| Policy | '+' | '.join(name for name, _ in cols)+' | Avg. | 完成进度 |',
                    '|---|'+'---:|'*(len(cols)+1)+'---|']
@@ -235,7 +271,7 @@ def generate(data, output):
            '生成时核对已归档结果的 SHA-256、provenance、mode 和成功数，并与快照总数交叉检查；不改动正在运行的评测。', '',
            '刷新命令：', '', '```bash',
            'python tools/summarize_formal_policy_results.py --run-dir '+str(data['run_dir'])+
-           ' --output '+str(output) + (' --include-archived-tasks' if set(data['tasks']) & set(ARCHIVED_TASKS) else ''), '```', '']
+           ' --output '+str(output) + (' --include-archived-tasks' if set(data['tasks']) & set(ARCHIVED_TASKS) else '') + (' --include-archived-modes' if data.get('spatial_scope') == 'five-modes' else ''), '```', '']
     output.write_text('\n'.join(md))
     page = ('<!doctype html><html lang="zh-CN"><meta charset="utf-8">'
             '<meta name="viewport" content="width=device-width,initial-scale=1">'
@@ -267,8 +303,10 @@ def main():
         default=ROOT/'notes/2026-09-01-if-ext-tasklist/results-current.md')
     parser.add_argument('--include-archived-tasks', action='store_true',
                         help='Include retired tasks when reproducing a historical seven-task report')
+    parser.add_argument("--include-archived-modes", action="store_true",
+                        help="Reproduce the historical five-mode Spatial metric")
     args = parser.parse_args()
-    data = snapshot(args.run_dir.resolve(), args.include_archived_tasks)
+    data = snapshot(args.run_dir.resolve(), args.include_archived_tasks, args.include_archived_modes)
     generate(data, args.output.resolve())
     print(json.dumps(dict(updated_at=data['updated_at'], output=str(args.output),
                           policies=data['policies']), ensure_ascii=False, indent=2))

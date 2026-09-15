@@ -27,7 +27,7 @@ TASKS = (
     "stack_sequence",
     "place_relative",
 )
-SIZES = (2, 2, 8, 2, 6, 5)
+SIZES = (2, 2, 8, 2, 6, 3)
 
 
 class SeedContractTests(unittest.TestCase):

@@ -61,7 +61,7 @@ class SeedManifestTests(unittest.TestCase):
         missing = dict(self.data)
         missing.pop("task_config")
         cases.append(missing)
-        schema = dict(self.data, schema_version=2)
+        schema = dict(self.data, schema_version=99)
         cases.append(schema)
         for data in cases:
             with self.subTest(data=data), self.assertRaises(sm.ManifestError):

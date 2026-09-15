@@ -1,0 +1,39 @@
+{
+    "full_description": "A mover object A, a reference object B, and one distractor are on the table. The instruction tells the robot to pick up A and place it in a spatial DIRECTION relative to B: to the left of / to the right of / in front of / behind / on top of. Tests spatial-direction understanding: the SAME scene admits every direction, so the direction phrase alone decides the correct placement.",
+    "schema": "{A} = the mover object (picked up), filled by play_once with the literal 'the {color} {noun}' (no '/', substituted verbatim). {B} = the reference object, same literal form. {D} = the direction phrase the instruction commands (a prepositional phrase: 'to the left of' / 'to the right of' / 'in front of' / 'behind' / 'on top of') -- it is the ONLY signal of the placement direction. {a} = arm. Every template MUST be exactly {A} {D} {B} (+ optional {a}), with {D} immediately before {B}. Do NOT write 'the' immediately before {A}/{B}/{a}; each already renders with a leading article. Color is a grounding aid, not a scored axis; the scored axis is the placement direction.",
+    "preference": "One family for all five directions (the phrase is injected into {D}). num of words should not exceed 12. Keep {D} directly between {A} and {B}.",
+    "seen": [
+        "Use {a} to put {A} {D} {B}",
+        "Pick {A} up with {a} and place it {D} {B}",
+        "Move {A} {D} {B}",
+        "Lift {A} using {a} and set it {D} {B}",
+        "Grab {A} and place it {D} {B}",
+        "Take {A} with {a}, set it {D} {B}",
+        "Pick {A} up and position it {D} {B}",
+        "Using {a}, lift {A} and put it {D} {B}",
+        "Pick {A} with {a} and place it {D} {B}",
+        "Lift {A} and move it {D} {B}",
+        "Place {A} {D} {B}",
+        "Grab {A} with {a} and set it {D} {B}",
+        "Set {A} {D} {B} after picking it up",
+        "Use {a} to lift {A}, then set it {D} {B}",
+        "Move {A} to be {D} {B}",
+        "Grab {A} with {a} and position it {D} {B}",
+        "Lift {A}, then place it {D} {B}",
+        "Use {a} to grab {A} and put it {D} {B}",
+        "Pick up {A} and set it {D} {B}",
+        "With {a}, grab {A} and place it {D} {B}",
+        "Take {A} using {a}, set it {D} {B}",
+        "Put {A} {D} {B}",
+        "Use {a} to pick {A} up and place it {D} {B}",
+        "Carefully place {A} {D} {B}"
+    ],
+    "unseen": [
+        "Pick up {A} and move it {D} {B}",
+        "Grab {A} and set it {D} {B}",
+        "Lift {A} and set it {D} {B}",
+        "Use {a} to grab {A} and place it {D} {B}",
+        "Relocate {A} {D} {B}",
+        "Use {a} to pick up {A}, set it {D} {B}"
+    ]
+}

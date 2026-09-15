@@ -2,8 +2,8 @@
 
 当前任务为 bottle_verb、pick_diverse_object、attribute_select、arm_select、stack_sequence、place_relative。
 Grasp-Approach 已暂时下线，见 [归档说明](../bak/grasp_cube_approach/README.md)。
-使用 [六任务 20-block manifest](../seed-manifests/if-ext-v2-six-tasks-20-per-mode/README.md)，
-各 policy 500 回合，全套 3,000 回合、720 blocks。原七任务归档中这些回合均已完成，无需重跑。
+使用 [六任务 20-block manifest](../seed-manifests/if-ext-v2-six-tasks-spatial3-20-per-mode/README.md)，
+各 policy 460 回合，全套 2,760 回合、720 blocks。原七任务归档中这些回合均已完成，无需重跑。
 
 ## 当前入口：单机串行
 
@@ -87,7 +87,7 @@ python tools/summarize_formal_policy_results.py \
 SR 只使用完整、均衡的 blocks；半个 block 中已完成的回合仍计入进度，标为待成组。
 未完成的任务均值标 `†`，没有完整 block 时用 `—`；未跑回合不当作 failure。
 Attribute 的 Color/Decal/Shape/Size 各平均两个 target values，Task Avg. 对 modes 等权。
-默认报告排除 grasp，进度分母为 3,000 回合/720 blocks/36 个 policy-task 组合。
+默认报告排除 grasp，进度分母为 2,760 回合/720 blocks/36 个 policy-task 组合。
 Overall 仅在该 policy 六任务全部完成后显示，按六个 Task Avg. 等权平均。
 如需还原原七任务统计，显式传 `--include-archived-tasks`；报告会标明七任务范围，分母恢复为 3,240/840/42。
 新旧范围的 Overall 不直接比较；源 summary 与已发布的 `result/` 文件均不改写。

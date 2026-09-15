@@ -1,6 +1,6 @@
 """Shared success predicates for the Place-Relative IF task (IF-Spatial-Direction).
 
-The placement DIRECTION is the scored axis. Four lateral directions are signed
+The placement DIRECTION is the scored axis. Left/right directions are signed
 offsets on one world axis with the orthogonal axis locked (mirrors native
 place_a2b_left: 'left' = object_x < target_x, |Δy|<0.05, planar dist in [0.08,0.2]);
 'on top' is an elevation stack (planar ~0, clearly raised). All predicates require the
@@ -9,7 +9,7 @@ named A (mover) and B (reference) actors -> placing a distractor or picking noth
 leaves A at rest and fails, which is exactly the target- + direction-specific check the
 IF task needs.
 
-The four lateral directions are mutually exclusive by construction, and jointly
+The two lateral directions are mutually exclusive by construction, and jointly
 exclusive with on-top:
   - wrong side (asked left, placed right) -> signed offset flips -> False
   - stacked when a lateral direction was asked -> planar < lo (0.08) -> False
@@ -20,21 +20,11 @@ stack_blocks_two + place_object_stand (stacked / xy-aligned)，论文未确认.
 """
 import numpy as np
 
-# World-y sign that points "front" = toward the robot. The robot faces the table
-# along world y; which sign is toward it is the one empirically-verified unknown
-# (see docs/features/09 §6). Pinned by the oracle diagnostic + a front/back render
-# spot-check; flip this single constant if front/back read reversed.
-FRONT_SIGN = 1.0
-
-# direction -> (axis index, signed direction along that axis). x=0 (left/right),
-# y=1 (front/back). Consumed by place_relative.play_once (to build the target) and
-# check_success (to score), so the oracle and the check never disagree on a sign.
+# Active lateral directions. The historical front/back mapping is archived in bak/.
 _AXIS = {"x": 0, "y": 1}
 DIRECTIONS = {
     "left":  ("x", -1.0),
     "right": ("x", +1.0),
-    "front": ("y", +FRONT_SIGN),
-    "back":  ("y", -FRONT_SIGN),
 }
 
 

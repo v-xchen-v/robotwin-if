@@ -7,7 +7,7 @@ export PYTHONNOUSERSITE=1
 SIM_PYTHON=${SIM_PYTHON:-python3}
 POLICY= TASK=all OUTPUT_DIR= SERVER_URL=
 BLOCKS=20 SIM_GPU=0 MODEL_GPU=1 DRY_RUN=0
-MANIFEST_DIR="$REPO_ROOT/seed-manifests/if-ext-v2-six-tasks-20-per-mode"
+MANIFEST_DIR="$REPO_ROOT/seed-manifests/if-ext-v2-six-tasks-spatial3-20-per-mode"
 ROBOTWIN_DIR="$REPO_ROOT/third_party/robotwin"
 
 usage() {
@@ -73,12 +73,14 @@ MANIFEST_DIR=$("$SIM_PYTHON" -c 'from pathlib import Path; import sys; print(Pat
 TASK_ROWS=$("$SIM_PYTHON" - "$MANIFEST_DIR" "$TASK" "$BLOCKS" <<'PY'
 import sys
 from if_benchmark.seed_modes import build_seed_modes, check_seed_modes
+from if_benchmark.seed_contracts import validate_active_seeds
 check_seed_modes(sys.argv[1])
 data = build_seed_modes(sys.argv[1])
 selected = [t for t in data['tasks'] if sys.argv[2] in ('all', t['task'])]
 if not selected:
     raise SystemExit('Unknown or retired task: ' + sys.argv[2])
 for task in selected:
+    validate_active_seeds(task['task'], [e['seed'] for e in task['episodes']])
     count = sum(e['block'] < int(sys.argv[3]) for e in task['episodes'])
     print(task['task'], task['task_config'], count, sep='\t')
 PY

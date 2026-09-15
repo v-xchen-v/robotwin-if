@@ -1,0 +1,28 @@
+{
+  "task": "place_relative",
+  "seed": 100008,
+  "status": "failure",
+  "success": false,
+  "instruction_type": "unseen",
+  "instruction": "Pick up the black remotecontrol and move it behind the red tea-box",
+  "action_calls": 400,
+  "chunks": 13,
+  "oracle_success": true,
+  "mode": "back",
+  "oracle_cache": {
+    "status": "miss",
+    "key": "6ff9034d752f0da7afcf1091feb22b8ebdafa07b7df3e3286f4f5475133a9a94",
+    "identity_sha256": "3ce2d65d0956cfa3e79158a29a01ac20e43507270cad82a56ccef4eb5ca55da1",
+    "initial_verified": false
+  },
+  "oracle_seconds": 3.224554835993331,
+  "step_limit": 400,
+  "policy_setup_seconds": 1.025643507950008,
+  "termination": "action_limit",
+  "render_sync": {
+    "mode": "observation",
+    "skipped_updates": 16170,
+    "performed_updates": 550
+  },
+  "elapsed_seconds": 73.89263194298837
+}

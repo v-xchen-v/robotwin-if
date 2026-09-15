@@ -7,14 +7,13 @@ reference, would still pass positives yet make the spatial benchmark meaningless
 drive specific end-states by teleporting the mover and assert the expected boolean.
 
 KEY cases:
-  R4 wrong-DIRECTION: left asked but mover placed to the RIGHT of B -> False; front asked
-     but placed BEHIND B -> False; a lateral direction asked but mover STACKED on B ->
+  R4 wrong-DIRECTION: left asked but mover placed to the RIGHT of B -> False; a lateral direction asked but mover STACKED on B ->
      False; on-top asked but mover placed BESIDE B -> False. Proves the direction phrase
      decides success.
   R5 wrong-REFERENCE: mover placed correctly relative to the DISTRACTOR, not B -> False.
      Proves the check is anchored to the NAMED reference, not just "some object".
-  R7 scene-pairing: consecutive seeds 5k..5k+4 share ONE scene (same A/B/distractor
-     poses) and cycle through all five directions -- the structural guarantee that the
+  R7 scene-pairing: seeds 5k,5k+1,5k+4 share ONE scene (same A/B/distractor
+     poses) and cycle through all three directions -- the structural guarantee that the
      policy sees pixel-identical frames and only the instruction changes.
 
 Run inside the RoboTwin conda env:
@@ -62,7 +61,7 @@ _results = []
 def _setup_direction(direction, start=0):
     """setup_demo for a seed whose direction == `direction` (seed % 5 == index),
     retrying by +5 so the parity is preserved across UnStableError retries."""
-    idx = ORDER.index(direction)
+    idx = next(k for k, v in TASK.SEED_MODES.items() if v == direction)
     s = start + ((idx - start) % 5)
     last = None
     for _ in range(80):
@@ -109,7 +108,7 @@ for d in ORDER:
             note=f"seed={s} mover={TASK.mover_noun} ref={TASK.reference_noun}")
 
 # ---- R2 lateral positives: teleport mover to the commanded cell -> True ------------
-for d in ("left", "right", "front", "back"):
+for d in ("left", "right"):
     s = _setup_direction(d)
     _teleport(TASK.mover, _dir_xyz(TASK.reference, d))
     _record(f"R2 {d} positive (mover {d} of B)", TASK.check_success(), True, note=f"seed={s}")
@@ -125,9 +124,7 @@ s = _setup_direction("left")
 _teleport(TASK.mover, _dir_xyz(TASK.reference, "right"))
 _record("R4a left asked, placed RIGHT <-KEY", TASK.check_success(), False, note=f"seed={s}")
 
-s = _setup_direction("front")
-_teleport(TASK.mover, _dir_xyz(TASK.reference, "back"))
-_record("R4b front asked, placed BACK <-KEY", TASK.check_success(), False, note=f"seed={s}")
+
 
 s = _setup_direction("left")
 _teleport(TASK.mover, _ontop_xyz(TASK.reference, TASK.base_half_z))
@@ -156,7 +153,7 @@ if TASK.distractors:
 # ---- R6 oracle positives: the scripted expert should satisfy the check -------------
 for d in ORDER:
     ok = False
-    seed = ORDER.index(d)
+    seed = next(k for k, v in TASK.SEED_MODES.items() if v == d)
     for _ in range(8):
         sd = _setup_direction(d, seed)
         try:
@@ -182,7 +179,7 @@ def _scene_key():
 base = 0
 for _try in range(6):
     keys, dirs, ok_tuple = [], [], True
-    for k in range(5):
+    for k in (0, 1, 4):
         try:
             TASK.setup_demo(now_ep_num=0, seed=base + k, **ARGS)
             keys.append(_scene_key())
@@ -193,9 +190,9 @@ for _try in range(6):
     if ok_tuple:
         break
     base += 5
-_record("R7a 5-tuple shares one scene", ok_tuple and all(k == keys[0] for k in keys), True,
+_record("R7a 3-mode block shares one scene", ok_tuple and all(k == keys[0] for k in keys), True,
         note=f"base_seed={base} keys={len(set(keys))} unique")
-_record("R7b 5-tuple cycles all directions", dirs == ORDER, True, note=f"dirs={dirs}")
+_record("R7b 3-mode block cycles all directions", dirs == ORDER, True, note=f"dirs={dirs}")
 
 print("\n==== summary ====")
 print(f"{sum(_results)}/{len(_results)} passed")

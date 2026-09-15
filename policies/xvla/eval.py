@@ -22,7 +22,7 @@ import traceback
 REPO_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO_ROOT))
 
-from if_benchmark.seed_contracts import ARCHIVED_SEED_CONTRACTS, IF_SEED_CONTRACTS, describe_seed  # noqa: E402
+from if_benchmark.seed_contracts import ARCHIVED_SEED_CONTRACTS, IF_SEED_CONTRACTS, describe_seed, validate_active_seeds  # noqa: E402
 from policies.evaluation import setup_episode  # noqa: E402
 from if_benchmark.seed_manifest import load_manifest, manifest_sha256  # noqa: E402
 from policies.xvla.outputs import camera_strip, episode_path, write_episode_artifacts, write_json  # noqa: E402
@@ -46,6 +46,7 @@ def select_seeds(args):
         if manifest["task"] != args.task or manifest["task_config"] != args.task_config:
             raise ValueError("Seed manifest task/config do not match the requested run")
         seeds = list(manifest["seeds"])
+        validate_active_seeds(args.task, seeds)
         if args.blocks is not None:
             count = args.blocks * IF_SEED_CONTRACTS[args.task].block_size
             if args.blocks < 1 or count > len(seeds):

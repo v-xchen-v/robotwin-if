@@ -9,7 +9,7 @@ import tempfile
 from .seed_contracts import contract_for, mode_denominators, validate_complete_blocks
 
 
-MANIFEST_SCHEMA_VERSION = 1
+MANIFEST_SCHEMA_VERSION = 2
 MAX_MANIFEST_BYTES = 1024 * 1024
 MAX_MANIFEST_SEEDS = 100_000
 MANIFEST_KEYS = ("schema_version", "task", "task_config", "seeds")
@@ -26,7 +26,7 @@ def validate_manifest(data):
         raise ManifestError(
             f"manifest keys must be exactly {list(MANIFEST_KEYS)}, got {sorted(data)}"
         )
-    if data["schema_version"] != MANIFEST_SCHEMA_VERSION:
+    if type(data["schema_version"]) is not int or data["schema_version"] not in (1, MANIFEST_SCHEMA_VERSION):
         raise ManifestError(
             f"unsupported manifest schema_version: {data['schema_version']!r}"
         )
@@ -53,13 +53,13 @@ def validate_manifest(data):
             f"manifest exceeds the {MAX_MANIFEST_SEEDS}-seed safety limit"
         )
     try:
-        block_ids = validate_complete_blocks(task, seeds)
-        denominators = mode_denominators(task, seeds)
+        block_ids = validate_complete_blocks(task, seeds, legacy=data["schema_version"] == 1)
+        denominators = mode_denominators(task, seeds, legacy=data["schema_version"] == 1)
     except ValueError as exc:
         raise ManifestError(str(exc)) from exc
 
     return {
-        "schema_version": MANIFEST_SCHEMA_VERSION,
+        "schema_version": data["schema_version"],
         "task": task,
         "task_config": task_config,
         "seeds": list(seeds),
