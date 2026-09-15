@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RoboTwin · Video review</title><link rel="stylesheet" href="/style.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="/"><span class="brand-icon">R<span>↗</span></span><span>RoboTwin <small>/ VIDEO REVIEW</small></span></a>
+    <div class="top-actions"><span class="local-badge"><i></i>本地复核</span><button id="refresh">刷新归档</button><button id="export-csv">导出全部 CSV</button><button id="export-diff" class="accent-outline">导出分歧</button></div>
+  </header>
+  <section class="intro"><div><p class="eyebrow">EVALUATION / HUMAN REVIEW</p><h1>让每一次判定，都有画面依据。</h1><p id="run-name" class="muted">正在读取评测归档…</p></div><div class="scope"><label><input id="archived" type="checkbox">包含已下线的 Grasp approach</label><span>人工标注单独保存，原始结果保持不变</span></div></section>
+  <section class="stats" aria-label="复核进度">
+    <div><span>当前范围回合</span><strong id="total">—</strong><small id="scope-count">六任务 · 六 policies</small></div>
+    <div><span>已明确复核</span><strong id="reviewed">—</strong><small id="review-progress">人工 Success / Fail</small></div>
+    <button class="stat-button" id="show-fp"><span>疑似误报成功</span><strong id="fp">—</strong><small>自动 Success → 人工 Fail</small></button>
+    <button class="stat-button" id="show-fn"><span>疑似漏判成功</span><strong id="fn">—</strong><small>自动 Fail → 人工 Success</small></button>
+  </section>
+  <div id="global-error" class="notice error hidden" role="alert"></div>
+  <div class="workspace">
+    <aside class="queue">
+      <div class="queue-title"><h2>回合队列</h2><span id="queue-count">—</span></div>
+      <div class="filters">
+        <label class="search"><span>⌕</span><input id="search" type="search" placeholder="搜索 seed / 指令 / 物体" aria-label="搜索回合"></label>
+        <div class="filter-pair"><label>POLICY<select id="policy"><option value="">全部 policies</option></select></label><label>TASK<select id="task"><option value="">全部任务</option></select></label></div>
+        <div class="filter-pair"><label>自动判定<select id="automatic"><option value="">全部</option><option value="success">Success</option><option value="failure">Fail</option><option value="error">运行错误 / 无有效判定</option></select></label><label>人工复核<select id="review-filter"><option value="">全部</option><option value="unreviewed">未复核</option><option value="disagreements">仅分歧</option><option value="false_positive">疑似误报成功</option><option value="false_negative">疑似漏判成功</option><option value="agree">与自动一致</option><option value="uncertain">待确认</option><option value="stale">源文件已更新</option><option value="success">人工 Success</option><option value="failure">人工 Fail</option></select></label></div>
+        <div class="filter-pair"><label>MODE<select id="mode"><option value="">全部模式</option></select></label><label>BLOCK<select id="block"><option value="">全部 blocks</option></select></label></div>
+        <button class="text-button" id="clear-filters">清除筛选</button>
+      </div>
+      <div id="episode-list" class="episode-list" aria-label="回合列表"></div>
+      <div class="pagination"><button id="page-prev" aria-label="上一页">←</button><span id="page-label">—</span><button id="page-next" aria-label="下一页">→</button></div>
+    </aside>
+    <main>
+      <div id="empty" class="empty hidden"><span>◎</span><h2>当前筛选下没有回合</h2><p>试试调整筛选，或清除搜索内容。</p></div>
+      <div id="review-workspace" class="hidden">
+        <div class="episode-heading"><div><p id="episode-meta" class="eyebrow"></p><h2 id="episode-title"></h2></div><div class="navigation"><button id="previous" title="上一个（P）">← 上一个</button><button id="next" title="下一个（N）">下一个 →</button></div></div>
+        <div class="review-grid">
+          <section class="player-card">
+            <div class="player-bar"><span id="auto-badge" class="badge"></span><div class="view-switch" aria-label="相机视角"><button data-view="all" class="active">全部视角</button><button data-view="0">主相机</button><button data-view="1">左腕</button><button data-view="2">右腕</button></div></div>
+            <div id="video-stage" class="video-stage"><video id="video" preload="metadata" playsinline muted></video><div id="video-message" class="video-message hidden"></div></div>
+            <div class="playback"><input id="timeline" type="range" min="0" max="1" step="0.001" value="0" aria-label="视频时间轴"><div class="transport"><div><button id="play" title="播放 / 暂停（空格）">▶</button><button id="frame-prev" title="上一帧（←）">|‹</button><button id="frame-next" title="下一帧（→）">›|</button><span id="timecode">0:00 / 0:00</span></div><div><button id="last-seconds">最后 2 秒</button><button id="last-frame">末帧</button><select id="speed" aria-label="播放速度"><option value="0.25">0.25×</option><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="2">2×</option><option value="4">4×</option></select><button id="fullscreen" title="放大画面">⛶</button></div></div></div>
+            <div class="instruction"><span>本回合指令</span><p id="instruction"></p></div>
+            <div class="episode-facts"><span id="step-info"></span><span id="video-info"></span><span id="termination-info"></span></div>
+          </section>
+          <aside class="review-card">
+            <div class="review-title"><h3>你的判定</h3><span id="save-status">未复核</span></div>
+            <p class="hint">根据完整视频判断任务是否完成。</p>
+            <div class="label-buttons"><button data-label="success" class="success"><span>✓ Success</span><kbd>1</kbd></button><button data-label="failure" class="failure"><span>× Fail</span><kbd>2</kbd></button><button data-label="uncertain" class="uncertain"><span>? 待确认</span><kbd>3</kbd></button></div>
+            <div id="disagreement" class="notice hidden"></div>
+            <label class="notes-label" for="notes">观察记录 <small>可选</small></label><textarea id="notes" maxlength="10000" placeholder="例如：抓起后滑落，但自动判为成功。"></textarea>
+            <div class="note-chips"><button data-note="抓错目标">抓错目标</button><button data-note="未抬起">未抬起</button><button data-note="滑落 / 松爪">滑落 / 松爪</button><button data-note="手臂错误">手臂错误</button><button id="record-frame">＋ 当前时间</button></div>
+            <button id="save-notes" class="save-button">保存记录 <kbd>Ctrl ↵</kbd></button>
+            <label class="auto-next"><input id="auto-next" type="checkbox" checked>判定并保存后，自动下一个</label>
+            <button id="reset-review" class="text-button">清除当前判定</button>
+            <p class="save-path" id="save-path"></p>
+          </aside>
+        </div>
+        <section class="evidence">
+          <div class="tabs"><button data-tab="compare" class="active">同 seed · 跨 policy 对比</button><button data-tab="details">诊断与原始记录</button><button data-tab="history">标注历史</button></div>
+          <div id="compare-panel"><div class="compare-intro"><p>相同 task 与 seed，各 policy 独立播放。点击「复核此回合」切换标注对象。</p><button id="load-compare">加载对比视频</button></div><div id="compare-grid" class="compare-grid"></div></div>
+          <div id="details-panel" class="hidden"><div id="artifacts" class="artifact-links"></div><p class="hint">Oracle 信息来自专家资格检查；不代表 policy rollout 的最终状态。</p><pre id="details-json"></pre></div>
+          <div id="history-panel" class="hidden"></div>
+        </section>
+      </div>
+      <footer><span>原视频按需读取 · 无模型 / 仿真 / GPU 作业</span><span><kbd>1</kbd> Success <kbd>2</kbd> Fail <kbd>3</kbd> 待确认 <kbd>N</kbd> 下一个 <kbd>← →</kbd> 逐帧</span></footer>
+    </main>
+  </div>
+  <div id="toast" role="status" class="toast hidden"></div>
+</body>
+</html>

@@ -212,10 +212,21 @@ Spatial 的 Top 表示 on_top。每个 policy 的每项任务均已完成 20/20 
 |---|---|
 | 六个 policy 的 inference code / setup / eval adapter | [`policies/`](policies/README.md) |
 | 统一 bash 评测入口（单个模型服务 + 串行 sim） | [`scripts/eval.sh`](scripts/eval.sh) |
+| 视频人工复核、Success/Fail 标注与判定分歧导出 | [`tools/policy-video-review/`](tools/policy-video-review/README.md) |
 | 六任务 × 20 blocks：flat seeds 与显式 seed/mode JSON、CSV | [`seed-manifests/if-ext-v2-six-tasks-20-per-mode/`](seed-manifests/if-ext-v2-six-tasks-20-per-mode/README.md) |
 | 已完成结果、逐回合 CSV、checkpoint 与校验证据 | [`result/if-ext-v2-six-tasks-20blocks/`](result/if-ext-v2-six-tasks-20blocks/README.md) |
 
 接收方从 [分支交付说明](docs/branch-delivery.md) 开始；运行新评测不依赖本机 `/Data` 下的旧运行目录。
+
+人工复核原始评测视频：
+
+```bash
+python tools/policy-video-review/server.py \
+  --run-dir outputs/policy-eval/if-seven-tasks-v2-wide-20blocks-001
+```
+
+打开 `http://127.0.0.1:8893/`，按 policy/task 筛选、逐帧查看和标注，导出自动判定与人工判定的分歧。
+人工标签独立保存，原始结果保持不变；远程机器需转发该端口，详见 [使用说明](tools/policy-video-review/README.md)。
 
 ## 设计原则：零改上游
 
