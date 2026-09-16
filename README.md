@@ -17,16 +17,16 @@ Grasp-Approach 已于 2026-09-15 暂时下线；实现、配置、测试和 prob
 
 本仓库维护 benchmark task（场景、干扰物、指令模板、成功判定与评测语义），并在 [`policies/`](policies/README.md) 中维护 X-VLA、LingBot-VA 等开源策略的独立推理环境与适配代码，**不在本仓库训练模型**。模型服务与 RoboTwin 仿真使用不同的 Conda 环境；也可由外部 CogACT/X-VLA 集成提供推理。
 
-正式评测结果见 [`result/`](result/README.md)，当前 [六任务结果表](#policy-results) 已从原归档提取。历史七任务 [IF-Ext v2 wide 20-block 结果](result/if-ext-v2-wide-20blocks/README.md)
+正式评测结果见 [`result/`](result/README.md)，当前 [六任务结果表](#policy-results) 已合并 Bottle-Verb v6 重测与其他五任务的历史结果。历史七任务 [IF-Ext v2 wide 20-block 结果](result/if-ext-v2-wide-20blocks/README.md)
 保留六个 policies × 七任务的 3240 回合，包含报表、逐回合 CSV、冻结 seed manifest 和校验证据。
-当前六任务使用 [20-block 清单](seed-manifests/if-ext-v2-six-tasks-spatial3-20-per-mode/README.md)：460 回合/policy、总计 2760 回合和 720 blocks，历史统计来自原归档；新 Bottle-Verb 判定下需重测该任务。Spatial 仅包含 left/right/on_top；旧五模式与七任务 Overall 均属于不同评测范围。
+当前六任务使用 [20-block 清单](seed-manifests/if-ext-v2-six-tasks-spatial3-20-per-mode/README.md)：460 回合/policy、总计 2760 回合和 720 blocks，Bottle-Verb 已按新判定重跑，其余五项复用原归档。Spatial 仅包含 left/right/on_top；旧五模式与七任务 Overall 均属于不同评测范围。
 
 <a id="policy-results"></a>
 
 ## 六个 Policies 的评测结果
 
-2026-09-15 归档快照：**六任务 × 每任务 20 blocks × 六个 policies**，已完成 **2760/2760 回合、720/720 blocks**。
-**判定版本说明：** 下表 Bottle-Verb 和 Overall 仍基于旧 pick 高度判定；[稳定拿起修复](docs/bottle-verb-pick-hold.md)已改为 v6：pick 跑满 700 个动作后判定，允许平移并排除旋转摇晃。六 policy 的 20-block 正式重测共 240 回合，保留已验证的 2 个 X-VLA v6 回合、补跑 238 回合；其他五项复用 2520 个历史结果。当前进度见本机 `outputs/policy-eval/if-six-tasks-spatial3-bottle-v6-terminal-20blocks-001/report.md`；全部完成且校验通过后更新下表和 Overall。
+2026-09-15 22:44 UTC 完成并校验：**六任务 × 每任务 20 blocks × 六个 policies**，已完成 **2760/2760 回合、720/720 blocks**。
+**判定版本说明：** Bottle-Verb 已按 v6 [回合末判定](docs/bottle-verb-pick-hold.md)完成六个 policy、共 240 回合（含前两个已验证的 X-VLA v6 回合）；pick 跑满 700 个动作，允许平移并排除旋转摇晃。其余五项复用原结果。下表与 Overall 已更新，详见 [新结果包](result/if-ext-v2-six-tasks-spatial3-bottle-v6-terminal-20blocks/README.md)。
 
 Arm-Select 使用 v2；VLAct 使用 `StarVLA/VLAct_Qwen3OFT_Robotwin_all_Finetune`（All 100K）。
 
@@ -39,12 +39,12 @@ Arm-Select 使用 v2；VLAct 使用 `StarVLA/VLAct_Qwen3OFT_Robotwin_all_Finetun
 
 | Policy | Verb | Noun | Attribute | Arm v2 | Sequence | Spatial | Overall (%) | 完成回合 | 完成 blocks |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| [X-VLA](policies/xvla/README.md) | 25/40 | 15/40 | 100/160 | 25/40 | 0/120 | 6/60 | 39.2 | 460/460 | 120/120 |
-| [LingBot-VA](policies/lingbot_va/README.md) | 23/40 | 30/40 | 145/160 | 37/40 | 17/120 | 26/60 | 62.2 | 460/460 | 120/120 |
-| [LingBot-VLA](policies/lingbot_vla/README.md) | 25/40 | 13/40 | 93/160 | 15/40 | 14/120 | 3/60 | 34.5 | 460/460 | 120/120 |
-| [VLAct All](policies/vlact/README.md) | 20/40 | 28/40 | 133/160 | 0/40 | 15/120 | 19/60 | 41.2 | 460/460 | 120/120 |
-| [DM05](policies/dm05/README.md) | 20/40 | 25/40 | 112/160 | 39/40 | 9/120 | 20/60 | 53.5 | 460/460 | 120/120 |
-| [Hy-VLA](policies/hy_vla/README.md) | 23/40 | 11/40 | 143/160 | 8/40 | 15/120 | 7/60 | 36.4 | 460/460 | 120/120 |
+| [X-VLA](policies/xvla/README.md) | 20/40 | 15/40 | 100/160 | 25/40 | 0/120 | 6/60 | 37.1 | 460/460 | 120/120 |
+| [LingBot-VA](policies/lingbot_va/README.md) | 20/40 | 30/40 | 145/160 | 37/40 | 17/120 | 26/60 | 60.9 | 460/460 | 120/120 |
+| [LingBot-VLA](policies/lingbot_vla/README.md) | 20/40 | 13/40 | 93/160 | 15/40 | 14/120 | 3/60 | 32.5 | 460/460 | 120/120 |
+| [VLAct All](policies/vlact/README.md) | 36/40 | 28/40 | 133/160 | 0/40 | 15/120 | 19/60 | 47.9 | 460/460 | 120/120 |
+| [DM05](policies/dm05/README.md) | 40/40 | 25/40 | 112/160 | 39/40 | 9/120 | 20/60 | 61.8 | 460/460 | 120/120 |
+| [Hy-VLA](policies/hy_vla/README.md) | 20/40 | 11/40 | 143/160 | 8/40 | 15/120 | 7/60 | 35.2 | 460/460 | 120/120 |
 
 **待复核记录：** Hy-VLA 的 `pick_diverse_object` seed `100052`（coffee box）被用户指出视频表现失败，
 其归档自动判定仍为成功；该片段已从 README 演示中撤下。上表保持归档计数，尚未据此人工修订分数，
@@ -61,12 +61,12 @@ Spatial 的 Top 表示 on_top。每个 policy 的每项任务均已完成 20/20 
 
 | Policy | Pick | Shake | Avg. (%) |
 |---|---:|---:|---:|
-| X-VLA | 5/20 | 20/20 | 62.5 |
-| LingBot-VA | 3/20 | 20/20 | 57.5 |
-| LingBot-VLA | 5/20 | 20/20 | 62.5 |
-| VLAct All | 0/20 | 20/20 | 50.0 |
-| DM05 | 0/20 | 20/20 | 50.0 |
-| Hy-VLA | 3/20 | 20/20 | 57.5 |
+| X-VLA | 0/20 | 20/20 | 50.0 |
+| LingBot-VA | 0/20 | 20/20 | 50.0 |
+| LingBot-VLA | 0/20 | 20/20 | 50.0 |
+| VLAct All | 16/20 | 20/20 | 90.0 |
+| DM05 | 20/20 | 20/20 | 100.0 |
+| Hy-VLA | 0/20 | 20/20 | 50.0 |
 
 ### Noun — `pick_diverse_object`
 
@@ -128,16 +128,16 @@ Spatial 从五模式收缩为 **left/right/on_top**；这是视频复核后的�
 
 </details>
 
-数据来源：[完整结果表](result/if-ext-v2-six-tasks-spatial3-20blocks/results.md) ·
-[分模式 CSV](result/if-ext-v2-six-tasks-spatial3-20blocks/results.csv) ·
-[逐回合 CSV](result/if-ext-v2-six-tasks-spatial3-20blocks/episodes.csv) ·
-[Checkpoint 版本](result/if-ext-v2-six-tasks-spatial3-20blocks/checkpoints.json)。
+数据来源：[完整结果表](result/if-ext-v2-six-tasks-spatial3-bottle-v6-terminal-20blocks/results.md) ·
+[分模式 CSV](result/if-ext-v2-six-tasks-spatial3-bottle-v6-terminal-20blocks/results.csv) ·
+[逐回合 CSV](result/if-ext-v2-six-tasks-spatial3-bottle-v6-terminal-20blocks/episodes.csv) ·
+[Checkpoint 版本](result/if-ext-v2-six-tasks-spatial3-bottle-v6-terminal-20blocks/checkpoints.json)。
 
 ## 六个任务与视频
 
 每项任务聚焦一种指令差异：做什么动作、抓哪个物体、按什么属性选择、用哪只手、按什么顺序、放在哪个方向。
 下方动态预览可点击打开 MP4；素材随仓库提供。视频选自正式评测中的成功回合，用于展示任务行为，
-整体表现见 [完整结果](result/if-ext-v2-six-tasks-spatial3-20blocks/README.md)。原始指令、seed、policy 和视频处理说明见 [素材来源](docs/assets/task-demos/README.md)。
+整体表现见 [完整结果](result/if-ext-v2-six-tasks-spatial3-bottle-v6-terminal-20blocks/README.md)。原始指令、seed、policy 和视频处理说明见 [素材来源](docs/assets/task-demos/README.md)。
 
 <a id="bottle-verb"></a>
 
@@ -150,7 +150,7 @@ pick 跑满 700 个动作后判定：允许拿起后平移，末尾保持抬升�
 
 [![Bottle-Verb：同一场景中的拿起与摇动](docs/assets/task-demos/bottle_verb.gif)](docs/assets/task-demos/bottle_verb.mp4)
 
-[观看 MP4](docs/assets/task-demos/bottle_verb.mp4) · 示例 policy：Hy-VLA。
+[观看 MP4](docs/assets/task-demos/bottle_verb.mp4) · 示例 policy：Hy-VLA（旧判定版本的演示，不作为 v6 成功证据）。
 
 <a id="pick-diverse-object"></a>
 
@@ -220,7 +220,7 @@ pick 跑满 700 个动作后判定：允许拿起后平移，末尾保持抬升�
 | 统一 bash 评测入口（单个模型服务 + 串行 sim） | [`scripts/eval.sh`](scripts/eval.sh) |
 | 视频人工复核、Success/Fail 标注与判定分歧导出 | [`tools/policy-video-review/`](tools/policy-video-review/README.md) |
 | 六任务 × 20 blocks：flat seeds 与显式 seed/mode JSON、CSV | [`seed-manifests/if-ext-v2-six-tasks-spatial3-20-per-mode/`](seed-manifests/if-ext-v2-six-tasks-spatial3-20-per-mode/README.md) |
-| 已完成结果、逐回合 CSV、checkpoint 与校验证据 | [`result/if-ext-v2-six-tasks-spatial3-20blocks/`](result/if-ext-v2-six-tasks-spatial3-20blocks/README.md) |
+| 已完成结果、逐回合 CSV、checkpoint 与校验证据 | [`result/if-ext-v2-six-tasks-spatial3-bottle-v6-terminal-20blocks/`](result/if-ext-v2-six-tasks-spatial3-bottle-v6-terminal-20blocks/README.md) |
 
 接收方从 [分支交付说明](docs/branch-delivery.md) 开始；运行新评测不依赖本机 `/Data` 下的旧运行目录。
 
@@ -429,7 +429,7 @@ third_party/xvla/        setup 获取的固定版本 X-VLA 源码（Git 忽略�
 
 当前维护六项任务；inventory、bridge 与 seed contracts 由静态检查保持一致。
 Grasp-Approach 已归档，不参与默认安装、生成、评测或当前 Overall。
-六个 policies 的 20-block 结果已完成，六任务历史范围包含 2760 回合、720 个完整 blocks；新 Bottle-Verb 判定需要重测该任务。
+六个 policies 的 20-block 结果已完成，六任务包含 2760 回合、720 个完整 blocks；Bottle-Verb 已按稳定拿起判定重测。
 当前入口见 [正式评测说明](docs/formal-policy-evaluation.md) 和 [结果目录](result/README.md)。
 
 任务执行使用固定 manifest，成功和 policy failure 都保留，基础设施错误不替换 seed。

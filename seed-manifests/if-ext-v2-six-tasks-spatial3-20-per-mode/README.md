@@ -5,13 +5,15 @@
 
 Spatial 使用 schema 2，保留原 seed：每组 `[5k, 5k+1, 5k+4]`，场景仍为 `seed // 5`。
 没有重新编号、更换场景或筛选成功回合。原五模式清单及 oracle 资格证据由
-`qualification-files.json` 绑定；全部 2760 回合已完成，可以按 `reusable-results.yml` 复用。
+`qualification-files.json` 绑定；`reusable-results.yml` 保留旧判定下的 2760 回合索引。
+当前 Bottle-Verb v6 不复用其中的旧 Bottle 标签：相同 240 个 policy/seed 回合已经重测，其他五项复用 2520 回合。
+本清单的 seed、mode 与 config 不因判定更新而改变。
 旧五模式 flat manifest 保持 schema 1，用于历史校验，当前运行入口拒绝 front/back。
 
 - [显式 seed/mode JSON](seed-modes.json) · [CSV](seed-modes.csv)
 - [套件及计数](suite.yml) · [复用清单](reusable-results.yml)
 - [决策与证据](../../docs/place-relative-spatial3.md)
-- [结果](../../result/if-ext-v2-six-tasks-spatial3-20blocks/README.md)
+- [当前 v6 结果](../../result/if-ext-v2-six-tasks-spatial3-bottle-v6-terminal-20blocks/README.md) · [旧判定结果](../../result/if-ext-v2-six-tasks-spatial3-20blocks/README.md)
 
 CPU 校验：`python seed-manifests/if-ext-v2-six-tasks-spatial3-20-per-mode/verify.py`。
 运行：`bash scripts/eval.sh --policy <policy> --output-dir <new-output>`，先启动相应模型 server。

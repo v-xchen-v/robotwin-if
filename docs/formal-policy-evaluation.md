@@ -3,8 +3,9 @@
 当前任务为 bottle_verb、pick_diverse_object、attribute_select、arm_select、stack_sequence、place_relative。
 Grasp-Approach 已暂时下线，见 [归档说明](../bak/grasp_cube_approach/README.md)。
 使用 [六任务 20-block manifest](../seed-manifests/if-ext-v2-six-tasks-spatial3-20-per-mode/README.md)，
-各 policy 460 回合，全套 2,760 回合、720 blocks。原七任务归档中这些回合均已完成，但使用旧 Bottle-Verb 判定。
-[新的 pick 稳定保持判定](bottle-verb-pick-hold.md)下，prepare 会排除旧 Bottle-Verb 结果并保留原 seed 重测；其余任务可复用。
+各 policy 460 回合，全套 2,760 回合、720 blocks，已于 **2026-09-15 22:44 UTC** 完成并通过校验。
+[当前结果包](../result/if-ext-v2-six-tasks-spatial3-bottle-v6-terminal-20blocks/README.md)合并 Bottle-Verb v6 的 240 回合与其他五任务复用的 2520 回合。
+[新的 pick 稳定保持判定](bottle-verb-pick-hold.md)下，prepare 会排除旧 Bottle-Verb 结果并保留原 seed 重测；该轮重测现已完成。
 当前 v6 的 pick 允许平移，在完整执行 700 个动作后判断末尾姿态保持和全程旋转摇晃；不再提前成功。shake 及其他任务保留原终止方式。
 
 ## 当前入口：单机串行
@@ -73,16 +74,17 @@ GPU、网络、场景不一致及执行异常不走这个重试。
 全套 **3,240 回合、840 个完整 blocks**。从 12 扩到 20 时保留全部 1,944 条旧成功/失败结果，
 新增 1,296 回合；seed 选择不参考 policy 成败。
 
-结果入口在 [`result/`](../result/README.md)，完整数据目录为
-`/Data/robotwin-if/evaluations/if-seven-tasks-v2-wide-20blocks-001`。
-本次代码收简不修改已导出的报表、manifest、逐回合结果或校验文件。
+结果入口在 [`result/`](../result/README.md)。当前 v6 六任务完整数据目录为
+`/Data/robotwin-if/evaluations/if-six-tasks-spatial3-bottle-v6-terminal-20blocks-001`，
+repo 入口为同名的 `outputs/policy-eval/` 子目录。历史七任务目录
+`/Data/robotwin-if/evaluations/if-seven-tasks-v2-wide-20blocks-001` 保留原判定和原始产物。
 
 `tools/summarize_formal_policy_results.py` 读取单次 summary 快照，核对归档结果的 SHA-256、
 provenance、mode 和计数，生成 Markdown、HTML、JSON 与分模式 CSV：
 
 ```bash
 python tools/summarize_formal_policy_results.py \
-  --run-dir /Data/robotwin-if/evaluations/if-seven-tasks-v2-wide-20blocks-001 \
+  --run-dir /Data/robotwin-if/evaluations/if-six-tasks-spatial3-bottle-v6-terminal-20blocks-001 \
   --output outputs/policy-eval/reports/results-current.md
 ```
 

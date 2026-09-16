@@ -58,8 +58,9 @@ oracle / collection 不受 policy 的末尾裁决限制；pick oracle 提起轨�
 
 ## 历史结果与复用
 
-现有 result 包、README 中的分数和五模式/三模式历史证据没有据此重新计分。
-**现有 Bottle-Verb 及 Overall 数字仍包含旧判定的结果**，不能声称已经通过新规则校正。
+当前 README 与 [v6 结果包](../result/if-ext-v2-six-tasks-spatial3-bottle-v6-terminal-20blocks/README.md)
+已使用完整重测的 Bottle-Verb 分数和重算的 Overall，六个 policy 均完成 20/20 blocks。
+旧判定结果包、五模式/三模式历史证据独立保留，原标签不改写。
 原始视频不是精确的仿真时钟，既有动作 NPZ 也不包含完整瓶子 pose 序列；旧成功回合还会在旧高度线处
 提前结束，缺失之后的保持过程，因此不能简单对旧 CSV 改几个阈值就可靠得到新结果。
 
@@ -217,7 +218,7 @@ repo 内入口为 `outputs/policy-eval/if-six-tasks-spatial3-bottle-hold3s-20blo
 补完 120 个预测动作的重放及 `cpu-replay-comparison.json`。在当前 v6 阈值下，补完后缀的保存轨迹
 末尾不满足三秒姿态保持；它没有跑满 700 个动作，不能标为新版正式 policy success/failure。
 
-v5 队列目前暂停，保留 **15 个 X-VLA 回合**作历史诊断；新版分数尚未生成。
+v5 队列当时暂停，保留 **15 个 X-VLA 回合**作历史诊断；新版分数在该阶段尚未生成。
 运行与模型服务停止，不自动恢复。v6 的版本及参数与 v5 不兼容；正式导入还要求 pick 的 700-action
 终态标记与计数完整，旧 15 回合和 raw probe 均不能计入 v6。下次评测需要新计划、新输出目录，
 原 seed / mode 清单不变，其余五任务仍可按原规则复用。
@@ -239,7 +240,7 @@ v5 队列目前暂停，保留 **15 个 X-VLA 回合**作历史诊断；新版�
 稳定 **3.88 s**，最近三秒累计转角 **10.41°**，plan / raw success 均 True，未检测到摇晃。
 它是 raw 谓词验证，不是完整 paired qualification 或 700-action policy 分数。
 输出为 `outputs/policy-eval/bottle-pick-hold3s-v6-validation/oracle-low-pick-100002/`。
-正式评测未恢复；验证结束后两张 GPU 均回落到 16 MiB。
+该次诊断未恢复正式评测；验证结束后两张 GPU 均回落到 16 MiB。
 
 ## v6 X-VLA 前两个回合实测（2026-09-15）
 
@@ -258,7 +259,7 @@ v5 队列目前暂停，保留 **15 个 X-VLA 回合**作历史诊断；新版�
 运行、视频及位姿轨迹位于 `outputs/policy-eval/xvla-bottle-verb-v6-first2-001/`，
 `support/v5-v6-same-trajectory.json` 保留对比，`support/validation.json` 保留视频帧数 / 动作数及哈希。
 本次完成 2/2 episodes（1/2 success，0/1 全模式成功 block），未扩大到其他 seed 或 policy。
-模型服务和模拟器已经退出，GPU 已释放；六 policy 正式队列仍暂停。
+该两回合试跑结束时模型服务和模拟器退出，GPU 释放；随后启动的六 policy 正式重测结果见下一节。
 
 ## v6 六 policy 正式重测（2026-09-15）
 
@@ -279,8 +280,20 @@ GPU 0 运行一个模拟器，GPU 1 运行一个模型服务；顺序为 X-VLA�
 VLAct All、DM05、Hy-VLA。保留温度、显存、日志停滞检测和源码冻结检查。
 只有纯推理前 oracle 资格失败允许原 seed 在新模拟器中最多尝试三次；完成的 policy failure 不重试。
 
-全部完成并通过视频帧数、动作轨迹、跨 policy 初始场景、判定版本及参数校验后，
-`support/launch-and-export.py` 自动导出
-`result/if-ext-v2-six-tasks-spatial3-bottle-v6-terminal-20blocks/`，更新 README 的 Verb / Overall。
-发布前再次核对其余五项的统计与记录哈希；当前 README 分数保留旧口径并明确标注。
-如果运行或发布失败，分别查看 `status.json` / `publication.json` 和 `runner.log`；不会以不完整结果替换正式表格。
+正式队列已于 **2026-09-15 22:44 UTC** 全部完成，视频帧数、动作轨迹、跨 policy 初始场景、
+判定版本及参数校验均通过。`support/launch-and-export.py` 已自动导出
+[v6 结果包](../result/if-ext-v2-six-tasks-spatial3-bottle-v6-terminal-20blocks/README.md)，更新 README 的 Verb / Overall。
+其余五项的统计与记录哈希均与旧结果一致；`status.json` / `publication.json` 均为 `complete`。
+
+| Policy | Pick 成功 | Shake 成功 | Bottle 成功 | 完成 blocks | 六任务 Overall (%) |
+|---|---:|---:|---:|---:|---:|
+| X-VLA | 0/20 | 20/20 | 20/40 | 20/20 | 37.1 |
+| LingBot-VA | 0/20 | 20/20 | 20/40 | 20/20 | 60.9 |
+| LingBot-VLA | 0/20 | 20/20 | 20/40 | 20/20 | 32.5 |
+| VLAct All | 16/20 | 20/20 | 36/40 | 20/20 | 47.9 |
+| DM05 | 20/20 | 20/20 | 40/40 | 20/20 | 61.8 |
+| Hy-VLA | 0/20 | 20/20 | 20/40 | 20/20 | 35.2 |
+
+新版 Bottle 共 **156/240 成功**；全套为 **2760/2760 回合、720/720 blocks**。
+这些是自动判定结果；改动了成功规则，不能将与旧分数的变化归因于模型能力变化。
+完整分模式计数及逐回合 CSV 见结果包；其他五项仍沿用历史自动标签，包括已注明的 Hy-VLA coffee-box 待人工复核记录。

@@ -16,7 +16,7 @@ Grasp-Approach 暂时下线，保存在 `bak/`，不进入当前默认评测。
 
 各目录提供 `setup_env.sh`、依赖声明、`client.py`、`eval.py` 和输出适配；五个模型还有本仓库的
 `serve.py` 包装，X-VLA 使用 setup 获取的固定上游 server。模型权重由各 README 的下载流程获取。
-实际用于已交付结果的 checkpoint revisions 记录在 [checkpoints.json](../result/if-ext-v2-six-tasks-spatial3-20blocks/checkpoints.json)。
+实际用于已交付结果的 checkpoint revisions 记录在 [checkpoints.json](../result/if-ext-v2-six-tasks-spatial3-bottle-v6-terminal-20blocks/checkpoints.json)。
 VLAct 使用 All 100K，不能用旧 Clean 50K 代替。
 
 运行需要 Linux、NVIDIA GPU、Bash、`setsid`、`flock`、`timeout`、`nvidia-smi`，以及已安装的
@@ -102,15 +102,17 @@ GPU 查询超过 8 秒、温度达到 87°C 或显存超限会停止本次 sim�
 
 ## 3. Result
 
-当前交付结果：[`result/if-ext-v2-six-tasks-spatial3-20blocks/`](../result/if-ext-v2-six-tasks-spatial3-20blocks/README.md)。
+当前交付结果：[`result/if-ext-v2-six-tasks-spatial3-bottle-v6-terminal-20blocks/`](../result/if-ext-v2-six-tasks-spatial3-bottle-v6-terminal-20blocks/README.md)。
 六个 policies 已完成 **2760/2760 episodes、720/720 blocks**，每个 policy 为 460 episodes。
+Bottle-Verb v6 已完成 240 回合，其他五项复用 2520 回合；2026-09-15 22:44 UTC 正式校验通过。
+README 的 Verb / Overall 与结果包一致；旧判定版本在 [结果索引](../result/README.md) 中保留。
 
 提供 `results.html/md/json/csv`、`episodes.csv`、六份 frozen manifests、checkpoint 身份、
 provenance 与 `SHA256SUMS`。可离线查看汇总表和逐回合计数，不依赖原机器。
 `Overall` 对六个任务的 `Task Avg.` 等权，成功与已完成的 policy failure 都保留。
 
 ```bash
-(cd result/if-ext-v2-six-tasks-spatial3-20blocks && sha256sum -c SHA256SUMS)
+(cd result/if-ext-v2-six-tasks-spatial3-bottle-v6-terminal-20blocks && sha256sum -c SHA256SUMS)
 ```
 
 完整视频和动作轨迹体积较大，仍保存在结果 README 指定的原始评测目录，不包含在此轻量结果包中。

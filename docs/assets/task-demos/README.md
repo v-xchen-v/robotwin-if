@@ -1,8 +1,10 @@
 # README 任务视频素材
 
 这六组视频来自已完成的六任务、20-block policy 评测，用于介绍任务行为。
-每个画面选用一个成功回合，完整成功率与失败回合仍保留在 [结果包](../../../result/if-ext-v2-six-tasks-20blocks/README.md)。
+每个画面选用一个在当时规则下标记成功的回合，原始来源保留在 [历史结果包](../../../result/if-ext-v2-six-tasks-20blocks/README.md)。
 视频选例不参与结果计算，也没有重跑仿真或模型。
+Bottle-Verb 已完成 v6 重测；此处 Hy-VLA pick / shake 视频仍为旧判定演示，不作为 v6 成功证据。
+当前成绩见 [v6 六任务结果包](../../../result/if-ext-v2-six-tasks-spatial3-bottle-v6-terminal-20blocks/README.md)。
 
 | Task | Policy | Seeds（按画面从左到右、从上到下） | 展示内容 | 存档播放倍速 |
 |---|---|---|---|---:|
