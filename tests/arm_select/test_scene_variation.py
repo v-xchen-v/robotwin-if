@@ -70,6 +70,43 @@ class SceneVariationTests(unittest.TestCase):
             np.testing.assert_array_equal(task.box.get_pose().q, [1, 0, 0, 0])
             self.assertEqual(task.scene_version, "fixed-v1")
 
+    def test_cube_pairs_vary_pose_without_leaking_arm(self):
+        poses, rotations, regions = set(), set(), []
+        for block in range(150000, 150012):
+            left, right = Task(), Task()
+            left.setup_demo(seed=2*block, arm_select_scene_version="cube-v3")
+            np.random.random(37)
+            right.setup_demo(seed=2*block+1, arm_select_scene_version="cube-v3")
+            self.assertEqual((left.mode, right.mode), ("left", "right"))
+            self.assertEqual(left.info["arm_select_scene"], right.info["arm_select_scene"])
+            np.testing.assert_array_equal(left.box.get_pose().p, right.box.get_pose().p)
+            np.testing.assert_array_equal(left.box.get_pose().q, right.box.get_pose().q)
+            poses.add(tuple(left.box.get_pose().p))
+            rotations.add(tuple(left.box.get_pose().q))
+            regions.append(left._scene_spec["region"])
+            x, y, _ = left.box.get_pose().p
+            self.assertTrue(-0.04 <= x <= 0.04 and -0.08 <= y <= -0.06)
+            self.assertLessEqual(abs(left._scene_spec["yaw_degrees"]), 15)
+            # Roll/pitch remain zero so the cube starts flat on the table.
+            np.testing.assert_array_equal(left.box.get_pose().q[1:3], [0, 0])
+        self.assertEqual(len(poses), 12)
+        self.assertEqual(len(rotations), 12)
+        self.assertEqual([regions.count(r) for r in ("left", "center", "right")], [4, 4, 4])
+
+    def test_cube_reset_does_not_change_legacy_actor(self):
+        task = Task()
+        with patch.dict(namespace, create_box=lambda **kw: SimpleNamespace(get_pose=lambda: kw["pose"], creation=kw)):
+            task.setup_demo(seed=300000, arm_select_scene_version="cube-v3")
+            cube = task.box.creation
+            self.assertEqual(cube["boxtype"], "default")
+            self.assertEqual(cube["half_size"], (0.025, 0.025, 0.025))
+            self.assertAlmostEqual(cube["pose"].p[2] - cube["half_size"][2], 0.741)
+            task.setup_demo(seed=300000, arm_select_scene_version="jitter-v2")
+            self.assertEqual(task.box.creation["boxtype"], "long")
+            self.assertEqual(task.box.creation["half_size"], (0.03, 0.03, 0.1))
+            self.assertEqual(task.box.get_pose().p[2], 0.842)
+            self.assertEqual(task.pre_grasp_dis, 0.07)
+
     def test_unknown_version_fails_before_setup(self):
         with self.assertRaisesRegex(ValueError, "scene_version"):
             Task().setup_demo(seed=0, arm_select_scene_version="typo")
@@ -81,11 +118,11 @@ class SceneVariationTests(unittest.TestCase):
         utils = str(ROOT / "third_party/robotwin/description/utils")
         with patch.object(sys, "path", [utils, *sys.path]):
             before = random.getstate()
-            for block in range(50000, 50012):
+            for version, block in ((v, b) for v in ("jitter-v2", "cube-v3") for b in range(50000, 50012)):
                 texts = []
                 for offset, arm in enumerate(("left", "right")):
                     info = {"info": {"{A}": "the block", "{a}": arm},
-                            "arm_select_scene": {"version": "jitter-v2"}}
+                            "arm_select_scene": {"version": version}}
                     text = instruction_for("arm_select", info, "unseen", 2*block+offset)
                     self.assertIn(f"the {arm} arm", text)
                     texts.append(text.replace(f"the {arm} arm", "the ARM arm"))
@@ -95,17 +132,19 @@ class SceneVariationTests(unittest.TestCase):
             text = instruction_for("arm_select", {"info": {"{A}": "the block", "{a}": "left"}}, "unseen", 100000)
             self.assertEqual(text, "Have the left arm take the block.")
 
-    def test_all_six_evaluators_require_matching_v2_manifest_config(self):
+    def test_all_six_evaluators_require_matching_manifest_config(self):
         with tempfile.TemporaryDirectory() as directory:
             manifest = Path(directory) / "arm_select.json"
-            manifest.write_text(json.dumps({"schema_version": 1, "task": "arm_select",
-                                           "task_config": "demo_clean_arm_select_v2",
-                                           "seeds": [100000, 100001]}))
-            for policy in ("xvla", "lingbot_va", "lingbot_vla", "vlact", "dm05", "hy_vla"):
+            cases = ((v, p) for v in ("v2", "v3") for p in
+                     ("xvla", "lingbot_va", "lingbot_vla", "vlact", "dm05", "hy_vla"))
+            for version, policy in cases:
+                config = f"demo_clean_arm_select_{version}"
+                manifest.write_text(json.dumps({"schema_version": 1, "task": "arm_select",
+                                               "task_config": config, "seeds": [100000, 100001]}))
                 module = importlib.import_module(f"policies.{policy}.eval")
-                argv = ["eval.py", "--task", "arm_select", "--task-config", "demo_clean_arm_select_v2",
+                argv = ["eval.py", "--task", "arm_select", "--task-config", config,
                         "--seed-manifest", str(manifest), "--blocks", "1", "--output-dir", "unused"]
-                with self.subTest(policy=policy), patch.object(sys, "argv", argv):
+                with self.subTest(policy=policy, version=version), patch.object(sys, "argv", argv):
                     select = module.select_seeds
                     with patch.object(module, "select_seeds", side_effect=InterruptedError) as called:
                         with self.assertRaises(InterruptedError):

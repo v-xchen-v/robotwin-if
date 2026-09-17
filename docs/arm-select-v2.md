@@ -1,5 +1,8 @@
 # arm_select 场景变化试验
 
+本文及结果属于 6 × 6 × 20 cm 长柱版本。2026-09-16 的 [cube-v3 探索](recon/arm-select-cube-v3.md)
+采用独立配置；旧代码与 240 回合结果已[备份](../bak/arm_select-long-v2-20260916/README.md)。
+
 `arm_select` 默认仍使用 `fixed-v1` 中央固定场景。新配置
 `demo_clean_arm_select_v2` 通过 `arm_select_scene_version: jitter-v2` 启用位置与朝向变化。
 它是单独的试验条件，使用不同 task_config 和重新验证的 seed manifest。

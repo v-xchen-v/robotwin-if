@@ -1,0 +1,3845 @@
+{
+  "complete": true,
+  "all_checks_passed": true,
+  "task": "arm_select",
+  "task_config": "demo_clean_arm_select_v3",
+  "pci": "0000:d8:00.0",
+  "blocks": [
+    {
+      "seeds": [
+        400000,
+        400001
+      ],
+      "same_rgb": true,
+      "same_pose": true,
+      "same_template": true,
+      "region": "right",
+      "accepted": true
+    },
+    {
+      "seeds": [
+        400002,
+        400003
+      ],
+      "same_rgb": true,
+      "same_pose": true,
+      "same_template": true,
+      "region": "left",
+      "accepted": true
+    },
+    {
+      "seeds": [
+        400004,
+        400005
+      ],
+      "same_rgb": true,
+      "same_pose": true,
+      "same_template": true,
+      "region": "center",
+      "accepted": true
+    },
+    {
+      "seeds": [
+        400006,
+        400007
+      ],
+      "same_rgb": true,
+      "same_pose": true,
+      "same_template": true,
+      "region": "right",
+      "accepted": true
+    },
+    {
+      "seeds": [
+        400008,
+        400009
+      ],
+      "same_rgb": true,
+      "same_pose": true,
+      "same_template": true,
+      "region": "left",
+      "accepted": true
+    },
+    {
+      "seeds": [
+        400010,
+        400011
+      ],
+      "same_rgb": true,
+      "same_pose": true,
+      "same_template": true,
+      "region": "center",
+      "accepted": true
+    },
+    {
+      "seeds": [
+        400012,
+        400013
+      ],
+      "same_rgb": true,
+      "same_pose": true,
+      "same_template": true,
+      "region": "right",
+      "accepted": true
+    },
+    {
+      "seeds": [
+        400014,
+        400015
+      ],
+      "same_rgb": true,
+      "same_pose": true,
+      "same_template": true,
+      "region": "left",
+      "accepted": true
+    },
+    {
+      "seeds": [
+        400016,
+        400017
+      ],
+      "same_rgb": true,
+      "same_pose": true,
+      "same_template": true,
+      "region": "center",
+      "accepted": true
+    },
+    {
+      "seeds": [
+        400018,
+        400019
+      ],
+      "same_rgb": true,
+      "same_pose": true,
+      "same_template": true,
+      "region": "right",
+      "accepted": true
+    },
+    {
+      "seeds": [
+        400020,
+        400021
+      ],
+      "same_rgb": true,
+      "same_pose": true,
+      "same_template": true,
+      "region": "left",
+      "accepted": true
+    },
+    {
+      "seeds": [
+        400022,
+        400023
+      ],
+      "same_rgb": true,
+      "same_pose": true,
+      "same_template": true,
+      "region": "center",
+      "accepted": true
+    }
+  ],
+  "episodes": [
+    {
+      "seed": 100000,
+      "phase": "fixed",
+      "mode": "left",
+      "version": "fixed-v1",
+      "initial_rgb": {
+        "head_camera": "b600f83b98d4d152efbd1652750e8d01cb237130eda98d5a39d4c0ab81923af2",
+        "left_camera": "07c9764d0e9898730eb7617a3a24dd955f9fd1d89fb9121d9c45e40ba56fca5d",
+        "right_camera": "2991ffad492a309def1aea4882c0ec6cbf6e7db4a8c2e7b7c388d5cbbfd51054"
+      },
+      "initial_pose": [
+        -1.150382217929291e-06,
+        0.09999887645244598,
+        0.8400006294250488,
+        1.0,
+        5.4782040024292655e-06,
+        -5.616101589112077e-06,
+        3.612565890875885e-08
+      ],
+      "scene": {
+        "version": "fixed-v1",
+        "scene_seed": 50000,
+        "region": "center",
+        "position": [
+          0.0,
+          0.1,
+          0.842
+        ],
+        "quaternion": [
+          1.0,
+          0,
+          0,
+          0.0
+        ],
+        "yaw_degrees": 0.0
+      },
+      "initial_success": false,
+      "matches_archived_v1": true,
+      "plan_success": true,
+      "success": true,
+      "signals": {
+        "arm": "left",
+        "arm_match": true,
+        "lifted": true,
+        "lift_delta": 0.09832602739334106,
+        "dist_cmd_tcp": 0.14088791585553706,
+        "dist_other_tcp": 0.5154110899717925
+      },
+      "instruction": "Have the left arm take the block.",
+      "passed": true,
+      "oracle_info": {
+        "cluttered_table_info": [],
+        "texture_info": {
+          "wall_texture": null,
+          "table_texture": null
+        },
+        "info": {
+          "{A}": "the block",
+          "{a}": "left"
+        },
+        "arm_select_scene": {
+          "version": "fixed-v1",
+          "scene_seed": 50000,
+          "region": "center",
+          "position": [
+            0.0,
+            0.1,
+            0.842
+          ],
+          "quaternion": [
+            1.0,
+            0,
+            0,
+            0.0
+          ],
+          "yaw_degrees": 0.0
+        },
+        "mode": "left",
+        "signals": {
+          "arm_match": true,
+          "lifted": true
+        }
+      },
+      "elapsed_seconds": 41.819077451946214
+    },
+    {
+      "seed": 100001,
+      "phase": "fixed",
+      "mode": "right",
+      "version": "fixed-v1",
+      "initial_rgb": {
+        "head_camera": "b600f83b98d4d152efbd1652750e8d01cb237130eda98d5a39d4c0ab81923af2",
+        "left_camera": "07c9764d0e9898730eb7617a3a24dd955f9fd1d89fb9121d9c45e40ba56fca5d",
+        "right_camera": "2991ffad492a309def1aea4882c0ec6cbf6e7db4a8c2e7b7c388d5cbbfd51054"
+      },
+      "initial_pose": [
+        -1.150382217929291e-06,
+        0.09999887645244598,
+        0.8400006294250488,
+        1.0,
+        5.4782040024292655e-06,
+        -5.616101589112077e-06,
+        3.612565890875885e-08
+      ],
+      "scene": {
+        "version": "fixed-v1",
+        "scene_seed": 50000,
+        "region": "center",
+        "position": [
+          0.0,
+          0.1,
+          0.842
+        ],
+        "quaternion": [
+          1.0,
+          0,
+          0,
+          0.0
+        ],
+        "yaw_degrees": 0.0
+      },
+      "initial_success": false,
+      "matches_archived_v1": true,
+      "plan_success": true,
+      "success": true,
+      "signals": {
+        "arm": "right",
+        "arm_match": true,
+        "lifted": true,
+        "lift_delta": 0.09883517026901245,
+        "dist_cmd_tcp": 0.14049631166300497,
+        "dist_other_tcp": 0.509156088576652
+      },
+      "instruction": "Use the right arm to retrieve the block.",
+      "passed": true,
+      "oracle_info": {
+        "cluttered_table_info": [],
+        "texture_info": {
+          "wall_texture": null,
+          "table_texture": null
+        },
+        "info": {
+          "{A}": "the block",
+          "{a}": "right"
+        },
+        "arm_select_scene": {
+          "version": "fixed-v1",
+          "scene_seed": 50000,
+          "region": "center",
+          "position": [
+            0.0,
+            0.1,
+            0.842
+          ],
+          "quaternion": [
+            1.0,
+            0,
+            0,
+            0.0
+          ],
+          "yaw_degrees": 0.0
+        },
+        "mode": "right",
+        "signals": {
+          "arm_match": true,
+          "lifted": true
+        }
+      },
+      "elapsed_seconds": 3.7628464229637757
+    },
+    {
+      "seed": 400000,
+      "phase": "candidate",
+      "mode": "left",
+      "version": "cube-v3",
+      "initial_rgb": {
+        "head_camera": "75f23f9b0c0a7277e3ccaf892637a472dc5cec9dc09ab6a91d3d69217f9b5f26",
+        "left_camera": "9e1e6260c6891d30a3daee7173fd09f1d6b4d5d4fd79295edb7f5abc6158d54e",
+        "right_camera": "c300bc75e48d4871b217d5b3d063d3b7fe24bbccba30da0a2ee570b29a2af45d"
+      },
+      "initial_pose": [
+        0.03310072794556618,
+        -0.07272133231163025,
+        0.7650007605552673,
+        0.99815833568573,
+        1.8070185205942835e-06,
+        -1.680423883954063e-05,
+        -0.06066253408789635
+      ],
+      "scene": {
+        "version": "cube-v3",
+        "scene_seed": 200000,
+        "region": "right",
+        "position": [
+          0.0331016795001038,
+          -0.0727212019235501,
+          0.766
+        ],
+        "quaternion": [
+          0.9981582454557403,
+          0,
+          0,
+          -0.060663968125388615
+        ],
+        "yaw_degrees": -6.955849531252075,
+        "half_size": [
+          0.025,
+          0.025,
+          0.025
+        ],
+        "boxtype": "default",
+        "oracle_grasp": "top-down"
+      },
+      "initial_success": false,
+      "plan_success": true,
+      "success": true,
+      "signals": {
+        "arm": "left",
+        "arm_match": true,
+        "lifted": true,
+        "lift_delta": 0.09870380163192749,
+        "dist_cmd_tcp": 0.13060297627551024,
+        "dist_other_tcp": 0.3756881243608592
+      },
+      "instruction": "Use the left arm to hold the block.",
+      "passed": true,
+      "oracle_info": {
+        "cluttered_table_info": [],
+        "texture_info": {
+          "wall_texture": null,
+          "table_texture": null
+        },
+        "info": {
+          "{A}": "the block",
+          "{a}": "left"
+        },
+        "arm_select_scene": {
+          "version": "cube-v3",
+          "scene_seed": 200000,
+          "region": "right",
+          "position": [
+            0.0331016795001038,
+            -0.0727212019235501,
+            0.766
+          ],
+          "quaternion": [
+            0.9981582454557403,
+            0,
+            0,
+            -0.060663968125388615
+          ],
+          "yaw_degrees": -6.955849531252075,
+          "half_size": [
+            0.025,
+            0.025,
+            0.025
+          ],
+          "boxtype": "default",
+          "oracle_grasp": "top-down"
+        },
+        "mode": "left",
+        "signals": {
+          "arm_match": true,
+          "lifted": true
+        }
+      },
+      "elapsed_seconds": 5.10907504404895
+    },
+    {
+      "seed": 400001,
+      "phase": "candidate",
+      "mode": "right",
+      "version": "cube-v3",
+      "initial_rgb": {
+        "head_camera": "75f23f9b0c0a7277e3ccaf892637a472dc5cec9dc09ab6a91d3d69217f9b5f26",
+        "left_camera": "9e1e6260c6891d30a3daee7173fd09f1d6b4d5d4fd79295edb7f5abc6158d54e",
+        "right_camera": "c300bc75e48d4871b217d5b3d063d3b7fe24bbccba30da0a2ee570b29a2af45d"
+      },
+      "initial_pose": [
+        0.03310072794556618,
+        -0.07272133231163025,
+        0.7650007605552673,
+        0.99815833568573,
+        1.8070185205942835e-06,
+        -1.680423883954063e-05,
+        -0.06066253408789635
+      ],
+      "scene": {
+        "version": "cube-v3",
+        "scene_seed": 200000,
+        "region": "right",
+        "position": [
+          0.0331016795001038,
+          -0.0727212019235501,
+          0.766
+        ],
+        "quaternion": [
+          0.9981582454557403,
+          0,
+          0,
+          -0.060663968125388615
+        ],
+        "yaw_degrees": -6.955849531252075,
+        "half_size": [
+          0.025,
+          0.025,
+          0.025
+        ],
+        "boxtype": "default",
+        "oracle_grasp": "top-down"
+      },
+      "initial_success": false,
+      "plan_success": true,
+      "success": true,
+      "signals": {
+        "arm": "right",
+        "arm_match": true,
+        "lifted": true,
+        "lift_delta": 0.09820866584777832,
+        "dist_cmd_tcp": 0.1306114562566383,
+        "dist_other_tcp": 0.4173216746465484
+      },
+      "instruction": "Use the right arm to hold the block.",
+      "passed": true,
+      "oracle_info": {
+        "cluttered_table_info": [],
+        "texture_info": {
+          "wall_texture": null,
+          "table_texture": null
+        },
+        "info": {
+          "{A}": "the block",
+          "{a}": "right"
+        },
+        "arm_select_scene": {
+          "version": "cube-v3",
+          "scene_seed": 200000,
+          "region": "right",
+          "position": [
+            0.0331016795001038,
+            -0.0727212019235501,
+            0.766
+          ],
+          "quaternion": [
+            0.9981582454557403,
+            0,
+            0,
+            -0.060663968125388615
+          ],
+          "yaw_degrees": -6.955849531252075,
+          "half_size": [
+            0.025,
+            0.025,
+            0.025
+          ],
+          "boxtype": "default",
+          "oracle_grasp": "top-down"
+        },
+        "mode": "right",
+        "signals": {
+          "arm_match": true,
+          "lifted": true
+        }
+      },
+      "elapsed_seconds": 2.7694448310649022
+    },
+    {
+      "seed": 400002,
+      "phase": "candidate",
+      "mode": "left",
+      "version": "cube-v3",
+      "initial_rgb": {
+        "head_camera": "48b5a7bca471c938edab28cc3696cb3c8e4b3ad8f91b8240ec6cbf4559eb8c0d",
+        "left_camera": "451a2d89eaace8d8b3a4b3e731a1c8565e9fba3ccd9a3b11f6d566e2e4ff58d2",
+        "right_camera": "4affae6db6cb3a3e37ec72081d7bb0dd4c9adab11b90989fcfcde4e02d82226c"
+      },
+      "initial_pose": [
+        -0.01676693744957447,
+        -0.07795325666666031,
+        0.7650007605552673,
+        0.9993868470191956,
+        3.311091177238268e-06,
+        -1.6258210962405428e-05,
+        0.03501486778259277
+      ],
+      "scene": {
+        "version": "cube-v3",
+        "scene_seed": 200001,
+        "region": "left",
+        "position": [
+          -0.016766044996120773,
+          -0.07795297336494544,
+          0.766
+        ],
+        "quaternion": [
+          0.999386841492534,
+          0,
+          0,
+          0.03501344101308573
+        ],
+        "yaw_degrees": 4.0130650410834825,
+        "half_size": [
+          0.025,
+          0.025,
+          0.025
+        ],
+        "boxtype": "default",
+        "oracle_grasp": "top-down"
+      },
+      "initial_success": false,
+      "plan_success": true,
+      "success": true,
+      "signals": {
+        "arm": "left",
+        "arm_match": true,
+        "lifted": true,
+        "lift_delta": 0.09822005033493042,
+        "dist_cmd_tcp": 0.1306177218547172,
+        "dist_other_tcp": 0.41068060608017787
+      },
+      "instruction": "Scoop up the block with the left arm.",
+      "passed": true,
+      "oracle_info": {
+        "cluttered_table_info": [],
+        "texture_info": {
+          "wall_texture": null,
+          "table_texture": null
+        },
+        "info": {
+          "{A}": "the block",
+          "{a}": "left"
+        },
+        "arm_select_scene": {
+          "version": "cube-v3",
+          "scene_seed": 200001,
+          "region": "left",
+          "position": [
+            -0.016766044996120773,
+            -0.07795297336494544,
+            0.766
+          ],
+          "quaternion": [
+            0.999386841492534,
+            0,
+            0,
+            0.03501344101308573
+          ],
+          "yaw_degrees": 4.0130650410834825,
+          "half_size": [
+            0.025,
+            0.025,
+            0.025
+          ],
+          "boxtype": "default",
+          "oracle_grasp": "top-down"
+        },
+        "mode": "left",
+        "signals": {
+          "arm_match": true,
+          "lifted": true
+        }
+      },
+      "elapsed_seconds": 2.6720204829471186
+    },
+    {
+      "seed": 400003,
+      "phase": "candidate",
+      "mode": "right",
+      "version": "cube-v3",
+      "initial_rgb": {
+        "head_camera": "48b5a7bca471c938edab28cc3696cb3c8e4b3ad8f91b8240ec6cbf4559eb8c0d",
+        "left_camera": "451a2d89eaace8d8b3a4b3e731a1c8565e9fba3ccd9a3b11f6d566e2e4ff58d2",
+        "right_camera": "4affae6db6cb3a3e37ec72081d7bb0dd4c9adab11b90989fcfcde4e02d82226c"
+      },
+      "initial_pose": [
+        -0.01676693744957447,
+        -0.07795325666666031,
+        0.7650007605552673,
+        0.9993868470191956,
+        3.311091177238268e-06,
+        -1.6258210962405428e-05,
+        0.03501486778259277
+      ],
+      "scene": {
+        "version": "cube-v3",
+        "scene_seed": 200001,
+        "region": "left",
+        "position": [
+          -0.016766044996120773,
+          -0.07795297336494544,
+          0.766
+        ],
+        "quaternion": [
+          0.999386841492534,
+          0,
+          0,
+          0.03501344101308573
+        ],
+        "yaw_degrees": 4.0130650410834825,
+        "half_size": [
+          0.025,
+          0.025,
+          0.025
+        ],
+        "boxtype": "default",
+        "oracle_grasp": "top-down"
+      },
+      "initial_success": false,
+      "plan_success": true,
+      "success": true,
+      "signals": {
+        "arm": "right",
+        "arm_match": true,
+        "lifted": true,
+        "lift_delta": 0.09844094514846802,
+        "dist_cmd_tcp": 0.13054317158390238,
+        "dist_other_tcp": 0.37532327419093997
+      },
+      "instruction": "Scoop up the block with the right arm.",
+      "passed": true,
+      "oracle_info": {
+        "cluttered_table_info": [],
+        "texture_info": {
+          "wall_texture": null,
+          "table_texture": null
+        },
+        "info": {
+          "{A}": "the block",
+          "{a}": "right"
+        },
+        "arm_select_scene": {
+          "version": "cube-v3",
+          "scene_seed": 200001,
+          "region": "left",
+          "position": [
+            -0.016766044996120773,
+            -0.07795297336494544,
+            0.766
+          ],
+          "quaternion": [
+            0.999386841492534,
+            0,
+            0,
+            0.03501344101308573
+          ],
+          "yaw_degrees": 4.0130650410834825,
+          "half_size": [
+            0.025,
+            0.025,
+            0.025
+          ],
+          "boxtype": "default",
+          "oracle_grasp": "top-down"
+        },
+        "mode": "right",
+        "signals": {
+          "arm_match": true,
+          "lifted": true
+        }
+      },
+      "elapsed_seconds": 4.9777219370007515
+    },
+    {
+      "seed": 400004,
+      "phase": "candidate",
+      "mode": "left",
+      "version": "cube-v3",
+      "initial_rgb": {
+        "head_camera": "5779461829c58238ef4c9aa6439555b9e75538c3e0fbc7092e118d534d052208",
+        "left_camera": "76359b43ce95987c11764cfed5bd04205fee1dc526a732ce4accbffc0f271439",
+        "right_camera": "3ba059eb19ba257885b079614a8ad46f778eb3e569fe5ad61f34b6eadbbc4660"
+      },
+      "initial_pose": [
+        -0.010687661357223988,
+        -0.07869570702314377,
+        0.7650006413459778,
+        0.9996637105941772,
+        3.1674003366788384e-06,
+        -1.6192288967431523e-05,
+        0.02593476139008999
+      ],
+      "scene": {
+        "version": "cube-v3",
+        "scene_seed": 200002,
+        "region": "center",
+        "position": [
+          -0.010686771477528667,
+          -0.07869544409156541,
+          0.766
+        ],
+        "quaternion": [
+          0.9996636737538821,
+          0,
+          0,
+          0.025933364164566833
+        ],
+        "yaw_degrees": 2.972077833809422,
+        "half_size": [
+          0.025,
+          0.025,
+          0.025
+        ],
+        "boxtype": "default",
+        "oracle_grasp": "top-down"
+      },
+      "initial_success": false,
+      "plan_success": true,
+      "success": true,
+      "signals": {
+        "arm": "left",
+        "arm_match": true,
+        "lifted": true,
+        "lift_delta": 0.09817057847976685,
+        "dist_cmd_tcp": 0.13059672241871478,
+        "dist_other_tcp": 0.4053970168944939
+      },
+      "instruction": "Let the left arm grab the block.",
+      "passed": true,
+      "oracle_info": {
+        "cluttered_table_info": [],
+        "texture_info": {
+          "wall_texture": null,
+          "table_texture": null
+        },
+        "info": {
+          "{A}": "the block",
+          "{a}": "left"
+        },
+        "arm_select_scene": {
+          "version": "cube-v3",
+          "scene_seed": 200002,
+          "region": "center",
+          "position": [
+            -0.010686771477528667,
+            -0.07869544409156541,
+            0.766
+          ],
+          "quaternion": [
+            0.9996636737538821,
+            0,
+            0,
+            0.025933364164566833
+          ],
+          "yaw_degrees": 2.972077833809422,
+          "half_size": [
+            0.025,
+            0.025,
+            0.025
+          ],
+          "boxtype": "default",
+          "oracle_grasp": "top-down"
+        },
+        "mode": "left",
+        "signals": {
+          "arm_match": true,
+          "lifted": true
+        }
+      },
+      "elapsed_seconds": 3.153337138937786
+    },
+    {
+      "seed": 400005,
+      "phase": "candidate",
+      "mode": "right",
+      "version": "cube-v3",
+      "initial_rgb": {
+        "head_camera": "5779461829c58238ef4c9aa6439555b9e75538c3e0fbc7092e118d534d052208",
+        "left_camera": "76359b43ce95987c11764cfed5bd04205fee1dc526a732ce4accbffc0f271439",
+        "right_camera": "3ba059eb19ba257885b079614a8ad46f778eb3e569fe5ad61f34b6eadbbc4660"
+      },
+      "initial_pose": [
+        -0.010687661357223988,
+        -0.07869570702314377,
+        0.7650006413459778,
+        0.9996637105941772,
+        3.1674003366788384e-06,
+        -1.6192288967431523e-05,
+        0.02593476139008999
+      ],
+      "scene": {
+        "version": "cube-v3",
+        "scene_seed": 200002,
+        "region": "center",
+        "position": [
+          -0.010686771477528667,
+          -0.07869544409156541,
+          0.766
+        ],
+        "quaternion": [
+          0.9996636737538821,
+          0,
+          0,
+          0.025933364164566833
+        ],
+        "yaw_degrees": 2.972077833809422,
+        "half_size": [
+          0.025,
+          0.025,
+          0.025
+        ],
+        "boxtype": "default",
+        "oracle_grasp": "top-down"
+      },
+      "initial_success": false,
+      "plan_success": true,
+      "success": true,
+      "signals": {
+        "arm": "right",
+        "arm_match": true,
+        "lifted": true,
+        "lift_delta": 0.09832936525344849,
+        "dist_cmd_tcp": 0.13061747016827843,
+        "dist_other_tcp": 0.3799719111604578
+      },
+      "instruction": "Let the right arm grab the block.",
+      "passed": true,
+      "oracle_info": {
+        "cluttered_table_info": [],
+        "texture_info": {
+          "wall_texture": null,
+          "table_texture": null
+        },
+        "info": {
+          "{A}": "the block",
+          "{a}": "right"
+        },
+        "arm_select_scene": {
+          "version": "cube-v3",
+          "scene_seed": 200002,
+          "region": "center",
+          "position": [
+            -0.010686771477528667,
+            -0.07869544409156541,
+            0.766
+          ],
+          "quaternion": [
+            0.9996636737538821,
+            0,
+            0,
+            0.025933364164566833
+          ],
+          "yaw_degrees": 2.972077833809422,
+          "half_size": [
+            0.025,
+            0.025,
+            0.025
+          ],
+          "boxtype": "default",
+          "oracle_grasp": "top-down"
+        },
+        "mode": "right",
+        "signals": {
+          "arm_match": true,
+          "lifted": true
+        }
+      },
+      "elapsed_seconds": 4.203101166989654
+    },
+    {
+      "seed": 400006,
+      "phase": "candidate",
+      "mode": "left",
+      "version": "cube-v3",
+      "initial_rgb": {
+        "head_camera": "f34fd134c659615726d3d240268eda911229cdb76d2409bd65a403a970f1f753",
+        "left_camera": "32ba303218f63633693a5f57e223dd614733b9bad54c2f8085bfbcfaa0f4f4a1",
+        "right_camera": "f190a8dd90313cc3dcb740850a28c5338b2e1f48bda05f9013404f473ab3692d"
+      },
+      "initial_pose": [
+        0.015112417750060558,
+        -0.075738325715065,
+        0.7650007605552673,
+        0.9978765845298767,
+        4.076519417139934e-06,
+        -1.6303563825204037e-05,
+        0.06513449549674988
+      ],
+      "scene": {
+        "version": "cube-v3",
+        "scene_seed": 200003,
+        "region": "right",
+        "position": [
+          0.015113297496862686,
+          -0.07573797758933419,
+          0.766
+        ],
+        "quaternion": [
+          0.9978765865471514,
+          0,
+          0,
+          0.06513307931462643
+        ],
+        "yaw_degrees": 7.468988435097406,
+        "half_size": [
+          0.025,
+          0.025,
+          0.025
+        ],
+        "boxtype": "default",
+        "oracle_grasp": "top-down"
+      },
+      "initial_success": false,
+      "plan_success": true,
+      "success": true,
+      "signals": {
+        "arm": "left",
+        "arm_match": true,
+        "lifted": true,
+        "lift_delta": 0.09831047058105469,
+        "dist_cmd_tcp": 0.13061044367156605,
+        "dist_other_tcp": 0.3869364873191744
+      },
+      "instruction": "Use the left arm to hold the block.",
+      "passed": true,
+      "oracle_info": {
+        "cluttered_table_info": [],
+        "texture_info": {
+          "wall_texture": null,
+          "table_texture": null
+        },
+        "info": {
+          "{A}": "the block",
+          "{a}": "left"
+        },
+        "arm_select_scene": {
+          "version": "cube-v3",
+          "scene_seed": 200003,
+          "region": "right",
+          "position": [
+            0.015113297496862686,
+            -0.07573797758933419,
+            0.766
+          ],
+          "quaternion": [
+            0.9978765865471514,
+            0,
+            0,
+            0.06513307931462643
+          ],
+          "yaw_degrees": 7.468988435097406,
+          "half_size": [
+            0.025,
+            0.025,
+            0.025
+          ],
+          "boxtype": "default",
+          "oracle_grasp": "top-down"
+        },
+        "mode": "left",
+        "signals": {
+          "arm_match": true,
+          "lifted": true
+        }
+      },
+      "elapsed_seconds": 2.1867180289700627
+    },
+    {
+      "seed": 400007,
+      "phase": "candidate",
+      "mode": "right",
+      "version": "cube-v3",
+      "initial_rgb": {
+        "head_camera": "f34fd134c659615726d3d240268eda911229cdb76d2409bd65a403a970f1f753",
+        "left_camera": "32ba303218f63633693a5f57e223dd614733b9bad54c2f8085bfbcfaa0f4f4a1",
+        "right_camera": "f190a8dd90313cc3dcb740850a28c5338b2e1f48bda05f9013404f473ab3692d"
+      },
+      "initial_pose": [
+        0.015112417750060558,
+        -0.075738325715065,
+        0.7650007605552673,
+        0.9978765845298767,
+        4.076519417139934e-06,
+        -1.6303563825204037e-05,
+        0.06513449549674988
+      ],
+      "scene": {
+        "version": "cube-v3",
+        "scene_seed": 200003,
+        "region": "right",
+        "position": [
+          0.015113297496862686,
+          -0.07573797758933419,
+          0.766
+        ],
+        "quaternion": [
+          0.9978765865471514,
+          0,
+          0,
+          0.06513307931462643
+        ],
+        "yaw_degrees": 7.468988435097406,
+        "half_size": [
+          0.025,
+          0.025,
+          0.025
+        ],
+        "boxtype": "default",
+        "oracle_grasp": "top-down"
+      },
+      "initial_success": false,
+      "plan_success": true,
+      "success": true,
+      "signals": {
+        "arm": "right",
+        "arm_match": true,
+        "lifted": true,
+        "lift_delta": 0.09828746318817139,
+        "dist_cmd_tcp": 0.13061904088308765,
+        "dist_other_tcp": 0.40061010648100825
+      },
+      "instruction": "Use the right arm to hold the block.",
+      "passed": true,
+      "oracle_info": {
+        "cluttered_table_info": [],
+        "texture_info": {
+          "wall_texture": null,
+          "table_texture": null
+        },
+        "info": {
+          "{A}": "the block",
+          "{a}": "right"
+        },
+        "arm_select_scene": {
+          "version": "cube-v3",
+          "scene_seed": 200003,
+          "region": "right",
+          "position": [
+            0.015113297496862686,
+            -0.07573797758933419,
+            0.766
+          ],
+          "quaternion": [
+            0.9978765865471514,
+            0,
+            0,
+            0.06513307931462643
+          ],
+          "yaw_degrees": 7.468988435097406,
+          "half_size": [
+            0.025,
+            0.025,
+            0.025
+          ],
+          "boxtype": "default",
+          "oracle_grasp": "top-down"
+        },
+        "mode": "right",
+        "signals": {
+          "arm_match": true,
+          "lifted": true
+        }
+      },
+      "elapsed_seconds": 4.7488264420535415
+    },
+    {
+      "seed": 400008,
+      "phase": "candidate",
+      "mode": "left",
+      "version": "cube-v3",
+      "initial_rgb": {
+        "head_camera": "346e62f6bb756ab7e6324ebde3a78f8f6e6d398ab06be0b5be598470dcfdde72",
+        "left_camera": "9913ea03a5df065c8eb18e5ee102187b8ec2bd4d8fcd5bf5225c44398ed4f204",
+        "right_camera": "f2201109a3dcfa5e0ed0daf711f742b43514e43ca9761df816c4fc07eca77377"
+      },
+      "initial_pose": [
+        -0.02060183696448803,
+        -0.07333585619926453,
+        0.7650007009506226,
+        0.9965721964836121,
+        7.512011279686703e-07,
+        -1.596817310201004e-05,
+        -0.08272837102413177
+      ],
+      "scene": {
+        "version": "cube-v3",
+        "scene_seed": 200004,
+        "region": "left",
+        "position": [
+          -0.020600932034644682,
+          -0.07333578649616125,
+          0.766
+        ],
+        "quaternion": [
+          0.9965720232750929,
+          0,
+          0,
+          -0.08272969494315699
+        ],
+        "yaw_degrees": -9.490972145605312,
+        "half_size": [
+          0.025,
+          0.025,
+          0.025
+        ],
+        "boxtype": "default",
+        "oracle_grasp": "top-down"
+      },
+      "initial_success": false,
+      "plan_success": true,
+      "success": true,
+      "signals": {
+        "arm": "left",
+        "arm_match": true,
+        "lifted": true,
+        "lift_delta": 0.09816747903823853,
+        "dist_cmd_tcp": 0.13062742268873392,
+        "dist_other_tcp": 0.4162524072602383
+      },
+      "instruction": "Use the left arm to hold the block.",
+      "passed": true,
+      "oracle_info": {
+        "cluttered_table_info": [],
+        "texture_info": {
+          "wall_texture": null,
+          "table_texture": null
+        },
+        "info": {
+          "{A}": "the block",
+          "{a}": "left"
+        },
+        "arm_select_scene": {
+          "version": "cube-v3",
+          "scene_seed": 200004,
+          "region": "left",
+          "position": [
+            -0.020600932034644682,
+            -0.07333578649616125,
+            0.766
+          ],
+          "quaternion": [
+            0.9965720232750929,
+            0,
+            0,
+            -0.08272969494315699
+          ],
+          "yaw_degrees": -9.490972145605312,
+          "half_size": [
+            0.025,
+            0.025,
+            0.025
+          ],
+          "boxtype": "default",
+          "oracle_grasp": "top-down"
+        },
+        "mode": "left",
+        "signals": {
+          "arm_match": true,
+          "lifted": true
+        }
+      },
+      "elapsed_seconds": 5.316269744071178
+    },
+    {
+      "seed": 400009,
+      "phase": "candidate",
+      "mode": "right",
+      "version": "cube-v3",
+      "initial_rgb": {
+        "head_camera": "346e62f6bb756ab7e6324ebde3a78f8f6e6d398ab06be0b5be598470dcfdde72",
+        "left_camera": "9913ea03a5df065c8eb18e5ee102187b8ec2bd4d8fcd5bf5225c44398ed4f204",
+        "right_camera": "f2201109a3dcfa5e0ed0daf711f742b43514e43ca9761df816c4fc07eca77377"
+      },
+      "initial_pose": [
+        -0.02060183696448803,
+        -0.07333585619926453,
+        0.7650007009506226,
+        0.9965721964836121,
+        7.512011279686703e-07,
+        -1.596817310201004e-05,
+        -0.08272837102413177
+      ],
+      "scene": {
+        "version": "cube-v3",
+        "scene_seed": 200004,
+        "region": "left",
+        "position": [
+          -0.020600932034644682,
+          -0.07333578649616125,
+          0.766
+        ],
+        "quaternion": [
+          0.9965720232750929,
+          0,
+          0,
+          -0.08272969494315699
+        ],
+        "yaw_degrees": -9.490972145605312,
+        "half_size": [
+          0.025,
+          0.025,
+          0.025
+        ],
+        "boxtype": "default",
+        "oracle_grasp": "top-down"
+      },
+      "initial_success": false,
+      "plan_success": true,
+      "success": true,
+      "signals": {
+        "arm": "right",
+        "arm_match": true,
+        "lifted": true,
+        "lift_delta": 0.09859174489974976,
+        "dist_cmd_tcp": 0.13058206492935276,
+        "dist_other_tcp": 0.375973483156742
+      },
+      "instruction": "Use the right arm to hold the block.",
+      "passed": true,
+      "oracle_info": {
+        "cluttered_table_info": [],
+        "texture_info": {
+          "wall_texture": null,
+          "table_texture": null
+        },
+        "info": {
+          "{A}": "the block",
+          "{a}": "right"
+        },
+        "arm_select_scene": {
+          "version": "cube-v3",
+          "scene_seed": 200004,
+          "region": "left",
+          "position": [
+            -0.020600932034644682,
+            -0.07333578649616125,
+            0.766
+          ],
+          "quaternion": [
+            0.9965720232750929,
+            0,
+            0,
+            -0.08272969494315699
+          ],
+          "yaw_degrees": -9.490972145605312,
+          "half_size": [
+            0.025,
+            0.025,
+            0.025
+          ],
+          "boxtype": "default",
+          "oracle_grasp": "top-down"
+        },
+        "mode": "right",
+        "signals": {
+          "arm_match": true,
+          "lifted": true
+        }
+      },
+      "elapsed_seconds": 3.0293415159685537
+    },
+    {
+      "seed": 400010,
+      "phase": "candidate",
+      "mode": "left",
+      "version": "cube-v3",
+      "initial_rgb": {
+        "head_camera": "35e84f5f873817fb16018d0f9c3f184a5ec54f2cbad6209b9a650e133b7e6f54",
+        "left_camera": "6e50059523f7d00c8fd672f5a911e940c13e980448ad0f1ed1b01c799e5b2e75",
+        "right_camera": "5c0d4e3f3275929323854dac958b56d5026842a6be4f0124daf717ff4dcfe9e5"
+      },
+      "initial_pose": [
+        0.005311450455337763,
+        -0.07635093480348587,
+        0.7650008201599121,
+        0.9990196824073792,
+        6.153200047265273e-07,
+        -1.6508267435710877e-05,
+        -0.044268637895584106
+      ],
+      "scene": {
+        "version": "cube-v3",
+        "scene_seed": 200005,
+        "region": "center",
+        "position": [
+          0.0053123897491334,
+          -0.07635084387473028,
+          0.766
+        ],
+        "quaternion": [
+          0.9990195999830821,
+          0,
+          0,
+          -0.044270067197179006
+        ],
+        "yaw_degrees": -5.074634517324412,
+        "half_size": [
+          0.025,
+          0.025,
+          0.025
+        ],
+        "boxtype": "default",
+        "oracle_grasp": "top-down"
+      },
+      "initial_success": false,
+      "plan_success": true,
+      "success": true,
+      "signals": {
+        "arm": "left",
+        "arm_match": true,
+        "lifted": true,
+        "lift_delta": 0.09825247526168823,
+        "dist_cmd_tcp": 0.13062189762228704,
+        "dist_other_tcp": 0.39426057347558424
+      },
+      "instruction": "Pick up the block carefully with the left arm.",
+      "passed": true,
+      "oracle_info": {
+        "cluttered_table_info": [],
+        "texture_info": {
+          "wall_texture": null,
+          "table_texture": null
+        },
+        "info": {
+          "{A}": "the block",
+          "{a}": "left"
+        },
+        "arm_select_scene": {
+          "version": "cube-v3",
+          "scene_seed": 200005,
+          "region": "center",
+          "position": [
+            0.0053123897491334,
+            -0.07635084387473028,
+            0.766
+          ],
+          "quaternion": [
+            0.9990195999830821,
+            0,
+            0,
+            -0.044270067197179006
+          ],
+          "yaw_degrees": -5.074634517324412,
+          "half_size": [
+            0.025,
+            0.025,
+            0.025
+          ],
+          "boxtype": "default",
+          "oracle_grasp": "top-down"
+        },
+        "mode": "left",
+        "signals": {
+          "arm_match": true,
+          "lifted": true
+        }
+      },
+      "elapsed_seconds": 4.246569372015074
+    },
+    {
+      "seed": 400011,
+      "phase": "candidate",
+      "mode": "right",
+      "version": "cube-v3",
+      "initial_rgb": {
+        "head_camera": "35e84f5f873817fb16018d0f9c3f184a5ec54f2cbad6209b9a650e133b7e6f54",
+        "left_camera": "6e50059523f7d00c8fd672f5a911e940c13e980448ad0f1ed1b01c799e5b2e75",
+        "right_camera": "5c0d4e3f3275929323854dac958b56d5026842a6be4f0124daf717ff4dcfe9e5"
+      },
+      "initial_pose": [
+        0.005311450455337763,
+        -0.07635093480348587,
+        0.7650008201599121,
+        0.9990196824073792,
+        6.153200047265273e-07,
+        -1.6508267435710877e-05,
+        -0.044268637895584106
+      ],
+      "scene": {
+        "version": "cube-v3",
+        "scene_seed": 200005,
+        "region": "center",
+        "position": [
+          0.0053123897491334,
+          -0.07635084387473028,
+          0.766
+        ],
+        "quaternion": [
+          0.9990195999830821,
+          0,
+          0,
+          -0.044270067197179006
+        ],
+        "yaw_degrees": -5.074634517324412,
+        "half_size": [
+          0.025,
+          0.025,
+          0.025
+        ],
+        "boxtype": "default",
+        "oracle_grasp": "top-down"
+      },
+      "initial_success": false,
+      "plan_success": true,
+      "success": true,
+      "signals": {
+        "arm": "right",
+        "arm_match": true,
+        "lifted": true,
+        "lift_delta": 0.09830403327941895,
+        "dist_cmd_tcp": 0.13060256620970462,
+        "dist_other_tcp": 0.39358547514957426
+      },
+      "instruction": "Pick up the block carefully with the right arm.",
+      "passed": true,
+      "oracle_info": {
+        "cluttered_table_info": [],
+        "texture_info": {
+          "wall_texture": null,
+          "table_texture": null
+        },
+        "info": {
+          "{A}": "the block",
+          "{a}": "right"
+        },
+        "arm_select_scene": {
+          "version": "cube-v3",
+          "scene_seed": 200005,
+          "region": "center",
+          "position": [
+            0.0053123897491334,
+            -0.07635084387473028,
+            0.766
+          ],
+          "quaternion": [
+            0.9990195999830821,
+            0,
+            0,
+            -0.044270067197179006
+          ],
+          "yaw_degrees": -5.074634517324412,
+          "half_size": [
+            0.025,
+            0.025,
+            0.025
+          ],
+          "boxtype": "default",
+          "oracle_grasp": "top-down"
+        },
+        "mode": "right",
+        "signals": {
+          "arm_match": true,
+          "lifted": true
+        }
+      },
+      "elapsed_seconds": 2.6253522330662236
+    },
+    {
+      "seed": 400012,
+      "phase": "candidate",
+      "mode": "left",
+      "version": "cube-v3",
+      "initial_rgb": {
+        "head_camera": "701b01387fdc23e63ff1429ead3818915d3226bf5d2d112e978aa73935fab1ba",
+        "left_camera": "08d3a52ccc5f0a066a0ac8633456eb2ea61666367d84700082991d46266c062a",
+        "right_camera": "69f6edee54665314b45a0c82d1ba7a65e574fe3cbd0a53c25b3641e6ee4e425b"
+      },
+      "initial_pose": [
+        0.033540986478328705,
+        -0.07999622821807861,
+        0.765000581741333,
+        0.9961197376251221,
+        1.5680153637731564e-06,
+        -1.641114977246616e-05,
+        -0.08800823241472244
+      ],
+      "scene": {
+        "version": "cube-v3",
+        "scene_seed": 200006,
+        "region": "right",
+        "position": [
+          0.033541939142301476,
+          -0.0799961251950321,
+          0.766
+        ],
+        "quaternion": [
+          0.9961196241540617,
+          0,
+          0,
+          -0.08800962660510916
+        ],
+        "yaw_degrees": -10.098225340619058,
+        "half_size": [
+          0.025,
+          0.025,
+          0.025
+        ],
+        "boxtype": "default",
+        "oracle_grasp": "top-down"
+      },
+      "initial_success": false,
+      "plan_success": true,
+      "success": true,
+      "signals": {
+        "arm": "left",
+        "arm_match": true,
+        "lifted": true,
+        "lift_delta": 0.09847897291183472,
+        "dist_cmd_tcp": 0.1306488843283279,
+        "dist_other_tcp": 0.3708211647264313
+      },
+      "instruction": "Collect the block using the left arm.",
+      "passed": true,
+      "oracle_info": {
+        "cluttered_table_info": [],
+        "texture_info": {
+          "wall_texture": null,
+          "table_texture": null
+        },
+        "info": {
+          "{A}": "the block",
+          "{a}": "left"
+        },
+        "arm_select_scene": {
+          "version": "cube-v3",
+          "scene_seed": 200006,
+          "region": "right",
+          "position": [
+            0.033541939142301476,
+            -0.0799961251950321,
+            0.766
+          ],
+          "quaternion": [
+            0.9961196241540617,
+            0,
+            0,
+            -0.08800962660510916
+          ],
+          "yaw_degrees": -10.098225340619058,
+          "half_size": [
+            0.025,
+            0.025,
+            0.025
+          ],
+          "boxtype": "default",
+          "oracle_grasp": "top-down"
+        },
+        "mode": "left",
+        "signals": {
+          "arm_match": true,
+          "lifted": true
+        }
+      },
+      "elapsed_seconds": 5.405666057020426
+    },
+    {
+      "seed": 400013,
+      "phase": "candidate",
+      "mode": "right",
+      "version": "cube-v3",
+      "initial_rgb": {
+        "head_camera": "701b01387fdc23e63ff1429ead3818915d3226bf5d2d112e978aa73935fab1ba",
+        "left_camera": "08d3a52ccc5f0a066a0ac8633456eb2ea61666367d84700082991d46266c062a",
+        "right_camera": "69f6edee54665314b45a0c82d1ba7a65e574fe3cbd0a53c25b3641e6ee4e425b"
+      },
+      "initial_pose": [
+        0.033540986478328705,
+        -0.07999622821807861,
+        0.765000581741333,
+        0.9961197376251221,
+        1.5680153637731564e-06,
+        -1.641114977246616e-05,
+        -0.08800823241472244
+      ],
+      "scene": {
+        "version": "cube-v3",
+        "scene_seed": 200006,
+        "region": "right",
+        "position": [
+          0.033541939142301476,
+          -0.0799961251950321,
+          0.766
+        ],
+        "quaternion": [
+          0.9961196241540617,
+          0,
+          0,
+          -0.08800962660510916
+        ],
+        "yaw_degrees": -10.098225340619058,
+        "half_size": [
+          0.025,
+          0.025,
+          0.025
+        ],
+        "boxtype": "default",
+        "oracle_grasp": "top-down"
+      },
+      "initial_success": false,
+      "plan_success": true,
+      "success": true,
+      "signals": {
+        "arm": "right",
+        "arm_match": true,
+        "lifted": true,
+        "lift_delta": 0.09825050830841064,
+        "dist_cmd_tcp": 0.1306140668847851,
+        "dist_other_tcp": 0.41362626737122715
+      },
+      "instruction": "Collect the block using the right arm.",
+      "passed": true,
+      "oracle_info": {
+        "cluttered_table_info": [],
+        "texture_info": {
+          "wall_texture": null,
+          "table_texture": null
+        },
+        "info": {
+          "{A}": "the block",
+          "{a}": "right"
+        },
+        "arm_select_scene": {
+          "version": "cube-v3",
+          "scene_seed": 200006,
+          "region": "right",
+          "position": [
+            0.033541939142301476,
+            -0.0799961251950321,
+            0.766
+          ],
+          "quaternion": [
+            0.9961196241540617,
+            0,
+            0,
+            -0.08800962660510916
+          ],
+          "yaw_degrees": -10.098225340619058,
+          "half_size": [
+            0.025,
+            0.025,
+            0.025
+          ],
+          "boxtype": "default",
+          "oracle_grasp": "top-down"
+        },
+        "mode": "right",
+        "signals": {
+          "arm_match": true,
+          "lifted": true
+        }
+      },
+      "elapsed_seconds": 2.259229921968654
+    },
+    {
+      "seed": 400014,
+      "phase": "candidate",
+      "mode": "left",
+      "version": "cube-v3",
+      "initial_rgb": {
+        "head_camera": "607f908b8475c5e32795c5764fee6007b048f3d3470b7c5af4441cf0d817e67b",
+        "left_camera": "e375b1e72b7f33bf22597772994cf4ee1010b66a3e712f5eaa84dc792ec967a1",
+        "right_camera": "d2676a9cf0c82c140cfcafe6282b4747aef6c8dd17d3a4a1e390ff80b4ba7b32"
+      },
+      "initial_pose": [
+        -0.02411586605012417,
+        -0.06745307892560959,
+        0.7650007009506226,
+        0.9940617680549622,
+        2.821726354795828e-07,
+        -1.5982283002813347e-05,
+        -0.10881689190864563
+      ],
+      "scene": {
+        "version": "cube-v3",
+        "scene_seed": 200007,
+        "region": "left",
+        "position": [
+          -0.024114966100930772,
+          -0.06745306310747695,
+          0.766
+        ],
+        "quaternion": [
+          0.9940616664581425,
+          0,
+          0,
+          -0.10881821207160444
+        ],
+        "yaw_degrees": -12.494390329091358,
+        "half_size": [
+          0.025,
+          0.025,
+          0.025
+        ],
+        "boxtype": "default",
+        "oracle_grasp": "top-down"
+      },
+      "initial_success": false,
+      "plan_success": true,
+      "success": true,
+      "signals": {
+        "arm": "left",
+        "arm_match": true,
+        "lifted": true,
+        "lift_delta": 0.09820324182510376,
+        "dist_cmd_tcp": 0.1306192820188621,
+        "dist_other_tcp": 0.422282631563124
+      },
+      "instruction": "Use the left arm to hold the block.",
+      "passed": true,
+      "oracle_info": {
+        "cluttered_table_info": [],
+        "texture_info": {
+          "wall_texture": null,
+          "table_texture": null
+        },
+        "info": {
+          "{A}": "the block",
+          "{a}": "left"
+        },
+        "arm_select_scene": {
+          "version": "cube-v3",
+          "scene_seed": 200007,
+          "region": "left",
+          "position": [
+            -0.024114966100930772,
+            -0.06745306310747695,
+            0.766
+          ],
+          "quaternion": [
+            0.9940616664581425,
+            0,
+            0,
+            -0.10881821207160444
+          ],
+          "yaw_degrees": -12.494390329091358,
+          "half_size": [
+            0.025,
+            0.025,
+            0.025
+          ],
+          "boxtype": "default",
+          "oracle_grasp": "top-down"
+        },
+        "mode": "left",
+        "signals": {
+          "arm_match": true,
+          "lifted": true
+        }
+      },
+      "elapsed_seconds": 5.5263539280276746
+    },
+    {
+      "seed": 400015,
+      "phase": "candidate",
+      "mode": "right",
+      "version": "cube-v3",
+      "initial_rgb": {
+        "head_camera": "607f908b8475c5e32795c5764fee6007b048f3d3470b7c5af4441cf0d817e67b",
+        "left_camera": "e375b1e72b7f33bf22597772994cf4ee1010b66a3e712f5eaa84dc792ec967a1",
+        "right_camera": "d2676a9cf0c82c140cfcafe6282b4747aef6c8dd17d3a4a1e390ff80b4ba7b32"
+      },
+      "initial_pose": [
+        -0.02411586605012417,
+        -0.06745307892560959,
+        0.7650007009506226,
+        0.9940617680549622,
+        2.821726354795828e-07,
+        -1.5982283002813347e-05,
+        -0.10881689190864563
+      ],
+      "scene": {
+        "version": "cube-v3",
+        "scene_seed": 200007,
+        "region": "left",
+        "position": [
+          -0.024114966100930772,
+          -0.06745306310747695,
+          0.766
+        ],
+        "quaternion": [
+          0.9940616664581425,
+          0,
+          0,
+          -0.10881821207160444
+        ],
+        "yaw_degrees": -12.494390329091358,
+        "half_size": [
+          0.025,
+          0.025,
+          0.025
+        ],
+        "boxtype": "default",
+        "oracle_grasp": "top-down"
+      },
+      "initial_success": false,
+      "plan_success": true,
+      "success": true,
+      "signals": {
+        "arm": "right",
+        "arm_match": true,
+        "lifted": true,
+        "lift_delta": 0.09907609224319458,
+        "dist_cmd_tcp": 0.13059142371598675,
+        "dist_other_tcp": 0.37693554470010304
+      },
+      "instruction": "Use the right arm to hold the block.",
+      "passed": true,
+      "oracle_info": {
+        "cluttered_table_info": [],
+        "texture_info": {
+          "wall_texture": null,
+          "table_texture": null
+        },
+        "info": {
+          "{A}": "the block",
+          "{a}": "right"
+        },
+        "arm_select_scene": {
+          "version": "cube-v3",
+          "scene_seed": 200007,
+          "region": "left",
+          "position": [
+            -0.024114966100930772,
+            -0.06745306310747695,
+            0.766
+          ],
+          "quaternion": [
+            0.9940616664581425,
+            0,
+            0,
+            -0.10881821207160444
+          ],
+          "yaw_degrees": -12.494390329091358,
+          "half_size": [
+            0.025,
+            0.025,
+            0.025
+          ],
+          "boxtype": "default",
+          "oracle_grasp": "top-down"
+        },
+        "mode": "right",
+        "signals": {
+          "arm_match": true,
+          "lifted": true
+        }
+      },
+      "elapsed_seconds": 2.5658905809978023
+    },
+    {
+      "seed": 400016,
+      "phase": "candidate",
+      "mode": "left",
+      "version": "cube-v3",
+      "initial_rgb": {
+        "head_camera": "b9f172e4368f385a58d478399340003a372ad72c4fbc37f09d7dcccb0b4730d2",
+        "left_camera": "49e14a84386fe61759ee82ba1890306bcec6ba820fb5c276100e8ad1b7d19125",
+        "right_camera": "21a63626373e26d56799a4fa54f5652b4222904d0b6d4e10a029435712b5dcc6"
+      },
+      "initial_pose": [
+        0.012334889732301235,
+        -0.0722607970237732,
+        0.7650007605552673,
+        0.9987914562225342,
+        3.7978859381837538e-06,
+        -1.639585752855055e-05,
+        0.04915032535791397
+      ],
+      "scene": {
+        "version": "cube-v3",
+        "scene_seed": 200008,
+        "region": "center",
+        "position": [
+          0.012335778177406566,
+          -0.07226047089474315,
+          0.766
+        ],
+        "quaternion": [
+          0.9987914614229778,
+          0,
+          0,
+          0.049148922557388855
+        ],
+        "yaw_degrees": 5.634321608239601,
+        "half_size": [
+          0.025,
+          0.025,
+          0.025
+        ],
+        "boxtype": "default",
+        "oracle_grasp": "top-down"
+      },
+      "initial_success": false,
+      "plan_success": true,
+      "success": true,
+      "signals": {
+        "arm": "left",
+        "arm_match": true,
+        "lifted": true,
+        "lift_delta": 0.09843528270721436,
+        "dist_cmd_tcp": 0.1305897467099679,
+        "dist_other_tcp": 0.39130394833601817
+      },
+      "instruction": "Scoop up the block with the left arm.",
+      "passed": true,
+      "oracle_info": {
+        "cluttered_table_info": [],
+        "texture_info": {
+          "wall_texture": null,
+          "table_texture": null
+        },
+        "info": {
+          "{A}": "the block",
+          "{a}": "left"
+        },
+        "arm_select_scene": {
+          "version": "cube-v3",
+          "scene_seed": 200008,
+          "region": "center",
+          "position": [
+            0.012335778177406566,
+            -0.07226047089474315,
+            0.766
+          ],
+          "quaternion": [
+            0.9987914614229778,
+            0,
+            0,
+            0.049148922557388855
+          ],
+          "yaw_degrees": 5.634321608239601,
+          "half_size": [
+            0.025,
+            0.025,
+            0.025
+          ],
+          "boxtype": "default",
+          "oracle_grasp": "top-down"
+        },
+        "mode": "left",
+        "signals": {
+          "arm_match": true,
+          "lifted": true
+        }
+      },
+      "elapsed_seconds": 2.2984486899804324
+    },
+    {
+      "seed": 400017,
+      "phase": "candidate",
+      "mode": "right",
+      "version": "cube-v3",
+      "initial_rgb": {
+        "head_camera": "b9f172e4368f385a58d478399340003a372ad72c4fbc37f09d7dcccb0b4730d2",
+        "left_camera": "49e14a84386fe61759ee82ba1890306bcec6ba820fb5c276100e8ad1b7d19125",
+        "right_camera": "21a63626373e26d56799a4fa54f5652b4222904d0b6d4e10a029435712b5dcc6"
+      },
+      "initial_pose": [
+        0.012334889732301235,
+        -0.0722607970237732,
+        0.7650007605552673,
+        0.9987914562225342,
+        3.7978859381837538e-06,
+        -1.639585752855055e-05,
+        0.04915032535791397
+      ],
+      "scene": {
+        "version": "cube-v3",
+        "scene_seed": 200008,
+        "region": "center",
+        "position": [
+          0.012335778177406566,
+          -0.07226047089474315,
+          0.766
+        ],
+        "quaternion": [
+          0.9987914614229778,
+          0,
+          0,
+          0.049148922557388855
+        ],
+        "yaw_degrees": 5.634321608239601,
+        "half_size": [
+          0.025,
+          0.025,
+          0.025
+        ],
+        "boxtype": "default",
+        "oracle_grasp": "top-down"
+      },
+      "initial_success": false,
+      "plan_success": true,
+      "success": true,
+      "signals": {
+        "arm": "right",
+        "arm_match": true,
+        "lifted": true,
+        "lift_delta": 0.09830421209335327,
+        "dist_cmd_tcp": 0.13062908972665255,
+        "dist_other_tcp": 0.40035118118294144
+      },
+      "instruction": "Scoop up the block with the right arm.",
+      "passed": true,
+      "oracle_info": {
+        "cluttered_table_info": [],
+        "texture_info": {
+          "wall_texture": null,
+          "table_texture": null
+        },
+        "info": {
+          "{A}": "the block",
+          "{a}": "right"
+        },
+        "arm_select_scene": {
+          "version": "cube-v3",
+          "scene_seed": 200008,
+          "region": "center",
+          "position": [
+            0.012335778177406566,
+            -0.07226047089474315,
+            0.766
+          ],
+          "quaternion": [
+            0.9987914614229778,
+            0,
+            0,
+            0.049148922557388855
+          ],
+          "yaw_degrees": 5.634321608239601,
+          "half_size": [
+            0.025,
+            0.025,
+            0.025
+          ],
+          "boxtype": "default",
+          "oracle_grasp": "top-down"
+        },
+        "mode": "right",
+        "signals": {
+          "arm_match": true,
+          "lifted": true
+        }
+      },
+      "elapsed_seconds": 4.460217137937434
+    },
+    {
+      "seed": 400018,
+      "phase": "candidate",
+      "mode": "left",
+      "version": "cube-v3",
+      "initial_rgb": {
+        "head_camera": "365cab796c7778bd01e2f672f2ab5ab9bfdc83145c516f9704e174f7d41cc2f8",
+        "left_camera": "05feba533dd3b0b0a4f97060f163a2a25df38f439d9f935ddddfbef1573e676b",
+        "right_camera": "b163f0cc2b94ad6f46347d19341676c8a675b6d850d16cc9cc84f12915d338fe"
+      },
+      "initial_pose": [
+        0.03800193965435028,
+        -0.07803426682949066,
+        0.7650007009506226,
+        0.9975641369819641,
+        1.6373057860619156e-06,
+        -1.6741378203732893e-05,
+        -0.0697552040219307
+      ],
+      "scene": {
+        "version": "cube-v3",
+        "scene_seed": 200009,
+        "region": "right",
+        "position": [
+          0.038002885499857544,
+          -0.07803414049596001,
+          0.766
+        ],
+        "quaternion": [
+          0.9975640403865409,
+          0,
+          0,
+          -0.06975661493851121
+        ],
+        "yaw_degrees": -8.000016219194029,
+        "half_size": [
+          0.025,
+          0.025,
+          0.025
+        ],
+        "boxtype": "default",
+        "oracle_grasp": "top-down"
+      },
+      "initial_success": false,
+      "plan_success": true,
+      "success": true,
+      "signals": {
+        "arm": "left",
+        "arm_match": true,
+        "lifted": true,
+        "lift_delta": 0.09861046075820923,
+        "dist_cmd_tcp": 0.13062047699329163,
+        "dist_other_tcp": 0.3687918605781679
+      },
+      "instruction": "Retrieve the block with the left arm.",
+      "passed": true,
+      "oracle_info": {
+        "cluttered_table_info": [],
+        "texture_info": {
+          "wall_texture": null,
+          "table_texture": null
+        },
+        "info": {
+          "{A}": "the block",
+          "{a}": "left"
+        },
+        "arm_select_scene": {
+          "version": "cube-v3",
+          "scene_seed": 200009,
+          "region": "right",
+          "position": [
+            0.038002885499857544,
+            -0.07803414049596001,
+            0.766
+          ],
+          "quaternion": [
+            0.9975640403865409,
+            0,
+            0,
+            -0.06975661493851121
+          ],
+          "yaw_degrees": -8.000016219194029,
+          "half_size": [
+            0.025,
+            0.025,
+            0.025
+          ],
+          "boxtype": "default",
+          "oracle_grasp": "top-down"
+        },
+        "mode": "left",
+        "signals": {
+          "arm_match": true,
+          "lifted": true
+        }
+      },
+      "elapsed_seconds": 5.445413763052784
+    },
+    {
+      "seed": 400019,
+      "phase": "candidate",
+      "mode": "right",
+      "version": "cube-v3",
+      "initial_rgb": {
+        "head_camera": "365cab796c7778bd01e2f672f2ab5ab9bfdc83145c516f9704e174f7d41cc2f8",
+        "left_camera": "05feba533dd3b0b0a4f97060f163a2a25df38f439d9f935ddddfbef1573e676b",
+        "right_camera": "b163f0cc2b94ad6f46347d19341676c8a675b6d850d16cc9cc84f12915d338fe"
+      },
+      "initial_pose": [
+        0.03800193965435028,
+        -0.07803426682949066,
+        0.7650007009506226,
+        0.9975641369819641,
+        1.6373057860619156e-06,
+        -1.6741378203732893e-05,
+        -0.0697552040219307
+      ],
+      "scene": {
+        "version": "cube-v3",
+        "scene_seed": 200009,
+        "region": "right",
+        "position": [
+          0.038002885499857544,
+          -0.07803414049596001,
+          0.766
+        ],
+        "quaternion": [
+          0.9975640403865409,
+          0,
+          0,
+          -0.06975661493851121
+        ],
+        "yaw_degrees": -8.000016219194029,
+        "half_size": [
+          0.025,
+          0.025,
+          0.025
+        ],
+        "boxtype": "default",
+        "oracle_grasp": "top-down"
+      },
+      "initial_success": false,
+      "plan_success": true,
+      "success": true,
+      "signals": {
+        "arm": "right",
+        "arm_match": true,
+        "lifted": true,
+        "lift_delta": 0.09832286834716797,
+        "dist_cmd_tcp": 0.13060354419910486,
+        "dist_other_tcp": 0.4184146063161787
+      },
+      "instruction": "Retrieve the block with the right arm.",
+      "passed": true,
+      "oracle_info": {
+        "cluttered_table_info": [],
+        "texture_info": {
+          "wall_texture": null,
+          "table_texture": null
+        },
+        "info": {
+          "{A}": "the block",
+          "{a}": "right"
+        },
+        "arm_select_scene": {
+          "version": "cube-v3",
+          "scene_seed": 200009,
+          "region": "right",
+          "position": [
+            0.038002885499857544,
+            -0.07803414049596001,
+            0.766
+          ],
+          "quaternion": [
+            0.9975640403865409,
+            0,
+            0,
+            -0.06975661493851121
+          ],
+          "yaw_degrees": -8.000016219194029,
+          "half_size": [
+            0.025,
+            0.025,
+            0.025
+          ],
+          "boxtype": "default",
+          "oracle_grasp": "top-down"
+        },
+        "mode": "right",
+        "signals": {
+          "arm_match": true,
+          "lifted": true
+        }
+      },
+      "elapsed_seconds": 2.719534131931141
+    },
+    {
+      "seed": 400020,
+      "phase": "candidate",
+      "mode": "left",
+      "version": "cube-v3",
+      "initial_rgb": {
+        "head_camera": "8e2cbb266e1efa70edd1f1e84f988deda11b049d9e38a9c0a9e427dddba4aefe",
+        "left_camera": "45220adbef1e7758603cef18559af88b402eb9bc6caa988fa7270804f5933c6f",
+        "right_camera": "71e9e7ad244a4489fccaaed5defc4397cdb9f1e40db9ee60a162d0c0e420847d"
+      },
+      "initial_pose": [
+        -0.03803271800279617,
+        -0.062073715031147,
+        0.7650007605552673,
+        0.9970248341560364,
+        4.281142082618317e-06,
+        -1.6243982827290893e-05,
+        0.0770820900797844
+      ],
+      "scene": {
+        "version": "cube-v3",
+        "scene_seed": 200010,
+        "region": "left",
+        "position": [
+          -0.03803184767611912,
+          -0.062073342987659486,
+          0.766
+        ],
+        "quaternion": [
+          0.9970248601987589,
+          0,
+          0,
+          0.07708065999746752
+        ],
+        "yaw_degrees": 8.841563035599691,
+        "half_size": [
+          0.025,
+          0.025,
+          0.025
+        ],
+        "boxtype": "default",
+        "oracle_grasp": "top-down"
+      },
+      "initial_success": false,
+      "plan_success": true,
+      "success": true,
+      "signals": {
+        "arm": "left",
+        "arm_match": true,
+        "lifted": true,
+        "lift_delta": 0.09833168983459473,
+        "dist_cmd_tcp": 0.13061570238728706,
+        "dist_other_tcp": 0.43634759006800594
+      },
+      "instruction": "Have the left arm take the block.",
+      "passed": true,
+      "oracle_info": {
+        "cluttered_table_info": [],
+        "texture_info": {
+          "wall_texture": null,
+          "table_texture": null
+        },
+        "info": {
+          "{A}": "the block",
+          "{a}": "left"
+        },
+        "arm_select_scene": {
+          "version": "cube-v3",
+          "scene_seed": 200010,
+          "region": "left",
+          "position": [
+            -0.03803184767611912,
+            -0.062073342987659486,
+            0.766
+          ],
+          "quaternion": [
+            0.9970248601987589,
+            0,
+            0,
+            0.07708065999746752
+          ],
+          "yaw_degrees": 8.841563035599691,
+          "half_size": [
+            0.025,
+            0.025,
+            0.025
+          ],
+          "boxtype": "default",
+          "oracle_grasp": "top-down"
+        },
+        "mode": "left",
+        "signals": {
+          "arm_match": true,
+          "lifted": true
+        }
+      },
+      "elapsed_seconds": 2.038334753946401
+    },
+    {
+      "seed": 400021,
+      "phase": "candidate",
+      "mode": "right",
+      "version": "cube-v3",
+      "initial_rgb": {
+        "head_camera": "8e2cbb266e1efa70edd1f1e84f988deda11b049d9e38a9c0a9e427dddba4aefe",
+        "left_camera": "45220adbef1e7758603cef18559af88b402eb9bc6caa988fa7270804f5933c6f",
+        "right_camera": "71e9e7ad244a4489fccaaed5defc4397cdb9f1e40db9ee60a162d0c0e420847d"
+      },
+      "initial_pose": [
+        -0.03803271800279617,
+        -0.062073715031147,
+        0.7650007605552673,
+        0.9970248341560364,
+        4.281142082618317e-06,
+        -1.6243982827290893e-05,
+        0.0770820900797844
+      ],
+      "scene": {
+        "version": "cube-v3",
+        "scene_seed": 200010,
+        "region": "left",
+        "position": [
+          -0.03803184767611912,
+          -0.062073342987659486,
+          0.766
+        ],
+        "quaternion": [
+          0.9970248601987589,
+          0,
+          0,
+          0.07708065999746752
+        ],
+        "yaw_degrees": 8.841563035599691,
+        "half_size": [
+          0.025,
+          0.025,
+          0.025
+        ],
+        "boxtype": "default",
+        "oracle_grasp": "top-down"
+      },
+      "initial_success": false,
+      "plan_success": true,
+      "success": true,
+      "signals": {
+        "arm": "right",
+        "arm_match": true,
+        "lifted": true,
+        "lift_delta": 0.10192263126373291,
+        "dist_cmd_tcp": 0.1305657542049442,
+        "dist_other_tcp": 0.36927210855865206
+      },
+      "instruction": "Have the right arm take the block.",
+      "passed": true,
+      "oracle_info": {
+        "cluttered_table_info": [],
+        "texture_info": {
+          "wall_texture": null,
+          "table_texture": null
+        },
+        "info": {
+          "{A}": "the block",
+          "{a}": "right"
+        },
+        "arm_select_scene": {
+          "version": "cube-v3",
+          "scene_seed": 200010,
+          "region": "left",
+          "position": [
+            -0.03803184767611912,
+            -0.062073342987659486,
+            0.766
+          ],
+          "quaternion": [
+            0.9970248601987589,
+            0,
+            0,
+            0.07708065999746752
+          ],
+          "yaw_degrees": 8.841563035599691,
+          "half_size": [
+            0.025,
+            0.025,
+            0.025
+          ],
+          "boxtype": "default",
+          "oracle_grasp": "top-down"
+        },
+        "mode": "right",
+        "signals": {
+          "arm_match": true,
+          "lifted": true
+        }
+      },
+      "elapsed_seconds": 4.66038868308533
+    },
+    {
+      "seed": 400022,
+      "phase": "candidate",
+      "mode": "left",
+      "version": "cube-v3",
+      "initial_rgb": {
+        "head_camera": "5e25387fc600ab21336c3370b3986be0ae777acfea3b860b03f585b9fbdae2a0",
+        "left_camera": "d99dd8bcf9ab28fca3def1dd1533e1ceeac9359ce67ef2c76c4d9350b97ca1f2",
+        "right_camera": "0ffd7fbc5341be313457b15eb86c37ace1721a0af5ffc00a906e20c952cae1fa"
+      },
+      "initial_pose": [
+        0.004873474594205618,
+        -0.07886379957199097,
+        0.7650007605552673,
+        0.998397707939148,
+        1.1356804634488071e-06,
+        -1.586522012075875e-05,
+        -0.056587137281894684
+      ],
+      "scene": {
+        "version": "cube-v3",
+        "scene_seed": 200011,
+        "region": "center",
+        "position": [
+          0.004874371712774673,
+          -0.07886371378742618,
+          0.766
+        ],
+        "quaternion": [
+          0.9983975878857383,
+          0,
+          0,
+          -0.05658848384556223
+        ],
+        "yaw_degrees": -6.488028455606652,
+        "half_size": [
+          0.025,
+          0.025,
+          0.025
+        ],
+        "boxtype": "default",
+        "oracle_grasp": "top-down"
+      },
+      "initial_success": false,
+      "plan_success": true,
+      "success": true,
+      "signals": {
+        "arm": "left",
+        "arm_match": true,
+        "lifted": true,
+        "lift_delta": 0.09826040267944336,
+        "dist_cmd_tcp": 0.1306232963110675,
+        "dist_other_tcp": 0.393215049666919
+      },
+      "instruction": "Have the left arm take the block.",
+      "passed": true,
+      "oracle_info": {
+        "cluttered_table_info": [],
+        "texture_info": {
+          "wall_texture": null,
+          "table_texture": null
+        },
+        "info": {
+          "{A}": "the block",
+          "{a}": "left"
+        },
+        "arm_select_scene": {
+          "version": "cube-v3",
+          "scene_seed": 200011,
+          "region": "center",
+          "position": [
+            0.004874371712774673,
+            -0.07886371378742618,
+            0.766
+          ],
+          "quaternion": [
+            0.9983975878857383,
+            0,
+            0,
+            -0.05658848384556223
+          ],
+          "yaw_degrees": -6.488028455606652,
+          "half_size": [
+            0.025,
+            0.025,
+            0.025
+          ],
+          "boxtype": "default",
+          "oracle_grasp": "top-down"
+        },
+        "mode": "left",
+        "signals": {
+          "arm_match": true,
+          "lifted": true
+        }
+      },
+      "elapsed_seconds": 5.606053741066717
+    },
+    {
+      "seed": 400023,
+      "phase": "candidate",
+      "mode": "right",
+      "version": "cube-v3",
+      "initial_rgb": {
+        "head_camera": "5e25387fc600ab21336c3370b3986be0ae777acfea3b860b03f585b9fbdae2a0",
+        "left_camera": "d99dd8bcf9ab28fca3def1dd1533e1ceeac9359ce67ef2c76c4d9350b97ca1f2",
+        "right_camera": "0ffd7fbc5341be313457b15eb86c37ace1721a0af5ffc00a906e20c952cae1fa"
+      },
+      "initial_pose": [
+        0.004873474594205618,
+        -0.07886379957199097,
+        0.7650007605552673,
+        0.998397707939148,
+        1.1356804634488071e-06,
+        -1.586522012075875e-05,
+        -0.056587137281894684
+      ],
+      "scene": {
+        "version": "cube-v3",
+        "scene_seed": 200011,
+        "region": "center",
+        "position": [
+          0.004874371712774673,
+          -0.07886371378742618,
+          0.766
+        ],
+        "quaternion": [
+          0.9983975878857383,
+          0,
+          0,
+          -0.05658848384556223
+        ],
+        "yaw_degrees": -6.488028455606652,
+        "half_size": [
+          0.025,
+          0.025,
+          0.025
+        ],
+        "boxtype": "default",
+        "oracle_grasp": "top-down"
+      },
+      "initial_success": false,
+      "plan_success": true,
+      "success": true,
+      "signals": {
+        "arm": "right",
+        "arm_match": true,
+        "lifted": true,
+        "lift_delta": 0.0982934832572937,
+        "dist_cmd_tcp": 0.1306151132146566,
+        "dist_other_tcp": 0.39187510824458793
+      },
+      "instruction": "Have the right arm take the block.",
+      "passed": true,
+      "oracle_info": {
+        "cluttered_table_info": [],
+        "texture_info": {
+          "wall_texture": null,
+          "table_texture": null
+        },
+        "info": {
+          "{A}": "the block",
+          "{a}": "right"
+        },
+        "arm_select_scene": {
+          "version": "cube-v3",
+          "scene_seed": 200011,
+          "region": "center",
+          "position": [
+            0.004874371712774673,
+            -0.07886371378742618,
+            0.766
+          ],
+          "quaternion": [
+            0.9983975878857383,
+            0,
+            0,
+            -0.05658848384556223
+          ],
+          "yaw_degrees": -6.488028455606652,
+          "half_size": [
+            0.025,
+            0.025,
+            0.025
+          ],
+          "boxtype": "default",
+          "oracle_grasp": "top-down"
+        },
+        "mode": "right",
+        "signals": {
+          "arm_match": true,
+          "lifted": true
+        }
+      },
+      "elapsed_seconds": 2.7888421670068055
+    },
+    {
+      "seed": 400000,
+      "phase": "repeat",
+      "mode": "left",
+      "version": "cube-v3",
+      "initial_rgb": {
+        "head_camera": "75f23f9b0c0a7277e3ccaf892637a472dc5cec9dc09ab6a91d3d69217f9b5f26",
+        "left_camera": "9e1e6260c6891d30a3daee7173fd09f1d6b4d5d4fd79295edb7f5abc6158d54e",
+        "right_camera": "c300bc75e48d4871b217d5b3d063d3b7fe24bbccba30da0a2ee570b29a2af45d"
+      },
+      "initial_pose": [
+        0.03310072794556618,
+        -0.07272133231163025,
+        0.7650007605552673,
+        0.99815833568573,
+        1.8070185205942835e-06,
+        -1.680423883954063e-05,
+        -0.06066253408789635
+      ],
+      "scene": {
+        "version": "cube-v3",
+        "scene_seed": 200000,
+        "region": "right",
+        "position": [
+          0.0331016795001038,
+          -0.0727212019235501,
+          0.766
+        ],
+        "quaternion": [
+          0.9981582454557403,
+          0,
+          0,
+          -0.060663968125388615
+        ],
+        "yaw_degrees": -6.955849531252075,
+        "half_size": [
+          0.025,
+          0.025,
+          0.025
+        ],
+        "boxtype": "default",
+        "oracle_grasp": "top-down"
+      },
+      "initial_success": false,
+      "plan_success": true,
+      "success": true,
+      "signals": {
+        "arm": "left",
+        "arm_match": true,
+        "lifted": true,
+        "lift_delta": 0.09869694709777832,
+        "dist_cmd_tcp": 0.13061975868686532,
+        "dist_other_tcp": 0.37573360849655757
+      },
+      "instruction": "Use the left arm to hold the block.",
+      "passed": true,
+      "oracle_info": {
+        "cluttered_table_info": [],
+        "texture_info": {
+          "wall_texture": null,
+          "table_texture": null
+        },
+        "info": {
+          "{A}": "the block",
+          "{a}": "left"
+        },
+        "arm_select_scene": {
+          "version": "cube-v3",
+          "scene_seed": 200000,
+          "region": "right",
+          "position": [
+            0.0331016795001038,
+            -0.0727212019235501,
+            0.766
+          ],
+          "quaternion": [
+            0.9981582454557403,
+            0,
+            0,
+            -0.060663968125388615
+          ],
+          "yaw_degrees": -6.955849531252075,
+          "half_size": [
+            0.025,
+            0.025,
+            0.025
+          ],
+          "boxtype": "default",
+          "oracle_grasp": "top-down"
+        },
+        "mode": "left",
+        "signals": {
+          "arm_match": true,
+          "lifted": true
+        }
+      },
+      "elapsed_seconds": 5.480420661973767
+    },
+    {
+      "seed": 400000,
+      "phase": "wrong-arm",
+      "mode": "left",
+      "version": "cube-v3",
+      "initial_rgb": {
+        "head_camera": "75f23f9b0c0a7277e3ccaf892637a472dc5cec9dc09ab6a91d3d69217f9b5f26",
+        "left_camera": "9e1e6260c6891d30a3daee7173fd09f1d6b4d5d4fd79295edb7f5abc6158d54e",
+        "right_camera": "c300bc75e48d4871b217d5b3d063d3b7fe24bbccba30da0a2ee570b29a2af45d"
+      },
+      "initial_pose": [
+        0.03310072794556618,
+        -0.07272133231163025,
+        0.7650007605552673,
+        0.99815833568573,
+        1.8070185205942835e-06,
+        -1.680423883954063e-05,
+        -0.06066253408789635
+      ],
+      "scene": {
+        "version": "cube-v3",
+        "scene_seed": 200000,
+        "region": "right",
+        "position": [
+          0.0331016795001038,
+          -0.0727212019235501,
+          0.766
+        ],
+        "quaternion": [
+          0.9981582454557403,
+          0,
+          0,
+          -0.060663968125388615
+        ],
+        "yaw_degrees": -6.955849531252075,
+        "half_size": [
+          0.025,
+          0.025,
+          0.025
+        ],
+        "boxtype": "default",
+        "oracle_grasp": "top-down"
+      },
+      "initial_success": false,
+      "plan_success": true,
+      "success": false,
+      "signals": {
+        "arm": "left",
+        "arm_match": false,
+        "lifted": true,
+        "lift_delta": 0.0983017086982727,
+        "dist_cmd_tcp": 0.41743668645516385,
+        "dist_other_tcp": 0.13058605895319664
+      },
+      "instruction": "Use the left arm to hold the block.",
+      "passed": true,
+      "oracle_info": {
+        "cluttered_table_info": [],
+        "texture_info": {
+          "wall_texture": null,
+          "table_texture": null
+        },
+        "info": {
+          "{A}": "the block",
+          "{a}": "left"
+        },
+        "arm_select_scene": {
+          "version": "cube-v3",
+          "scene_seed": 200000,
+          "region": "right",
+          "position": [
+            0.0331016795001038,
+            -0.0727212019235501,
+            0.766
+          ],
+          "quaternion": [
+            0.9981582454557403,
+            0,
+            0,
+            -0.060663968125388615
+          ],
+          "yaw_degrees": -6.955849531252075,
+          "half_size": [
+            0.025,
+            0.025,
+            0.025
+          ],
+          "boxtype": "default",
+          "oracle_grasp": "top-down"
+        },
+        "mode": "left",
+        "signals": {
+          "arm_match": false,
+          "lifted": true
+        }
+      },
+      "elapsed_seconds": 2.1134036229923368
+    },
+    {
+      "seed": 400001,
+      "phase": "repeat",
+      "mode": "right",
+      "version": "cube-v3",
+      "initial_rgb": {
+        "head_camera": "75f23f9b0c0a7277e3ccaf892637a472dc5cec9dc09ab6a91d3d69217f9b5f26",
+        "left_camera": "9e1e6260c6891d30a3daee7173fd09f1d6b4d5d4fd79295edb7f5abc6158d54e",
+        "right_camera": "c300bc75e48d4871b217d5b3d063d3b7fe24bbccba30da0a2ee570b29a2af45d"
+      },
+      "initial_pose": [
+        0.03310072794556618,
+        -0.07272133231163025,
+        0.7650007605552673,
+        0.99815833568573,
+        1.8070185205942835e-06,
+        -1.680423883954063e-05,
+        -0.06066253408789635
+      ],
+      "scene": {
+        "version": "cube-v3",
+        "scene_seed": 200000,
+        "region": "right",
+        "position": [
+          0.0331016795001038,
+          -0.0727212019235501,
+          0.766
+        ],
+        "quaternion": [
+          0.9981582454557403,
+          0,
+          0,
+          -0.060663968125388615
+        ],
+        "yaw_degrees": -6.955849531252075,
+        "half_size": [
+          0.025,
+          0.025,
+          0.025
+        ],
+        "boxtype": "default",
+        "oracle_grasp": "top-down"
+      },
+      "initial_success": false,
+      "plan_success": true,
+      "success": true,
+      "signals": {
+        "arm": "right",
+        "arm_match": true,
+        "lifted": true,
+        "lift_delta": 0.09826052188873291,
+        "dist_cmd_tcp": 0.13061698841047292,
+        "dist_other_tcp": 0.4176015165360626
+      },
+      "instruction": "Use the right arm to hold the block.",
+      "passed": true,
+      "oracle_info": {
+        "cluttered_table_info": [],
+        "texture_info": {
+          "wall_texture": null,
+          "table_texture": null
+        },
+        "info": {
+          "{A}": "the block",
+          "{a}": "right"
+        },
+        "arm_select_scene": {
+          "version": "cube-v3",
+          "scene_seed": 200000,
+          "region": "right",
+          "position": [
+            0.0331016795001038,
+            -0.0727212019235501,
+            0.766
+          ],
+          "quaternion": [
+            0.9981582454557403,
+            0,
+            0,
+            -0.060663968125388615
+          ],
+          "yaw_degrees": -6.955849531252075,
+          "half_size": [
+            0.025,
+            0.025,
+            0.025
+          ],
+          "boxtype": "default",
+          "oracle_grasp": "top-down"
+        },
+        "mode": "right",
+        "signals": {
+          "arm_match": true,
+          "lifted": true
+        }
+      },
+      "elapsed_seconds": 1.97258297202643
+    },
+    {
+      "seed": 400001,
+      "phase": "wrong-arm",
+      "mode": "right",
+      "version": "cube-v3",
+      "initial_rgb": {
+        "head_camera": "75f23f9b0c0a7277e3ccaf892637a472dc5cec9dc09ab6a91d3d69217f9b5f26",
+        "left_camera": "9e1e6260c6891d30a3daee7173fd09f1d6b4d5d4fd79295edb7f5abc6158d54e",
+        "right_camera": "c300bc75e48d4871b217d5b3d063d3b7fe24bbccba30da0a2ee570b29a2af45d"
+      },
+      "initial_pose": [
+        0.03310072794556618,
+        -0.07272133231163025,
+        0.7650007605552673,
+        0.99815833568573,
+        1.8070185205942835e-06,
+        -1.680423883954063e-05,
+        -0.06066253408789635
+      ],
+      "scene": {
+        "version": "cube-v3",
+        "scene_seed": 200000,
+        "region": "right",
+        "position": [
+          0.0331016795001038,
+          -0.0727212019235501,
+          0.766
+        ],
+        "quaternion": [
+          0.9981582454557403,
+          0,
+          0,
+          -0.060663968125388615
+        ],
+        "yaw_degrees": -6.955849531252075,
+        "half_size": [
+          0.025,
+          0.025,
+          0.025
+        ],
+        "boxtype": "default",
+        "oracle_grasp": "top-down"
+      },
+      "initial_success": false,
+      "plan_success": true,
+      "success": false,
+      "signals": {
+        "arm": "right",
+        "arm_match": false,
+        "lifted": true,
+        "lift_delta": 0.09873849153518677,
+        "dist_cmd_tcp": 0.37566354231010674,
+        "dist_other_tcp": 0.13057505724093624
+      },
+      "instruction": "Use the right arm to hold the block.",
+      "passed": true,
+      "oracle_info": {
+        "cluttered_table_info": [],
+        "texture_info": {
+          "wall_texture": null,
+          "table_texture": null
+        },
+        "info": {
+          "{A}": "the block",
+          "{a}": "right"
+        },
+        "arm_select_scene": {
+          "version": "cube-v3",
+          "scene_seed": 200000,
+          "region": "right",
+          "position": [
+            0.0331016795001038,
+            -0.0727212019235501,
+            0.766
+          ],
+          "quaternion": [
+            0.9981582454557403,
+            0,
+            0,
+            -0.060663968125388615
+          ],
+          "yaw_degrees": -6.955849531252075,
+          "half_size": [
+            0.025,
+            0.025,
+            0.025
+          ],
+          "boxtype": "default",
+          "oracle_grasp": "top-down"
+        },
+        "mode": "right",
+        "signals": {
+          "arm_match": false,
+          "lifted": true
+        }
+      },
+      "elapsed_seconds": 5.438288774108514
+    },
+    {
+      "seed": 400002,
+      "phase": "repeat",
+      "mode": "left",
+      "version": "cube-v3",
+      "initial_rgb": {
+        "head_camera": "48b5a7bca471c938edab28cc3696cb3c8e4b3ad8f91b8240ec6cbf4559eb8c0d",
+        "left_camera": "451a2d89eaace8d8b3a4b3e731a1c8565e9fba3ccd9a3b11f6d566e2e4ff58d2",
+        "right_camera": "4affae6db6cb3a3e37ec72081d7bb0dd4c9adab11b90989fcfcde4e02d82226c"
+      },
+      "initial_pose": [
+        -0.01676693744957447,
+        -0.07795325666666031,
+        0.7650007605552673,
+        0.9993868470191956,
+        3.311091177238268e-06,
+        -1.6258210962405428e-05,
+        0.03501486778259277
+      ],
+      "scene": {
+        "version": "cube-v3",
+        "scene_seed": 200001,
+        "region": "left",
+        "position": [
+          -0.016766044996120773,
+          -0.07795297336494544,
+          0.766
+        ],
+        "quaternion": [
+          0.999386841492534,
+          0,
+          0,
+          0.03501344101308573
+        ],
+        "yaw_degrees": 4.0130650410834825,
+        "half_size": [
+          0.025,
+          0.025,
+          0.025
+        ],
+        "boxtype": "default",
+        "oracle_grasp": "top-down"
+      },
+      "initial_success": false,
+      "plan_success": true,
+      "success": true,
+      "signals": {
+        "arm": "left",
+        "arm_match": true,
+        "lifted": true,
+        "lift_delta": 0.09826135635375977,
+        "dist_cmd_tcp": 0.13060749021293389,
+        "dist_other_tcp": 0.4106967060059943
+      },
+      "instruction": "Scoop up the block with the left arm.",
+      "passed": true,
+      "oracle_info": {
+        "cluttered_table_info": [],
+        "texture_info": {
+          "wall_texture": null,
+          "table_texture": null
+        },
+        "info": {
+          "{A}": "the block",
+          "{a}": "left"
+        },
+        "arm_select_scene": {
+          "version": "cube-v3",
+          "scene_seed": 200001,
+          "region": "left",
+          "position": [
+            -0.016766044996120773,
+            -0.07795297336494544,
+            0.766
+          ],
+          "quaternion": [
+            0.999386841492534,
+            0,
+            0,
+            0.03501344101308573
+          ],
+          "yaw_degrees": 4.0130650410834825,
+          "half_size": [
+            0.025,
+            0.025,
+            0.025
+          ],
+          "boxtype": "default",
+          "oracle_grasp": "top-down"
+        },
+        "mode": "left",
+        "signals": {
+          "arm_match": true,
+          "lifted": true
+        }
+      },
+      "elapsed_seconds": 2.829144085990265
+    },
+    {
+      "seed": 400002,
+      "phase": "wrong-arm",
+      "mode": "left",
+      "version": "cube-v3",
+      "initial_rgb": {
+        "head_camera": "48b5a7bca471c938edab28cc3696cb3c8e4b3ad8f91b8240ec6cbf4559eb8c0d",
+        "left_camera": "451a2d89eaace8d8b3a4b3e731a1c8565e9fba3ccd9a3b11f6d566e2e4ff58d2",
+        "right_camera": "4affae6db6cb3a3e37ec72081d7bb0dd4c9adab11b90989fcfcde4e02d82226c"
+      },
+      "initial_pose": [
+        -0.01676693744957447,
+        -0.07795325666666031,
+        0.7650007605552673,
+        0.9993868470191956,
+        3.311091177238268e-06,
+        -1.6258210962405428e-05,
+        0.03501486778259277
+      ],
+      "scene": {
+        "version": "cube-v3",
+        "scene_seed": 200001,
+        "region": "left",
+        "position": [
+          -0.016766044996120773,
+          -0.07795297336494544,
+          0.766
+        ],
+        "quaternion": [
+          0.999386841492534,
+          0,
+          0,
+          0.03501344101308573
+        ],
+        "yaw_degrees": 4.0130650410834825,
+        "half_size": [
+          0.025,
+          0.025,
+          0.025
+        ],
+        "boxtype": "default",
+        "oracle_grasp": "top-down"
+      },
+      "initial_success": false,
+      "plan_success": true,
+      "success": false,
+      "signals": {
+        "arm": "left",
+        "arm_match": false,
+        "lifted": true,
+        "lift_delta": 0.0986868143081665,
+        "dist_cmd_tcp": 0.3751490166057179,
+        "dist_other_tcp": 0.13026248609743082
+      },
+      "instruction": "Scoop up the block with the left arm.",
+      "passed": true,
+      "oracle_info": {
+        "cluttered_table_info": [],
+        "texture_info": {
+          "wall_texture": null,
+          "table_texture": null
+        },
+        "info": {
+          "{A}": "the block",
+          "{a}": "left"
+        },
+        "arm_select_scene": {
+          "version": "cube-v3",
+          "scene_seed": 200001,
+          "region": "left",
+          "position": [
+            -0.016766044996120773,
+            -0.07795297336494544,
+            0.766
+          ],
+          "quaternion": [
+            0.999386841492534,
+            0,
+            0,
+            0.03501344101308573
+          ],
+          "yaw_degrees": 4.0130650410834825,
+          "half_size": [
+            0.025,
+            0.025,
+            0.025
+          ],
+          "boxtype": "default",
+          "oracle_grasp": "top-down"
+        },
+        "mode": "left",
+        "signals": {
+          "arm_match": false,
+          "lifted": true
+        }
+      },
+      "elapsed_seconds": 4.6112550169928
+    },
+    {
+      "seed": 400003,
+      "phase": "repeat",
+      "mode": "right",
+      "version": "cube-v3",
+      "initial_rgb": {
+        "head_camera": "48b5a7bca471c938edab28cc3696cb3c8e4b3ad8f91b8240ec6cbf4559eb8c0d",
+        "left_camera": "451a2d89eaace8d8b3a4b3e731a1c8565e9fba3ccd9a3b11f6d566e2e4ff58d2",
+        "right_camera": "4affae6db6cb3a3e37ec72081d7bb0dd4c9adab11b90989fcfcde4e02d82226c"
+      },
+      "initial_pose": [
+        -0.01676693744957447,
+        -0.07795325666666031,
+        0.7650007605552673,
+        0.9993868470191956,
+        3.311091177238268e-06,
+        -1.6258210962405428e-05,
+        0.03501486778259277
+      ],
+      "scene": {
+        "version": "cube-v3",
+        "scene_seed": 200001,
+        "region": "left",
+        "position": [
+          -0.016766044996120773,
+          -0.07795297336494544,
+          0.766
+        ],
+        "quaternion": [
+          0.999386841492534,
+          0,
+          0,
+          0.03501344101308573
+        ],
+        "yaw_degrees": 4.0130650410834825,
+        "half_size": [
+          0.025,
+          0.025,
+          0.025
+        ],
+        "boxtype": "default",
+        "oracle_grasp": "top-down"
+      },
+      "initial_success": false,
+      "plan_success": true,
+      "success": true,
+      "signals": {
+        "arm": "right",
+        "arm_match": true,
+        "lifted": true,
+        "lift_delta": 0.09872168302536011,
+        "dist_cmd_tcp": 0.13031806677971222,
+        "dist_other_tcp": 0.3751677557213534
+      },
+      "instruction": "Scoop up the block with the right arm.",
+      "passed": true,
+      "oracle_info": {
+        "cluttered_table_info": [],
+        "texture_info": {
+          "wall_texture": null,
+          "table_texture": null
+        },
+        "info": {
+          "{A}": "the block",
+          "{a}": "right"
+        },
+        "arm_select_scene": {
+          "version": "cube-v3",
+          "scene_seed": 200001,
+          "region": "left",
+          "position": [
+            -0.016766044996120773,
+            -0.07795297336494544,
+            0.766
+          ],
+          "quaternion": [
+            0.999386841492534,
+            0,
+            0,
+            0.03501344101308573
+          ],
+          "yaw_degrees": 4.0130650410834825,
+          "half_size": [
+            0.025,
+            0.025,
+            0.025
+          ],
+          "boxtype": "default",
+          "oracle_grasp": "top-down"
+        },
+        "mode": "right",
+        "signals": {
+          "arm_match": true,
+          "lifted": true
+        }
+      },
+      "elapsed_seconds": 4.526333153015003
+    },
+    {
+      "seed": 400003,
+      "phase": "wrong-arm",
+      "mode": "right",
+      "version": "cube-v3",
+      "initial_rgb": {
+        "head_camera": "48b5a7bca471c938edab28cc3696cb3c8e4b3ad8f91b8240ec6cbf4559eb8c0d",
+        "left_camera": "451a2d89eaace8d8b3a4b3e731a1c8565e9fba3ccd9a3b11f6d566e2e4ff58d2",
+        "right_camera": "4affae6db6cb3a3e37ec72081d7bb0dd4c9adab11b90989fcfcde4e02d82226c"
+      },
+      "initial_pose": [
+        -0.01676693744957447,
+        -0.07795325666666031,
+        0.7650007605552673,
+        0.9993868470191956,
+        3.311091177238268e-06,
+        -1.6258210962405428e-05,
+        0.03501486778259277
+      ],
+      "scene": {
+        "version": "cube-v3",
+        "scene_seed": 200001,
+        "region": "left",
+        "position": [
+          -0.016766044996120773,
+          -0.07795297336494544,
+          0.766
+        ],
+        "quaternion": [
+          0.999386841492534,
+          0,
+          0,
+          0.03501344101308573
+        ],
+        "yaw_degrees": 4.0130650410834825,
+        "half_size": [
+          0.025,
+          0.025,
+          0.025
+        ],
+        "boxtype": "default",
+        "oracle_grasp": "top-down"
+      },
+      "initial_success": false,
+      "plan_success": true,
+      "success": false,
+      "signals": {
+        "arm": "right",
+        "arm_match": false,
+        "lifted": true,
+        "lift_delta": 0.09826773405075073,
+        "dist_cmd_tcp": 0.41040208800960154,
+        "dist_other_tcp": 0.13059434340401435
+      },
+      "instruction": "Scoop up the block with the right arm.",
+      "passed": true,
+      "oracle_info": {
+        "cluttered_table_info": [],
+        "texture_info": {
+          "wall_texture": null,
+          "table_texture": null
+        },
+        "info": {
+          "{A}": "the block",
+          "{a}": "right"
+        },
+        "arm_select_scene": {
+          "version": "cube-v3",
+          "scene_seed": 200001,
+          "region": "left",
+          "position": [
+            -0.016766044996120773,
+            -0.07795297336494544,
+            0.766
+          ],
+          "quaternion": [
+            0.999386841492534,
+            0,
+            0,
+            0.03501344101308573
+          ],
+          "yaw_degrees": 4.0130650410834825,
+          "half_size": [
+            0.025,
+            0.025,
+            0.025
+          ],
+          "boxtype": "default",
+          "oracle_grasp": "top-down"
+        },
+        "mode": "right",
+        "signals": {
+          "arm_match": false,
+          "lifted": true
+        }
+      },
+      "elapsed_seconds": 2.3730800559278578
+    },
+    {
+      "seed": 400004,
+      "phase": "repeat",
+      "mode": "left",
+      "version": "cube-v3",
+      "initial_rgb": {
+        "head_camera": "5779461829c58238ef4c9aa6439555b9e75538c3e0fbc7092e118d534d052208",
+        "left_camera": "76359b43ce95987c11764cfed5bd04205fee1dc526a732ce4accbffc0f271439",
+        "right_camera": "3ba059eb19ba257885b079614a8ad46f778eb3e569fe5ad61f34b6eadbbc4660"
+      },
+      "initial_pose": [
+        -0.010687661357223988,
+        -0.07869570702314377,
+        0.7650006413459778,
+        0.9996637105941772,
+        3.1674003366788384e-06,
+        -1.6192288967431523e-05,
+        0.02593476139008999
+      ],
+      "scene": {
+        "version": "cube-v3",
+        "scene_seed": 200002,
+        "region": "center",
+        "position": [
+          -0.010686771477528667,
+          -0.07869544409156541,
+          0.766
+        ],
+        "quaternion": [
+          0.9996636737538821,
+          0,
+          0,
+          0.025933364164566833
+        ],
+        "yaw_degrees": 2.972077833809422,
+        "half_size": [
+          0.025,
+          0.025,
+          0.025
+        ],
+        "boxtype": "default",
+        "oracle_grasp": "top-down"
+      },
+      "initial_success": false,
+      "plan_success": true,
+      "success": true,
+      "signals": {
+        "arm": "left",
+        "arm_match": true,
+        "lifted": true,
+        "lift_delta": 0.09829115867614746,
+        "dist_cmd_tcp": 0.13062987971365456,
+        "dist_other_tcp": 0.4054184118379795
+      },
+      "instruction": "Let the left arm grab the block.",
+      "passed": true,
+      "oracle_info": {
+        "cluttered_table_info": [],
+        "texture_info": {
+          "wall_texture": null,
+          "table_texture": null
+        },
+        "info": {
+          "{A}": "the block",
+          "{a}": "left"
+        },
+        "arm_select_scene": {
+          "version": "cube-v3",
+          "scene_seed": 200002,
+          "region": "center",
+          "position": [
+            -0.010686771477528667,
+            -0.07869544409156541,
+            0.766
+          ],
+          "quaternion": [
+            0.9996636737538821,
+            0,
+            0,
+            0.025933364164566833
+          ],
+          "yaw_degrees": 2.972077833809422,
+          "half_size": [
+            0.025,
+            0.025,
+            0.025
+          ],
+          "boxtype": "default",
+          "oracle_grasp": "top-down"
+        },
+        "mode": "left",
+        "signals": {
+          "arm_match": true,
+          "lifted": true
+        }
+      },
+      "elapsed_seconds": 2.9777224930003285
+    },
+    {
+      "seed": 400004,
+      "phase": "wrong-arm",
+      "mode": "left",
+      "version": "cube-v3",
+      "initial_rgb": {
+        "head_camera": "5779461829c58238ef4c9aa6439555b9e75538c3e0fbc7092e118d534d052208",
+        "left_camera": "76359b43ce95987c11764cfed5bd04205fee1dc526a732ce4accbffc0f271439",
+        "right_camera": "3ba059eb19ba257885b079614a8ad46f778eb3e569fe5ad61f34b6eadbbc4660"
+      },
+      "initial_pose": [
+        -0.010687661357223988,
+        -0.07869570702314377,
+        0.7650006413459778,
+        0.9996637105941772,
+        3.1674003366788384e-06,
+        -1.6192288967431523e-05,
+        0.02593476139008999
+      ],
+      "scene": {
+        "version": "cube-v3",
+        "scene_seed": 200002,
+        "region": "center",
+        "position": [
+          -0.010686771477528667,
+          -0.07869544409156541,
+          0.766
+        ],
+        "quaternion": [
+          0.9996636737538821,
+          0,
+          0,
+          0.025933364164566833
+        ],
+        "yaw_degrees": 2.972077833809422,
+        "half_size": [
+          0.025,
+          0.025,
+          0.025
+        ],
+        "boxtype": "default",
+        "oracle_grasp": "top-down"
+      },
+      "initial_success": false,
+      "plan_success": true,
+      "success": false,
+      "signals": {
+        "arm": "left",
+        "arm_match": false,
+        "lifted": true,
+        "lift_delta": 0.0983729362487793,
+        "dist_cmd_tcp": 0.37998439608869905,
+        "dist_other_tcp": 0.13059105424242268
+      },
+      "instruction": "Let the left arm grab the block.",
+      "passed": true,
+      "oracle_info": {
+        "cluttered_table_info": [],
+        "texture_info": {
+          "wall_texture": null,
+          "table_texture": null
+        },
+        "info": {
+          "{A}": "the block",
+          "{a}": "left"
+        },
+        "arm_select_scene": {
+          "version": "cube-v3",
+          "scene_seed": 200002,
+          "region": "center",
+          "position": [
+            -0.010686771477528667,
+            -0.07869544409156541,
+            0.766
+          ],
+          "quaternion": [
+            0.9996636737538821,
+            0,
+            0,
+            0.025933364164566833
+          ],
+          "yaw_degrees": 2.972077833809422,
+          "half_size": [
+            0.025,
+            0.025,
+            0.025
+          ],
+          "boxtype": "default",
+          "oracle_grasp": "top-down"
+        },
+        "mode": "left",
+        "signals": {
+          "arm_match": false,
+          "lifted": true
+        }
+      },
+      "elapsed_seconds": 4.385856152046472
+    },
+    {
+      "seed": 400005,
+      "phase": "repeat",
+      "mode": "right",
+      "version": "cube-v3",
+      "initial_rgb": {
+        "head_camera": "5779461829c58238ef4c9aa6439555b9e75538c3e0fbc7092e118d534d052208",
+        "left_camera": "76359b43ce95987c11764cfed5bd04205fee1dc526a732ce4accbffc0f271439",
+        "right_camera": "3ba059eb19ba257885b079614a8ad46f778eb3e569fe5ad61f34b6eadbbc4660"
+      },
+      "initial_pose": [
+        -0.010687661357223988,
+        -0.07869570702314377,
+        0.7650006413459778,
+        0.9996637105941772,
+        3.1674003366788384e-06,
+        -1.6192288967431523e-05,
+        0.02593476139008999
+      ],
+      "scene": {
+        "version": "cube-v3",
+        "scene_seed": 200002,
+        "region": "center",
+        "position": [
+          -0.010686771477528667,
+          -0.07869544409156541,
+          0.766
+        ],
+        "quaternion": [
+          0.9996636737538821,
+          0,
+          0,
+          0.025933364164566833
+        ],
+        "yaw_degrees": 2.972077833809422,
+        "half_size": [
+          0.025,
+          0.025,
+          0.025
+        ],
+        "boxtype": "default",
+        "oracle_grasp": "top-down"
+      },
+      "initial_success": false,
+      "plan_success": true,
+      "success": true,
+      "signals": {
+        "arm": "right",
+        "arm_match": true,
+        "lifted": true,
+        "lift_delta": 0.09838402271270752,
+        "dist_cmd_tcp": 0.13064140714496564,
+        "dist_other_tcp": 0.3800487180844583
+      },
+      "instruction": "Let the right arm grab the block.",
+      "passed": true,
+      "oracle_info": {
+        "cluttered_table_info": [],
+        "texture_info": {
+          "wall_texture": null,
+          "table_texture": null
+        },
+        "info": {
+          "{A}": "the block",
+          "{a}": "right"
+        },
+        "arm_select_scene": {
+          "version": "cube-v3",
+          "scene_seed": 200002,
+          "region": "center",
+          "position": [
+            -0.010686771477528667,
+            -0.07869544409156541,
+            0.766
+          ],
+          "quaternion": [
+            0.9996636737538821,
+            0,
+            0,
+            0.025933364164566833
+          ],
+          "yaw_degrees": 2.972077833809422,
+          "half_size": [
+            0.025,
+            0.025,
+            0.025
+          ],
+          "boxtype": "default",
+          "oracle_grasp": "top-down"
+        },
+        "mode": "right",
+        "signals": {
+          "arm_match": true,
+          "lifted": true
+        }
+      },
+      "elapsed_seconds": 4.722323487047106
+    },
+    {
+      "seed": 400005,
+      "phase": "wrong-arm",
+      "mode": "right",
+      "version": "cube-v3",
+      "initial_rgb": {
+        "head_camera": "5779461829c58238ef4c9aa6439555b9e75538c3e0fbc7092e118d534d052208",
+        "left_camera": "76359b43ce95987c11764cfed5bd04205fee1dc526a732ce4accbffc0f271439",
+        "right_camera": "3ba059eb19ba257885b079614a8ad46f778eb3e569fe5ad61f34b6eadbbc4660"
+      },
+      "initial_pose": [
+        -0.010687661357223988,
+        -0.07869570702314377,
+        0.7650006413459778,
+        0.9996637105941772,
+        3.1674003366788384e-06,
+        -1.6192288967431523e-05,
+        0.02593476139008999
+      ],
+      "scene": {
+        "version": "cube-v3",
+        "scene_seed": 200002,
+        "region": "center",
+        "position": [
+          -0.010686771477528667,
+          -0.07869544409156541,
+          0.766
+        ],
+        "quaternion": [
+          0.9996636737538821,
+          0,
+          0,
+          0.025933364164566833
+        ],
+        "yaw_degrees": 2.972077833809422,
+        "half_size": [
+          0.025,
+          0.025,
+          0.025
+        ],
+        "boxtype": "default",
+        "oracle_grasp": "top-down"
+      },
+      "initial_success": false,
+      "plan_success": true,
+      "success": false,
+      "signals": {
+        "arm": "right",
+        "arm_match": false,
+        "lifted": true,
+        "lift_delta": 0.09822511672973633,
+        "dist_cmd_tcp": 0.4054614922779423,
+        "dist_other_tcp": 0.13059492197361292
+      },
+      "instruction": "Let the right arm grab the block.",
+      "passed": true,
+      "oracle_info": {
+        "cluttered_table_info": [],
+        "texture_info": {
+          "wall_texture": null,
+          "table_texture": null
+        },
+        "info": {
+          "{A}": "the block",
+          "{a}": "right"
+        },
+        "arm_select_scene": {
+          "version": "cube-v3",
+          "scene_seed": 200002,
+          "region": "center",
+          "position": [
+            -0.010686771477528667,
+            -0.07869544409156541,
+            0.766
+          ],
+          "quaternion": [
+            0.9996636737538821,
+            0,
+            0,
+            0.025933364164566833
+          ],
+          "yaw_degrees": 2.972077833809422,
+          "half_size": [
+            0.025,
+            0.025,
+            0.025
+          ],
+          "boxtype": "default",
+          "oracle_grasp": "top-down"
+        },
+        "mode": "right",
+        "signals": {
+          "arm_match": false,
+          "lifted": true
+        }
+      },
+      "elapsed_seconds": 3.231198721914552
+    }
+  ],
+  "unique_candidate_scenes": 12,
+  "repeat_initial_rgb_match": true,
+  "boundary_episodes": 0,
+  "note": "Small oracle feasibility probe, not policy success rates; all candidate failures retained."
+}

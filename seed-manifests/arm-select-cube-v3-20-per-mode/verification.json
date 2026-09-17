@@ -1,0 +1,66 @@
+{
+  "checked_at": "2026-09-16T11:56:11.158416+00:00",
+  "task": "arm_select",
+  "task_config": "demo_clean_arm_select_v3",
+  "manifest_sha256": "334b5ab9a6f908dd603694f23a441aab1bbf8a7a1af6e5ae528d5c7e513aedd6",
+  "blocks": 20,
+  "episodes": 40,
+  "mode_denominators": {
+    "left": 20,
+    "right": 20
+  },
+  "scene_regions": {
+    "center": 7,
+    "right": 7,
+    "left": 6
+  },
+  "qualification_episode_counts": {
+    "fixed": 2,
+    "candidate": 40,
+    "repeat": 6,
+    "wrong-arm": 6
+  },
+  "source_and_snapshot_hashes_match": true,
+  "disjoint_from": [
+    "arm-select-cube-v3-dev-12-per-mode",
+    "arm-select-cube-v3-validation-12-per-mode"
+  ],
+  "consumer_seed_selection": {
+    "xvla": {
+      "episodes": 40,
+      "blocks": 20,
+      "instruction_type": "unseen",
+      "passed": true
+    },
+    "lingbot_va": {
+      "episodes": 40,
+      "blocks": 20,
+      "instruction_type": "unseen",
+      "passed": true
+    },
+    "lingbot_vla": {
+      "episodes": 40,
+      "blocks": 20,
+      "instruction_type": "unseen",
+      "passed": true
+    },
+    "vlact": {
+      "episodes": 40,
+      "blocks": 20,
+      "instruction_type": "unseen",
+      "passed": true
+    },
+    "dm05": {
+      "episodes": 40,
+      "blocks": 20,
+      "instruction_type": "unseen",
+      "passed": true
+    },
+    "hy_vla": {
+      "episodes": 40,
+      "blocks": 20,
+      "instruction_type": "unseen",
+      "passed": true
+    }
+  }
+}

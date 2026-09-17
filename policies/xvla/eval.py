@@ -95,7 +95,7 @@ def instruction_for(task, episode_info, split, seed):
     try:
         # Experimental pairs use one template, changing only the tested word.
         paired = (task == "arm_select" and
-                  episode_info.get("arm_select_scene", {}).get("version") == "jitter-v2")
+                  episode_info.get("arm_select_scene", {}).get("version") in ("jitter-v2", "cube-v3"))
         random.seed(seed // 2 if paired else seed)
         descriptions = generate_episode_descriptions(task, [episode_info["info"]], 1)[0][split]
     finally:

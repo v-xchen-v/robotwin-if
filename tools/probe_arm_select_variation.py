@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Bounded serial oracle probe for arm_select v2, including paired controls.
+"""Bounded serial oracle probe for arm_select v2 / cube-v3 with paired controls.
 
 Run with the RoboTwin Python environment. One worker uses one simulator on GPU
 0; no model servers. The supervisor stops on GPU-query failure, heartbeat stall,
@@ -17,7 +17,7 @@ import time
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
-CONFIG = "demo_clean_arm_select_v2"
+CONFIGS = {"jitter-v2": "demo_clean_arm_select_v2", "cube-v3": "demo_clean_arm_select_v3"}
 CAMERAS = ("head_camera", "left_camera", "right_camera")
 
 
@@ -42,7 +42,8 @@ def worker(args):
 
     beat("renderer_init")
     pci = pin_renderer()
-    env, config = load_task(args.robotwin_dir, "arm_select", CONFIG)
+    task_config = CONFIGS[args.scene_version]
+    env, config = load_task(args.robotwin_dir, "arm_select", task_config)
     rows = []
     original_move = env.move
 
@@ -55,13 +56,18 @@ def worker(args):
     current = [None]
     env.move = move
 
-    def episode(seed, phase, *, version="jitter-v2", wrong_arm=False):
+    def episode(seed, phase, *, version=None, wrong_arm=False, pose_override=None):
+        version = version or args.scene_version
         current[0] = seed
         mode = ("left", "right")[seed % 2]
         row = {"seed": seed, "phase": phase, "mode": mode, "version": version}
         started = time.monotonic()
         beat("setup", seed)
         env.ORACLE_ARM = ("right" if mode == "left" else "left") if wrong_arm else None
+        original_sampler = env.scene_pose
+        if pose_override is not None:
+            env.scene_pose = lambda scene_seed, version: (*pose_override, "boundary")
+            row["pose_override"] = list(pose_override)
         try:
             cfg = dict(config, arm_select_scene_version=version)
             env.setup_demo(now_ep_num=0, seed=seed, is_test=True, **cfg)
@@ -103,6 +109,7 @@ def worker(args):
             beat("close", seed)
             env.close_env()
             env.ORACLE_ARM = None
+            env.scene_pose = original_sampler
         row["elapsed_seconds"] = time.monotonic() - started
         rows.append(row)
         write_json(args.output / "episodes.json", rows)
@@ -130,6 +137,17 @@ def worker(args):
     for seed in range(args.seed_start, args.seed_start + 2*min(3, args.blocks)):
         episode(seed, "repeat")
         episode(seed, "wrong-arm", wrong_arm=True)
+    if args.check_boundaries:
+        from itertools import product
+        # Exercise every xy corner at both yaw extremes and zero yaw, plus
+        # the center. These are explicit controls, never manifest candidates.
+        xs = (env.CUBE_X_BINS[0][0], env.CUBE_X_BINS[-1][1])
+        ys = env.CUBE_Y_RANGE
+        yaws = (-env.CUBE_YAW_LIMIT, 0.0, env.CUBE_YAW_LIMIT)
+        poses = [*product(xs, ys, yaws), (0.0, sum(ys)/2, 0.0)]
+        for index, pose in enumerate(poses):
+            for seed in (args.seed_start, args.seed_start+1):
+                episode(seed, f"boundary-{index:02d}", pose_override=pose)
     accepted = [s for block in blocks if block["accepted"] for s in block["seeds"]]
     signatures = {tuple(row["initial_rgb"][c] for c in CAMERAS) for row in rows
                   if row["phase"] == "candidate" and "initial_rgb" in row}
@@ -139,14 +157,16 @@ def worker(args):
                           for r in rows if r["phase"] in ("repeat", "wrong-arm"))
     report = {"complete": True, "all_checks_passed": all(r["passed"] for r in rows) and
               all(b["accepted"] for b in blocks) and len(signatures) == args.blocks and repeat_identity,
-              "task": "arm_select", "task_config": CONFIG, "pci": pci,
+              "task": "arm_select", "task_config": task_config, "pci": pci,
               "blocks": blocks, "episodes": rows, "unique_candidate_scenes": len(signatures),
               "repeat_initial_rgb_match": repeat_identity,
+              "boundary_episodes": sum(r["phase"].startswith("boundary-") for r in rows),
               "note": "Small oracle feasibility probe, not policy success rates; all candidate failures retained."}
     write_json(args.output / "report.json", report)
-    if accepted:
+    # A failed repeat or negative control must not produce a qualified manifest.
+    if report["all_checks_passed"]:
         write_json(args.output / "arm_select.json", {"schema_version": 1, "task": "arm_select",
-                                                    "task_config": CONFIG, "seeds": accepted})
+                                                    "task_config": task_config, "seeds": accepted})
     beat("complete")
     print("PROBE_COMPLETE", report["all_checks_passed"], "accepted", len(accepted)//2, flush=True)
     return 0 if report["all_checks_passed"] else 2
@@ -167,6 +187,9 @@ def main():
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--blocks", type=int, default=12)
     parser.add_argument("--seed-start", type=int, default=100000)
+    parser.add_argument("--scene-version", choices=tuple(CONFIGS), default="jitter-v2")
+    parser.add_argument("--check-boundaries", action="store_true",
+                        help="Also check cube-v3 xy corners at extreme/zero yaw, and center, with both arms")
     parser.add_argument("--robotwin-dir", type=Path, default=ROOT / "third_party/robotwin")
     parser.add_argument("--reference", type=Path, default=ROOT / "outputs/policy-eval/if-seven-tasks-2blocks-001")
     parser.add_argument("--sim-gpu", choices=("0", "1"), default="0")
@@ -175,14 +198,21 @@ def main():
     args = parser.parse_args()
     if not 1 <= args.blocks <= 32 or args.seed_start < 0 or args.seed_start % 2:
         parser.error("Use 1..32 complete blocks and a non-negative even seed-start")
+    if args.check_boundaries and args.scene_version != "cube-v3":
+        parser.error("--check-boundaries requires --scene-version cube-v3")
     args.output, args.reference, args.robotwin_dir = args.output.resolve(), args.reference.resolve(), args.robotwin_dir.resolve()
     if args.worker:
         return worker(args)
-    config = args.robotwin_dir / "task_config" / f"{CONFIG}.yml"
+    task_config = CONFIGS[args.scene_version]
+    config = args.robotwin_dir / "task_config" / f"{task_config}.yml"
     if not config.is_file():
-        parser.error(f"Install tasks/task_config/{CONFIG}.yml at {config}")
+        parser.error(f"Install tasks/task_config/{task_config}.yml at {config}")
     args.output.mkdir(parents=True, exist_ok=False)
     sources = [ROOT / "tasks/envs/arm_select.py", ROOT / "policies/xvla/eval.py", config, Path(__file__)]
+    snapshot = args.output / "source"
+    snapshot.mkdir()
+    for source in sources:
+        (snapshot / source.name).write_bytes(source.read_bytes())
     write_json(args.output / "provenance.json", {"argv": sys.argv, "python": sys.executable,
                "sources": {str(p): sha(p.read_bytes()) for p in sources}, "simulators": 1, "model_servers": 0})
     gpu_sample(args)

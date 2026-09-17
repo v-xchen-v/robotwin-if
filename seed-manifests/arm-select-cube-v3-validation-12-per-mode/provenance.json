@@ -1,0 +1,24 @@
+{
+  "argv": [
+    "tools/probe_arm_select_variation.py",
+    "--scene-version",
+    "cube-v3",
+    "--output",
+    "outputs/policy-eval/arm-select-cube-v3-validation-001",
+    "--blocks",
+    "12",
+    "--seed-start",
+    "400000",
+    "--sim-gpu",
+    "1"
+  ],
+  "python": "/home/xichen6/miniconda3/envs/RoboTwin/bin/python",
+  "sources": {
+    "/home/xichen6/Documents/repos/robotwin-if/tasks/envs/arm_select.py": "67154b8a04b1ea785f3bdfcd6c74c239323fdb452df1f52038aded334fc06d1d",
+    "/home/xichen6/Documents/repos/robotwin-if/policies/xvla/eval.py": "b3e7fd80902dcd9b0a66af5a5577df429e3525fbb83621b9ed20666a30447f31",
+    "/home/xichen6/Documents/repos/robotwin-if/third_party/robotwin/task_config/demo_clean_arm_select_v3.yml": "b45833e1a638042c6fe6e3bc4394697a1c77769fd512364bcf4f1fa773065974",
+    "/home/xichen6/Documents/repos/robotwin-if/tools/probe_arm_select_variation.py": "ff124f29a8c30357c42ed6b50e6e5e042d8eda1c3f30cfc34c69d7f70cf92301"
+  },
+  "simulators": 1,
+  "model_servers": 0
+}
