@@ -1,0 +1,15 @@
+{
+  "previous_run": "/Data/robotwin-if/evaluations/if-six-tasks-spatial3-bottle-v6-terminal-20blocks-001",
+  "reused_episodes": 2520,
+  "new_arm_select_episodes": 240,
+  "source_differences": [
+    "policies/xvla/eval.py",
+    "tasks/envs/arm_select.py",
+    "third_party/robotwin/envs/arm_select.py",
+    "tools/run_formal_policy_suite.py"
+  ],
+  "unchanged_five_task_sources": true,
+  "unchanged_five_task_manifests": true,
+  "shared_evaluator_change": "instruction_for adds cube-v3 to paired arm_select template selection only",
+  "checkpoint_metadata": "Retain prior run metadata and services-before-recovery.json through formal prepare."
+}

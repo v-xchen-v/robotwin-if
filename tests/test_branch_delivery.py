@@ -15,7 +15,7 @@ from if_benchmark.seed_contracts import IF_SEED_CONTRACTS
 from if_benchmark.seed_modes import build_seed_modes, check_seed_modes, export_texts
 
 ROOT = Path(__file__).resolve().parents[1]
-RELEASE = ROOT / 'seed-manifests/if-ext-v2-six-tasks-spatial3-20-per-mode'
+RELEASE = ROOT / 'seed-manifests/robotwin-if-cube-v3-20-per-mode'
 POLICIES = ('xvla', 'lingbot_va', 'lingbot_vla', 'vlact', 'dm05', 'hy_vla')
 
 
@@ -26,7 +26,9 @@ class SeedModeDeliveryTest(unittest.TestCase):
         self.assertEqual(data['episodes_per_policy'], 460)
         self.assertEqual([t['task'] for t in data['tasks']], list(IF_SEED_CONTRACTS))
         for task in data['tasks']:
-            frozen = json.loads((ROOT / 'result/if-ext-v2-six-tasks-spatial3-20blocks/manifests' / task['manifest']).read_text())
+            source = (ROOT / 'seed-manifests/arm-select-cube-v3-20-per-mode' if task['task'] == 'arm_select'
+                      else ROOT / 'result/if-ext-v2-six-tasks-spatial3-bottle-v6-terminal-20blocks/manifests')
+            frozen = json.loads((source / task['manifest']).read_text())
             self.assertEqual([r['seed'] for r in task['episodes']], frozen['seeds'])
             self.assertEqual(task['mode_counts'], dict.fromkeys(IF_SEED_CONTRACTS[task['task']].modes, 20))
             blocks = {i: [r for r in task['episodes'] if r['block'] == i] for i in range(20)}
@@ -67,8 +69,8 @@ class EvalLauncherTest(unittest.TestCase):
         for task in IF_SEED_CONTRACTS:
             (self.runtime / 'envs' / f'{task}.py').touch()
         (self.runtime / 'task_config/demo_clean.yml').touch()
-        shutil.copyfile(ROOT / 'tasks/task_config/demo_clean_arm_select_v2.yml',
-                        self.runtime / 'task_config/demo_clean_arm_select_v2.yml')
+        shutil.copyfile(ROOT / 'tasks/task_config/demo_clean_arm_select_v3.yml',
+                        self.runtime / 'task_config/demo_clean_arm_select_v3.yml')
         self.output = self.base / 'output with spaces'
         self.env = dict(os.environ, PATH=str(self.bin) + os.pathsep + os.environ['PATH'],
                         TMPDIR=str(self.base), FAKE_LOG=str(self.base / 'launched.jsonl'),
@@ -174,7 +176,7 @@ print('1, 10000, 40000, 40, 20')
         calls = self.launched()
         self.assertEqual([r['options']['--task'] for r in calls], list(IF_SEED_CONTRACTS))
         self.assertTrue(all(r['gpu'] == '0' for r in calls))
-        self.assertEqual(calls[3]['options']['--task-config'], 'demo_clean_arm_select_v2')
+        self.assertEqual(calls[3]['options']['--task-config'], 'demo_clean_arm_select_v3')
 
     def test_infrastructure_failure_and_substituted_seed_stop_following_tasks(self):
         self.env['FAKE_RC'] = '2'

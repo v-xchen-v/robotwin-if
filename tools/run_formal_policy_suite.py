@@ -32,7 +32,7 @@ ENVS = {p: Path('/home/xichen6/miniconda3/envs') / ('robotwin-if-' + p.replace('
         for p in POLICIES}
 ENVS.update({p: Path('/Data/robotwin-if/envs') / ('robotwin-if-' + p.replace('_', '-'))
              for p in ('dm05', 'hy_vla')})
-DEFAULT_RUN = Path('/Data/robotwin-if/evaluations/if-six-tasks-v2-20blocks-001')
+DEFAULT_RUN = Path('/Data/robotwin-if/evaluations/robotwin-if-cube-v3-20blocks-001')
 MAX_ORACLE_ATTEMPTS = 3  # Initial attempt plus at most two retries; never policy retries.
 
 
@@ -730,7 +730,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('command', choices=('prepare', 'run', 'status', 'verify', 'worker'))
     parser.add_argument('--run-dir', type=Path, default=DEFAULT_RUN)
-    parser.add_argument('--release', type=Path, default=ROOT / 'seed-manifests/if-ext-v2-six-tasks-spatial3-20-per-mode')
+    parser.add_argument('--release', type=Path, default=ROOT / 'seed-manifests/robotwin-if-cube-v3-20-per-mode')
     parser.add_argument('--old-run', type=Path,
                         help='Prepare: prior run with matching checkpoint and inference metadata')
     parser.add_argument('--policy', choices=POLICIES)

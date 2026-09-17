@@ -75,6 +75,21 @@ class ResultScopeTest(unittest.TestCase):
         self.assertEqual(data['tasks'], list(report.TASKS))
         self.assertEqual(data['excluded_tasks'], [])
 
+    def test_cube_report_uses_its_recorded_config_without_relabeling_history(self):
+        self.fixture(historical=False)
+        plan_path = self.base / 'plan.json'
+        plan = json.loads(plan_path.read_text())
+        arm = next(s for s in plan['tasks'] if s['task'] == 'arm_select')
+        for config, label in (('demo_clean_arm_select_v3', 'Arm cube-v3'),
+                              ('demo_clean_arm_select_v2', 'Arm v2')):
+            arm['task_config'] = config
+            plan_path.write_text(json.dumps(plan))
+            data = report.snapshot(self.base)
+            report.generate(data, self.base / 'report.md')
+            self.assertIn(label, (self.base / 'report.md').read_text())
+            self.assertIn(label, (self.base / 'report.html').read_text())
+            self.assertAlmostEqual(data['policies']['xvla']['overall_pct'], 500/6)
+
 
 if __name__ == '__main__':
     unittest.main()

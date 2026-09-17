@@ -23,7 +23,7 @@ dataset-viewer port="8892":
 
 
 # Policy 视频人工复核：原视频只读，标注单独保存。
-video-review run_dir="outputs/policy-eval/if-seven-tasks-v2-wide-20blocks-001" port="8893":
+video-review run_dir="outputs/policy-eval/robotwin-if-cube-v3-20blocks-001" port="8893":
     python tools/policy-video-review/server.py --run-dir {{quote(run_dir)}} --port {{quote(port)}}
 
 # 幂等初始化：远端没有 notes/vibe-coding 分支就建，.gitignore 没排除 notes/ 就加，

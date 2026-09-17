@@ -1,10 +1,11 @@
-# 六任务 v2 正式评测
+# 六任务正式评测
 
 当前任务为 bottle_verb、pick_diverse_object、attribute_select、arm_select、stack_sequence、place_relative。
 Grasp-Approach 已暂时下线，见 [归档说明](../bak/grasp_cube_approach/README.md)。
-使用 [六任务 20-block manifest](../seed-manifests/if-ext-v2-six-tasks-spatial3-20-per-mode/README.md)，
-各 policy 460 回合，全套 2,760 回合、720 blocks，已于 **2026-09-15 22:44 UTC** 完成并通过校验。
-[当前结果包](../result/if-ext-v2-six-tasks-spatial3-bottle-v6-terminal-20blocks/README.md)合并 Bottle-Verb v6 的 240 回合与其他五任务复用的 2520 回合。
+当前使用 [RoboTwin-IF cube-v3 taskset](../seed-manifests/robotwin-if-cube-v3-20-per-mode/README.md)，
+各 policy 460 回合，全套 **2,760/2,760 回合、720/720 blocks** 已于 2026-09-16 17:59 UTC 完成校验。Arm-Select 的 240 回合已重新运行，
+其他五任务复用[上一版已完成结果包](../result/if-ext-v2-six-tasks-spatial3-bottle-v6-terminal-20blocks/README.md)中的 2520 回合，
+[新结果包](../result/robotwin-if-cube-v3-20blocks/README.md)已生成；具体来源、配置和运行命令见 [cube-v3 合并评测](arm-select-cube-v3-evaluation.md)。
 [新的 pick 稳定保持判定](bottle-verb-pick-hold.md)下，prepare 会排除旧 Bottle-Verb 结果并保留原 seed 重测；该轮重测现已完成。
 当前 v6 的 pick 允许平移，在完整执行 700 个动作后判断末尾姿态保持和全程旋转摇晃；不再提前成功。shake 及其他任务保留原终止方式。
 

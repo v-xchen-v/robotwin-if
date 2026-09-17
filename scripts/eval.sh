@@ -7,7 +7,7 @@ export PYTHONNOUSERSITE=1
 SIM_PYTHON=${SIM_PYTHON:-python3}
 POLICY= TASK=all OUTPUT_DIR= SERVER_URL=
 BLOCKS=20 SIM_GPU=0 MODEL_GPU=1 DRY_RUN=0
-MANIFEST_DIR="$REPO_ROOT/seed-manifests/if-ext-v2-six-tasks-spatial3-20-per-mode"
+MANIFEST_DIR="$REPO_ROOT/seed-manifests/robotwin-if-cube-v3-20-per-mode"
 ROBOTWIN_DIR="$REPO_ROOT/third_party/robotwin"
 
 usage() {
@@ -91,8 +91,8 @@ while IFS=$'\t' read -r task config count; do
   if (( ! DRY_RUN )); then
     [[ -f "$ROBOTWIN_DIR/envs/$task.py" ]] || fail "task is not bridged: $task (see docs/branch-delivery.md)"
     [[ -f "$ROBOTWIN_DIR/task_config/$config.yml" ]] || fail "missing task config: $config (see docs/branch-delivery.md)"
-    if [[ "$config" == demo_clean_arm_select_v2 ]]; then
-      cmp -s "$REPO_ROOT/tasks/task_config/$config.yml" "$ROBOTWIN_DIR/task_config/$config.yml" || fail 'arm_select v2 config differs from the delivered config'
+    if [[ "$config" == demo_clean_arm_select_v2 || "$config" == demo_clean_arm_select_v3 ]]; then
+      cmp -s "$REPO_ROOT/tasks/task_config/$config.yml" "$ROBOTWIN_DIR/task_config/$config.yml" || fail 'arm_select config differs from the delivered config'
     fi
   fi
 done <<< "$TASK_ROWS"

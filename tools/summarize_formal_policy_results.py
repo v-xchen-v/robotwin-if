@@ -166,6 +166,7 @@ def snapshot(base, include_archived_tasks=False, include_archived_modes=False):
                    expected_blocks=sum(r['expected_blocks'] for r in rows),
                    complete_task_policy_runs=sum(r['complete'] for r in rows))
     return dict(updated_at=source['updated_at'], run_dir=str(base),
+                task_configs={task: specs[task].get('task_config') for task in task_names},
                 tasks=task_names, excluded_modes=excluded_modes, spatial_scope=("five-modes" if include_archived_modes else "spatial3"), excluded_tasks=sorted(planned - set(task_names)), summary=summary,
                 checkpoint_replacement=plan.get('checkpoint_replacement'),
                 block_extension=plan.get('block_extension'),
@@ -195,13 +196,17 @@ def generate(data, output):
     rows = {(r['policy'], r['task']): r for r in data['rows']}
     source = data['summary']
     task_count = len(data['tasks'])
+    cube = data.get('task_configs', {}).get('arm_select') == 'demo_clean_arm_select_v3'
+    labels = {task: ('Arm cube-v3' if task == 'arm_select' and cube else TASK_COLUMNS[task][0])
+              for task in data['tasks']}
+    arm_version = 'cube-v3' if cube else 'v2'
     panels_spec = [('Xa — Selection / Grounding', data['tasks'][:4]),
                    ('Xb — Structured Execution', data['tasks'][4:])]
     overview = (f"快照：{data['updated_at']}；完成 {source['completed_episodes']}/{source['expected_episodes']} 回合，"
                 f"完整 blocks {source['completed_blocks']}/{source['expected_blocks']}，"
                 f"跑齐任务组合 {source['complete_task_policy_runs']}/{len(POLICIES) * task_count}。")
     legend = [
-        f'本报告采用 {task_count} 项任务；arm select 使用 v2。已下线任务只有显式选择历史范围时才纳入。',
+        f'本报告采用 {task_count} 项任务；arm select 使用 {arm_version}。已下线任务只有显式选择历史范围时才纳入。',
         '模式单元格为 SR (%)（成功数/纳入统计回合数）；0.0 表示已评测但没有成功，— 表示尚无完整 block 可统计。',
         '每项进度为已完成/计划 blocks、全部有效已完成回合/计划 ep。成功与 policy failure 均计入已完成；缺失/运行错误不计入。',
         'SR 和 Avg. 仅使用已完成的完整、均衡 blocks。半个 block 中已完成的回合仍计入进度，标为待成组，成组后才进入评分。',
@@ -235,7 +240,7 @@ def generate(data, output):
         first = '<tr><th rowspan="2">Policy</th>'
         second = '<tr>'
         for task in tasks:
-            label = TASK_COLUMNS[task][0]
+            label = labels[task]
             cols = columns_for(task, rows[next(iter(POLICIES)), task]["modes"])
             first += f'<th colspan="{len(cols)+2}">{html.escape(label)}</th>'
             second += ''.join(f'<th>{html.escape(name)}</th>' for name, _ in cols)
@@ -256,7 +261,7 @@ def generate(data, output):
             table += '</tr>'
         panels.append('<h2>'+html.escape(title)+'</h2><div class="scroll">'+table+'</tbody></table></div>')
         for task in tasks:
-            label = TASK_COLUMNS[task][0]
+            label = labels[task]
             cols = columns_for(task, rows[next(iter(POLICIES)), task]["modes"])
             md += ['', f'### {label} — `{task}`', '',
                    '| Policy | '+' | '.join(name for name, _ in cols)+' | Avg. | 完成进度 |',
