@@ -1,0 +1,51 @@
+{
+  "xvla": {
+    "repo_id": "2toINF/X-VLA-RoboTwin2",
+    "revision": "a157c580cfe6f9f445614490f3bec1b2f9ef9f18",
+    "evidence": "provenance/reused/xvla/bottle_verb/run.json",
+    "evidence_sha256": "3f4ef1ffd2b97984fd663d5675d1acd0905bcd943f64dfe8f1c3bbee183188ae"
+  },
+  "lingbot_va": {
+    "repo_id": "robbyant/lingbot-va-posttrain-robotwin",
+    "revision": "8c9dea8abbc5c91cc9e18bc3264b8915083bbe70",
+    "evidence": "provenance/reused/lingbot_va/bottle_verb/run.json",
+    "evidence_sha256": "c46857273369940af208ab3f1f1629a292e06a5f93e7ae615a05f318ce9f700b"
+  },
+  "lingbot_vla": {
+    "repo_id": "robbyant/lingbot-vla-4b-posttrain-robotwin",
+    "revision": "fb71a2c9749ccfedbb7290c2c3f0e5e7c7305c9e",
+    "processor": {
+      "repo_id": "Qwen/Qwen2.5-VL-3B-Instruct",
+      "revision": "66285546d2b821cf421d4f5eb2576359d3770cd3",
+      "directory": "qwen_processor"
+    },
+    "evidence": "provenance/reused/lingbot_vla/bottle_verb/run.json",
+    "evidence_sha256": "3913cf5eaf3485d59a039f6c896d83977b3c53c0e78ac09166c471970ecf557c"
+  },
+  "vlact": {
+    "repo_id": "StarVLA/VLAct_Qwen3OFT_Robotwin_all_Finetune",
+    "revision": "999b37d4d7c1bd0f5588f78d72a185f6f052bf83",
+    "weights_sha256": "beb2c0ec39c3bc7173a5bd90eb59ef99854b73ca1aa3bf50fb6ffc353f477c2a",
+    "base_model": {
+      "repo_id": "StarVLA/Qwen3-VL-4B-Instruct-Action",
+      "revision": "c41500cf1d287cd79e9f6602f419937b05048bd8",
+      "directory": "Qwen3-VL-4B-Instruct-Action"
+    },
+    "evidence": "provenance/reused/vlact/bottle_verb/run.json",
+    "evidence_sha256": "c20bf3524bbff8b6f0b2830664b073bceec984e30bc548c16b8def3a64c95dad"
+  },
+  "dm05": {
+    "repo_id": "Dexmal/DM05-robotwin2",
+    "revision": "bef09062f8d9744b7691d0a5db4e23834e46071e",
+    "weights_sha256": "74e8dbb475148080e35ede3f6823322eb6a0b061c8f843a932a4c4ce879bd282",
+    "evidence": "provenance/reused/dm05/bottle_verb/run.json",
+    "evidence_sha256": "3944a1f22744d29079245cc776004afb8273118295d822e4e32cd339e42dd7ab"
+  },
+  "hy_vla": {
+    "repo_id": "tencent/Hy-Embodied-0.5-VLA-RoboTwin",
+    "revision": "bd7bba6f5934ad62293a2a34f74760c6a3ef2ff8",
+    "weights_sha256": "3bd6c16225f905a298340489d519498d4e5ecf5bcdd28a5c1df63e29894fef60",
+    "evidence": "provenance/reused/hy_vla/bottle_verb/run.json",
+    "evidence_sha256": "08d33bf8919b608e78a187f5d0c40410d06d4eaaf1e6d1fa241b09efac97a6b5"
+  }
+}

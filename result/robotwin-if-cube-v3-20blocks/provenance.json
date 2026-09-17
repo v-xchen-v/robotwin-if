@@ -1,0 +1,19 @@
+{
+  "source_run": "/Data/robotwin-if/evaluations/robotwin-if-cube-v3-20blocks-001",
+  "taskset": "seed-manifests/robotwin-if-cube-v3-20-per-mode",
+  "previous_package": "result/if-ext-v2-six-tasks-spatial3-bottle-v6-terminal-20blocks",
+  "new_episodes": 240,
+  "reused_episodes": 2520,
+  "unchanged_five_task_rows_and_record_hashes": true,
+  "unchanged_checkpoint_metadata": true,
+  "arm_select_config": "demo_clean_arm_select_v3",
+  "arm_select_seeds": [
+    500000,
+    500039
+  ],
+  "formal_validation_sha256": "71c186bf1611e641defbe947762dbcfd8f8d6c5e5d49c86ea52b0e71b89aed29",
+  "oracle_setup_failed_attempts": 4,
+  "oracle_setup_retry_audit_sha256": "7d3839396e23a0fcf9c2cbdce7fd437fe29cb588fbe85b759516544582a76b93",
+  "parent_results_sha256": "e5c6ce12bceee73c4933142c9bc6aa8bb066a2399791eb5a118e323533c3e2cc",
+  "previous_five_task_records": "Byte-identical copies; origin reflects reuse in this run."
+}

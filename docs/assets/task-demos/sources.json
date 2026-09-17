@@ -167,40 +167,60 @@
     },
     {
       "task": "arm_select",
-      "policy": "dm05",
+      "policy": "lingbot_va",
+      "task_config": "demo_clean_arm_select_v3",
+      "source_run": "robotwin-if-cube-v3-20blocks-001",
+      "source_run_directory": "/Data/robotwin-if/evaluations/robotwin-if-cube-v3-20blocks-001",
+      "source_results": "../../../result/robotwin-if-cube-v3-20blocks/episodes.csv",
       "playback_speed": 1,
-      "mp4": "arm_select.mp4",
-      "gif": "arm_select.gif",
-      "duration_seconds": 9.6,
+      "mp4": "arm_select_cube_v3.mp4",
+      "gif": "arm_select_cube_v3.gif",
+      "duration_seconds": 10.0,
       "episodes": [
         {
-          "policy": "dm05",
-          "seed": 200010,
+          "policy": "lingbot_va",
+          "seed": 500000,
           "mode": "left",
-          "instruction": "Employ the left arm to lift the block.",
-          "record": "dm05/arm_select/arm_select_ep200010_result.json",
-          "record_sha256": "609c69fbbdf4aaf77f948a3ab77c0f07ba9c2a511a68766a2f844178418d6099",
-          "source_video": "dm05/arm_select/arm_select_ep200010_1.mp4",
-          "source_video_sha256": "a120f6cbc7c62a896de82a758e8b75158541fa9ba3b7be28ff78798e898de341",
-          "source_duration_seconds": 7.9,
-          "label": "LEFT ARM"
+          "instruction": "Use the left arm to retrieve the block.",
+          "record": "lingbot_va/arm_select/arm_select_ep500000_result.json",
+          "record_sha256": "27951fb7832e8d231cfbfd08d4b0b68fd43d0f8d893d22b3e73f88df28058b35",
+          "source_video": "lingbot_va/arm_select/arm_select_ep500000_1.mp4",
+          "source_video_sha256": "45444e99e533180b6b5c55940e2d5cbe57953b4ce5e3c5a9e571cd16bc6ccf02",
+          "source_duration_seconds": 8.3,
+          "label": "LEFT ARM",
+          "terminal_signals": {
+            "arm": "left",
+            "arm_match": true,
+            "lifted": true,
+            "lift_delta": 0.05002719163894653,
+            "dist_cmd_tcp": 0.1355011463046087,
+            "dist_other_tcp": 0.4115486963618835
+          }
         },
         {
-          "policy": "dm05",
-          "seed": 200011,
+          "policy": "lingbot_va",
+          "seed": 500001,
           "mode": "right",
-          "instruction": "Employ the right arm to lift the block.",
-          "record": "dm05/arm_select/arm_select_ep200011_result.json",
-          "record_sha256": "35f38d71b669909aeb7b7712784a624ef6781ce359556c5b2ece7b29916951fd",
-          "source_video": "dm05/arm_select/arm_select_ep200011_1.mp4",
-          "source_video_sha256": "67164d542aba386585261fa53327f7f57f1059dc4adcdfb3fac52c89e4c6167f",
-          "source_duration_seconds": 8.1,
-          "label": "RIGHT ARM"
+          "instruction": "Use the right arm to retrieve the block.",
+          "record": "lingbot_va/arm_select/arm_select_ep500001_result.json",
+          "record_sha256": "f75ce0629d1d846e01d0a857ffa6ce9015c135d6ff3792a86ca68fee44f9a0c5",
+          "source_video": "lingbot_va/arm_select/arm_select_ep500001_1.mp4",
+          "source_video_sha256": "2d69c342fe09767a67c329ecf8289e8ec7b86e117a06619f43c3a13e26e5cc2f",
+          "source_duration_seconds": 8.5,
+          "label": "RIGHT ARM",
+          "terminal_signals": {
+            "arm": "right",
+            "arm_match": true,
+            "lifted": true,
+            "lift_delta": 0.050152361392974854,
+            "dist_cmd_tcp": 0.13133194892477307,
+            "dist_other_tcp": 0.3913928507238755
+          }
         }
       ],
       "sha256": {
-        "arm_select.mp4": "879030f07fa08aa1e0416c00f88ed6a55b14d26e5740243e02c2f279a100459a",
-        "arm_select.gif": "ad34fd9fc2256d8552071d60a7be8a3fd9ddd70e6d92a7ad1c88a79dda31055b"
+        "arm_select_cube_v3.mp4": "c6f16278225c97f73a973db6f68cb36ac29b7982df9c0dd2d6ce5b83aef28f12",
+        "arm_select_cube_v3.gif": "2ffc2c1b524a018d0600909a3905186d62ee752c13200ac5020c71cf099ff052"
       }
     },
     {
@@ -297,5 +317,49 @@
         "target": "mug"
       }
     }
-  ]
+  ],
+  "historical_examples": [
+    {
+      "task": "arm_select",
+      "policy": "dm05",
+      "playback_speed": 1,
+      "mp4": "arm_select.mp4",
+      "gif": "arm_select.gif",
+      "duration_seconds": 9.6,
+      "episodes": [
+        {
+          "policy": "dm05",
+          "seed": 200010,
+          "mode": "left",
+          "instruction": "Employ the left arm to lift the block.",
+          "record": "dm05/arm_select/arm_select_ep200010_result.json",
+          "record_sha256": "609c69fbbdf4aaf77f948a3ab77c0f07ba9c2a511a68766a2f844178418d6099",
+          "source_video": "dm05/arm_select/arm_select_ep200010_1.mp4",
+          "source_video_sha256": "a120f6cbc7c62a896de82a758e8b75158541fa9ba3b7be28ff78798e898de341",
+          "source_duration_seconds": 7.9,
+          "label": "LEFT ARM"
+        },
+        {
+          "policy": "dm05",
+          "seed": 200011,
+          "mode": "right",
+          "instruction": "Employ the right arm to lift the block.",
+          "record": "dm05/arm_select/arm_select_ep200011_result.json",
+          "record_sha256": "35f38d71b669909aeb7b7712784a624ef6781ce359556c5b2ece7b29916951fd",
+          "source_video": "dm05/arm_select/arm_select_ep200011_1.mp4",
+          "source_video_sha256": "67164d542aba386585261fa53327f7f57f1059dc4adcdfb3fac52c89e4c6167f",
+          "source_duration_seconds": 8.1,
+          "label": "RIGHT ARM"
+        }
+      ],
+      "sha256": {
+        "arm_select.mp4": "879030f07fa08aa1e0416c00f88ed6a55b14d26e5740243e02c2f279a100459a",
+        "arm_select.gif": "ad34fd9fc2256d8552071d60a7be8a3fd9ddd70e6d92a7ad1c88a79dda31055b"
+      },
+      "source_run": "if-seven-tasks-v2-wide-20blocks-001",
+      "source_results": "../../../result/if-ext-v2-six-tasks-20blocks/episodes.csv",
+      "task_config": "demo_clean_arm_select_v2"
+    }
+  ],
+  "source_overrides": "source_run and source_results are defaults for historical entries; per-task fields override them. historical_examples retain superseded task illustrations."
 }

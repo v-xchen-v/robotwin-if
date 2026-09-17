@@ -16,7 +16,7 @@ Grasp-Approach 暂时下线，保存在 `bak/`，不进入当前默认评测。
 
 各目录提供 `setup_env.sh`、依赖声明、`client.py`、`eval.py` 和输出适配；五个模型还有本仓库的
 `serve.py` 包装，X-VLA 使用 setup 获取的固定上游 server。模型权重由各 README 的下载流程获取。
-实际用于已交付结果的 checkpoint revisions 记录在 [checkpoints.json](../result/if-ext-v2-six-tasks-spatial3-bottle-v6-terminal-20blocks/checkpoints.json)。
+实际用于已交付结果的 checkpoint revisions 记录在 [checkpoints.json](../result/robotwin-if-cube-v3-20blocks/checkpoints.json)。
 VLAct 使用 All 100K，不能用旧 Clean 50K 代替。
 
 运行需要 Linux、NVIDIA GPU、Bash、`setsid`、`flock`、`timeout`、`nvidia-smi`，以及已安装的
@@ -26,7 +26,7 @@ RoboTwin 环境/资产和所选模型的独立环境。默认 sim 用 GPU 0、�
 模型文档中的 `/Data/robotwin-if/...` 是示例存储路径，可改为接收方有写权限的位置，
 并在下载与服务启动参数中保持一致。
 
-先准备 RoboTwin、任务 bridge 和 arm_select v2 配置：
+先准备 RoboTwin、任务 bridge 和 arm_select cube-v3 配置：
 
 ```bash
 # 从仓库根目录执行；首次安装按根 README/setup_robotwin.sh 完成环境与资产准备。
@@ -34,9 +34,9 @@ git submodule update --init third_party/robotwin
 conda activate RoboTwin
 bash scripts/bridge_tasks.sh
 
-# v2 config 不属于 bridge 的 env/instruction 链接；目标不存在时安装。
-ln -s "$PWD/tasks/task_config/demo_clean_arm_select_v2.yml" \
-  third_party/robotwin/task_config/demo_clean_arm_select_v2.yml
+# cube-v3 config 不属于 bridge 的 env/instruction 链接；目标不存在时安装。
+ln -s "$PWD/tasks/task_config/demo_clean_arm_select_v3.yml" \
+  third_party/robotwin/task_config/demo_clean_arm_select_v3.yml
 
 python tools/export_seed_modes.py --check
 ```
@@ -76,43 +76,44 @@ GPU 查询超过 8 秒、温度达到 87°C 或显存超限会停止本次 sim�
 
 ## 2. 六任务 × 20 blocks 的 seed + mode manifest
 
-目录：[`seed-manifests/if-ext-v2-six-tasks-spatial3-20-per-mode/`](../seed-manifests/if-ext-v2-six-tasks-spatial3-20-per-mode/README.md)。
+目录：[`seed-manifests/robotwin-if-cube-v3-20-per-mode/`](../seed-manifests/robotwin-if-cube-v3-20-per-mode/README.md)。
 
 | Task | Modes/block | 20 blocks 的回合数 | Task config |
 |---|---:|---:|---|
 | bottle_verb | 2 | 40 | demo_clean |
 | pick_diverse_object | 2 | 40 | demo_clean |
 | attribute_select | 8 | 160 | demo_clean |
-| arm_select | 2 | 40 | demo_clean_arm_select_v2 |
+| arm_select | 2 | 40 | demo_clean_arm_select_v3 |
 | stack_sequence | 6 | 120 | demo_clean |
 | place_relative | 3 | 60 | demo_clean |
 | 每个 policy 合计 | 23 | 460 | |
 
 - `<task>.json` 是 flat manifest，evaluator 直接读取原始 `seeds`。Spatial 使用 schema 2，
-  每组 seeds 为 `[5k, 5k+1, 5k+4]`；其他五项清单不变。旧 Spatial schema 1 仅供五模式历史校验。
-- [`seed-modes.json`](../seed-manifests/if-ext-v2-six-tasks-spatial3-20-per-mode/seed-modes.json) 给出每个任务的
+  每组 seeds 为 `[5k, 5k+1, 5k+4]`；Arm-Select 使用新 seeds `500000–500039`。旧 Spatial schema 1 仅供五模式历史校验。
+- [`seed-modes.json`](../seed-manifests/robotwin-if-cube-v3-20-per-mode/seed-modes.json) 给出每个任务的
   config、manifest SHA-256、mode 分母及逐 episode 的 `seed`、`mode`、`block`、`block_offset`、scene 信息。
-- [`seed-modes.csv`](../seed-manifests/if-ext-v2-six-tasks-spatial3-20-per-mode/seed-modes.csv) 为相同信息的 460 行平表。
+- [`seed-modes.csv`](../seed-manifests/robotwin-if-cube-v3-20-per-mode/seed-modes.csv) 为相同信息的 460 行平表。
 - `block` 是清单内从 **0 到 19** 的顺序编号；候选 seed 可能有间隔，不等于 `seed // block_size`。
 - `suite.yml`、`qualification-files.json`、`reusable-results.yml` 保留正式发布及历史复用证据。
   接收方启动新评测只需 flat manifests 与 seed/mode 导出，不需要访问复用索引中的原机器路径。
 
 `python tools/export_seed_modes.py --check` 检查 JSON/CSV 与 flat seeds/modes 一致；
-完整发布检查使用 `python seed-manifests/if-ext-v2-six-tasks-spatial3-20-per-mode/verify.py`。
+完整发布检查使用 `python seed-manifests/robotwin-if-cube-v3-20-per-mode/verify.py`。
 
 ## 3. Result
 
-当前交付结果：[`result/if-ext-v2-six-tasks-spatial3-bottle-v6-terminal-20blocks/`](../result/if-ext-v2-six-tasks-spatial3-bottle-v6-terminal-20blocks/README.md)。
-六个 policies 已完成 **2760/2760 episodes、720/720 blocks**，每个 policy 为 460 episodes。
-Bottle-Verb v6 已完成 240 回合，其他五项复用 2520 回合；2026-09-15 22:44 UTC 正式校验通过。
-README 的 Verb / Overall 与结果包一致；旧判定版本在 [结果索引](../result/README.md) 中保留。
+当前结果：[`result/robotwin-if-cube-v3-20blocks/`](../result/robotwin-if-cube-v3-20blocks/README.md)。
+六个 policies 已完成 **2760/2760 episodes、720/720 blocks**，每个 policy 为 460 episodes；2026-09-16 17:59 UTC 正式校验通过。
+Arm-Select cube-v3 的 240 回合全部重新运行，其他五任务的 2520 回合逐字节复用最新 Bottle v6 结果；
+记录哈希、统计及 checkpoint 身份核对通过，详见[合并评测说明](arm-select-cube-v3-evaluation.md)。
+README 的六任务与 Overall 表均已更新；[上一版长柱结果](../result/if-ext-v2-six-tasks-spatial3-bottle-v6-terminal-20blocks/README.md)和旧判定版本在[结果索引](../result/README.md)中保留。
 
 提供 `results.html/md/json/csv`、`episodes.csv`、六份 frozen manifests、checkpoint 身份、
 provenance 与 `SHA256SUMS`。可离线查看汇总表和逐回合计数，不依赖原机器。
 `Overall` 对六个任务的 `Task Avg.` 等权，成功与已完成的 policy failure 都保留。
 
 ```bash
-(cd result/if-ext-v2-six-tasks-spatial3-bottle-v6-terminal-20blocks && sha256sum -c SHA256SUMS)
+(cd result/robotwin-if-cube-v3-20blocks && sha256sum -c SHA256SUMS)
 ```
 
 完整视频和动作轨迹体积较大，仍保存在结果 README 指定的原始评测目录，不包含在此轻量结果包中。
@@ -121,16 +122,16 @@ provenance 与 `SHA256SUMS`。可离线查看汇总表和逐回合计数，不�
 
 ## 交付检查
 
-2026-09-15：新增入口的 8 项 CPU 测试与 3 项已有六-policy CLI/任务契约测试通过；
-seed/mode 一致性、完整 release 验证、两版结果包 SHA-256 校验及 Bash 语法检查通过。
-CPU 测试使用假的 evaluator/GPU 查询，覆盖全失败仍完成、异常停止、原始 seed 保留、
-禁止覆盖及 GPU 异常时清理本脚本的仿真进程组。本次整理没有启动模型服务或重跑 GPU 评测。
+2026-09-16：本次相关的 **31 项 CPU 测试**通过（23 项 formal runner/report 测试、8 项分支交付测试），
+seed/mode 导出、release 复用来源与完整 artifact 哈希验证通过，Bash 语法与 diff 格式检查通过。
+六个 policy 的 240 个新 Arm 回合已实际完成；合并后的 2760 回合通过动作轨迹、初始场景、文件哈希和新视频帧数校验。
+新旧两个结果包的 `SHA256SUMS` 均通过。CPU 入口测试覆盖全失败仍完成、异常停止、原始 seed 保留、禁止覆盖及 GPU 异常时清理本脚本的仿真进程组。
 
 ```bash
 bash -n scripts/eval.sh
 python -m unittest discover -s tests -p test_branch_delivery.py
 # 以下使用安装好客户端依赖的 RoboTwin 环境。
-python -m unittest discover -s tests -p test_if_policy_evaluation.py
+python -m unittest discover -s tests -p 'test_formal*.py'
 python tools/export_seed_modes.py --check
-python seed-manifests/if-ext-v2-six-tasks-spatial3-20-per-mode/verify.py
+python seed-manifests/robotwin-if-cube-v3-20-per-mode/verify.py
 ```

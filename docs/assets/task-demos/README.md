@@ -1,22 +1,25 @@
 # README 任务视频素材
 
-这六组视频来自已完成的六任务、20-block policy 评测，用于介绍任务行为。
-每个画面选用一个在当时规则下标记成功的回合，原始来源保留在 [历史结果包](../../../result/if-ext-v2-six-tasks-20blocks/README.md)。
-视频选例不参与结果计算，也没有重跑仿真或模型。
+这六组视频用于介绍任务行为。Arm-Select 已换为 cube-v3 新评测中完成的左右臂回合；
+其余五组保留 [历史结果包](../../../result/if-ext-v2-six-tasks-20blocks/README.md)中的示例。
+每个画面选用一个在对应规则下标记成功的回合；视频选例不参与结果计算，导出过程没有重跑仿真或模型。
 Bottle-Verb 已完成 v6 重测；此处 Hy-VLA pick / shake 视频仍为旧判定演示，不作为 v6 成功证据。
-当前成绩见 [v6 六任务结果包](../../../result/if-ext-v2-six-tasks-spatial3-bottle-v6-terminal-20blocks/README.md)。
+当前成绩见 [cube-v3 六任务结果包](../../../result/robotwin-if-cube-v3-20blocks/README.md)，评测与复用证据见[运行说明](../../arm-select-cube-v3-evaluation.md)。
 
 | Task | Policy | Seeds（按画面从左到右、从上到下） | 展示内容 | 存档播放倍速 |
 |---|---|---|---|---:|
 | [bottle_verb](bottle_verb.mp4) | Hy-VLA | 100026, 100027 | pick / shake | 1× |
 | [pick_diverse_object](pick_diverse_object.mp4) | 左：DM05；右：Hy-VLA | 100014, 100053 | seen: mug / unseen: wooden mallet | 1× |
 | [attribute_select](attribute_select.mp4) | Hy-VLA | 100080, 100082, 100085, 100087 | red / cat / long bar / small | 1× |
-| [arm_select](arm_select.mp4) | DM05 | 200010, 200011 | v2 left / right | 1× |
+| [arm_select](arm_select_cube_v3.mp4) | LingBot-VA | 500000, 500001 | cube-v3 left / right | 1× |
 | [stack_sequence](stack_sequence.mp4) | VLAct All | 100014, 100017 | red→green→blue / green→blue→red（自下而上） | 3× |
 | [place_relative](place_relative.mp4) | VLAct All | 100055, 100059 | left / on top | 1.5× |
 
 Bottle-Verb、Arm-Select、Stack-Sequence 和 Place-Relative 各自的两个例子来自同一个 block。
 Noun-Grounding 的 seen/unseen 是两个独立场景；Attribute-Select 展示同一个 block 中四个不同属性的场景，未展示全部八个 modes。
+
+旧 Arm-Select v2 的 [MP4](arm_select.mp4) / [GIF](arm_select.gif) 原样保留，来源移入 `sources.json` 的 `historical_examples`。
+新的 cube-v3 示例来自 LingBot-VA：左/右回合分别在第 82/84 次动作后成功，记录的方块抬升均超过 5 cm，且指定臂匹配。
 
 Noun-Grounding 的 Seen 示例已从 Hy-VLA seed 100052（coffee box）替换为 DM05 seed 100014（mug）。
 原例被用户指出画面失败；其存档虽标记为 `success`，末段动作记录显示左夹爪已打开，故撤出展示。
@@ -25,8 +28,8 @@ Noun-Grounding 的 Seen 示例已从 Hy-VLA seed 100052（coffee box）替换为
 
 ## 文件与播放
 
-- `<task>.gif`：README 内联循环预览，8 fps、480 px 宽。
-- `<task>.mp4`：H.264 / yuv420p、20 fps、无音轨、faststart，可点击或下载播放。
+- `<task>.gif`：README 内联循环预览，8 fps、480 px 宽；当前 Arm 示例使用 `arm_select_cube_v3.gif`。
+- `<task>.mp4`：H.264 / yuv420p、20 fps、无音轨、faststart，可点击或下载播放；当前 Arm 示例使用 `arm_select_cube_v3.mp4`。
 - [sources.json](sources.json)：逐画面的原始指令、mode、seed、policy、源视频/回合记录路径与 SHA-256，以及导出文件 SHA-256。
 
 GIF 预览兼容 GitHub Markdown；点击预览或“观看 MP4”链接打开对应视频，无需支持 README 内的 HTML `video` 标签。
@@ -34,10 +37,10 @@ GIF 预览兼容 GitHub Markdown；点击预览或“观看 MP4”链接打开�
 
 ## 来源与处理
 
-源归档：`if-seven-tasks-v2-wide-20blocks-001`。选例均属于当前六任务结果，
-Arm-Select 使用 `demo_clean_arm_select_v2`，VLAct 使用 All checkpoint。
-可用 `sources.json` 中的 `record` 与 `record_sha256` 对照结果包的 `episodes.csv`；
-模型版本见 [checkpoints.json](../../../result/if-ext-v2-six-tasks-20blocks/checkpoints.json)。
+Arm-Select 的源归档为 `robotwin-if-cube-v3-20blocks-001`，配置 `demo_clean_arm_select_v3`；
+其余示例与旧 Arm v2 视频来自 `if-seven-tasks-v2-wide-20blocks-001`，VLAct 使用 All checkpoint。
+`sources.json` 顶层记录历史默认来源，Arm 条目的 `source_run` / `source_results` 明确覆盖该默认值。
+可用逐条 `record` 与 `record_sha256` 对照对应结果包的 `episodes.csv`；checkpoint 身份沿用上一轮。
 
 处理仅使用 CPU 上的 FFmpeg：从 960×240 的三相机存档裁出左侧 320×240 的 head camera，
 加上 mode 标签后按两列拼接；Attribute-Select 为两行，其余为一行。
