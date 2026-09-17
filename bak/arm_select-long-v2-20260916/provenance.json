@@ -1,0 +1,13 @@
+{
+  "created_at": "2026-09-16T11:13:14.084705+00:00",
+  "parent_commit": "9db9463d0659d0ba13470403a9b529387e297a55",
+  "robotwin_commit": "b82ffb81d291d14c24be444bb7b6f81719481e0f",
+  "status_before": " m third_party/robotwin\n?? .claude/settings.json\n?? bak/arm_select-long-v2-20260916/\n?? third_party/robotwin-manifest-clean/\n",
+  "result_package": "result/if-ext-v2-six-tasks-spatial3-bottle-v6-terminal-20blocks",
+  "raw_source": "/Data/robotwin-if/evaluations/if-six-tasks-spatial3-bottle-v6-terminal-20blocks-001",
+  "episodes": 240,
+  "policy_count": 6,
+  "copied_files": 3949,
+  "copied_bytes": 311714442,
+  "raw_results_are_independent_copies": true
+}
