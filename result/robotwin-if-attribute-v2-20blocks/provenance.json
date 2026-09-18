@@ -1,0 +1,26 @@
+{
+  "source_run": "/Data/robotwin-if/evaluations/robotwin-if-attribute-v2-20blocks-001",
+  "taskset": "seed-manifests/robotwin-if-attribute-v2-20-per-mode",
+  "previous_package": "result/robotwin-if-cube-v3-20blocks",
+  "new_episodes": 960,
+  "reused_episodes": 1800,
+  "unchanged_five_task_rows_and_record_hashes": true,
+  "unchanged_checkpoint_metadata": true,
+  "new_attribute_initial_observations_equal_to_parent": true,
+  "attribute_success_checker": {
+    "success_checker_version": "target-only-lift-v2",
+    "success_checker_parameters": {
+      "lift_m": 0.05
+    }
+  },
+  "arm_select_config": "demo_clean_arm_select_v3",
+  "arm_select_seeds": [
+    500000,
+    500039
+  ],
+  "formal_validation_sha256": "77a6de576522eadbd40bbc10f38f23a77a46d5f4d34cdde3a3cef74069ca36f8",
+  "oracle_setup_failed_attempts": 1,
+  "oracle_setup_retry_audit_sha256": "d5f2b6a568503ca70365f19e0e1886aeeeeadc321817d002f1dd3919e038f8fc",
+  "parent_results_sha256": "18bc80006e91c15cb4aaa168500a26f2f228de0f267a81cfbd02f6e8247d0908",
+  "previous_five_task_records": "Byte-identical copies; origin reflects reuse in this run."
+}

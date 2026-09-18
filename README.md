@@ -17,23 +17,25 @@ Grasp-Approach 已于 2026-09-15 暂时下线；实现、配置、测试和 prob
 
 本仓库维护 benchmark task（场景、干扰物、指令模板、成功判定与评测语义），并在 [`policies/`](policies/README.md) 中维护 X-VLA、LingBot-VA 等开源策略的独立推理环境与适配代码，**不在本仓库训练模型**。模型服务与 RoboTwin 仿真使用不同的 Conda 环境；也可由外部 CogACT/X-VLA 集成提供推理。
 
-**当前结果包：[`result/robotwin-if-cube-v3-20blocks/`](result/robotwin-if-cube-v3-20blocks/README.md)** ·
-[HTML 报表](result/robotwin-if-cube-v3-20blocks/results.html) ·
-[逐回合 CSV](result/robotwin-if-cube-v3-20blocks/episodes.csv) · [历史结果](result/README.md)。
+**当前结果包：[`result/robotwin-if-attribute-v2-20blocks/`](result/robotwin-if-attribute-v2-20blocks/README.md)** ·
+[HTML 报表](result/robotwin-if-attribute-v2-20blocks/results.html) ·
+[逐回合 CSV](result/robotwin-if-attribute-v2-20blocks/episodes.csv) · [历史结果](result/README.md)。
 
-当前 [RoboTwin-IF cube-v3 taskset](seed-manifests/robotwin-if-cube-v3-20-per-mode/README.md)
+当前 [RoboTwin-IF Attribute-v2 taskset](seed-manifests/robotwin-if-attribute-v2-20-per-mode/README.md)
 已完成六个 policies × 六任务 × 每任务 20 blocks：460 回合/policy，共 2760 回合、720 blocks。
-本轮只重跑 5 cm cube 的 Arm-Select 240 回合，其余五任务复用最新 Bottle v6 结果中的 2520 回合；
-Spatial 仅包含 left/right/on_top，详见[合并评测说明](docs/arm-select-cube-v3-evaluation.md)和[完整结果](result/robotwin-if-cube-v3-20blocks/README.md)。
+本轮按修正后的 `target-only-lift-v2` 重跑 Attribute-Select 960 回合，其余五任务逐字节复用上一版 cube-v3 的 1800 回合。
+Arm 保留 5 cm cube-v3，Bottle 保留 v6 terminal 判据，Spatial 仅含 left/right/on_top。
+详见[成功判据](docs/attribute-select-target-only.md)和[完整结果](result/robotwin-if-attribute-v2-20blocks/README.md)。
 历史七任务 [IF-Ext v2 wide 20-block 结果](result/if-ext-v2-wide-20blocks/README.md)保留六个 policies × 七任务的 3240 回合及其校验证据。
 
 <a id="policy-results"></a>
 
 ## 六个 Policies 的评测结果
 
-2026-09-16 17:59 UTC 完成并校验：**六任务 × 每任务 20 blocks × 六个 policies**，共 **2760/2760 回合、720/720 blocks**。
-Arm-Select 使用 **cube-v3**，240 回合全部重新运行；其他五任务的 2520 回合、记录哈希和统计与[上一版结果](result/if-ext-v2-six-tasks-spatial3-bottle-v6-terminal-20blocks/README.md)一致。
-Bottle-Verb 保留 v6 [回合末判定](docs/bottle-verb-pick-hold.md)，Spatial 保留 left/right/on_top；各模型 checkpoint 和推理参数沿用上一轮。
+2026-09-17 22:39 UTC 完成并校验：**六任务 × 每任务 20 blocks × 六个 policies**，共 **2760/2760 回合、720/720 blocks**。
+Attribute-Select 按新判据重新运行 **960 回合**；其余五任务的 **1800 回合**、记录哈希和统计与[上一版 cube-v3 结果](result/robotwin-if-cube-v3-20blocks/README.md)一致。
+六份 seed manifest、checkpoint 和推理参数沿用上一版；新回合初始观测已逐数组核对。
+共有 1 次推理前 oracle 初始化失败，均用原 seed 恢复；已完成的 policy 结果没有重跑。
 VLAct 使用 `StarVLA/VLAct_Qwen3OFT_Robotwin_all_Finetune`（All 100K）。
 
 **微调数据差异：** X-VLA 使用在 RoboTwin **clean** 数据上微调的 checkpoint，其余五个 policies 使用在
@@ -43,14 +45,18 @@ VLAct 使用 `StarVLA/VLAct_Qwen3OFT_Robotwin_all_Finetune`（All 100K）。
 任务列为**成功数 / 已评测回合数**，成功与已完成的 policy failure 均计入分母。
 **Overall (%) = 六个任务成功率的等权平均**，每个任务内部对 modes 等权；它不等于把 460 个回合合并后的成功率。
 
-| Policy | Verb | Noun | Attribute | Arm cube-v3 | Sequence | Spatial | Overall (%) | 完成回合 | 完成 blocks |
+| Policy | Verb | Noun | Attribute v2 | Arm cube-v3 | Sequence | Spatial | Overall (%) | 完成回合 | 完成 blocks |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| [X-VLA](policies/xvla/README.md) | 20/40 | 15/40 | 100/160 | 8/40 | 0/120 | 6/60 | 30.0 | 460/460 | 120/120 |
-| [LingBot-VA](policies/lingbot_va/README.md) | 20/40 | 30/40 | 145/160 | 38/40 | 17/120 | 26/60 | 61.4 | 460/460 | 120/120 |
-| [LingBot-VLA](policies/lingbot_vla/README.md) | 20/40 | 13/40 | 93/160 | 18/40 | 14/120 | 3/60 | 33.7 | 460/460 | 120/120 |
-| [VLAct All](policies/vlact/README.md) | 36/40 | 28/40 | 133/160 | 29/40 | 15/120 | 19/60 | 60.0 | 460/460 | 120/120 |
-| [DM05](policies/dm05/README.md) | 40/40 | 25/40 | 112/160 | 25/40 | 9/120 | 20/60 | 56.0 | 460/460 | 120/120 |
-| [Hy-VLA](policies/hy_vla/README.md) | 20/40 | 11/40 | 143/160 | 19/40 | 15/120 | 7/60 | 39.8 | 460/460 | 120/120 |
+| [X-VLA](policies/xvla/README.md) | 20/40 | 15/40 | 73/160 | 8/40 | 0/120 | 6/60 | 27.2 | 460/460 | 120/120 |
+| [LingBot-VA](policies/lingbot_va/README.md) | 20/40 | 30/40 | 108/160 | 38/40 | 17/120 | 26/60 | 57.5 | 460/460 | 120/120 |
+| [LingBot-VLA](policies/lingbot_vla/README.md) | 20/40 | 13/40 | 77/160 | 18/40 | 14/120 | 3/60 | 32.0 | 460/460 | 120/120 |
+| [VLAct All](policies/vlact/README.md) | 36/40 | 28/40 | 108/160 | 29/40 | 15/120 | 19/60 | 57.4 | 460/460 | 120/120 |
+| [DM05](policies/dm05/README.md) | 40/40 | 25/40 | 88/160 | 25/40 | 9/120 | 20/60 | 53.5 | 460/460 | 120/120 |
+| [Hy-VLA](policies/hy_vla/README.md) | 20/40 | 11/40 | 83/160 | 19/40 | 15/120 | 7/60 | 33.5 | 460/460 | 120/120 |
+
+**Attribute-Select 判定修正（2026-09-17）：** 新规则要求目标当前抬升超过 5 cm，且干扰物在整回合中从未越过该阈值。
+先抓错再抓对仍失败。上表 Attribute/Overall 已使用新判据重新评测；旧结果包保持原始计数。
+新旧差异包含判据变化及重新推理的影响。见[修正与回放证据](docs/attribute-select-target-only.md)。
 
 **待复核记录：** Hy-VLA 的 `pick_diverse_object` seed `100052`（coffee box）被用户指出视频表现失败，
 其归档自动判定仍为成功；该片段已从 README 演示中撤下。上表保持归档计数，尚未据此人工修订分数，
@@ -85,16 +91,16 @@ Spatial 的 Top 表示 on_top。每个 policy 的每项任务均已完成 20/20 
 | DM05 | 18/20 | 7/20 | 62.5 |
 | Hy-VLA | 7/20 | 4/20 | 27.5 |
 
-### Attribute — `attribute_select`
+### Attribute v2 — `attribute_select`
 
 | Policy | Color | Decal | Shape | Size | Avg. (%) |
 |---|---:|---:|---:|---:|---:|
-| X-VLA | 31/40 | 24/40 | 20/40 | 25/40 | 62.5 |
-| LingBot-VA | 38/40 | 35/40 | 37/40 | 35/40 | 90.6 |
-| LingBot-VLA | 35/40 | 21/40 | 16/40 | 21/40 | 58.1 |
-| VLAct All | 39/40 | 33/40 | 35/40 | 26/40 | 83.1 |
-| DM05 | 36/40 | 25/40 | 28/40 | 23/40 | 70.0 |
-| Hy-VLA | 36/40 | 35/40 | 34/40 | 38/40 | 89.4 |
+| X-VLA | 16/40 | 20/40 | 17/40 | 20/40 | 45.6 |
+| LingBot-VA | 39/40 | 21/40 | 28/40 | 20/40 | 67.5 |
+| LingBot-VLA | 20/40 | 21/40 | 16/40 | 20/40 | 48.1 |
+| VLAct All | 34/40 | 25/40 | 29/40 | 20/40 | 67.5 |
+| DM05 | 20/40 | 20/40 | 28/40 | 20/40 | 55.0 |
+| Hy-VLA | 20/40 | 21/40 | 22/40 | 20/40 | 51.9 |
 
 ### Arm cube-v3 — `arm_select`
 
@@ -136,19 +142,19 @@ Spatial 从五模式收缩为 **left/right/on_top**；这是视频复核后的�
 
 </details>
 
-数据来源：[HTML 报表](result/robotwin-if-cube-v3-20blocks/results.html) ·
-[完整结果表](result/robotwin-if-cube-v3-20blocks/results.md) ·
-[分模式 CSV](result/robotwin-if-cube-v3-20blocks/results.csv) ·
-[逐回合 CSV](result/robotwin-if-cube-v3-20blocks/episodes.csv) ·
-[结果 JSON](result/robotwin-if-cube-v3-20blocks/results.json) ·
-[Checkpoint 版本](result/robotwin-if-cube-v3-20blocks/checkpoints.json) ·
-[校验证据](result/robotwin-if-cube-v3-20blocks/validation.json)。
+数据来源：[HTML 报表](result/robotwin-if-attribute-v2-20blocks/results.html) ·
+[完整结果表](result/robotwin-if-attribute-v2-20blocks/results.md) ·
+[分模式 CSV](result/robotwin-if-attribute-v2-20blocks/results.csv) ·
+[逐回合 CSV](result/robotwin-if-attribute-v2-20blocks/episodes.csv) ·
+[结果 JSON](result/robotwin-if-attribute-v2-20blocks/results.json) ·
+[Checkpoint 版本](result/robotwin-if-attribute-v2-20blocks/checkpoints.json) ·
+[校验证据](result/robotwin-if-attribute-v2-20blocks/validation.json)。
 
 ## 六个任务与视频
 
 每项任务聚焦一种指令差异：做什么动作、抓哪个物体、按什么属性选择、用哪只手、按什么顺序、放在哪个方向。
 下方动态预览可点击打开 MP4；素材随仓库提供。视频选自正式评测中的成功回合，用于展示任务行为，
-整体表现见 [完整结果](result/robotwin-if-cube-v3-20blocks/README.md)。原始指令、seed、policy 和视频处理说明见 [素材来源](docs/assets/task-demos/README.md)。
+整体表现见 [完整结果](result/robotwin-if-attribute-v2-20blocks/README.md)。原始指令、seed、policy 和视频处理说明见 [素材来源](docs/assets/task-demos/README.md)。
 
 <a id="bottle-verb"></a>
 
@@ -182,6 +188,8 @@ pick 跑满 700 个动作后判定：允许拿起后平移，末尾保持抬升�
 在两个物体中按指定属性选择并抓起目标：**颜色**（red / blue）、**图案**（cat / dog）、
 **形状**（block / bar）或**大小**（big / small）。同一属性的两个指令共享场景、切换目标；
 一个 block 包含四组对比、共八个回合。下例依次展示 red、cat、long bar、small 四类属性指令。
+当前[成功判据](docs/attribute-select-target-only.md)要求目标抬升超过 5 cm，且干扰物在本回合从未越过该阈值；
+先抓错再抓对、或同时抓起两个物体，均判失败。下方演示来自旧判据归档。
 
 [![Attribute-Select：颜色、图案、形状和大小四种属性的抓取示例](docs/assets/task-demos/attribute_select.gif)](docs/assets/task-demos/attribute_select.mp4)
 
@@ -192,6 +200,8 @@ pick 跑满 700 个动作后判定：允许拿起后平移，末尾保持抬升�
 ### 4. Arm-Select：使用指定的机械臂
 
 对同一目标方块，分别要求用**左臂 / 右臂**抓起；用错机械臂即使抬起方块也不算成功。
+2026-09-18 已加入[错误手臂历史判据](docs/arm-select-target-arm-only.md)：先用错误臂拿起、再换指定臂仍失败。
+当前已发布报表中的 Arm/Overall 使用修复前的判据，尚未按该新规则重跑。
 当前 taskset 的 [cube-v3 配置](docs/recon/arm-select-cube-v3.md) 使用 5 cm cube，在双臂共用区域内随机平移和绕竖直轴旋转。
 不同 blocks 改变物体的位置和朝向，同一 block 的两个回合共享布局。
 下例左右分别为 left arm / right arm。
@@ -231,8 +241,8 @@ pick 跑满 700 个动作后判定：允许拿起后平移，末尾保持抬升�
 | 六个 policy 的 inference code / setup / eval adapter | [`policies/`](policies/README.md) |
 | 统一 bash 评测入口（单个模型服务 + 串行 sim） | [`scripts/eval.sh`](scripts/eval.sh) |
 | 视频人工复核、Success/Fail 标注与判定分歧导出 | [`tools/policy-video-review/`](tools/policy-video-review/README.md) |
-| 六任务 × 20 blocks：flat seeds 与显式 seed/mode JSON、CSV | [`seed-manifests/robotwin-if-cube-v3-20-per-mode/`](seed-manifests/robotwin-if-cube-v3-20-per-mode/README.md) |
-| 已完成结果、逐回合 CSV、checkpoint 与校验证据 | [`result/robotwin-if-cube-v3-20blocks/`](result/robotwin-if-cube-v3-20blocks/README.md) |
+| 六任务 × 20 blocks：flat seeds 与显式 seed/mode JSON、CSV | [`seed-manifests/robotwin-if-attribute-v2-20-per-mode/`](seed-manifests/robotwin-if-attribute-v2-20-per-mode/README.md) |
+| 已完成结果、逐回合 CSV、checkpoint 与校验证据 | [`result/robotwin-if-attribute-v2-20blocks/`](result/robotwin-if-attribute-v2-20blocks/README.md) |
 
 接收方从 [分支交付说明](docs/branch-delivery.md) 开始；运行新评测不依赖本机 `/Data` 下的旧运行目录。
 
@@ -240,7 +250,7 @@ pick 跑满 700 个动作后判定：允许拿起后平移，末尾保持抬升�
 
 ```bash
 python tools/policy-video-review/server.py \
-  --run-dir outputs/policy-eval/robotwin-if-cube-v3-20blocks-001
+  --run-dir outputs/policy-eval/robotwin-if-attribute-v2-20blocks-001
 ```
 
 打开 `http://127.0.0.1:8893/`，按 policy/task 筛选、逐帧查看和标注，导出自动判定与人工判定的分歧。
@@ -337,7 +347,7 @@ done
 ### 4. Policy 评测
 
 以下为初次接入时的 smoke 验证记录，Arm-Select 使用当时的长柱环境。
-当前 cube-v3 的六个 policies、20-block 正式成绩见[评测结果](#policy-results)。
+当前 Attribute-v2 的六个 policies、20-block 正式成绩见[评测结果](#policy-results)。
 
 本仓库维护的策略入口见 [`policies/README.md`](policies/README.md)。X-VLA 环境安装命令为 `bash policies/xvla/setup_env.sh`，服务启动与最小评测命令见其 [README](policies/xvla/README.md)。初次闭环验证已完成：raw `click_bell` 1/1 成功，IF `arm_select` 的一个完整左右臂 block 为 1/2（左成功、右达到动作上限），结果属于 smoke 验证。每个策略先验证一个 raw RoboTwin task，再验证一个 IF task。
 
@@ -449,9 +459,9 @@ third_party/xvla/        setup 获取的固定版本 X-VLA 源码（Git 忽略�
 
 当前维护六项任务；inventory、bridge 与 seed contracts 由静态检查保持一致。
 Grasp-Approach 已归档，不参与默认安装、生成、评测或当前 Overall。
-当前 cube-v3 taskset 的六个 policies × 20 blocks 结果已完成并校验，共 2760 回合、720 个完整 blocks；Arm-Select 重新运行 240 回合，其他五任务复用 2520 回合。
+当前 Attribute-v2 taskset 的六个 policies × 20 blocks 结果已完成并校验，共 2760 回合、720 个完整 blocks；Attribute 重新运行 960 回合，其他五任务复用 cube-v3 的 1800 回合。
 当前入口见 [正式评测说明](docs/formal-policy-evaluation.md) 和 [结果目录](result/README.md)。
 
 任务执行使用固定 manifest，成功和 policy failure 都保留，基础设施错误不替换 seed。
-正式 runner 使用单机串行、一个 sim 与一个模型服务，保留场景/结果校验和 GPU 安全停止。
+正式 runner 保留场景/结果校验和 GPU 安全停止；当前 Attribute 重评使用受资源限制的两路并发，见[运行说明](docs/attribute-select-v2-evaluation.md)。
 历史七任务 release、原始输出与源码快照继续保留，供追溯原评测范围。
