@@ -12,7 +12,7 @@ from if_benchmark.seed_modes import check_seed_modes, export_texts
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--manifest-dir', type=Path,
-                        default=ROOT / 'seed-manifests/robotwin-if-cube-v3-20-per-mode')
+                        default=ROOT / 'seed-manifests/robotwin-if-arm-only-v2-20-per-mode')
     parser.add_argument('--check', action='store_true')
     args = parser.parse_args()
     if args.check:

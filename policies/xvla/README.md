@@ -80,8 +80,8 @@ conda run --no-capture-output -n RoboTwin python policies/xvla/eval.py \
 
 # 2. Raw 成功后：IF task，manifest 的首个完整左右臂 block。
 conda run --no-capture-output -n RoboTwin python policies/xvla/eval.py \
-  --task arm_select \
-  --seed-manifest seed-manifests/if-ext-v1-100-per-mode/arm_select.json \
+  --task arm_select --task-config demo_clean_arm_select_v3 \
+  --seed-manifest seed-manifests/robotwin-if-arm-only-v2-20-per-mode/arm_select.json \
   --blocks 1 --sim-gpu 1 \
   --output-dir outputs/policy-eval/smoke-blocks1-002/xvla/arm_select
 ```

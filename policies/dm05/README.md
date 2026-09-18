@@ -66,8 +66,8 @@ conda run --no-capture-output -n RoboTwin python policies/dm05/eval.py \
 
 # After a successful raw episode, run the complete first balanced IF block.
 conda run --no-capture-output -n RoboTwin python policies/dm05/eval.py \
-  --task arm_select \
-  --seed-manifest seed-manifests/if-ext-v1-100-per-mode/arm_select.json \
+  --task arm_select --task-config demo_clean_arm_select_v3 \
+  --seed-manifest seed-manifests/robotwin-if-arm-only-v2-20-per-mode/arm_select.json \
   --blocks 1 --sim-gpu 0 \
   --output-dir outputs/policy-eval/smoke-blocks1/dm05/arm_select
 ```

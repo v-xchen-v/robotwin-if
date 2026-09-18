@@ -2,14 +2,15 @@
 
 当前任务为 bottle_verb、pick_diverse_object、attribute_select、arm_select、stack_sequence、place_relative。
 Grasp-Approach 已暂时下线，见 [归档说明](../bak/grasp_cube_approach/README.md)。
-当前使用 [RoboTwin-IF cube-v3 taskset](../seed-manifests/robotwin-if-cube-v3-20-per-mode/README.md)，
-各 policy 460 回合，全套 **2,760/2,760 回合、720/720 blocks** 已于 2026-09-16 17:59 UTC 完成校验。Arm-Select 的 240 回合已重新运行，
-其他五任务复用[上一版已完成结果包](../result/if-ext-v2-six-tasks-spatial3-bottle-v6-terminal-20blocks/README.md)中的 2520 回合，
-[新结果包](../result/robotwin-if-cube-v3-20blocks/README.md)已生成；具体来源、配置和运行命令见 [cube-v3 合并评测](arm-select-cube-v3-evaluation.md)。
+当前使用 [RoboTwin-IF Arm-only-v2 taskset](../seed-manifests/robotwin-if-arm-only-v2-20-per-mode/README.md)，
+各 policy 460 回合，全套 **2760/2760 回合、720/720 blocks** 已于 2026-09-18 05:26 UTC 完成校验。
+Arm 按 target-arm-only-lift-v2 重跑 240 回合，其他五任务复用 [Attribute-v2](../result/robotwin-if-attribute-v2-20blocks/README.md) 的 2520 回合。
+[最新结果](../result/robotwin-if-arm-only-v2-20blocks/README.md)及 [远端推理/并发调度记录](arm-select-target-only-v2-evaluation.md)已归档。
+正式 runner 的 `--release` 默认值已同步到该版本；旧清单实体见 [历史归档](../seed-manifests-archive/README.md)。
 [新的 pick 稳定保持判定](bottle-verb-pick-hold.md)下，prepare 会排除旧 Bottle-Verb 结果并保留原 seed 重测；该轮重测现已完成。
 当前 v6 的 pick 允许平移，在完整执行 700 个动作后判断末尾姿态保持和全程旋转摇晃；不再提前成功。shake 及其他任务保留原终止方式。
 
-## 当前入口：单机串行
+## 基础入口：单机串行
 
 `tools/run_formal_policy_suite.py` 按 policy、task、seed 依次运行，只启动一个
 simulator（GPU 0）和一个模型服务（GPU 1）。同一个模型跑完各任务后释放，再加载下一个模型。
@@ -17,8 +18,8 @@ simulator（GPU 0）和一个模型服务（GPU 1）。同一个模型跑完各�
 当前 runner 的 Python/模型环境路径及两张 GPU 的配置面向本机，见脚本顶部常量。
 
 每个新回合都执行完整 oracle qualification，通过后关闭场景，再用原 seed 重建 policy
-场景。所有任务使用 RoboTwin 原生渲染；不再使用 oracle 磁盘缓存、延迟渲染、双队列、
-远端服务器转发、多机分片或运行中暂停降温调度。任务本身的配对资格检查仍保留。
+场景。基础 runner 使用 RoboTwin 原生渲染和串行调度；任务本身的配对资格检查仍保留。
+需要远端模型、并发 simulator 或 Hy-VLA 双实例时，使用 [Arm 重评说明](arm-select-target-only-v2-evaluation.md) 中的专用 controller。
 
 X-VLA 首先建立参考场景。随后五个 policy 在调用模型前逐回合核对参考文件 SHA-256、
 三路 RGB 逐像素相等、机器人状态绝对误差不超过 `1e-6`、指令及步数上限相同。
@@ -75,8 +76,8 @@ GPU、网络、场景不一致及执行异常不走这个重试。
 全套 **3,240 回合、840 个完整 blocks**。从 12 扩到 20 时保留全部 1,944 条旧成功/失败结果，
 新增 1,296 回合；seed 选择不参考 policy 成败。
 
-结果入口在 [`result/`](../result/README.md)。当前 v6 六任务完整数据目录为
-`/Data/robotwin-if/evaluations/if-six-tasks-spatial3-bottle-v6-terminal-20blocks-001`，
+结果入口在 [`result/`](../result/README.md)。当前 Arm-only-v2 六任务完整数据目录为
+`/Data/robotwin-if/evaluations/robotwin-if-arm-only-v2-20blocks-001`，
 repo 入口为同名的 `outputs/policy-eval/` 子目录。历史七任务目录
 `/Data/robotwin-if/evaluations/if-seven-tasks-v2-wide-20blocks-001` 保留原判定和原始产物。
 
@@ -85,7 +86,7 @@ provenance、mode 和计数，生成 Markdown、HTML、JSON 与分模式 CSV：
 
 ```bash
 python tools/summarize_formal_policy_results.py \
-  --run-dir /Data/robotwin-if/evaluations/if-six-tasks-spatial3-bottle-v6-terminal-20blocks-001 \
+  --run-dir /Data/robotwin-if/evaluations/robotwin-if-arm-only-v2-20blocks-001 \
   --output outputs/policy-eval/reports/results-current.md
 ```
 

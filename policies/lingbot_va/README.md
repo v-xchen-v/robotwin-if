@@ -46,8 +46,8 @@ conda run --no-capture-output -n RoboTwin python policies/lingbot_va/eval.py \
 
 # After a native success: the first complete left/right IF block.
 conda run --no-capture-output -n RoboTwin python policies/lingbot_va/eval.py \
-  --task arm_select \
-  --seed-manifest seed-manifests/if-ext-v1-100-per-mode/arm_select.json \
+  --task arm_select --task-config demo_clean_arm_select_v3 \
+  --seed-manifest seed-manifests/robotwin-if-arm-only-v2-20-per-mode/arm_select.json \
   --blocks 1 --sim-gpu 0 \
   --output-dir outputs/policy-eval/smoke-blocks1/lingbot_va/arm_select
 ```

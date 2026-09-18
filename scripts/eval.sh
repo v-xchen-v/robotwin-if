@@ -7,7 +7,7 @@ export PYTHONNOUSERSITE=1
 SIM_PYTHON=${SIM_PYTHON:-python3}
 POLICY= TASK=all OUTPUT_DIR= SERVER_URL=
 BLOCKS=20 SIM_GPU=0 MODEL_GPU=1 DRY_RUN=0
-MANIFEST_DIR="$REPO_ROOT/seed-manifests/robotwin-if-cube-v3-20-per-mode"
+MANIFEST_DIR="$REPO_ROOT/seed-manifests/robotwin-if-arm-only-v2-20-per-mode"
 ROBOTWIN_DIR="$REPO_ROOT/third_party/robotwin"
 
 usage() {

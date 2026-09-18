@@ -745,7 +745,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('command', choices=('prepare', 'run', 'status', 'verify', 'worker'))
     parser.add_argument('--run-dir', type=Path, default=DEFAULT_RUN)
-    parser.add_argument('--release', type=Path, default=ROOT / 'seed-manifests/robotwin-if-attribute-v2-20-per-mode')
+    parser.add_argument('--release', type=Path, default=ROOT / 'seed-manifests/robotwin-if-arm-only-v2-20-per-mode')
     parser.add_argument('--old-run', type=Path,
                         help='Prepare: prior run with matching checkpoint and inference metadata')
     parser.add_argument('--policy', choices=POLICIES)

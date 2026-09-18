@@ -6,6 +6,7 @@ from collections import Counter
 from copy import deepcopy
 import csv
 from datetime import datetime, timezone
+import hashlib
 import json
 from pathlib import Path
 import shutil
@@ -69,6 +70,25 @@ def source_audit(old):
         checkpoint_metadata='Retain prior run metadata and services-before-recovery.json through formal prepare.')
 
 
+def verify_source_audit(old, recorded):
+    observed = source_audit(old)
+    if observed == recorded:
+        return
+    # Moving the default entry to this release must not rewrite its frozen audit.
+    # Permit only this exact CLI-default edit: every other runner byte and every
+    # task/config/source-audit field still have to match the published evidence.
+    name = 'tools/run_formal_policy_suite.py'
+    before = b"parser.add_argument('--release', type=Path, default=ROOT / 'seed-manifests/robotwin-if-attribute-v2-20-per-mode')"
+    after = before.replace(b'robotwin-if-attribute-v2', b'robotwin-if-arm-only-v2')
+    runner = (ROOT / name).read_bytes()
+    assert runner.count(after) == 1, 'Unexpected formal runner release default'
+    original = runner.replace(after, before, 1)
+    assert hashlib.sha256(original).hexdigest() == recorded['source_difference_sha256'][name], \
+        'Formal runner changed beyond its release default'
+    observed['source_difference_sha256'][name] = recorded['source_difference_sha256'][name]
+    assert observed == recorded, 'Source reuse audit changed beyond the release default'
+
+
 def verify(base=RELEASE):
     suite = yaml.safe_load((base / 'suite.yml').read_text())
     assert suite['policies'] == POLICIES
@@ -97,7 +117,7 @@ def verify(base=RELEASE):
         expected_keys.update((p, task, seed) for p in POLICIES for seed in reusable)
     assert specs['arm_select']['task_config'] == 'demo_clean_arm_select_v3'
     assert {k: specs['arm_select'][k] for k in current_success_checker('arm_select')} == current_success_checker('arm_select')
-    assert source_audit(Path(suite['previous_formal_run'])) == read(base / 'reuse-audit.json')
+    verify_source_audit(Path(suite['previous_formal_run']), read(base / 'reuse-audit.json'))
     reuse = yaml.safe_load((base / suite['reuse_index']).read_text())
     rows = reuse['episodes']
     keys = [(r['policy'], r['task'], r['seed']) for r in rows]

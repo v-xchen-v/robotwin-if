@@ -15,7 +15,7 @@ from if_benchmark.seed_contracts import IF_SEED_CONTRACTS
 from if_benchmark.seed_modes import build_seed_modes, check_seed_modes, export_texts
 
 ROOT = Path(__file__).resolve().parents[1]
-RELEASE = ROOT / 'seed-manifests/robotwin-if-cube-v3-20-per-mode'
+RELEASE = ROOT / 'seed-manifests/robotwin-if-arm-only-v2-20-per-mode'
 POLICIES = ('xvla', 'lingbot_va', 'lingbot_vla', 'vlact', 'dm05', 'hy_vla')
 
 
@@ -148,6 +148,7 @@ print('1, 10000, 40000, 40, 20')
                 run = self.run_launcher('--policy', policy, '--dry-run')
                 self.assertEqual(run.returncode, 0, run.stderr)
                 self.assertEqual(run.stdout.count('20 blocks,'), 6)
+                self.assertIn(str(RELEASE / 'arm_select.json'), run.stdout)
                 protocol = 'http' if policy in ('xvla', 'dm05') else 'ws'
                 self.assertIn(f'{protocol}://127.0.0.1:{8010 + index}', run.stdout)
                 self.assertNotIn('grasp_cube_approach', run.stdout)

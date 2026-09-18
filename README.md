@@ -26,6 +26,7 @@ Grasp-Approach 已于 2026-09-15 暂时下线；实现、配置、测试和 prob
 本轮按 `target-arm-only-lift-v2` 重跑 Arm-Select 240 回合；其余五任务逐字节复用 Attribute-v2 的 2520 回合。
 保留 cube-v3 场景、Attribute target-only-lift-v2、Bottle v6 terminal 和 Spatial 三模式。
 详见[Arm 成功判据](docs/arm-select-target-arm-only.md)和[完整结果](result/robotwin-if-arm-only-v2-20blocks/README.md)。
+Seed 清单的当前入口与使用方法见 [seed-manifests](seed-manifests/README.md)；12 份旧版实体已移入 [历史清单归档](seed-manifests-archive/README.md)，旧路径保留兼容软链接。
 历史七任务 [IF-Ext v2 wide 20-block 结果](result/if-ext-v2-wide-20blocks/README.md)保留六个 policies × 七任务的 3240 回合及其校验证据。
 
 <a id="policy-results"></a>

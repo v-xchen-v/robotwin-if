@@ -1,6 +1,6 @@
 # Balanced Seed Manifest 使用指南
 
-当前维护六项任务；Grasp-Approach 已归档到 [bak/](../bak/grasp_cube_approach/README.md)。旧七任务发布目录仅作历史证据，当前正式清单见 [六任务 20-block release](../seed-manifests/if-ext-v2-six-tasks-spatial3-20-per-mode/README.md)。
+当前维护六项任务；Grasp-Approach 已归档到 [bak/](../bak/grasp_cube_approach/README.md)。旧七任务发布目录仅作历史证据，当前正式清单见 [六任务 20-block release](../seed-manifests/robotwin-if-arm-only-v2-20-per-mode/README.md)。
 
 本文面向两类使用者：
 

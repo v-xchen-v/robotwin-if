@@ -16,8 +16,8 @@ bash scripts/eval.sh --policy vlact --sim-gpu 0 --model-gpu 1 \
 `arm_select` 的可选场景变化配置、双臂预检与独立 manifest 使用方式见
 [arm_select v2 试验说明](../docs/arm-select-v2.md)。
 
-当前六任务正式评测使用 [20-block 清单](../seed-manifests/if-ext-v2-six-tasks-20-per-mode/README.md)，
-保留 arm_select v2；每项 20 blocks，每个 policy 500 回合。Grasp-Approach 已暂时下线，
+当前六任务正式评测使用 [Arm-only-v2 20-block 清单](../seed-manifests/robotwin-if-arm-only-v2-20-per-mode/README.md)，
+Arm 使用 cube-v3 场景和错误臂历史判据；每项 20 blocks，每个 policy 460 回合。Grasp-Approach 已暂时下线，
 材料归档到 [bak/](../bak/grasp_cube_approach/README.md)，六个 evaluator 均拒绝执行该任务。
 
 ```text
@@ -77,13 +77,13 @@ policies/
 PYTHONNOUSERSITE=1 conda run --no-capture-output -n RoboTwin \
   python policies/xvla/eval.py \
   --task attribute_select --task-config demo_clean \
-  --seed-manifest seed-manifests/if-ext-v1-100-per-mode/attribute_select.json \
+  --seed-manifest seed-manifests/robotwin-if-arm-only-v2-20-per-mode/attribute_select.json \
   --blocks 2 --instruction-type unseen --sim-gpu 0 \
   --output-dir outputs/policy-eval/if-blocks2/xvla/attribute_select
 ```
 
 替换 policy 和 task 即可；模型服务须已在对应默认端口运行。同一个 policy 的
-有状态服务一次只接一个评测客户端。六项合计每个 policy 50 回合、六个 300 回合。
+有状态服务一次只接一个评测客户端。六项合计每个 policy 46 回合、六个 276 回合。
 输出保留固定 seeds、每种 mode 的分母和成功数；基础设施错误标为 incomplete，
 不会用新 seed 替换。源码/config 与 manifest 发布版本有差异时，先对选定的
 完整 blocks 在当前环境下重新做 oracle qualification，并保留两份 provenance。
