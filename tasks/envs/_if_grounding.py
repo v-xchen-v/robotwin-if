@@ -24,3 +24,54 @@ def named_object_lifted_and_held(task, actor, modelname, origin_z, lift_thresh=0
     lifted = (z - origin_z) > lift_thresh
     held = len(task.get_gripper_actor_contact_position(modelname)) > 0
     return bool(lifted and held)
+
+
+class AttributePickMonitor:
+    """A distractor lift permanently invalidates an Attribute-Select episode.
+
+    Observe both objects after every physics step, including oracle moves. A pick
+    uses the existing relative lift threshold; touching or nudging an object on
+    the table is not a pick. Success still requires the target to be lifted now.
+    """
+
+    VERSION = "target-only-lift-v2"
+    LIFT_THRESH = 0.05
+
+    def __init__(self, initial_z, lift_thresh=LIFT_THRESH):
+        self.initial_z = dict(initial_z)
+        self.lift_thresh = lift_thresh
+        self.lift = dict(target=0.0, distractor=0.0)
+        self.peak_lift = dict(self.lift)
+        self.first_lifted = None
+        self.distractor_lifted_ever = False
+        self.first_distractor_lift_action = None
+
+    def observe(self, target_z, distractor_z, action_count=0):
+        for name, z in (("target", target_z), ("distractor", distractor_z)):
+            self.lift[name] = float(z) - self.initial_z[name]
+            self.peak_lift[name] = max(self.peak_lift[name], self.lift[name])
+        lifted = self.lifted
+        if self.first_lifted is None and lifted is not None:
+            self.first_lifted = lifted
+        if self.lift["distractor"] > self.lift_thresh:
+            if not self.distractor_lifted_ever:
+                self.first_distractor_lift_action = int(action_count)
+            self.distractor_lifted_ever = True
+
+    @property
+    def lifted(self):
+        names = [name for name, lift in self.lift.items() if lift > self.lift_thresh]
+        return "both" if len(names) == 2 else (names[0] if names else None)
+
+    @property
+    def success(self):
+        return self.lift["target"] > self.lift_thresh and not self.distractor_lifted_ever
+
+    def signals(self):
+        return dict(checker_version=self.VERSION, thresholds={"lift_m": self.lift_thresh},
+                    grasped_target=bool(self.success), lifted=self.lifted,
+                    target_lifted=self.lift["target"] > self.lift_thresh,
+                    distractor_lifted_ever=self.distractor_lifted_ever,
+                    first_lifted=self.first_lifted,
+                    first_distractor_lift_action=self.first_distractor_lift_action,
+                    lift_m=dict(self.lift), peak_lift_m=dict(self.peak_lift))

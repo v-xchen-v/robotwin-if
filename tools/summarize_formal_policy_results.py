@@ -167,6 +167,7 @@ def snapshot(base, include_archived_tasks=False, include_archived_modes=False):
                    complete_task_policy_runs=sum(r['complete'] for r in rows))
     return dict(updated_at=source['updated_at'], run_dir=str(base),
                 task_configs={task: specs[task].get('task_config') for task in task_names},
+                success_checkers={task: specs[task].get('success_checker_version') for task in task_names},
                 tasks=task_names, excluded_modes=excluded_modes, spatial_scope=("five-modes" if include_archived_modes else "spatial3"), excluded_tasks=sorted(planned - set(task_names)), summary=summary,
                 checkpoint_replacement=plan.get('checkpoint_replacement'),
                 block_extension=plan.get('block_extension'),
@@ -199,6 +200,9 @@ def generate(data, output):
     cube = data.get('task_configs', {}).get('arm_select') == 'demo_clean_arm_select_v3'
     labels = {task: ('Arm cube-v3' if task == 'arm_select' and cube else TASK_COLUMNS[task][0])
               for task in data['tasks']}
+    attribute_v2 = data.get('success_checkers', {}).get('attribute_select') == 'target-only-lift-v2'
+    if attribute_v2:
+        labels['attribute_select'] = 'Attribute v2'
     arm_version = 'cube-v3' if cube else 'v2'
     panels_spec = [('Xa — Selection / Grounding', data['tasks'][:4]),
                    ('Xb — Structured Execution', data['tasks'][4:])]
@@ -217,6 +221,8 @@ def generate(data, output):
     ]
     if data.get('excluded_modes'):
         legend.insert(0, 'Spatial 当前仅统计 left/right/on_top；front/back 的历史回合保留但排除计分。这是评测后的范围调整，不代表模型性能提升。')
+    if attribute_v2:
+        legend.insert(0, 'Attribute 使用 target-only-lift-v2：目标当前抬升超过 5 cm，且干扰物整回合从未超过该阈值；先抓错再抓对仍失败。')
     if data['excluded_tasks']:
         legend.insert(0, '当前范围排除已下线任务：' + ', '.join(data['excluded_tasks']) + '；原始七任务结果未改写。')
     if replacement := data.get('checkpoint_replacement'):

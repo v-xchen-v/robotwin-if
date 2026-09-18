@@ -1,0 +1,102 @@
+[
+  {
+    "action": 1,
+    "signals": {
+      "checker_version": "target-only-lift-v2",
+      "thresholds": {
+        "lift_m": 0.05
+      },
+      "grasped_target": false,
+      "lifted": null,
+      "target_lifted": false,
+      "distractor_lifted_ever": false,
+      "first_lifted": null,
+      "first_distractor_lift_action": null,
+      "lift_m": {
+        "target": 0.0,
+        "distractor": 0.0
+      },
+      "peak_lift_m": {
+        "target": 0.0,
+        "distractor": 0.0
+      },
+      "axis": "color",
+      "value": 1
+    }
+  },
+  {
+    "action": 74,
+    "signals": {
+      "checker_version": "target-only-lift-v2",
+      "thresholds": {
+        "lift_m": 0.05
+      },
+      "grasped_target": false,
+      "lifted": "distractor",
+      "target_lifted": false,
+      "distractor_lifted_ever": true,
+      "first_lifted": "distractor",
+      "first_distractor_lift_action": 74,
+      "lift_m": {
+        "target": 0.0,
+        "distractor": 0.050015389919281006
+      },
+      "peak_lift_m": {
+        "target": 0.0,
+        "distractor": 0.050015389919281006
+      },
+      "axis": "color",
+      "value": 1
+    }
+  },
+  {
+    "action": 104,
+    "signals": {
+      "checker_version": "target-only-lift-v2",
+      "thresholds": {
+        "lift_m": 0.05
+      },
+      "grasped_target": false,
+      "lifted": null,
+      "target_lifted": false,
+      "distractor_lifted_ever": true,
+      "first_lifted": "distractor",
+      "first_distractor_lift_action": 74,
+      "lift_m": {
+        "target": 0.0,
+        "distractor": 0.049818217754364014
+      },
+      "peak_lift_m": {
+        "target": 0.0,
+        "distractor": 0.08691120147705078
+      },
+      "axis": "color",
+      "value": 1
+    }
+  },
+  {
+    "action": 232,
+    "signals": {
+      "checker_version": "target-only-lift-v2",
+      "thresholds": {
+        "lift_m": 0.05
+      },
+      "grasped_target": false,
+      "lifted": "target",
+      "target_lifted": true,
+      "distractor_lifted_ever": true,
+      "first_lifted": "distractor",
+      "first_distractor_lift_action": 74,
+      "lift_m": {
+        "target": 0.05011260509490967,
+        "distractor": 0.0
+      },
+      "peak_lift_m": {
+        "target": 0.05011260509490967,
+        "distractor": 0.08691120147705078
+      },
+      "axis": "color",
+      "value": 1
+    }
+  }
+]

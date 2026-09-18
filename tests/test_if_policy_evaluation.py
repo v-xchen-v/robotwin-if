@@ -13,11 +13,14 @@ import numpy as np
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from if_benchmark.seed_contracts import IF_SEED_CONTRACTS, observed_mode
+from if_benchmark.seed_manifest import load_manifest
 from tools.generate_if_seed_manifest import _observed_mode
+from tasks.envs._if_grounding import AttributePickMonitor
 
 
 class BaseTask:
     def _init_task_env_(self, seed, **kwargs):
+        self.scene = SimpleNamespace(step=lambda: None)
         self.position = np.array([0., 0., 0.8])
         self.other_position = np.array([0.2, 0., 0.8])
         self.cube = self.target = SimpleNamespace(get_pose=lambda: SimpleNamespace(p=self.position))
@@ -42,7 +45,7 @@ def task_class(name):
     path = ROOT / 'tasks/envs' / f'{name}.py'
     tree = ast.parse(path.read_text())
     tree.body = [node for node in tree.body if isinstance(node, ast.ClassDef)]
-    namespace = dict(Base_Task=BaseTask, np=np, ArmTag=str,
+    namespace = dict(Base_Task=BaseTask, np=np, ArmTag=str, AttributePickMonitor=AttributePickMonitor,
                      apply_if_eval_step_limit=lambda task: None)
     exec(compile(tree, str(path), 'exec'), namespace)
     return namespace[name]
@@ -70,9 +73,10 @@ class PolicyEvaluationTests(unittest.TestCase):
         for policy in ('xvla','lingbot_va','lingbot_vla','vlact','dm05','hy_vla'):
             module = importlib.import_module(f'policies.{policy}.eval')
             for task, contract in IF_SEED_CONTRACTS.items():
+                manifest_path = ROOT/'seed-manifests/if-ext-v2-six-tasks-spatial3-20-per-mode'/f'{task}.json'
                 with self.subTest(policy=policy, task=task), patch.object(sys, 'argv', [
                     'eval.py','--task',task,'--seed-manifest',
-                    str(ROOT/'seed-manifests/if-ext-v1-100-per-mode'/f'{task}.json'),
+                    str(manifest_path), '--task-config', load_manifest(manifest_path)['task_config'],
                     '--blocks','2','--output-dir','unused-test-output']):
                     select = module.select_seeds
                     with patch.object(module, 'select_seeds', side_effect=InterruptedError) as selected:
@@ -93,9 +97,13 @@ class PolicyEvaluationTests(unittest.TestCase):
         task.other_position[2] += 0.1
         self.assertFalse(task.check_success())
         task.position[2] += 0.1
-        self.assertTrue(task.check_success())
+        self.assertFalse(task.check_success())
+        task.other_position[2] -= 0.1
+        self.assertFalse(task.check_success())
         task.setup_demo(seed=100001)
         self.assertFalse(task.check_success())
+        task.position[2] += 0.1
+        self.assertTrue(task.check_success())
 
 
 

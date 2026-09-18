@@ -1,0 +1,54 @@
+{
+  "policy": "xvla",
+  "seed": 100001,
+  "instruction": "Reach for the blue block and lift it.",
+  "source_episode": "/Data/robotwin-if/evaluations/robotwin-if-cube-v3-20blocks-001/xvla/attribute_select/attribute_select_ep100001",
+  "historical_success": true,
+  "diagnostic_only": true,
+  "paired_oracle_qualified": false,
+  "stop_protocol": "historical target-lift stop; saved actions only",
+  "renderer_pci": "0000:af:00.0",
+  "source_sha256": {
+    "record": "51c9bb21fe3ebf50ec23278d10a239147b3eeabca39b014e5f5c65ad6ac50d95",
+    "actions": "321f5c917dbbe3459413777e82ae1acf75703f7d0275d285397897384b9b57ce",
+    "initial": "35b3f8ac5cf5d1b8f0463feb61d47276fbe29ff99ec455631e3f43b927c53085",
+    "summary": "6e23b16de8864eb36dafa053bd233c969b7598e903d5f0aa3b4dbfec3bbc351b"
+  },
+  "checker_sources_sha256": {
+    "tasks/envs/attribute_select.py": "20bfe3e5e8824bbf236888d23dace4eaa84cc2c20cd5fdecc16a540c872f34e3",
+    "tasks/envs/_if_grounding.py": "612726a3a89f42c9a6c567039fdd2d42c4c83f2aee94988bc0cc13c8c5ae2df8",
+    "third_party/robotwin/envs/_base_task.py": "448f7152b65cb9102217cf5463aa821d72810ca56f63d5a797ec7bd43e23e101"
+  },
+  "initial_images_identical": {
+    "head_camera": true,
+    "left_camera": true,
+    "right_camera": true
+  },
+  "initial_proprio_max_error": 0.0,
+  "replayed_actions": 232,
+  "saved_actions": 232,
+  "legacy_success": true,
+  "new_success": false,
+  "signals": {
+    "checker_version": "target-only-lift-v2",
+    "thresholds": {
+      "lift_m": 0.05
+    },
+    "grasped_target": false,
+    "lifted": "target",
+    "target_lifted": true,
+    "distractor_lifted_ever": true,
+    "first_lifted": "distractor",
+    "first_distractor_lift_action": 74,
+    "lift_m": {
+      "target": 0.05011260509490967,
+      "distractor": 0.0
+    },
+    "peak_lift_m": {
+      "target": 0.05011260509490967,
+      "distractor": 0.08691120147705078
+    },
+    "axis": "color",
+    "value": 1
+  }
+}

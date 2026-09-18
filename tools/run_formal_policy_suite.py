@@ -96,6 +96,20 @@ def validate_episode(directory, task, seed, config):
     return record
 
 
+def current_success_checker(task):
+    """Pin new plans to the checker actually used by the current task source."""
+    from dataclasses import asdict
+    from tasks.envs._if_bottle_verb import PickHoldMonitor, PickHoldRules
+    from tasks.envs._if_grounding import AttributePickMonitor
+    if task == 'bottle_verb':
+        return dict(success_checker_version=PickHoldMonitor.VERSION,
+                    success_checker_parameters=asdict(PickHoldRules()))
+    if task == 'attribute_select':
+        return dict(success_checker_version=AttributePickMonitor.VERSION,
+                    success_checker_parameters={'lift_m': AttributePickMonitor.LIFT_THRESH})
+    return dict(success_checker_version=None, success_checker_parameters=None)
+
+
 def matches_success_checker(spec, record):
     expected = spec.get('success_checker_version')
     signals = record.get('signals') or {}
@@ -200,11 +214,8 @@ def prepare(base, release, old):
                 for p in POLICIES for s in suite['tasks']}
     base.mkdir(parents=True, exist_ok=False)
     shutil.copytree(release, base / 'manifests')
-    from dataclasses import asdict
-    from tasks.envs._if_bottle_verb import PickHoldMonitor, PickHoldRules
     specs = [dict(s, seeds=read(release / s['manifest'])['seeds'],
-                  success_checker_version=PickHoldMonitor.VERSION if s['task'] == 'bottle_verb' else None,
-                  success_checker_parameters=asdict(PickHoldRules()) if s['task'] == 'bottle_verb' else None)
+                  **current_success_checker(s['task']))
              for s in suite['tasks']]
     compatible, excluded = compatible_reuse(specs, reuse['episodes'])
     for spec in specs:

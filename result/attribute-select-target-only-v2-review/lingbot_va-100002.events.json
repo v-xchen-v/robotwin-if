@@ -1,0 +1,52 @@
+[
+  {
+    "action": 1,
+    "signals": {
+      "checker_version": "target-only-lift-v2",
+      "thresholds": {
+        "lift_m": 0.05
+      },
+      "grasped_target": false,
+      "lifted": null,
+      "target_lifted": false,
+      "distractor_lifted_ever": false,
+      "first_lifted": null,
+      "first_distractor_lift_action": null,
+      "lift_m": {
+        "target": 0.0,
+        "distractor": 0.0
+      },
+      "peak_lift_m": {
+        "target": 0.0,
+        "distractor": 0.0
+      },
+      "axis": "decal",
+      "value": 0
+    }
+  },
+  {
+    "action": 84,
+    "signals": {
+      "checker_version": "target-only-lift-v2",
+      "thresholds": {
+        "lift_m": 0.05
+      },
+      "grasped_target": true,
+      "lifted": "target",
+      "target_lifted": true,
+      "distractor_lifted_ever": false,
+      "first_lifted": "target",
+      "first_distractor_lift_action": null,
+      "lift_m": {
+        "target": 0.050054967403411865,
+        "distractor": 0.0
+      },
+      "peak_lift_m": {
+        "target": 0.050054967403411865,
+        "distractor": 0.0
+      },
+      "axis": "decal",
+      "value": 0
+    }
+  }
+]

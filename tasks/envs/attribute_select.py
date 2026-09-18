@@ -1,5 +1,6 @@
 from ._base_task import Base_Task
 from ._if_eval import apply_if_eval_step_limit
+from ._if_grounding import AttributePickMonitor
 from .utils import *
 from ._GLOBAL_CONFIGS import *
 import sapien
@@ -33,7 +34,7 @@ class attribute_select(Base_Task):
     """
 
     TABLE_TOP = 0.741
-    LIFT_THRESH = 0.05
+    LIFT_THRESH = AttributePickMonitor.LIFT_THRESH
     MODES = ["color", "decal", "shape", "size"]
 
     # two table slots; scene_seed decides which feature-value sits in which slot
@@ -87,6 +88,8 @@ class attribute_select(Base_Task):
 
     # ---- lifecycle -------------------------------------------------------
     def setup_demo(self, is_test=False, **kwags):
+        self._detach_pick_observer()
+        self._pick_monitor = None
         self._seed = kwags.get("seed", 0)
         self._demo_kwargs = dict(kwags)
         super()._init_task_env_(**kwags)
@@ -94,6 +97,37 @@ class attribute_select(Base_Task):
         # Policy control starts after setup, without running the oracle.
         self._init_z = {name: float(actor.get_pose().p[2]) for name, actor in
                         (("target", self.target), ("distractor", self.distractor))}
+        self._pick_monitor = AttributePickMonitor(self._init_z, self.LIFT_THRESH)
+        self._attach_pick_observer()
+
+    def _observe_pick(self):
+        if self._pick_monitor is not None:
+            self._pick_monitor.observe(self.target.get_pose().p[2], self.distractor.get_pose().p[2],
+                                       getattr(self, "take_action_cnt", 0))
+
+    def _attach_pick_observer(self):
+        # Observe real physics, even if a wrong object is dropped before the next
+        # action-boundary check. Collection and policy actions share this hook.
+        scene = self.scene
+        original_step = scene.step
+        def observed_step():
+            result = original_step()
+            self._observe_pick()
+            return result
+        self._pick_observer = (scene, original_step, observed_step)
+        scene.step = observed_step
+
+    def _detach_pick_observer(self):
+        observer = getattr(self, "_pick_observer", None)
+        if observer is not None:
+            scene, original_step, observed_step = observer
+            if scene.step is observed_step:
+                scene.step = original_step
+            self._pick_observer = None
+
+    def close_env(self, clear_cache=False):
+        self._detach_pick_observer()
+        return super().close_env(clear_cache=clear_cache)
 
     def load_actors(self):
         scene_seed = self._seed // 2
@@ -217,9 +251,7 @@ class attribute_select(Base_Task):
 
     # ---- oracle ----------------------------------------------------------
     def play_once(self):
-        for nm, a in (("target", self.target), ("distractor", self.distractor)):
-            self._init_z[nm] = float(a.get_pose().p[2])
-
+        # Keep the settled setup baseline and all earlier pick history.
         which = self.ORACLE_TARGET or "target"
         obj = self.target if which == "target" else self.distractor
         arm_tag = ArmTag("left" if obj.get_pose().p[0] < 0 else "right")
@@ -243,27 +275,21 @@ class attribute_select(Base_Task):
 
     # ---- success ---------------------------------------------------------
     def _lifted(self):
-        for nm, a in (("target", self.target), ("distractor", self.distractor)):
-            if nm in self._init_z and float(a.get_pose().p[2]) - self._init_z[nm] > self.LIFT_THRESH:
-                return nm
-        return None
+        self._observe_pick()
+        return self._pick_monitor.lifted if self._pick_monitor is not None else None
 
     def eval_signals(self):
-        lifted = self._lifted()
-        return {
-            "axis": self.axis,
-            "value": self.value,
-            "grasped_target": bool(lifted == "target"),
-            "lifted": lifted,
-        }
+        self._observe_pick()
+        return dict(self._pick_monitor.signals(), axis=self.axis, value=self.value)
 
     def _raw_success(self):
-        """Single-episode success: the object lifted off the table is the
-        commanded target. Used by play_once's signals, the pair-gate trial-run,
+        """Target is lifted and the distractor has never crossed the lift
+        threshold in this episode. Used by the pair-gate trial-run,
         and eval -- NEVER call check_success from a trial-run (recursion)."""
-        if not self._init_z:
+        if self._pick_monitor is None:
             return False
-        return self._lifted() == "target"
+        self._observe_pick()
+        return bool(self._pick_monitor.success)
 
     # Pair-gate cache (class-level, survives across episodes in one process):
     # scene_seed -> "is the OTHER value of this scene also oracle-doable?".

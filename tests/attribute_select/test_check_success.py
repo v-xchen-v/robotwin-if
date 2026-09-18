@@ -88,7 +88,12 @@ rec("lift DISTRACTOR -> raw False (Layer-B)", TASK._raw_success() is False)
 lift(TASK.distractor, -0.10)      # nothing lifted
 rec("lift NEITHER -> raw False", TASK._raw_success() is False)
 
+lift(TASK.target, 0.10)
+rec("wrong pick then target -> still False", TASK._raw_success() is False)
+rec("wrong-pick history remains in signals", TASK.eval_signals()["distractor_lifted_ever"])
+
 # ---- C. pair-gate logic (inject _pair_ok cache -> no expensive partner rollout) ----
+setup(0)                                   # new episode clears wrong-pick history
 lift(TASK.target, 0.10)                       # raw success again
 sk = TASK._seed // 2
 type(TASK)._pair_ok[sk] = False

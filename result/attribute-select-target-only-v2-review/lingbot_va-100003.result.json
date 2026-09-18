@@ -1,0 +1,54 @@
+{
+  "policy": "lingbot_va",
+  "seed": 100003,
+  "instruction": "Fetch the block with a dog on it.",
+  "source_episode": "/Data/robotwin-if/evaluations/robotwin-if-cube-v3-20blocks-001/lingbot_va/attribute_select/attribute_select_ep100003",
+  "historical_success": true,
+  "diagnostic_only": true,
+  "paired_oracle_qualified": false,
+  "stop_protocol": "historical target-lift stop; saved actions only",
+  "renderer_pci": "0000:af:00.0",
+  "source_sha256": {
+    "record": "17a246b5da5d87ba6b8d791637b6d885fcc9e2411cd24616327165b587396e1e",
+    "actions": "a57e6d6fb950fd839d97d463d291cab1274769fe37da265686ea7d87b30931b9",
+    "initial": "0c8b58c39da0a36dd415656fb3f8147e070a6fc9209ac461e1fddb68d407a9cf",
+    "summary": "2f21543fc640c8f42fe862e1144fcc65986d869e97a5b535c01ddb8c25b963c0"
+  },
+  "checker_sources_sha256": {
+    "tasks/envs/attribute_select.py": "20bfe3e5e8824bbf236888d23dace4eaa84cc2c20cd5fdecc16a540c872f34e3",
+    "tasks/envs/_if_grounding.py": "612726a3a89f42c9a6c567039fdd2d42c4c83f2aee94988bc0cc13c8c5ae2df8",
+    "third_party/robotwin/envs/_base_task.py": "448f7152b65cb9102217cf5463aa821d72810ca56f63d5a797ec7bd43e23e101"
+  },
+  "initial_images_identical": {
+    "head_camera": true,
+    "left_camera": true,
+    "right_camera": true
+  },
+  "initial_proprio_max_error": 0.0,
+  "replayed_actions": 256,
+  "saved_actions": 256,
+  "legacy_success": true,
+  "new_success": false,
+  "signals": {
+    "checker_version": "target-only-lift-v2",
+    "thresholds": {
+      "lift_m": 0.05
+    },
+    "grasped_target": false,
+    "lifted": "target",
+    "target_lifted": true,
+    "distractor_lifted_ever": true,
+    "first_lifted": "distractor",
+    "first_distractor_lift_action": 79,
+    "lift_m": {
+      "target": 0.050156593322753906,
+      "distractor": -3.5762786865234375e-07
+    },
+    "peak_lift_m": {
+      "target": 0.050156593322753906,
+      "distractor": 0.09104049205780029
+    },
+    "axis": "decal",
+    "value": 1
+  }
+}

@@ -43,6 +43,29 @@ class FormalReuseTest(unittest.TestCase):
         self.assertEqual([r['seed'] for r in excluded], [100002, 100003])
         self.assertTrue(all(r['reason'] == 'success_checker_changed' for r in excluded))
 
+    def test_attribute_history_contract_excludes_legacy_successes_and_failures(self):
+        spec = dict(task='attribute_select', **suite.current_success_checker('attribute_select'))
+        self.assertEqual(spec['success_checker_version'], 'target-only-lift-v2')
+        self.assertEqual(spec['success_checker_parameters'], {'lift_m': .05})
+        rows = []
+        source = self.base / 'attribute-source'
+        for seed, success in ((100000, True), (100001, False), (100002, True)):
+            signals = dict(grasped_target=success)
+            if seed == 100002:
+                signals.update(checker_version=spec['success_checker_version'],
+                               thresholds=spec['success_checker_parameters'])
+            suite.write(source / f'attribute_select_ep{seed}_result.json',
+                        dict(success=success, signals=signals))
+            rows.append(dict(policy='xvla', task='attribute_select', seed=seed,
+                             source_directory=str(source)))
+        accepted, excluded = suite.compatible_reuse([spec], rows)
+        self.assertEqual([r['seed'] for r in accepted], [100002])
+        self.assertEqual([r['seed'] for r in excluded], [100000, 100001])
+        self.assertFalse(suite.matches_success_checker(spec, dict(signals=dict(
+            checker_version=spec['success_checker_version'], thresholds={'lift_m': .02}))))
+        # Historical plans remain readable under their original contract.
+        self.assertTrue(suite.matches_success_checker(dict(task='attribute_select'), {}))
+
     def test_prior_metadata_accepts_direct_and_formal_archive_layouts(self):
         direct = self.base / 'xvla/bottle_verb'
         archived = self.base / 'provenance/reused/xvla/bottle_verb'
@@ -56,6 +79,7 @@ class FormalReuseTest(unittest.TestCase):
         for name in ('resolved_config.json', 'summary.json'):
             suite.write(direct / name, {})
         self.assertEqual(suite.prior_metadata_directory(self.base, 'xvla', 'bottle_verb'), direct)
+
 
     def test_same_checker_version_with_changed_thresholds_is_not_reused(self):
         spec = dict(self.spec, success_checker_version='relative-lift-hold-v3',
