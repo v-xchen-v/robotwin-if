@@ -7,7 +7,7 @@
 - [独立 taskset](../seed-manifests/robotwin-if-arm-only-v2-20-per-mode/README.md)
 - [复用源码审计](../seed-manifests/robotwin-if-arm-only-v2-20-per-mode/reuse-audit.json)
 - [新 Arm 判据与真实仿真验证](arm-select-target-arm-only.md)
-- [父结果](../result-archive/robotwin-if-attribute-v2-20blocks/README.md)
+- [发布来源与完整溯源校验](release-provenance.md)
 
 运行目录（msrait-04）：
 
@@ -17,7 +17,7 @@
 
 `status.json` / `report.md` 为评测进度，`workflow.json` 为评测、校验打包、README 更新状态。
 完成后写入 `result/robotwin-if-arm-only-v2-20blocks/`，包含 HTML、逐回合 CSV、
-新旧 Arm 比较表、来源、checkpoint 和校验证据；历史包保留原样。
+新旧 Arm 比较表、来源、checkpoint 和校验证据；历史包仅保留在 Git 中。
 
 ## 不变项与新判据
 

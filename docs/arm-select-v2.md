@@ -55,22 +55,10 @@ supervisor 每 10 秒记录 GPU 利用率和显存；查询超时、显存超过
 
 当前正式入口已升级为 [Arm-only-v2 / cube-v3](../seed-manifests/robotwin-if-arm-only-v2-20-per-mode/README.md)。以下保留旧 v2 试验的配置与证据。
 
-## 使用试验 manifest
+## 当前评测入口
 
-六个 evaluator 都使用相同的任务名 `arm_select`，显式选择新配置：
-
-```text
---task arm_select
---task-config demo_clean_arm_select_v2
---seed-manifest seed-manifests/if-ext-v2-12-per-mode/arm_select.json
---blocks 12
-```
-
-其余模型连接参数沿用各 policy 的配置。旧 `demo_clean` manifest 与新配置不能混用。
-当时的 v2 正式评测使用 [六任务 20-block 清单](../seed-manifests/if-ext-v2-six-tasks-spatial3-20-per-mode/README.md)，
-其中 arm v2 的 seeds 独立于调试集。已验证的 12-block 开发集和完整 oracle 证据另存于
-[v2 manifest 目录](../seed-manifests/if-ext-v2-dev-12-per-mode/README.md)。
-当前六个 evaluator 统一使用原生渲染，并在每个新回合执行 oracle qualification。
+旧试验清单仅保留在 Git 历史中。新评测使用当前 Arm-only-v2 清单及
+`demo_clean_arm_select_v3`，见[分支交付说明](branch-delivery.md)。
 
 ## 2026-09-09 试验结果
 

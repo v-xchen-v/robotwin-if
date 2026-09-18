@@ -35,25 +35,25 @@
 | 初始 rotation | yaw ∈ [−15°, 15°]，roll/pitch=0；四元数顺序 wxyz | `CUBE_YAW_LIMIT` / `load_actors` |
 | 物理高度 | cube 下表面初始在 0.741 m，随后物理沉降；相对抬升基线在 setup 后记录，支持原生 table bias | `setup_demo` / `create_actor.preprocess` |
 | oracle | default cube 的 contact ids 0–3；预抓取 9 cm、上抬 10 cm | `play_once` |
-| policy 预算 | 400 actions，保持原判据：相对抬升 >5 cm，距指定 TCP <20 cm 且比另一 TCP 更近 | `_if_eval.py` / `_compute_signals` |
+| policy 预算 | 400 actions，相对抬升 >5 cm，距指定 TCP <20 cm 且比另一 TCP 更近；错误臂此前从未抬起 | `_if_eval.py` / `_compute_signals` |
 | 语言 | 所有版本沿用 `the block` 及原模板；cube-v3 与 jitter-v2 按 scene seed 选模板 | `policies/xvla/eval.py:instruction_for` |
 
 `fixed-v1` 仍是未传版本时的默认值；旧 `demo_clean_arm_select_v2` 仍生成长柱。
 v3 必须显式选择新配置，旧 manifest 与新配置不匹配时 evaluator 会拒绝。
-Cube-v3 已纳入[新的六任务 taskset](../../seed-manifests/robotwin-if-cube-v3-20-per-mode/README.md)，
-六个 policies 的独立重跑与五任务复用见[合并评测说明](../arm-select-cube-v3-evaluation.md)。
+Cube-v3 已纳入[新的六任务 taskset](../../seed-manifests/robotwin-if-arm-only-v2-20-per-mode/README.md)，
+六个 policies 的独立重跑与五任务复用见[合并评测说明](../arm-select-target-only-v2-evaluation.md)。
 
 ## 输出与数据流
 
 | 输出 | 路径/消费者 | 条件与证据状态 |
 |---|---|---|
 | 场景元数据 | `env.info['arm_select_scene']`，包含位姿、分区、尺寸、boxtype | 源码定义；不进入 instruction placeholders |
-| 分离信号 | `eval_signals()` 的 `arm_match` / `lifted` / 相对高度 / 两臂距离 | 供 evaluator 记录；`check_success` 为前两者 AND |
-| 备份 | [`bak/arm_select-long-v2-20260916`](../../bak/arm_select-long-v2-20260916/README.md) | 已复制源码、发布包和 240 回合视频/动作/记录，约 297 MiB；JSON 哈希核对通过 |
+| 分离信号 | `eval_signals()` 的 `arm_match` / `lifted` / 相对高度 / 两臂距离 | 供 evaluator 记录；`check_success` 还要求错误臂整回合从未完成抬升 |
+| 备份 | [`bak/arm_select-long-v2-20260916`](../../bak/arm_select-long-v2-20260916/README.md) | 保留源码；本机原始视频/动作备份不变，旧发布包与清单仅保留在 Git 历史中 |
 | 探索原始证据 | `outputs/policy-eval/arm-select-cube-v3-probe-00N/`、`arm-select-cube-v3-validation-001/`、`arm-select-cube-v3-20blocks-001/` | 本次运行：源码快照、哈希、GPU/阶段日志、每回合初始 NPZ 和初末 PNG |
 | 验证结论 | 上述目录的 `episodes.json` / `blocks.json` / `report.json` | 失败也保留；`complete=true` 表示跑完，`all_checks_passed=true` 才表示全通过 |
 | qualified manifest | 上述目录的 `arm_select.json` | 仅在候选双臂、配对一致性、复测、错误手臂反例及启用的边界检查全部通过后写出 |
-| 可复用清单与证据 | [20-block 清单](../../seed-manifests/arm-select-cube-v3-20-per-mode/README.md) / [开发集](../../seed-manifests/arm-select-cube-v3-dev-12-per-mode/README.md) / [独立验证集](../../seed-manifests/arm-select-cube-v3-validation-12-per-mode/README.md) | 已复制全通过的 manifest、逐回合报告及源码哈希；后两份各 12 个 blocks |
+| 当前清单与证据 | [20-block 清单](../../seed-manifests/robotwin-if-arm-only-v2-20-per-mode/README.md) / [发布溯源](../release-provenance.md) | 旧 oracle 开发/验证材料通过固定 Git commit 追溯；新运行逐回合检查 oracle |
 
 ```mermaid
 flowchart LR
@@ -135,9 +135,9 @@ ln -s "$(pwd)/tasks/task_config/demo_clean_arm_select_v3.yml" third_party/robotw
 ```text
 --task arm_select
 --task-config demo_clean_arm_select_v3
---seed-manifest seed-manifests/arm-select-cube-v3-20-per-mode/arm_select.json
+--seed-manifest seed-manifests/robotwin-if-arm-only-v2-20-per-mode/arm_select.json
 --blocks 20
 --output-dir <新的独立结果目录>
 ```
 
-六任务正式运行已使用 20-block 清单调度六个 policies，状态与结果入口见[合并评测说明](../arm-select-cube-v3-evaluation.md)。
+六任务正式运行已使用 20-block 清单调度六个 policies，状态与结果入口见[合并评测说明](../arm-select-target-only-v2-evaluation.md)。

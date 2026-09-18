@@ -2,7 +2,7 @@
   "schema_version": 1,
   "purpose": "Task illustrations selected from successful policy episodes; not a representative performance sample.",
   "source_run": "if-seven-tasks-v2-wide-20blocks-001",
-  "source_results": "../../../result/if-ext-v2-six-tasks-20blocks/episodes.csv",
+  "source_results": "https://github.com/v-xchen-v/robotwin-if/blob/2670a13f53f6e3f1cc2e6f0fdae558782cb88d7d/result-archive/if-ext-v2-six-tasks-20blocks/episodes.csv",
   "processing": {
     "camera": "head only: crop=320:240:0:0 from the 960x240 three-camera archive",
     "layout": "two columns; attribute_select has two rows; panel order is row-major",
@@ -171,7 +171,7 @@
       "task_config": "demo_clean_arm_select_v3",
       "source_run": "robotwin-if-cube-v3-20blocks-001",
       "source_run_directory": "/Data/robotwin-if/evaluations/robotwin-if-cube-v3-20blocks-001",
-      "source_results": "../../../result/robotwin-if-cube-v3-20blocks/episodes.csv",
+      "source_results": "https://github.com/v-xchen-v/robotwin-if/blob/2670a13f53f6e3f1cc2e6f0fdae558782cb88d7d/result-archive/robotwin-if-cube-v3-20blocks/episodes.csv",
       "playback_speed": 1,
       "mp4": "arm_select_cube_v3.mp4",
       "gif": "arm_select_cube_v3.gif",
@@ -357,7 +357,7 @@
         "arm_select.gif": "ad34fd9fc2256d8552071d60a7be8a3fd9ddd70e6d92a7ad1c88a79dda31055b"
       },
       "source_run": "if-seven-tasks-v2-wide-20blocks-001",
-      "source_results": "../../../result/if-ext-v2-six-tasks-20blocks/episodes.csv",
+      "source_results": "https://github.com/v-xchen-v/robotwin-if/blob/2670a13f53f6e3f1cc2e6f0fdae558782cb88d7d/result-archive/if-ext-v2-six-tasks-20blocks/episodes.csv",
       "task_config": "demo_clean_arm_select_v2"
     }
   ],

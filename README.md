@@ -19,22 +19,22 @@ Grasp-Approach 已于 2026-09-15 暂时下线；实现、配置、测试和 prob
 
 **当前结果包：[`result/robotwin-if-arm-only-v2-20blocks/`](result/robotwin-if-arm-only-v2-20blocks/README.md)** ·
 [HTML 报表](result/robotwin-if-arm-only-v2-20blocks/results.html) ·
-[逐回合 CSV](result/robotwin-if-arm-only-v2-20blocks/episodes.csv) · [历史结果](result-archive/README.md)。
+[逐回合 CSV](result/robotwin-if-arm-only-v2-20blocks/episodes.csv)。
 
 当前 [RoboTwin-IF Arm-only-v2 taskset](seed-manifests/robotwin-if-arm-only-v2-20-per-mode/README.md)
 已完成六个 policies × 六任务 × 每任务 20 blocks：460 回合/policy，共 2760 回合、720 blocks。
 本轮按 `target-arm-only-lift-v2` 重跑 Arm-Select 240 回合；其余五任务逐字节复用 Attribute-v2 的 2520 回合。
 保留 cube-v3 场景、Attribute target-only-lift-v2、Bottle v6 terminal 和 Spatial 三模式。
 详见[Arm 成功判据](docs/arm-select-target-arm-only.md)和[完整结果](result/robotwin-if-arm-only-v2-20blocks/README.md)。
-Seed 清单的当前入口与使用方法见 [seed-manifests](seed-manifests/README.md)；12 份旧版实体已移入 [历史清单归档](seed-manifests-archive/README.md)，旧路径保留兼容软链接。
-历史七任务 [IF-Ext v2 wide 20-block 结果](result-archive/if-ext-v2-wide-20blocks/README.md)保留六个 policies × 七任务的 3240 回合及其校验证据。
+Seed 清单的唯一正式入口与使用方法见 [seed-manifests](seed-manifests/README.md)。
+当前分支只提供最新版结果和清单；发布来源及完整审计见[溯源说明](docs/release-provenance.md)。
 
 <a id="policy-results"></a>
 
 ## 六个 Policies 的评测结果
 
 2026-09-18 05:26 UTC 完成并校验：**2760/2760 回合、720/720 blocks**。
-Arm-Select 重新运行 **240 回合**；其余五任务的 **2520 回合**及其统计与[上一版 Attribute-v2](result-archive/robotwin-if-attribute-v2-20blocks/README.md)一致。
+Arm-Select 重新运行 **240 回合**；其余五任务的 **2520 回合**及其统计与上一版 Attribute-v2（[复用来源](result/robotwin-if-arm-only-v2-20blocks/provenance.json)）一致。
 六份 seed manifest、checkpoint 和推理参数沿用上一版，全部新回合初始观测逐数组匹配。
 4 次推理前 oracle 初始化失败用原 seed 恢复；完成的 policy 成功和失败没有重跑。
 VLAct 使用 `StarVLA/VLAct_Qwen3OFT_Robotwin_all_Finetune`（All 100K）。
@@ -56,7 +56,7 @@ VLAct 使用 `StarVLA/VLAct_Qwen3OFT_Robotwin_all_Finetune`（All 100K）。
 | [Hy-VLA](policies/hy_vla/README.md) | 20/40 | 11/40 | 83/160 | 17/40 | 15/120 | 7/60 | 32.7 | 460/460 | 120/120 |
 
 **Attribute-Select 判定修正（2026-09-17）：** 新规则要求目标当前抬升超过 5 cm，且干扰物在整回合中从未越过该阈值。
-先抓错再抓对仍失败。上表 Attribute/Overall 已使用新判据重新评测；旧结果包保持原始计数。
+先抓错再抓对仍失败。上表 Attribute/Overall 已使用新判据重新评测；旧结果仅保留在 Git 历史中。
 新旧差异包含判据变化及重新推理的影响。见[修正与回放证据](docs/attribute-select-target-only.md)。
 
 **待复核记录：** Hy-VLA 的 `pick_diverse_object` seed `100052`（coffee box）被用户指出视频表现失败，
@@ -202,7 +202,7 @@ pick 跑满 700 个动作后判定：允许拿起后平移，末尾保持抬升�
 
 对同一目标方块，分别要求用**左臂 / 右臂**抓起；用错机械臂即使抬起方块也不算成功。
 2026-09-18 已加入[错误手臂历史判据](docs/arm-select-target-arm-only.md)：先用错误臂拿起、再换指定臂仍失败。
-当前报表中的 Arm/Overall 已按该新规则重跑；历史结果包保留原始判据和计数。
+当前报表中的 Arm/Overall 已按该新规则重跑；历史判据和计数保留在 Git 历史中。
 当前 taskset 的 [cube-v3 配置](docs/recon/arm-select-cube-v3.md) 使用 5 cm cube，在双臂共用区域内随机平移和绕竖直轴旋转。
 不同 blocks 改变物体的位置和朝向，同一 block 的两个回合共享布局。
 下例左右分别为 left arm / right arm。

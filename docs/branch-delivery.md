@@ -98,8 +98,8 @@ GPU 查询超过 8 秒、温度达到 87°C 或显存超限会停止本次 sim�
   接收方启动新评测只需 flat manifests 与 seed/mode 导出，不需要访问复用索引中的原机器路径。
 
 `python tools/export_seed_modes.py --check` 检查 JSON/CSV 与 flat seeds/modes 一致；
-完整发布检查使用 `python seed-manifests/robotwin-if-arm-only-v2-20-per-mode/verify.py`，需要原机历史运行目录与产物。
-旧版实体目录已移入 [历史清单归档](../seed-manifests-archive/README.md)，旧路径保留兼容软链接。
+完整发布检查使用 `python seed-manifests/robotwin-if-arm-only-v2-20-per-mode/verify.py`，需要原机历史运行目录与产物，
+并从固定 Git commit 临时读取原资格证据。当前分支仅保留最新清单，没有旧版软链接；见[溯源说明](release-provenance.md)。
 
 ## 3. Result
 
@@ -107,7 +107,7 @@ GPU 查询超过 8 秒、温度达到 87°C 或显存超限会停止本次 sim�
 六个 policies 已完成 **2760/2760 episodes、720/720 blocks**，每个 policy 为 460 episodes；2026-09-18 05:26 UTC 正式校验通过。
 Arm 按 target-arm-only-lift-v2 全新运行 240 回合，其余五任务复用 Attribute-v2 的 2520 回合，包含成功和失败。
 初始观测、记录哈希、统计及 checkpoint 身份核对通过，见 [Arm 重评说明](arm-select-target-only-v2-evaluation.md)。
-历史成绩与判据验证证据已归档到 [result-archive/](../result-archive/README.md)，原始判据、计数和哈希保持不变；旧路径保留兼容软链接。
+当前分支只保留这份结果；[Arm/Attribute 判据证据](../result/robotwin-if-arm-only-v2-20blocks/evidence/README.md)随包保留。
 
 提供 `results.html/md/json/csv`、`episodes.csv`、六份 frozen manifests、checkpoint 身份、
 provenance 与 `SHA256SUMS`。可离线查看汇总表和逐回合计数，不依赖原机器。
@@ -118,20 +118,18 @@ provenance 与 `SHA256SUMS`。可离线查看汇总表和逐回合计数，不�
 ```
 
 完整视频和动作轨迹体积较大，仍保存在结果 README 指定的原始评测目录，不包含在此轻量结果包中。
-历史七任务结果单独保留在 `result-archive/if-ext-v2-wide-20blocks/`；当前分数不与七任务 Overall 混用。
+当前分数不与历史七任务 Overall 混用；历史发布仅保留在 Git 中。
 `bak/`、历史 releases 和原机部署记录用于追溯，不属于接收方默认运行路径。
 
 ## 交付检查
 
 以下为可运行的检查入口；完整 release 校验需要原机数据。
 
-2026-09-18 清单归档与默认入口更新：54 项相关 CPU 测试通过，覆盖默认六任务运行、
-旧路径兼容、资格证据哈希及源码审计边界。12 份历史清单的 148 个原文件保持逐字节一致；历史校验通过兼容入口还原原目录布局。
-
-2026-09-16 的 cube-v3 交付记录：相关的 **31 项 CPU 测试**通过（23 项 formal runner/report 测试、8 项分支交付测试），
-seed/mode 导出、release 复用来源与完整 artifact 哈希验证通过，Bash 语法与 diff 格式检查通过。
-六个 policy 的 240 个新 Arm 回合已实际完成；合并后的 2760 回合通过动作轨迹、初始场景、文件哈希和新视频帧数校验。
-新旧两个结果包的 `SHA256SUMS` 均通过。CPU 入口测试覆盖全失败仍完成、异常停止、原始 seed 保留、禁止覆盖及 GPU 异常时清理本脚本的仿真进程组。
+当前 result 和 manifest 的原始文件逐字节保留；旧发布只保留在 Git 历史。
+接收方的 seed/mode 检查与新评测入口不依赖历史 commit；完整溯源检查按固定 commit
+临时恢复旧资格证据，原有哈希与 2520 条复用产物检查全部保留。
+本次整理通过 57 项相关 CPU 回归、2520 条复用回合的完整溯源检查，以及无 Git 历史的
+源码包 seed 校验、六任务 dry-run 和所有当前包的 SHA-256 检查。
 
 ```bash
 bash -n scripts/eval.sh

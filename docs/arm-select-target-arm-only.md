@@ -36,14 +36,14 @@
 ## 历史结果
 
 已经发布的 cube-v3 和 Attribute-v2 包中的 Arm/Overall 仍使用旧终态判据，保留原始字节与计数。
-本次修复和诊断验证不构成六个模型的正式重跑，也没有据此改写既有成绩。
+当前 [Arm-only-v2 结果](../result/robotwin-if-arm-only-v2-20blocks/README.md)已完成六个模型的 240 个 Arm 回合重跑；旧包仅保留在 Git 历史中。
 [`run_formal_policy_suite.py`](../tools/run_formal_policy_suite.py) 为新计划固定新判据版本、
 5 cm 抬升阈值与 20 cm TCP 阈值，拒绝将旧判据的 Arm 成功或失败记录混入新计划。
 显式读取历史计划仍按原合同验证。
 
 ## 验证入口
 
-2026-09-18 已完成 **4/4 组真实仿真与 76 项 CPU 回归**，见[验证包](../result-archive/arm-select-target-arm-only-v2-review/README.md)。
+2026-09-18 已完成 **4/4 组真实仿真与 76 项 CPU 回归**，见[验证包](../result/robotwin-if-arm-only-v2-20blocks/evidence/arm-target-only/README.md)。
 两个方向均真实执行“错误臂拿起→放回→指定臂拿起”，最终仍失败；直接正确抓取的两个对照仍成功。
 4 组初始观测逐数组匹配旧 cube-v3 同 seed 的观测。
 

@@ -8,12 +8,10 @@
 这些文件不再通过默认 bridge 安装，不参与 `--all` seed 生成或正常 policy 评测。
 归档脚本中的路径反映原目录结构；本目录不是可直接启动的评测入口。
 
-历史七任务 seed releases 仍保留在 `seed-manifests/if-ext-v1-*` 和旧 `if-ext-v2-*` 目录，
-包括 grasp 的 seeds、qualification evidence 与 scene snapshots；不重写这些发布证据。
-历史七任务结果保留在 `result/if-ext-v2-wide-20blocks/`，共 3240 回合。
+历史七任务清单与结果只保留在 Git 历史中，不作为当前目录中的备选入口。
 `if_benchmark.seed_contracts.ARCHIVED_SEED_CONTRACTS` 仅保留读取旧 manifest/结果所需的 mode 与 block 元数据。
 
-当前正式清单是 [`if-ext-v2-six-tasks-20-per-mode`](../../seed-manifests/if-ext-v2-six-tasks-20-per-mode/README.md)。
+当前正式清单是 [Arm-only-v2 六任务清单](../../seed-manifests/robotwin-if-arm-only-v2-20-per-mode/README.md)。
 当前报告默认不含 grasp，Overall 为六个 Task Avg. 等权平均。
 需还原旧七任务报告时，给 `tools/summarize_formal_policy_results.py` 加 `--include-archived-tasks`。
 不要将删除任务后的 Overall 与旧七任务分数当作相同指标比较。

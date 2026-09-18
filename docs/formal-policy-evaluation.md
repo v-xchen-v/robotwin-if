@@ -4,9 +4,9 @@
 Grasp-Approach 已暂时下线，见 [归档说明](../bak/grasp_cube_approach/README.md)。
 当前使用 [RoboTwin-IF Arm-only-v2 taskset](../seed-manifests/robotwin-if-arm-only-v2-20-per-mode/README.md)，
 各 policy 460 回合，全套 **2760/2760 回合、720/720 blocks** 已于 2026-09-18 05:26 UTC 完成校验。
-Arm 按 target-arm-only-lift-v2 重跑 240 回合，其他五任务复用 [Attribute-v2](../result-archive/robotwin-if-attribute-v2-20blocks/README.md) 的 2520 回合。
+Arm 按 target-arm-only-lift-v2 重跑 240 回合，其他五任务复用 Attribute-v2 的 2520 回合。
 [最新结果](../result/robotwin-if-arm-only-v2-20blocks/README.md)及 [远端推理/并发调度记录](arm-select-target-only-v2-evaluation.md)已归档。
-正式 runner 的 `--release` 默认值已同步到该版本；旧清单实体见 [历史归档](../seed-manifests-archive/README.md)。
+正式 runner 的 `--release` 默认值指向该版本；当前分支只保留这份清单和结果，见[发布溯源说明](release-provenance.md)。
 [新的 pick 稳定保持判定](bottle-verb-pick-hold.md)下，prepare 会排除旧 Bottle-Verb 结果并保留原 seed 重测；该轮重测现已完成。
 当前 v6 的 pick 允许平移，在完整执行 700 个动作后判断末尾姿态保持和全程旋转摇晃；不再提前成功。shake 及其他任务保留原终止方式。
 
@@ -72,7 +72,7 @@ GPU、网络、场景不一致及执行异常不走这个重试。
 
 ## 历史结果与当前六任务统计
 
-历史七任务版本使用 `seed-manifests/if-ext-v2-wide-20-per-mode/`，六个模型各 540 回合，
+历史七任务版本仅在 Git 历史中保留，六个模型各 540 回合，
 全套 **3,240 回合、840 个完整 blocks**。从 12 扩到 20 时保留全部 1,944 条旧成功/失败结果，
 新增 1,296 回合；seed 选择不参考 policy 成败。
 
