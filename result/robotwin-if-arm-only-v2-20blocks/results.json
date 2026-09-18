@@ -1,0 +1,7775 @@
+{
+  "updated_at": "2026-09-18T05:26:32.897568+00:00",
+  "run_dir": "/Data/robotwin-if/evaluations/robotwin-if-arm-only-v2-20blocks-001",
+  "task_configs": {
+    "bottle_verb": "demo_clean",
+    "pick_diverse_object": "demo_clean",
+    "attribute_select": "demo_clean",
+    "arm_select": "demo_clean_arm_select_v3",
+    "stack_sequence": "demo_clean",
+    "place_relative": "demo_clean"
+  },
+  "success_checkers": {
+    "bottle_verb": "relative-lift-hold-v6-terminal",
+    "pick_diverse_object": null,
+    "attribute_select": "target-only-lift-v2",
+    "arm_select": "target-arm-only-lift-v2",
+    "stack_sequence": null,
+    "place_relative": null
+  },
+  "tasks": [
+    "bottle_verb",
+    "pick_diverse_object",
+    "attribute_select",
+    "arm_select",
+    "stack_sequence",
+    "place_relative"
+  ],
+  "excluded_modes": {},
+  "spatial_scope": "spatial3",
+  "excluded_tasks": [],
+  "summary": {
+    "completed_episodes": 2760,
+    "expected_episodes": 2760,
+    "completed_blocks": 720,
+    "expected_blocks": 720,
+    "complete_task_policy_runs": 36
+  },
+  "checkpoint_replacement": null,
+  "block_extension": null,
+  "source_summary": {
+    "status": "complete",
+    "updated_at": "2026-09-18T05:26:32.897568+00:00",
+    "expected_episodes": 2760,
+    "completed_episodes": 2760,
+    "pending_episodes": 0,
+    "reused_episodes": 2520,
+    "new_episodes": 240,
+    "successes": 1097,
+    "policy_failures": 1663,
+    "complete_task_policy_runs": 36,
+    "completed_blocks": 720,
+    "expected_blocks": 720,
+    "current": {},
+    "error": null,
+    "sim_gpu": [
+      0,
+      1
+    ],
+    "model_gpu": [
+      2,
+      3
+    ],
+    "execution_topology": {
+      "mode": "remote-inference-policy-shards",
+      "max_servers": 3,
+      "max_simulators": 3,
+      "sim_host": "msrait-04",
+      "model_host": "msrait-03",
+      "lanes": [
+        {
+          "sim_gpu": "GPU-8ad7fc66-4785-ca1e-d5d3-d7b78fc3be57",
+          "sim_pci": "0000:af:00.0",
+          "model_gpu": "GPU-e08dce02-b70f-4ce3-e2d4-ebefd1952000"
+        },
+        {
+          "sim_gpu": "GPU-8ad7fc66-4785-ca1e-d5d3-d7b78fc3be57",
+          "sim_pci": "0000:af:00.0",
+          "model_gpu": "GPU-e08dce02-b70f-4ce3-e2d4-ebefd1952000"
+        },
+        {
+          "sim_gpu": "GPU-c790fd5b-e93b-853f-4669-7c0d8362f3c6",
+          "sim_pci": "0000:d8:00.0",
+          "model_gpu": "GPU-5251b938-1ba5-e1a1-ad21-68ea5b29e206",
+          "admit_temperature_c": 78,
+          "pause_temperature_c": 81,
+          "resume_temperature_c": 76
+        }
+      ],
+      "worker": "tools/run_sharded_remote_suite.py",
+      "deployment_config": "support/hy-vla-sharding/controller.json",
+      "controller_sha256": "05391b77847764906f19f16ad76aee3950c88eff7e88de0f67ed157f2f204085",
+      "model_admission_mib": 45056,
+      "hard_temperature_c": 86,
+      "pause_temperature_c": 83,
+      "resume_temperature_c": 78,
+      "checkpoint_loads_parallel": false,
+      "source_revision": "hy-vla-two-replicas",
+      "policy_model_gpus": {
+        "lingbot_vla": "GPU-5251b938-1ba5-e1a1-ad21-68ea5b29e206",
+        "vlact": "GPU-5251b938-1ba5-e1a1-ad21-68ea5b29e206",
+        "dm05": "GPU-5251b938-1ba5-e1a1-ad21-68ea5b29e206",
+        "hy_vla": "GPU-5251b938-1ba5-e1a1-ad21-68ea5b29e206"
+      },
+      "shared_model_gpus": [
+        "GPU-5251b938-1ba5-e1a1-ad21-68ea5b29e206"
+      ],
+      "max_simulators_per_gpu": 2,
+      "third_lane_pause_temperature_c": 81,
+      "third_lane_resume_temperature_c": 76,
+      "action_cooling": {
+        "pause_temperature_c": 80,
+        "resume_temperature_c": 74,
+        "check_interval_seconds": 3
+      },
+      "task": "arm_select",
+      "hy_vla_replicas": 2,
+      "shards": [
+        {
+          "id": "hy-primary",
+          "policy": "hy_vla",
+          "lane": 2,
+          "seeds": [
+            500009,
+            500012,
+            500013,
+            500016,
+            500017,
+            500020,
+            500021,
+            500024,
+            500025,
+            500028,
+            500029,
+            500032,
+            500033,
+            500036,
+            500037
+          ],
+          "config": "/Data/robotwin-if/evaluations/robotwin-if-arm-only-v2-20blocks-001/support/remote-msrait03.json",
+          "adopt_forward": true,
+          "config_sha256": "38b8ac41dad320f11f147d9e52a6070ae98301b55dee92e63642ecf9e4830b77",
+          "sim_gpu": "GPU-c790fd5b-e93b-853f-4669-7c0d8362f3c6",
+          "model_gpu": "GPU-5251b938-1ba5-e1a1-ad21-68ea5b29e206",
+          "local_port": 18015,
+          "remote_port": 28015
+        },
+        {
+          "id": "hy-replica2",
+          "policy": "hy_vla",
+          "lane": 1,
+          "seeds": [
+            500010,
+            500011,
+            500014,
+            500015,
+            500018,
+            500019,
+            500022,
+            500023,
+            500026,
+            500027,
+            500030,
+            500031,
+            500034,
+            500035,
+            500038,
+            500039
+          ],
+          "config": "/Data/robotwin-if/evaluations/robotwin-if-arm-only-v2-20blocks-001/support/hy-vla-sharding/replica2.json",
+          "adopt_forward": false,
+          "config_sha256": "a069b7ce164e608628a5b2630796c2efad3dabe22798780f626f26d65bfd3aa4",
+          "sim_gpu": "GPU-8ad7fc66-4785-ca1e-d5d3-d7b78fc3be57",
+          "model_gpu": "GPU-e08dce02-b70f-4ce3-e2d4-ebefd1952000",
+          "local_port": 18016,
+          "remote_port": 28016
+        },
+        {
+          "id": "dm05",
+          "policy": "dm05",
+          "lane": 0,
+          "seeds": [
+            500031,
+            500032,
+            500033,
+            500034,
+            500035,
+            500036,
+            500037,
+            500038,
+            500039
+          ],
+          "config": "/Data/robotwin-if/evaluations/robotwin-if-arm-only-v2-20blocks-001/support/remote-msrait03.json",
+          "adopt_forward": true,
+          "config_sha256": "38b8ac41dad320f11f147d9e52a6070ae98301b55dee92e63642ecf9e4830b77",
+          "sim_gpu": "GPU-8ad7fc66-4785-ca1e-d5d3-d7b78fc3be57",
+          "model_gpu": "GPU-5251b938-1ba5-e1a1-ad21-68ea5b29e206",
+          "local_port": 18014,
+          "remote_port": 28014
+        }
+      ]
+    },
+    "tasks": [
+      {
+        "policy": "xvla",
+        "task": "bottle_verb",
+        "expected_episodes": 40,
+        "recorded_episodes": 40,
+        "successes": 20,
+        "reused": 40,
+        "new": 0,
+        "complete": true,
+        "completed_blocks": 20,
+        "expected_blocks": 20,
+        "partial_blocks": 0,
+        "pending_seeds": [],
+        "per_mode": {
+          "pick": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 0
+          },
+          "shake": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 20
+          }
+        }
+      },
+      {
+        "policy": "xvla",
+        "task": "pick_diverse_object",
+        "expected_episodes": 40,
+        "recorded_episodes": 40,
+        "successes": 15,
+        "reused": 40,
+        "new": 0,
+        "complete": true,
+        "completed_blocks": 20,
+        "expected_blocks": 20,
+        "partial_blocks": 0,
+        "pending_seeds": [],
+        "per_mode": {
+          "seen": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 7
+          },
+          "unseen": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 8
+          }
+        }
+      },
+      {
+        "policy": "xvla",
+        "task": "attribute_select",
+        "expected_episodes": 160,
+        "recorded_episodes": 160,
+        "successes": 73,
+        "reused": 160,
+        "new": 0,
+        "complete": true,
+        "completed_blocks": 20,
+        "expected_blocks": 20,
+        "partial_blocks": 0,
+        "pending_seeds": [],
+        "per_mode": {
+          "color:red": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 16
+          },
+          "color:blue": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 0
+          },
+          "decal:cat": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 13
+          },
+          "decal:dog": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 7
+          },
+          "shape:block": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 7
+          },
+          "shape:bar": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 10
+          },
+          "size:big": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 0
+          },
+          "size:small": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 20
+          }
+        }
+      },
+      {
+        "policy": "xvla",
+        "task": "arm_select",
+        "expected_episodes": 40,
+        "recorded_episodes": 40,
+        "successes": 5,
+        "reused": 0,
+        "new": 40,
+        "complete": true,
+        "completed_blocks": 20,
+        "expected_blocks": 20,
+        "partial_blocks": 0,
+        "pending_seeds": [],
+        "per_mode": {
+          "left": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 2
+          },
+          "right": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 3
+          }
+        }
+      },
+      {
+        "policy": "xvla",
+        "task": "stack_sequence",
+        "expected_episodes": 120,
+        "recorded_episodes": 120,
+        "successes": 0,
+        "reused": 120,
+        "new": 0,
+        "complete": true,
+        "completed_blocks": 20,
+        "expected_blocks": 20,
+        "partial_blocks": 0,
+        "pending_seeds": [],
+        "per_mode": {
+          "red>green>blue": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 0
+          },
+          "red>blue>green": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 0
+          },
+          "green>red>blue": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 0
+          },
+          "green>blue>red": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 0
+          },
+          "blue>red>green": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 0
+          },
+          "blue>green>red": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 0
+          }
+        }
+      },
+      {
+        "policy": "xvla",
+        "task": "place_relative",
+        "expected_episodes": 60,
+        "recorded_episodes": 60,
+        "successes": 6,
+        "reused": 60,
+        "new": 0,
+        "complete": true,
+        "completed_blocks": 20,
+        "expected_blocks": 20,
+        "partial_blocks": 0,
+        "pending_seeds": [],
+        "per_mode": {
+          "left": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 4
+          },
+          "right": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 2
+          },
+          "on_top": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 0
+          }
+        }
+      },
+      {
+        "policy": "lingbot_va",
+        "task": "bottle_verb",
+        "expected_episodes": 40,
+        "recorded_episodes": 40,
+        "successes": 20,
+        "reused": 40,
+        "new": 0,
+        "complete": true,
+        "completed_blocks": 20,
+        "expected_blocks": 20,
+        "partial_blocks": 0,
+        "pending_seeds": [],
+        "per_mode": {
+          "pick": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 0
+          },
+          "shake": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 20
+          }
+        }
+      },
+      {
+        "policy": "lingbot_va",
+        "task": "pick_diverse_object",
+        "expected_episodes": 40,
+        "recorded_episodes": 40,
+        "successes": 30,
+        "reused": 40,
+        "new": 0,
+        "complete": true,
+        "completed_blocks": 20,
+        "expected_blocks": 20,
+        "partial_blocks": 0,
+        "pending_seeds": [],
+        "per_mode": {
+          "seen": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 14
+          },
+          "unseen": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 16
+          }
+        }
+      },
+      {
+        "policy": "lingbot_va",
+        "task": "attribute_select",
+        "expected_episodes": 160,
+        "recorded_episodes": 160,
+        "successes": 108,
+        "reused": 160,
+        "new": 0,
+        "complete": true,
+        "completed_blocks": 20,
+        "expected_blocks": 20,
+        "partial_blocks": 0,
+        "pending_seeds": [],
+        "per_mode": {
+          "color:red": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 20
+          },
+          "color:blue": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 19
+          },
+          "decal:cat": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 8
+          },
+          "decal:dog": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 13
+          },
+          "shape:block": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 20
+          },
+          "shape:bar": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 8
+          },
+          "size:big": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 0
+          },
+          "size:small": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 20
+          }
+        }
+      },
+      {
+        "policy": "lingbot_va",
+        "task": "arm_select",
+        "expected_episodes": 40,
+        "recorded_episodes": 40,
+        "successes": 37,
+        "reused": 0,
+        "new": 40,
+        "complete": true,
+        "completed_blocks": 20,
+        "expected_blocks": 20,
+        "partial_blocks": 0,
+        "pending_seeds": [],
+        "per_mode": {
+          "left": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 18
+          },
+          "right": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 19
+          }
+        }
+      },
+      {
+        "policy": "lingbot_va",
+        "task": "stack_sequence",
+        "expected_episodes": 120,
+        "recorded_episodes": 120,
+        "successes": 17,
+        "reused": 120,
+        "new": 0,
+        "complete": true,
+        "completed_blocks": 20,
+        "expected_blocks": 20,
+        "partial_blocks": 0,
+        "pending_seeds": [],
+        "per_mode": {
+          "red>green>blue": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 17
+          },
+          "red>blue>green": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 0
+          },
+          "green>red>blue": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 0
+          },
+          "green>blue>red": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 0
+          },
+          "blue>red>green": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 0
+          },
+          "blue>green>red": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 0
+          }
+        }
+      },
+      {
+        "policy": "lingbot_va",
+        "task": "place_relative",
+        "expected_episodes": 60,
+        "recorded_episodes": 60,
+        "successes": 26,
+        "reused": 60,
+        "new": 0,
+        "complete": true,
+        "completed_blocks": 20,
+        "expected_blocks": 20,
+        "partial_blocks": 0,
+        "pending_seeds": [],
+        "per_mode": {
+          "left": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 12
+          },
+          "right": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 7
+          },
+          "on_top": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 7
+          }
+        }
+      },
+      {
+        "policy": "lingbot_vla",
+        "task": "bottle_verb",
+        "expected_episodes": 40,
+        "recorded_episodes": 40,
+        "successes": 20,
+        "reused": 40,
+        "new": 0,
+        "complete": true,
+        "completed_blocks": 20,
+        "expected_blocks": 20,
+        "partial_blocks": 0,
+        "pending_seeds": [],
+        "per_mode": {
+          "pick": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 0
+          },
+          "shake": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 20
+          }
+        }
+      },
+      {
+        "policy": "lingbot_vla",
+        "task": "pick_diverse_object",
+        "expected_episodes": 40,
+        "recorded_episodes": 40,
+        "successes": 13,
+        "reused": 40,
+        "new": 0,
+        "complete": true,
+        "completed_blocks": 20,
+        "expected_blocks": 20,
+        "partial_blocks": 0,
+        "pending_seeds": [],
+        "per_mode": {
+          "seen": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 10
+          },
+          "unseen": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 3
+          }
+        }
+      },
+      {
+        "policy": "lingbot_vla",
+        "task": "attribute_select",
+        "expected_episodes": 160,
+        "recorded_episodes": 160,
+        "successes": 77,
+        "reused": 160,
+        "new": 0,
+        "complete": true,
+        "completed_blocks": 20,
+        "expected_blocks": 20,
+        "partial_blocks": 0,
+        "pending_seeds": [],
+        "per_mode": {
+          "color:red": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 11
+          },
+          "color:blue": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 9
+          },
+          "decal:cat": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 12
+          },
+          "decal:dog": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 9
+          },
+          "shape:block": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 5
+          },
+          "shape:bar": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 11
+          },
+          "size:big": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 0
+          },
+          "size:small": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 20
+          }
+        }
+      },
+      {
+        "policy": "lingbot_vla",
+        "task": "arm_select",
+        "expected_episodes": 40,
+        "recorded_episodes": 40,
+        "successes": 18,
+        "reused": 0,
+        "new": 40,
+        "complete": true,
+        "completed_blocks": 20,
+        "expected_blocks": 20,
+        "partial_blocks": 0,
+        "pending_seeds": [],
+        "per_mode": {
+          "left": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 7
+          },
+          "right": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 11
+          }
+        }
+      },
+      {
+        "policy": "lingbot_vla",
+        "task": "stack_sequence",
+        "expected_episodes": 120,
+        "recorded_episodes": 120,
+        "successes": 14,
+        "reused": 120,
+        "new": 0,
+        "complete": true,
+        "completed_blocks": 20,
+        "expected_blocks": 20,
+        "partial_blocks": 0,
+        "pending_seeds": [],
+        "per_mode": {
+          "red>green>blue": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 14
+          },
+          "red>blue>green": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 0
+          },
+          "green>red>blue": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 0
+          },
+          "green>blue>red": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 0
+          },
+          "blue>red>green": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 0
+          },
+          "blue>green>red": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 0
+          }
+        }
+      },
+      {
+        "policy": "lingbot_vla",
+        "task": "place_relative",
+        "expected_episodes": 60,
+        "recorded_episodes": 60,
+        "successes": 3,
+        "reused": 60,
+        "new": 0,
+        "complete": true,
+        "completed_blocks": 20,
+        "expected_blocks": 20,
+        "partial_blocks": 0,
+        "pending_seeds": [],
+        "per_mode": {
+          "left": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 1
+          },
+          "right": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 2
+          },
+          "on_top": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 0
+          }
+        }
+      },
+      {
+        "policy": "vlact",
+        "task": "bottle_verb",
+        "expected_episodes": 40,
+        "recorded_episodes": 40,
+        "successes": 36,
+        "reused": 40,
+        "new": 0,
+        "complete": true,
+        "completed_blocks": 20,
+        "expected_blocks": 20,
+        "partial_blocks": 0,
+        "pending_seeds": [],
+        "per_mode": {
+          "pick": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 16
+          },
+          "shake": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 20
+          }
+        }
+      },
+      {
+        "policy": "vlact",
+        "task": "pick_diverse_object",
+        "expected_episodes": 40,
+        "recorded_episodes": 40,
+        "successes": 28,
+        "reused": 40,
+        "new": 0,
+        "complete": true,
+        "completed_blocks": 20,
+        "expected_blocks": 20,
+        "partial_blocks": 0,
+        "pending_seeds": [],
+        "per_mode": {
+          "seen": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 16
+          },
+          "unseen": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 12
+          }
+        }
+      },
+      {
+        "policy": "vlact",
+        "task": "attribute_select",
+        "expected_episodes": 160,
+        "recorded_episodes": 160,
+        "successes": 108,
+        "reused": 160,
+        "new": 0,
+        "complete": true,
+        "completed_blocks": 20,
+        "expected_blocks": 20,
+        "partial_blocks": 0,
+        "pending_seeds": [],
+        "per_mode": {
+          "color:red": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 18
+          },
+          "color:blue": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 16
+          },
+          "decal:cat": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 18
+          },
+          "decal:dog": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 7
+          },
+          "shape:block": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 15
+          },
+          "shape:bar": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 14
+          },
+          "size:big": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 0
+          },
+          "size:small": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 20
+          }
+        }
+      },
+      {
+        "policy": "vlact",
+        "task": "arm_select",
+        "expected_episodes": 40,
+        "recorded_episodes": 40,
+        "successes": 29,
+        "reused": 0,
+        "new": 40,
+        "complete": true,
+        "completed_blocks": 20,
+        "expected_blocks": 20,
+        "partial_blocks": 0,
+        "pending_seeds": [],
+        "per_mode": {
+          "left": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 16
+          },
+          "right": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 13
+          }
+        }
+      },
+      {
+        "policy": "vlact",
+        "task": "stack_sequence",
+        "expected_episodes": 120,
+        "recorded_episodes": 120,
+        "successes": 15,
+        "reused": 120,
+        "new": 0,
+        "complete": true,
+        "completed_blocks": 20,
+        "expected_blocks": 20,
+        "partial_blocks": 0,
+        "pending_seeds": [],
+        "per_mode": {
+          "red>green>blue": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 10
+          },
+          "red>blue>green": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 0
+          },
+          "green>red>blue": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 1
+          },
+          "green>blue>red": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 2
+          },
+          "blue>red>green": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 0
+          },
+          "blue>green>red": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 2
+          }
+        }
+      },
+      {
+        "policy": "vlact",
+        "task": "place_relative",
+        "expected_episodes": 60,
+        "recorded_episodes": 60,
+        "successes": 19,
+        "reused": 60,
+        "new": 0,
+        "complete": true,
+        "completed_blocks": 20,
+        "expected_blocks": 20,
+        "partial_blocks": 0,
+        "pending_seeds": [],
+        "per_mode": {
+          "left": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 11
+          },
+          "right": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 7
+          },
+          "on_top": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 1
+          }
+        }
+      },
+      {
+        "policy": "dm05",
+        "task": "bottle_verb",
+        "expected_episodes": 40,
+        "recorded_episodes": 40,
+        "successes": 40,
+        "reused": 40,
+        "new": 0,
+        "complete": true,
+        "completed_blocks": 20,
+        "expected_blocks": 20,
+        "partial_blocks": 0,
+        "pending_seeds": [],
+        "per_mode": {
+          "pick": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 20
+          },
+          "shake": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 20
+          }
+        }
+      },
+      {
+        "policy": "dm05",
+        "task": "pick_diverse_object",
+        "expected_episodes": 40,
+        "recorded_episodes": 40,
+        "successes": 25,
+        "reused": 40,
+        "new": 0,
+        "complete": true,
+        "completed_blocks": 20,
+        "expected_blocks": 20,
+        "partial_blocks": 0,
+        "pending_seeds": [],
+        "per_mode": {
+          "seen": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 18
+          },
+          "unseen": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 7
+          }
+        }
+      },
+      {
+        "policy": "dm05",
+        "task": "attribute_select",
+        "expected_episodes": 160,
+        "recorded_episodes": 160,
+        "successes": 88,
+        "reused": 160,
+        "new": 0,
+        "complete": true,
+        "completed_blocks": 20,
+        "expected_blocks": 20,
+        "partial_blocks": 0,
+        "pending_seeds": [],
+        "per_mode": {
+          "color:red": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 20
+          },
+          "color:blue": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 0
+          },
+          "decal:cat": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 8
+          },
+          "decal:dog": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 12
+          },
+          "shape:block": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 8
+          },
+          "shape:bar": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 20
+          },
+          "size:big": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 0
+          },
+          "size:small": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 20
+          }
+        }
+      },
+      {
+        "policy": "dm05",
+        "task": "arm_select",
+        "expected_episodes": 40,
+        "recorded_episodes": 40,
+        "successes": 25,
+        "reused": 0,
+        "new": 40,
+        "complete": true,
+        "completed_blocks": 20,
+        "expected_blocks": 20,
+        "partial_blocks": 0,
+        "pending_seeds": [],
+        "per_mode": {
+          "left": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 9
+          },
+          "right": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 16
+          }
+        }
+      },
+      {
+        "policy": "dm05",
+        "task": "stack_sequence",
+        "expected_episodes": 120,
+        "recorded_episodes": 120,
+        "successes": 9,
+        "reused": 120,
+        "new": 0,
+        "complete": true,
+        "completed_blocks": 20,
+        "expected_blocks": 20,
+        "partial_blocks": 0,
+        "pending_seeds": [],
+        "per_mode": {
+          "red>green>blue": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 9
+          },
+          "red>blue>green": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 0
+          },
+          "green>red>blue": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 0
+          },
+          "green>blue>red": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 0
+          },
+          "blue>red>green": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 0
+          },
+          "blue>green>red": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 0
+          }
+        }
+      },
+      {
+        "policy": "dm05",
+        "task": "place_relative",
+        "expected_episodes": 60,
+        "recorded_episodes": 60,
+        "successes": 20,
+        "reused": 60,
+        "new": 0,
+        "complete": true,
+        "completed_blocks": 20,
+        "expected_blocks": 20,
+        "partial_blocks": 0,
+        "pending_seeds": [],
+        "per_mode": {
+          "left": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 12
+          },
+          "right": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 8
+          },
+          "on_top": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 0
+          }
+        }
+      },
+      {
+        "policy": "hy_vla",
+        "task": "bottle_verb",
+        "expected_episodes": 40,
+        "recorded_episodes": 40,
+        "successes": 20,
+        "reused": 40,
+        "new": 0,
+        "complete": true,
+        "completed_blocks": 20,
+        "expected_blocks": 20,
+        "partial_blocks": 0,
+        "pending_seeds": [],
+        "per_mode": {
+          "pick": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 0
+          },
+          "shake": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 20
+          }
+        }
+      },
+      {
+        "policy": "hy_vla",
+        "task": "pick_diverse_object",
+        "expected_episodes": 40,
+        "recorded_episodes": 40,
+        "successes": 11,
+        "reused": 40,
+        "new": 0,
+        "complete": true,
+        "completed_blocks": 20,
+        "expected_blocks": 20,
+        "partial_blocks": 0,
+        "pending_seeds": [],
+        "per_mode": {
+          "seen": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 7
+          },
+          "unseen": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 4
+          }
+        }
+      },
+      {
+        "policy": "hy_vla",
+        "task": "attribute_select",
+        "expected_episodes": 160,
+        "recorded_episodes": 160,
+        "successes": 83,
+        "reused": 160,
+        "new": 0,
+        "complete": true,
+        "completed_blocks": 20,
+        "expected_blocks": 20,
+        "partial_blocks": 0,
+        "pending_seeds": [],
+        "per_mode": {
+          "color:red": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 20
+          },
+          "color:blue": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 0
+          },
+          "decal:cat": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 11
+          },
+          "decal:dog": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 10
+          },
+          "shape:block": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 3
+          },
+          "shape:bar": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 19
+          },
+          "size:big": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 0
+          },
+          "size:small": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 20
+          }
+        }
+      },
+      {
+        "policy": "hy_vla",
+        "task": "arm_select",
+        "expected_episodes": 40,
+        "recorded_episodes": 40,
+        "successes": 17,
+        "reused": 0,
+        "new": 40,
+        "complete": true,
+        "completed_blocks": 20,
+        "expected_blocks": 20,
+        "partial_blocks": 0,
+        "pending_seeds": [],
+        "per_mode": {
+          "left": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 6
+          },
+          "right": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 11
+          }
+        }
+      },
+      {
+        "policy": "hy_vla",
+        "task": "stack_sequence",
+        "expected_episodes": 120,
+        "recorded_episodes": 120,
+        "successes": 15,
+        "reused": 120,
+        "new": 0,
+        "complete": true,
+        "completed_blocks": 20,
+        "expected_blocks": 20,
+        "partial_blocks": 0,
+        "pending_seeds": [],
+        "per_mode": {
+          "red>green>blue": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 15
+          },
+          "red>blue>green": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 0
+          },
+          "green>red>blue": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 0
+          },
+          "green>blue>red": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 0
+          },
+          "blue>red>green": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 0
+          },
+          "blue>green>red": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 0
+          }
+        }
+      },
+      {
+        "policy": "hy_vla",
+        "task": "place_relative",
+        "expected_episodes": 60,
+        "recorded_episodes": 60,
+        "successes": 7,
+        "reused": 60,
+        "new": 0,
+        "complete": true,
+        "completed_blocks": 20,
+        "expected_blocks": 20,
+        "partial_blocks": 0,
+        "pending_seeds": [],
+        "per_mode": {
+          "left": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 2
+          },
+          "right": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 5
+          },
+          "on_top": {
+            "expected": 20,
+            "recorded": 20,
+            "successes": 0
+          }
+        }
+      }
+    ]
+  },
+  "rows": [
+    {
+      "policy": "xvla",
+      "task": "bottle_verb",
+      "complete": true,
+      "completed_blocks": 20,
+      "expected_blocks": 20,
+      "recorded_episodes": 40,
+      "expected_episodes": 40,
+      "recorded_successes": 20,
+      "included_episodes": 40,
+      "partial_group_episodes": 0,
+      "included_seeds": [
+        100002,
+        100003,
+        100004,
+        100005,
+        100006,
+        100007,
+        100008,
+        100009,
+        100010,
+        100011,
+        100016,
+        100017,
+        100018,
+        100019,
+        100020,
+        100021,
+        100022,
+        100023,
+        100024,
+        100025,
+        100026,
+        100027,
+        100030,
+        100031,
+        100032,
+        100033,
+        100038,
+        100039,
+        100042,
+        100043,
+        100048,
+        100049,
+        100050,
+        100051,
+        100052,
+        100053,
+        100054,
+        100055,
+        100056,
+        100057
+      ],
+      "complete_block_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ],
+      "modes": {
+        "pick": {
+          "successes": 0,
+          "included": 20,
+          "sr_pct": 0.0,
+          "recorded": 20,
+          "recorded_successes": 0
+        },
+        "shake": {
+          "successes": 20,
+          "included": 20,
+          "sr_pct": 100.0,
+          "recorded": 20,
+          "recorded_successes": 20
+        }
+      },
+      "columns": [
+        {
+          "label": "Pick",
+          "modes": [
+            "pick"
+          ],
+          "successes": 0,
+          "included": 20,
+          "sr_pct": 0.0
+        },
+        {
+          "label": "Shake",
+          "modes": [
+            "shake"
+          ],
+          "successes": 20,
+          "included": 20,
+          "sr_pct": 100.0
+        }
+      ],
+      "avg_pct": 50.0
+    },
+    {
+      "policy": "xvla",
+      "task": "pick_diverse_object",
+      "complete": true,
+      "completed_blocks": 20,
+      "expected_blocks": 20,
+      "recorded_episodes": 40,
+      "expected_episodes": 40,
+      "recorded_successes": 15,
+      "included_episodes": 40,
+      "partial_group_episodes": 0,
+      "included_seeds": [
+        100002,
+        100003,
+        100004,
+        100005,
+        100006,
+        100007,
+        100008,
+        100009,
+        100012,
+        100013,
+        100014,
+        100015,
+        100018,
+        100019,
+        100020,
+        100021,
+        100024,
+        100025,
+        100034,
+        100035,
+        100036,
+        100037,
+        100038,
+        100039,
+        100040,
+        100041,
+        100042,
+        100043,
+        100048,
+        100049,
+        100052,
+        100053,
+        100054,
+        100055,
+        100056,
+        100057,
+        100060,
+        100061,
+        100066,
+        100067
+      ],
+      "complete_block_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ],
+      "modes": {
+        "seen": {
+          "successes": 7,
+          "included": 20,
+          "sr_pct": 35.0,
+          "recorded": 20,
+          "recorded_successes": 7
+        },
+        "unseen": {
+          "successes": 8,
+          "included": 20,
+          "sr_pct": 40.0,
+          "recorded": 20,
+          "recorded_successes": 8
+        }
+      },
+      "columns": [
+        {
+          "label": "Seen",
+          "modes": [
+            "seen"
+          ],
+          "successes": 7,
+          "included": 20,
+          "sr_pct": 35.0
+        },
+        {
+          "label": "Unseen",
+          "modes": [
+            "unseen"
+          ],
+          "successes": 8,
+          "included": 20,
+          "sr_pct": 40.0
+        }
+      ],
+      "avg_pct": 37.5
+    },
+    {
+      "policy": "xvla",
+      "task": "attribute_select",
+      "complete": true,
+      "completed_blocks": 20,
+      "expected_blocks": 20,
+      "recorded_episodes": 160,
+      "expected_episodes": 160,
+      "recorded_successes": 73,
+      "included_episodes": 160,
+      "partial_group_episodes": 0,
+      "included_seeds": [
+        100000,
+        100001,
+        100002,
+        100003,
+        100004,
+        100005,
+        100006,
+        100007,
+        100008,
+        100009,
+        100010,
+        100011,
+        100012,
+        100013,
+        100014,
+        100015,
+        100016,
+        100017,
+        100018,
+        100019,
+        100020,
+        100021,
+        100022,
+        100023,
+        100024,
+        100025,
+        100026,
+        100027,
+        100028,
+        100029,
+        100030,
+        100031,
+        100032,
+        100033,
+        100034,
+        100035,
+        100036,
+        100037,
+        100038,
+        100039,
+        100040,
+        100041,
+        100042,
+        100043,
+        100044,
+        100045,
+        100046,
+        100047,
+        100048,
+        100049,
+        100050,
+        100051,
+        100052,
+        100053,
+        100054,
+        100055,
+        100064,
+        100065,
+        100066,
+        100067,
+        100068,
+        100069,
+        100070,
+        100071,
+        100072,
+        100073,
+        100074,
+        100075,
+        100076,
+        100077,
+        100078,
+        100079,
+        100080,
+        100081,
+        100082,
+        100083,
+        100084,
+        100085,
+        100086,
+        100087,
+        100088,
+        100089,
+        100090,
+        100091,
+        100092,
+        100093,
+        100094,
+        100095,
+        100096,
+        100097,
+        100098,
+        100099,
+        100100,
+        100101,
+        100102,
+        100103,
+        100104,
+        100105,
+        100106,
+        100107,
+        100108,
+        100109,
+        100110,
+        100111,
+        100112,
+        100113,
+        100114,
+        100115,
+        100116,
+        100117,
+        100118,
+        100119,
+        100120,
+        100121,
+        100122,
+        100123,
+        100124,
+        100125,
+        100126,
+        100127,
+        100128,
+        100129,
+        100130,
+        100131,
+        100132,
+        100133,
+        100134,
+        100135,
+        100144,
+        100145,
+        100146,
+        100147,
+        100148,
+        100149,
+        100150,
+        100151,
+        100152,
+        100153,
+        100154,
+        100155,
+        100156,
+        100157,
+        100158,
+        100159,
+        100160,
+        100161,
+        100162,
+        100163,
+        100164,
+        100165,
+        100166,
+        100167,
+        100168,
+        100169,
+        100170,
+        100171,
+        100172,
+        100173,
+        100174,
+        100175
+      ],
+      "complete_block_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ],
+      "modes": {
+        "color:red": {
+          "successes": 16,
+          "included": 20,
+          "sr_pct": 80.0,
+          "recorded": 20,
+          "recorded_successes": 16
+        },
+        "color:blue": {
+          "successes": 0,
+          "included": 20,
+          "sr_pct": 0.0,
+          "recorded": 20,
+          "recorded_successes": 0
+        },
+        "decal:cat": {
+          "successes": 13,
+          "included": 20,
+          "sr_pct": 65.0,
+          "recorded": 20,
+          "recorded_successes": 13
+        },
+        "decal:dog": {
+          "successes": 7,
+          "included": 20,
+          "sr_pct": 35.0,
+          "recorded": 20,
+          "recorded_successes": 7
+        },
+        "shape:block": {
+          "successes": 7,
+          "included": 20,
+          "sr_pct": 35.0,
+          "recorded": 20,
+          "recorded_successes": 7
+        },
+        "shape:bar": {
+          "successes": 10,
+          "included": 20,
+          "sr_pct": 50.0,
+          "recorded": 20,
+          "recorded_successes": 10
+        },
+        "size:big": {
+          "successes": 0,
+          "included": 20,
+          "sr_pct": 0.0,
+          "recorded": 20,
+          "recorded_successes": 0
+        },
+        "size:small": {
+          "successes": 20,
+          "included": 20,
+          "sr_pct": 100.0,
+          "recorded": 20,
+          "recorded_successes": 20
+        }
+      },
+      "columns": [
+        {
+          "label": "Color",
+          "modes": [
+            "color:red",
+            "color:blue"
+          ],
+          "successes": 16,
+          "included": 40,
+          "sr_pct": 40.0
+        },
+        {
+          "label": "Decal",
+          "modes": [
+            "decal:cat",
+            "decal:dog"
+          ],
+          "successes": 20,
+          "included": 40,
+          "sr_pct": 50.0
+        },
+        {
+          "label": "Shape",
+          "modes": [
+            "shape:block",
+            "shape:bar"
+          ],
+          "successes": 17,
+          "included": 40,
+          "sr_pct": 42.5
+        },
+        {
+          "label": "Size",
+          "modes": [
+            "size:big",
+            "size:small"
+          ],
+          "successes": 20,
+          "included": 40,
+          "sr_pct": 50.0
+        }
+      ],
+      "avg_pct": 45.625
+    },
+    {
+      "policy": "xvla",
+      "task": "arm_select",
+      "complete": true,
+      "completed_blocks": 20,
+      "expected_blocks": 20,
+      "recorded_episodes": 40,
+      "expected_episodes": 40,
+      "recorded_successes": 5,
+      "included_episodes": 40,
+      "partial_group_episodes": 0,
+      "included_seeds": [
+        500000,
+        500001,
+        500002,
+        500003,
+        500004,
+        500005,
+        500006,
+        500007,
+        500008,
+        500009,
+        500010,
+        500011,
+        500012,
+        500013,
+        500014,
+        500015,
+        500016,
+        500017,
+        500018,
+        500019,
+        500020,
+        500021,
+        500022,
+        500023,
+        500024,
+        500025,
+        500026,
+        500027,
+        500028,
+        500029,
+        500030,
+        500031,
+        500032,
+        500033,
+        500034,
+        500035,
+        500036,
+        500037,
+        500038,
+        500039
+      ],
+      "complete_block_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ],
+      "modes": {
+        "left": {
+          "successes": 2,
+          "included": 20,
+          "sr_pct": 10.0,
+          "recorded": 20,
+          "recorded_successes": 2
+        },
+        "right": {
+          "successes": 3,
+          "included": 20,
+          "sr_pct": 15.0,
+          "recorded": 20,
+          "recorded_successes": 3
+        }
+      },
+      "columns": [
+        {
+          "label": "Left",
+          "modes": [
+            "left"
+          ],
+          "successes": 2,
+          "included": 20,
+          "sr_pct": 10.0
+        },
+        {
+          "label": "Right",
+          "modes": [
+            "right"
+          ],
+          "successes": 3,
+          "included": 20,
+          "sr_pct": 15.0
+        }
+      ],
+      "avg_pct": 12.5
+    },
+    {
+      "policy": "xvla",
+      "task": "stack_sequence",
+      "complete": true,
+      "completed_blocks": 20,
+      "expected_blocks": 20,
+      "recorded_episodes": 120,
+      "expected_episodes": 120,
+      "recorded_successes": 0,
+      "included_episodes": 120,
+      "partial_group_episodes": 0,
+      "included_seeds": [
+        100008,
+        100009,
+        100010,
+        100011,
+        100012,
+        100013,
+        100014,
+        100015,
+        100016,
+        100017,
+        100018,
+        100019,
+        100020,
+        100021,
+        100022,
+        100023,
+        100024,
+        100025,
+        100026,
+        100027,
+        100028,
+        100029,
+        100030,
+        100031,
+        100032,
+        100033,
+        100034,
+        100035,
+        100036,
+        100037,
+        100038,
+        100039,
+        100040,
+        100041,
+        100042,
+        100043,
+        100050,
+        100051,
+        100052,
+        100053,
+        100054,
+        100055,
+        100062,
+        100063,
+        100064,
+        100065,
+        100066,
+        100067,
+        100068,
+        100069,
+        100070,
+        100071,
+        100072,
+        100073,
+        100080,
+        100081,
+        100082,
+        100083,
+        100084,
+        100085,
+        100092,
+        100093,
+        100094,
+        100095,
+        100096,
+        100097,
+        100098,
+        100099,
+        100100,
+        100101,
+        100102,
+        100103,
+        100104,
+        100105,
+        100106,
+        100107,
+        100108,
+        100109,
+        100110,
+        100111,
+        100112,
+        100113,
+        100114,
+        100115,
+        100116,
+        100117,
+        100118,
+        100119,
+        100120,
+        100121,
+        100140,
+        100141,
+        100142,
+        100143,
+        100144,
+        100145,
+        100146,
+        100147,
+        100148,
+        100149,
+        100150,
+        100151,
+        100152,
+        100153,
+        100154,
+        100155,
+        100156,
+        100157,
+        100158,
+        100159,
+        100160,
+        100161,
+        100162,
+        100163,
+        100170,
+        100171,
+        100172,
+        100173,
+        100174,
+        100175
+      ],
+      "complete_block_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ],
+      "modes": {
+        "red>green>blue": {
+          "successes": 0,
+          "included": 20,
+          "sr_pct": 0.0,
+          "recorded": 20,
+          "recorded_successes": 0
+        },
+        "red>blue>green": {
+          "successes": 0,
+          "included": 20,
+          "sr_pct": 0.0,
+          "recorded": 20,
+          "recorded_successes": 0
+        },
+        "green>red>blue": {
+          "successes": 0,
+          "included": 20,
+          "sr_pct": 0.0,
+          "recorded": 20,
+          "recorded_successes": 0
+        },
+        "green>blue>red": {
+          "successes": 0,
+          "included": 20,
+          "sr_pct": 0.0,
+          "recorded": 20,
+          "recorded_successes": 0
+        },
+        "blue>red>green": {
+          "successes": 0,
+          "included": 20,
+          "sr_pct": 0.0,
+          "recorded": 20,
+          "recorded_successes": 0
+        },
+        "blue>green>red": {
+          "successes": 0,
+          "included": 20,
+          "sr_pct": 0.0,
+          "recorded": 20,
+          "recorded_successes": 0
+        }
+      },
+      "columns": [
+        {
+          "label": "RGB",
+          "modes": [
+            "red>green>blue"
+          ],
+          "successes": 0,
+          "included": 20,
+          "sr_pct": 0.0
+        },
+        {
+          "label": "RBG",
+          "modes": [
+            "red>blue>green"
+          ],
+          "successes": 0,
+          "included": 20,
+          "sr_pct": 0.0
+        },
+        {
+          "label": "GRB",
+          "modes": [
+            "green>red>blue"
+          ],
+          "successes": 0,
+          "included": 20,
+          "sr_pct": 0.0
+        },
+        {
+          "label": "GBR",
+          "modes": [
+            "green>blue>red"
+          ],
+          "successes": 0,
+          "included": 20,
+          "sr_pct": 0.0
+        },
+        {
+          "label": "BRG",
+          "modes": [
+            "blue>red>green"
+          ],
+          "successes": 0,
+          "included": 20,
+          "sr_pct": 0.0
+        },
+        {
+          "label": "BGR",
+          "modes": [
+            "blue>green>red"
+          ],
+          "successes": 0,
+          "included": 20,
+          "sr_pct": 0.0
+        }
+      ],
+      "avg_pct": 0.0
+    },
+    {
+      "policy": "xvla",
+      "task": "place_relative",
+      "complete": true,
+      "completed_blocks": 20,
+      "expected_blocks": 20,
+      "recorded_episodes": 60,
+      "expected_episodes": 60,
+      "recorded_successes": 6,
+      "included_episodes": 60,
+      "partial_group_episodes": 0,
+      "included_seeds": [
+        100005,
+        100006,
+        100009,
+        100010,
+        100011,
+        100014,
+        100015,
+        100016,
+        100019,
+        100020,
+        100021,
+        100024,
+        100025,
+        100026,
+        100029,
+        100030,
+        100031,
+        100034,
+        100040,
+        100041,
+        100044,
+        100045,
+        100046,
+        100049,
+        100050,
+        100051,
+        100054,
+        100055,
+        100056,
+        100059,
+        100060,
+        100061,
+        100064,
+        100065,
+        100066,
+        100069,
+        100070,
+        100071,
+        100074,
+        100075,
+        100076,
+        100079,
+        100080,
+        100081,
+        100084,
+        100085,
+        100086,
+        100089,
+        100095,
+        100096,
+        100099,
+        100100,
+        100101,
+        100104,
+        100105,
+        100106,
+        100109,
+        100110,
+        100111,
+        100114
+      ],
+      "complete_block_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ],
+      "modes": {
+        "left": {
+          "successes": 4,
+          "included": 20,
+          "sr_pct": 20.0,
+          "recorded": 20,
+          "recorded_successes": 4
+        },
+        "right": {
+          "successes": 2,
+          "included": 20,
+          "sr_pct": 10.0,
+          "recorded": 20,
+          "recorded_successes": 2
+        },
+        "on_top": {
+          "successes": 0,
+          "included": 20,
+          "sr_pct": 0.0,
+          "recorded": 20,
+          "recorded_successes": 0
+        }
+      },
+      "columns": [
+        {
+          "label": "Left",
+          "modes": [
+            "left"
+          ],
+          "successes": 4,
+          "included": 20,
+          "sr_pct": 20.0
+        },
+        {
+          "label": "Right",
+          "modes": [
+            "right"
+          ],
+          "successes": 2,
+          "included": 20,
+          "sr_pct": 10.0
+        },
+        {
+          "label": "Top",
+          "modes": [
+            "on_top"
+          ],
+          "successes": 0,
+          "included": 20,
+          "sr_pct": 0.0
+        }
+      ],
+      "avg_pct": 10.0
+    },
+    {
+      "policy": "lingbot_va",
+      "task": "bottle_verb",
+      "complete": true,
+      "completed_blocks": 20,
+      "expected_blocks": 20,
+      "recorded_episodes": 40,
+      "expected_episodes": 40,
+      "recorded_successes": 20,
+      "included_episodes": 40,
+      "partial_group_episodes": 0,
+      "included_seeds": [
+        100002,
+        100003,
+        100004,
+        100005,
+        100006,
+        100007,
+        100008,
+        100009,
+        100010,
+        100011,
+        100016,
+        100017,
+        100018,
+        100019,
+        100020,
+        100021,
+        100022,
+        100023,
+        100024,
+        100025,
+        100026,
+        100027,
+        100030,
+        100031,
+        100032,
+        100033,
+        100038,
+        100039,
+        100042,
+        100043,
+        100048,
+        100049,
+        100050,
+        100051,
+        100052,
+        100053,
+        100054,
+        100055,
+        100056,
+        100057
+      ],
+      "complete_block_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ],
+      "modes": {
+        "pick": {
+          "successes": 0,
+          "included": 20,
+          "sr_pct": 0.0,
+          "recorded": 20,
+          "recorded_successes": 0
+        },
+        "shake": {
+          "successes": 20,
+          "included": 20,
+          "sr_pct": 100.0,
+          "recorded": 20,
+          "recorded_successes": 20
+        }
+      },
+      "columns": [
+        {
+          "label": "Pick",
+          "modes": [
+            "pick"
+          ],
+          "successes": 0,
+          "included": 20,
+          "sr_pct": 0.0
+        },
+        {
+          "label": "Shake",
+          "modes": [
+            "shake"
+          ],
+          "successes": 20,
+          "included": 20,
+          "sr_pct": 100.0
+        }
+      ],
+      "avg_pct": 50.0
+    },
+    {
+      "policy": "lingbot_va",
+      "task": "pick_diverse_object",
+      "complete": true,
+      "completed_blocks": 20,
+      "expected_blocks": 20,
+      "recorded_episodes": 40,
+      "expected_episodes": 40,
+      "recorded_successes": 30,
+      "included_episodes": 40,
+      "partial_group_episodes": 0,
+      "included_seeds": [
+        100002,
+        100003,
+        100004,
+        100005,
+        100006,
+        100007,
+        100008,
+        100009,
+        100012,
+        100013,
+        100014,
+        100015,
+        100018,
+        100019,
+        100020,
+        100021,
+        100024,
+        100025,
+        100034,
+        100035,
+        100036,
+        100037,
+        100038,
+        100039,
+        100040,
+        100041,
+        100042,
+        100043,
+        100048,
+        100049,
+        100052,
+        100053,
+        100054,
+        100055,
+        100056,
+        100057,
+        100060,
+        100061,
+        100066,
+        100067
+      ],
+      "complete_block_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ],
+      "modes": {
+        "seen": {
+          "successes": 14,
+          "included": 20,
+          "sr_pct": 70.0,
+          "recorded": 20,
+          "recorded_successes": 14
+        },
+        "unseen": {
+          "successes": 16,
+          "included": 20,
+          "sr_pct": 80.0,
+          "recorded": 20,
+          "recorded_successes": 16
+        }
+      },
+      "columns": [
+        {
+          "label": "Seen",
+          "modes": [
+            "seen"
+          ],
+          "successes": 14,
+          "included": 20,
+          "sr_pct": 70.0
+        },
+        {
+          "label": "Unseen",
+          "modes": [
+            "unseen"
+          ],
+          "successes": 16,
+          "included": 20,
+          "sr_pct": 80.0
+        }
+      ],
+      "avg_pct": 75.0
+    },
+    {
+      "policy": "lingbot_va",
+      "task": "attribute_select",
+      "complete": true,
+      "completed_blocks": 20,
+      "expected_blocks": 20,
+      "recorded_episodes": 160,
+      "expected_episodes": 160,
+      "recorded_successes": 108,
+      "included_episodes": 160,
+      "partial_group_episodes": 0,
+      "included_seeds": [
+        100000,
+        100001,
+        100002,
+        100003,
+        100004,
+        100005,
+        100006,
+        100007,
+        100008,
+        100009,
+        100010,
+        100011,
+        100012,
+        100013,
+        100014,
+        100015,
+        100016,
+        100017,
+        100018,
+        100019,
+        100020,
+        100021,
+        100022,
+        100023,
+        100024,
+        100025,
+        100026,
+        100027,
+        100028,
+        100029,
+        100030,
+        100031,
+        100032,
+        100033,
+        100034,
+        100035,
+        100036,
+        100037,
+        100038,
+        100039,
+        100040,
+        100041,
+        100042,
+        100043,
+        100044,
+        100045,
+        100046,
+        100047,
+        100048,
+        100049,
+        100050,
+        100051,
+        100052,
+        100053,
+        100054,
+        100055,
+        100064,
+        100065,
+        100066,
+        100067,
+        100068,
+        100069,
+        100070,
+        100071,
+        100072,
+        100073,
+        100074,
+        100075,
+        100076,
+        100077,
+        100078,
+        100079,
+        100080,
+        100081,
+        100082,
+        100083,
+        100084,
+        100085,
+        100086,
+        100087,
+        100088,
+        100089,
+        100090,
+        100091,
+        100092,
+        100093,
+        100094,
+        100095,
+        100096,
+        100097,
+        100098,
+        100099,
+        100100,
+        100101,
+        100102,
+        100103,
+        100104,
+        100105,
+        100106,
+        100107,
+        100108,
+        100109,
+        100110,
+        100111,
+        100112,
+        100113,
+        100114,
+        100115,
+        100116,
+        100117,
+        100118,
+        100119,
+        100120,
+        100121,
+        100122,
+        100123,
+        100124,
+        100125,
+        100126,
+        100127,
+        100128,
+        100129,
+        100130,
+        100131,
+        100132,
+        100133,
+        100134,
+        100135,
+        100144,
+        100145,
+        100146,
+        100147,
+        100148,
+        100149,
+        100150,
+        100151,
+        100152,
+        100153,
+        100154,
+        100155,
+        100156,
+        100157,
+        100158,
+        100159,
+        100160,
+        100161,
+        100162,
+        100163,
+        100164,
+        100165,
+        100166,
+        100167,
+        100168,
+        100169,
+        100170,
+        100171,
+        100172,
+        100173,
+        100174,
+        100175
+      ],
+      "complete_block_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ],
+      "modes": {
+        "color:red": {
+          "successes": 20,
+          "included": 20,
+          "sr_pct": 100.0,
+          "recorded": 20,
+          "recorded_successes": 20
+        },
+        "color:blue": {
+          "successes": 19,
+          "included": 20,
+          "sr_pct": 95.0,
+          "recorded": 20,
+          "recorded_successes": 19
+        },
+        "decal:cat": {
+          "successes": 8,
+          "included": 20,
+          "sr_pct": 40.0,
+          "recorded": 20,
+          "recorded_successes": 8
+        },
+        "decal:dog": {
+          "successes": 13,
+          "included": 20,
+          "sr_pct": 65.0,
+          "recorded": 20,
+          "recorded_successes": 13
+        },
+        "shape:block": {
+          "successes": 20,
+          "included": 20,
+          "sr_pct": 100.0,
+          "recorded": 20,
+          "recorded_successes": 20
+        },
+        "shape:bar": {
+          "successes": 8,
+          "included": 20,
+          "sr_pct": 40.0,
+          "recorded": 20,
+          "recorded_successes": 8
+        },
+        "size:big": {
+          "successes": 0,
+          "included": 20,
+          "sr_pct": 0.0,
+          "recorded": 20,
+          "recorded_successes": 0
+        },
+        "size:small": {
+          "successes": 20,
+          "included": 20,
+          "sr_pct": 100.0,
+          "recorded": 20,
+          "recorded_successes": 20
+        }
+      },
+      "columns": [
+        {
+          "label": "Color",
+          "modes": [
+            "color:red",
+            "color:blue"
+          ],
+          "successes": 39,
+          "included": 40,
+          "sr_pct": 97.5
+        },
+        {
+          "label": "Decal",
+          "modes": [
+            "decal:cat",
+            "decal:dog"
+          ],
+          "successes": 21,
+          "included": 40,
+          "sr_pct": 52.5
+        },
+        {
+          "label": "Shape",
+          "modes": [
+            "shape:block",
+            "shape:bar"
+          ],
+          "successes": 28,
+          "included": 40,
+          "sr_pct": 70.0
+        },
+        {
+          "label": "Size",
+          "modes": [
+            "size:big",
+            "size:small"
+          ],
+          "successes": 20,
+          "included": 40,
+          "sr_pct": 50.0
+        }
+      ],
+      "avg_pct": 67.5
+    },
+    {
+      "policy": "lingbot_va",
+      "task": "arm_select",
+      "complete": true,
+      "completed_blocks": 20,
+      "expected_blocks": 20,
+      "recorded_episodes": 40,
+      "expected_episodes": 40,
+      "recorded_successes": 37,
+      "included_episodes": 40,
+      "partial_group_episodes": 0,
+      "included_seeds": [
+        500000,
+        500001,
+        500002,
+        500003,
+        500004,
+        500005,
+        500006,
+        500007,
+        500008,
+        500009,
+        500010,
+        500011,
+        500012,
+        500013,
+        500014,
+        500015,
+        500016,
+        500017,
+        500018,
+        500019,
+        500020,
+        500021,
+        500022,
+        500023,
+        500024,
+        500025,
+        500026,
+        500027,
+        500028,
+        500029,
+        500030,
+        500031,
+        500032,
+        500033,
+        500034,
+        500035,
+        500036,
+        500037,
+        500038,
+        500039
+      ],
+      "complete_block_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ],
+      "modes": {
+        "left": {
+          "successes": 18,
+          "included": 20,
+          "sr_pct": 90.0,
+          "recorded": 20,
+          "recorded_successes": 18
+        },
+        "right": {
+          "successes": 19,
+          "included": 20,
+          "sr_pct": 95.0,
+          "recorded": 20,
+          "recorded_successes": 19
+        }
+      },
+      "columns": [
+        {
+          "label": "Left",
+          "modes": [
+            "left"
+          ],
+          "successes": 18,
+          "included": 20,
+          "sr_pct": 90.0
+        },
+        {
+          "label": "Right",
+          "modes": [
+            "right"
+          ],
+          "successes": 19,
+          "included": 20,
+          "sr_pct": 95.0
+        }
+      ],
+      "avg_pct": 92.5
+    },
+    {
+      "policy": "lingbot_va",
+      "task": "stack_sequence",
+      "complete": true,
+      "completed_blocks": 20,
+      "expected_blocks": 20,
+      "recorded_episodes": 120,
+      "expected_episodes": 120,
+      "recorded_successes": 17,
+      "included_episodes": 120,
+      "partial_group_episodes": 0,
+      "included_seeds": [
+        100008,
+        100009,
+        100010,
+        100011,
+        100012,
+        100013,
+        100014,
+        100015,
+        100016,
+        100017,
+        100018,
+        100019,
+        100020,
+        100021,
+        100022,
+        100023,
+        100024,
+        100025,
+        100026,
+        100027,
+        100028,
+        100029,
+        100030,
+        100031,
+        100032,
+        100033,
+        100034,
+        100035,
+        100036,
+        100037,
+        100038,
+        100039,
+        100040,
+        100041,
+        100042,
+        100043,
+        100050,
+        100051,
+        100052,
+        100053,
+        100054,
+        100055,
+        100062,
+        100063,
+        100064,
+        100065,
+        100066,
+        100067,
+        100068,
+        100069,
+        100070,
+        100071,
+        100072,
+        100073,
+        100080,
+        100081,
+        100082,
+        100083,
+        100084,
+        100085,
+        100092,
+        100093,
+        100094,
+        100095,
+        100096,
+        100097,
+        100098,
+        100099,
+        100100,
+        100101,
+        100102,
+        100103,
+        100104,
+        100105,
+        100106,
+        100107,
+        100108,
+        100109,
+        100110,
+        100111,
+        100112,
+        100113,
+        100114,
+        100115,
+        100116,
+        100117,
+        100118,
+        100119,
+        100120,
+        100121,
+        100140,
+        100141,
+        100142,
+        100143,
+        100144,
+        100145,
+        100146,
+        100147,
+        100148,
+        100149,
+        100150,
+        100151,
+        100152,
+        100153,
+        100154,
+        100155,
+        100156,
+        100157,
+        100158,
+        100159,
+        100160,
+        100161,
+        100162,
+        100163,
+        100170,
+        100171,
+        100172,
+        100173,
+        100174,
+        100175
+      ],
+      "complete_block_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ],
+      "modes": {
+        "red>green>blue": {
+          "successes": 17,
+          "included": 20,
+          "sr_pct": 85.0,
+          "recorded": 20,
+          "recorded_successes": 17
+        },
+        "red>blue>green": {
+          "successes": 0,
+          "included": 20,
+          "sr_pct": 0.0,
+          "recorded": 20,
+          "recorded_successes": 0
+        },
+        "green>red>blue": {
+          "successes": 0,
+          "included": 20,
+          "sr_pct": 0.0,
+          "recorded": 20,
+          "recorded_successes": 0
+        },
+        "green>blue>red": {
+          "successes": 0,
+          "included": 20,
+          "sr_pct": 0.0,
+          "recorded": 20,
+          "recorded_successes": 0
+        },
+        "blue>red>green": {
+          "successes": 0,
+          "included": 20,
+          "sr_pct": 0.0,
+          "recorded": 20,
+          "recorded_successes": 0
+        },
+        "blue>green>red": {
+          "successes": 0,
+          "included": 20,
+          "sr_pct": 0.0,
+          "recorded": 20,
+          "recorded_successes": 0
+        }
+      },
+      "columns": [
+        {
+          "label": "RGB",
+          "modes": [
+            "red>green>blue"
+          ],
+          "successes": 17,
+          "included": 20,
+          "sr_pct": 85.0
+        },
+        {
+          "label": "RBG",
+          "modes": [
+            "red>blue>green"
+          ],
+          "successes": 0,
+          "included": 20,
+          "sr_pct": 0.0
+        },
+        {
+          "label": "GRB",
+          "modes": [
+            "green>red>blue"
+          ],
+          "successes": 0,
+          "included": 20,
+          "sr_pct": 0.0
+        },
+        {
+          "label": "GBR",
+          "modes": [
+            "green>blue>red"
+          ],
+          "successes": 0,
+          "included": 20,
+          "sr_pct": 0.0
+        },
+        {
+          "label": "BRG",
+          "modes": [
+            "blue>red>green"
+          ],
+          "successes": 0,
+          "included": 20,
+          "sr_pct": 0.0
+        },
+        {
+          "label": "BGR",
+          "modes": [
+            "blue>green>red"
+          ],
+          "successes": 0,
+          "included": 20,
+          "sr_pct": 0.0
+        }
+      ],
+      "avg_pct": 14.166666666666666
+    },
+    {
+      "policy": "lingbot_va",
+      "task": "place_relative",
+      "complete": true,
+      "completed_blocks": 20,
+      "expected_blocks": 20,
+      "recorded_episodes": 60,
+      "expected_episodes": 60,
+      "recorded_successes": 26,
+      "included_episodes": 60,
+      "partial_group_episodes": 0,
+      "included_seeds": [
+        100005,
+        100006,
+        100009,
+        100010,
+        100011,
+        100014,
+        100015,
+        100016,
+        100019,
+        100020,
+        100021,
+        100024,
+        100025,
+        100026,
+        100029,
+        100030,
+        100031,
+        100034,
+        100040,
+        100041,
+        100044,
+        100045,
+        100046,
+        100049,
+        100050,
+        100051,
+        100054,
+        100055,
+        100056,
+        100059,
+        100060,
+        100061,
+        100064,
+        100065,
+        100066,
+        100069,
+        100070,
+        100071,
+        100074,
+        100075,
+        100076,
+        100079,
+        100080,
+        100081,
+        100084,
+        100085,
+        100086,
+        100089,
+        100095,
+        100096,
+        100099,
+        100100,
+        100101,
+        100104,
+        100105,
+        100106,
+        100109,
+        100110,
+        100111,
+        100114
+      ],
+      "complete_block_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ],
+      "modes": {
+        "left": {
+          "successes": 12,
+          "included": 20,
+          "sr_pct": 60.0,
+          "recorded": 20,
+          "recorded_successes": 12
+        },
+        "right": {
+          "successes": 7,
+          "included": 20,
+          "sr_pct": 35.0,
+          "recorded": 20,
+          "recorded_successes": 7
+        },
+        "on_top": {
+          "successes": 7,
+          "included": 20,
+          "sr_pct": 35.0,
+          "recorded": 20,
+          "recorded_successes": 7
+        }
+      },
+      "columns": [
+        {
+          "label": "Left",
+          "modes": [
+            "left"
+          ],
+          "successes": 12,
+          "included": 20,
+          "sr_pct": 60.0
+        },
+        {
+          "label": "Right",
+          "modes": [
+            "right"
+          ],
+          "successes": 7,
+          "included": 20,
+          "sr_pct": 35.0
+        },
+        {
+          "label": "Top",
+          "modes": [
+            "on_top"
+          ],
+          "successes": 7,
+          "included": 20,
+          "sr_pct": 35.0
+        }
+      ],
+      "avg_pct": 43.333333333333336
+    },
+    {
+      "policy": "lingbot_vla",
+      "task": "bottle_verb",
+      "complete": true,
+      "completed_blocks": 20,
+      "expected_blocks": 20,
+      "recorded_episodes": 40,
+      "expected_episodes": 40,
+      "recorded_successes": 20,
+      "included_episodes": 40,
+      "partial_group_episodes": 0,
+      "included_seeds": [
+        100002,
+        100003,
+        100004,
+        100005,
+        100006,
+        100007,
+        100008,
+        100009,
+        100010,
+        100011,
+        100016,
+        100017,
+        100018,
+        100019,
+        100020,
+        100021,
+        100022,
+        100023,
+        100024,
+        100025,
+        100026,
+        100027,
+        100030,
+        100031,
+        100032,
+        100033,
+        100038,
+        100039,
+        100042,
+        100043,
+        100048,
+        100049,
+        100050,
+        100051,
+        100052,
+        100053,
+        100054,
+        100055,
+        100056,
+        100057
+      ],
+      "complete_block_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ],
+      "modes": {
+        "pick": {
+          "successes": 0,
+          "included": 20,
+          "sr_pct": 0.0,
+          "recorded": 20,
+          "recorded_successes": 0
+        },
+        "shake": {
+          "successes": 20,
+          "included": 20,
+          "sr_pct": 100.0,
+          "recorded": 20,
+          "recorded_successes": 20
+        }
+      },
+      "columns": [
+        {
+          "label": "Pick",
+          "modes": [
+            "pick"
+          ],
+          "successes": 0,
+          "included": 20,
+          "sr_pct": 0.0
+        },
+        {
+          "label": "Shake",
+          "modes": [
+            "shake"
+          ],
+          "successes": 20,
+          "included": 20,
+          "sr_pct": 100.0
+        }
+      ],
+      "avg_pct": 50.0
+    },
+    {
+      "policy": "lingbot_vla",
+      "task": "pick_diverse_object",
+      "complete": true,
+      "completed_blocks": 20,
+      "expected_blocks": 20,
+      "recorded_episodes": 40,
+      "expected_episodes": 40,
+      "recorded_successes": 13,
+      "included_episodes": 40,
+      "partial_group_episodes": 0,
+      "included_seeds": [
+        100002,
+        100003,
+        100004,
+        100005,
+        100006,
+        100007,
+        100008,
+        100009,
+        100012,
+        100013,
+        100014,
+        100015,
+        100018,
+        100019,
+        100020,
+        100021,
+        100024,
+        100025,
+        100034,
+        100035,
+        100036,
+        100037,
+        100038,
+        100039,
+        100040,
+        100041,
+        100042,
+        100043,
+        100048,
+        100049,
+        100052,
+        100053,
+        100054,
+        100055,
+        100056,
+        100057,
+        100060,
+        100061,
+        100066,
+        100067
+      ],
+      "complete_block_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ],
+      "modes": {
+        "seen": {
+          "successes": 10,
+          "included": 20,
+          "sr_pct": 50.0,
+          "recorded": 20,
+          "recorded_successes": 10
+        },
+        "unseen": {
+          "successes": 3,
+          "included": 20,
+          "sr_pct": 15.0,
+          "recorded": 20,
+          "recorded_successes": 3
+        }
+      },
+      "columns": [
+        {
+          "label": "Seen",
+          "modes": [
+            "seen"
+          ],
+          "successes": 10,
+          "included": 20,
+          "sr_pct": 50.0
+        },
+        {
+          "label": "Unseen",
+          "modes": [
+            "unseen"
+          ],
+          "successes": 3,
+          "included": 20,
+          "sr_pct": 15.0
+        }
+      ],
+      "avg_pct": 32.5
+    },
+    {
+      "policy": "lingbot_vla",
+      "task": "attribute_select",
+      "complete": true,
+      "completed_blocks": 20,
+      "expected_blocks": 20,
+      "recorded_episodes": 160,
+      "expected_episodes": 160,
+      "recorded_successes": 77,
+      "included_episodes": 160,
+      "partial_group_episodes": 0,
+      "included_seeds": [
+        100000,
+        100001,
+        100002,
+        100003,
+        100004,
+        100005,
+        100006,
+        100007,
+        100008,
+        100009,
+        100010,
+        100011,
+        100012,
+        100013,
+        100014,
+        100015,
+        100016,
+        100017,
+        100018,
+        100019,
+        100020,
+        100021,
+        100022,
+        100023,
+        100024,
+        100025,
+        100026,
+        100027,
+        100028,
+        100029,
+        100030,
+        100031,
+        100032,
+        100033,
+        100034,
+        100035,
+        100036,
+        100037,
+        100038,
+        100039,
+        100040,
+        100041,
+        100042,
+        100043,
+        100044,
+        100045,
+        100046,
+        100047,
+        100048,
+        100049,
+        100050,
+        100051,
+        100052,
+        100053,
+        100054,
+        100055,
+        100064,
+        100065,
+        100066,
+        100067,
+        100068,
+        100069,
+        100070,
+        100071,
+        100072,
+        100073,
+        100074,
+        100075,
+        100076,
+        100077,
+        100078,
+        100079,
+        100080,
+        100081,
+        100082,
+        100083,
+        100084,
+        100085,
+        100086,
+        100087,
+        100088,
+        100089,
+        100090,
+        100091,
+        100092,
+        100093,
+        100094,
+        100095,
+        100096,
+        100097,
+        100098,
+        100099,
+        100100,
+        100101,
+        100102,
+        100103,
+        100104,
+        100105,
+        100106,
+        100107,
+        100108,
+        100109,
+        100110,
+        100111,
+        100112,
+        100113,
+        100114,
+        100115,
+        100116,
+        100117,
+        100118,
+        100119,
+        100120,
+        100121,
+        100122,
+        100123,
+        100124,
+        100125,
+        100126,
+        100127,
+        100128,
+        100129,
+        100130,
+        100131,
+        100132,
+        100133,
+        100134,
+        100135,
+        100144,
+        100145,
+        100146,
+        100147,
+        100148,
+        100149,
+        100150,
+        100151,
+        100152,
+        100153,
+        100154,
+        100155,
+        100156,
+        100157,
+        100158,
+        100159,
+        100160,
+        100161,
+        100162,
+        100163,
+        100164,
+        100165,
+        100166,
+        100167,
+        100168,
+        100169,
+        100170,
+        100171,
+        100172,
+        100173,
+        100174,
+        100175
+      ],
+      "complete_block_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ],
+      "modes": {
+        "color:red": {
+          "successes": 11,
+          "included": 20,
+          "sr_pct": 55.0,
+          "recorded": 20,
+          "recorded_successes": 11
+        },
+        "color:blue": {
+          "successes": 9,
+          "included": 20,
+          "sr_pct": 45.0,
+          "recorded": 20,
+          "recorded_successes": 9
+        },
+        "decal:cat": {
+          "successes": 12,
+          "included": 20,
+          "sr_pct": 60.0,
+          "recorded": 20,
+          "recorded_successes": 12
+        },
+        "decal:dog": {
+          "successes": 9,
+          "included": 20,
+          "sr_pct": 45.0,
+          "recorded": 20,
+          "recorded_successes": 9
+        },
+        "shape:block": {
+          "successes": 5,
+          "included": 20,
+          "sr_pct": 25.0,
+          "recorded": 20,
+          "recorded_successes": 5
+        },
+        "shape:bar": {
+          "successes": 11,
+          "included": 20,
+          "sr_pct": 55.0,
+          "recorded": 20,
+          "recorded_successes": 11
+        },
+        "size:big": {
+          "successes": 0,
+          "included": 20,
+          "sr_pct": 0.0,
+          "recorded": 20,
+          "recorded_successes": 0
+        },
+        "size:small": {
+          "successes": 20,
+          "included": 20,
+          "sr_pct": 100.0,
+          "recorded": 20,
+          "recorded_successes": 20
+        }
+      },
+      "columns": [
+        {
+          "label": "Color",
+          "modes": [
+            "color:red",
+            "color:blue"
+          ],
+          "successes": 20,
+          "included": 40,
+          "sr_pct": 50.0
+        },
+        {
+          "label": "Decal",
+          "modes": [
+            "decal:cat",
+            "decal:dog"
+          ],
+          "successes": 21,
+          "included": 40,
+          "sr_pct": 52.5
+        },
+        {
+          "label": "Shape",
+          "modes": [
+            "shape:block",
+            "shape:bar"
+          ],
+          "successes": 16,
+          "included": 40,
+          "sr_pct": 40.0
+        },
+        {
+          "label": "Size",
+          "modes": [
+            "size:big",
+            "size:small"
+          ],
+          "successes": 20,
+          "included": 40,
+          "sr_pct": 50.0
+        }
+      ],
+      "avg_pct": 48.125
+    },
+    {
+      "policy": "lingbot_vla",
+      "task": "arm_select",
+      "complete": true,
+      "completed_blocks": 20,
+      "expected_blocks": 20,
+      "recorded_episodes": 40,
+      "expected_episodes": 40,
+      "recorded_successes": 18,
+      "included_episodes": 40,
+      "partial_group_episodes": 0,
+      "included_seeds": [
+        500000,
+        500001,
+        500002,
+        500003,
+        500004,
+        500005,
+        500006,
+        500007,
+        500008,
+        500009,
+        500010,
+        500011,
+        500012,
+        500013,
+        500014,
+        500015,
+        500016,
+        500017,
+        500018,
+        500019,
+        500020,
+        500021,
+        500022,
+        500023,
+        500024,
+        500025,
+        500026,
+        500027,
+        500028,
+        500029,
+        500030,
+        500031,
+        500032,
+        500033,
+        500034,
+        500035,
+        500036,
+        500037,
+        500038,
+        500039
+      ],
+      "complete_block_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ],
+      "modes": {
+        "left": {
+          "successes": 7,
+          "included": 20,
+          "sr_pct": 35.0,
+          "recorded": 20,
+          "recorded_successes": 7
+        },
+        "right": {
+          "successes": 11,
+          "included": 20,
+          "sr_pct": 55.0,
+          "recorded": 20,
+          "recorded_successes": 11
+        }
+      },
+      "columns": [
+        {
+          "label": "Left",
+          "modes": [
+            "left"
+          ],
+          "successes": 7,
+          "included": 20,
+          "sr_pct": 35.0
+        },
+        {
+          "label": "Right",
+          "modes": [
+            "right"
+          ],
+          "successes": 11,
+          "included": 20,
+          "sr_pct": 55.0
+        }
+      ],
+      "avg_pct": 45.0
+    },
+    {
+      "policy": "lingbot_vla",
+      "task": "stack_sequence",
+      "complete": true,
+      "completed_blocks": 20,
+      "expected_blocks": 20,
+      "recorded_episodes": 120,
+      "expected_episodes": 120,
+      "recorded_successes": 14,
+      "included_episodes": 120,
+      "partial_group_episodes": 0,
+      "included_seeds": [
+        100008,
+        100009,
+        100010,
+        100011,
+        100012,
+        100013,
+        100014,
+        100015,
+        100016,
+        100017,
+        100018,
+        100019,
+        100020,
+        100021,
+        100022,
+        100023,
+        100024,
+        100025,
+        100026,
+        100027,
+        100028,
+        100029,
+        100030,
+        100031,
+        100032,
+        100033,
+        100034,
+        100035,
+        100036,
+        100037,
+        100038,
+        100039,
+        100040,
+        100041,
+        100042,
+        100043,
+        100050,
+        100051,
+        100052,
+        100053,
+        100054,
+        100055,
+        100062,
+        100063,
+        100064,
+        100065,
+        100066,
+        100067,
+        100068,
+        100069,
+        100070,
+        100071,
+        100072,
+        100073,
+        100080,
+        100081,
+        100082,
+        100083,
+        100084,
+        100085,
+        100092,
+        100093,
+        100094,
+        100095,
+        100096,
+        100097,
+        100098,
+        100099,
+        100100,
+        100101,
+        100102,
+        100103,
+        100104,
+        100105,
+        100106,
+        100107,
+        100108,
+        100109,
+        100110,
+        100111,
+        100112,
+        100113,
+        100114,
+        100115,
+        100116,
+        100117,
+        100118,
+        100119,
+        100120,
+        100121,
+        100140,
+        100141,
+        100142,
+        100143,
+        100144,
+        100145,
+        100146,
+        100147,
+        100148,
+        100149,
+        100150,
+        100151,
+        100152,
+        100153,
+        100154,
+        100155,
+        100156,
+        100157,
+        100158,
+        100159,
+        100160,
+        100161,
+        100162,
+        100163,
+        100170,
+        100171,
+        100172,
+        100173,
+        100174,
+        100175
+      ],
+      "complete_block_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ],
+      "modes": {
+        "red>green>blue": {
+          "successes": 14,
+          "included": 20,
+          "sr_pct": 70.0,
+          "recorded": 20,
+          "recorded_successes": 14
+        },
+        "red>blue>green": {
+          "successes": 0,
+          "included": 20,
+          "sr_pct": 0.0,
+          "recorded": 20,
+          "recorded_successes": 0
+        },
+        "green>red>blue": {
+          "successes": 0,
+          "included": 20,
+          "sr_pct": 0.0,
+          "recorded": 20,
+          "recorded_successes": 0
+        },
+        "green>blue>red": {
+          "successes": 0,
+          "included": 20,
+          "sr_pct": 0.0,
+          "recorded": 20,
+          "recorded_successes": 0
+        },
+        "blue>red>green": {
+          "successes": 0,
+          "included": 20,
+          "sr_pct": 0.0,
+          "recorded": 20,
+          "recorded_successes": 0
+        },
+        "blue>green>red": {
+          "successes": 0,
+          "included": 20,
+          "sr_pct": 0.0,
+          "recorded": 20,
+          "recorded_successes": 0
+        }
+      },
+      "columns": [
+        {
+          "label": "RGB",
+          "modes": [
+            "red>green>blue"
+          ],
+          "successes": 14,
+          "included": 20,
+          "sr_pct": 70.0
+        },
+        {
+          "label": "RBG",
+          "modes": [
+            "red>blue>green"
+          ],
+          "successes": 0,
+          "included": 20,
+          "sr_pct": 0.0
+        },
+        {
+          "label": "GRB",
+          "modes": [
+            "green>red>blue"
+          ],
+          "successes": 0,
+          "included": 20,
+          "sr_pct": 0.0
+        },
+        {
+          "label": "GBR",
+          "modes": [
+            "green>blue>red"
+          ],
+          "successes": 0,
+          "included": 20,
+          "sr_pct": 0.0
+        },
+        {
+          "label": "BRG",
+          "modes": [
+            "blue>red>green"
+          ],
+          "successes": 0,
+          "included": 20,
+          "sr_pct": 0.0
+        },
+        {
+          "label": "BGR",
+          "modes": [
+            "blue>green>red"
+          ],
+          "successes": 0,
+          "included": 20,
+          "sr_pct": 0.0
+        }
+      ],
+      "avg_pct": 11.666666666666666
+    },
+    {
+      "policy": "lingbot_vla",
+      "task": "place_relative",
+      "complete": true,
+      "completed_blocks": 20,
+      "expected_blocks": 20,
+      "recorded_episodes": 60,
+      "expected_episodes": 60,
+      "recorded_successes": 3,
+      "included_episodes": 60,
+      "partial_group_episodes": 0,
+      "included_seeds": [
+        100005,
+        100006,
+        100009,
+        100010,
+        100011,
+        100014,
+        100015,
+        100016,
+        100019,
+        100020,
+        100021,
+        100024,
+        100025,
+        100026,
+        100029,
+        100030,
+        100031,
+        100034,
+        100040,
+        100041,
+        100044,
+        100045,
+        100046,
+        100049,
+        100050,
+        100051,
+        100054,
+        100055,
+        100056,
+        100059,
+        100060,
+        100061,
+        100064,
+        100065,
+        100066,
+        100069,
+        100070,
+        100071,
+        100074,
+        100075,
+        100076,
+        100079,
+        100080,
+        100081,
+        100084,
+        100085,
+        100086,
+        100089,
+        100095,
+        100096,
+        100099,
+        100100,
+        100101,
+        100104,
+        100105,
+        100106,
+        100109,
+        100110,
+        100111,
+        100114
+      ],
+      "complete_block_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ],
+      "modes": {
+        "left": {
+          "successes": 1,
+          "included": 20,
+          "sr_pct": 5.0,
+          "recorded": 20,
+          "recorded_successes": 1
+        },
+        "right": {
+          "successes": 2,
+          "included": 20,
+          "sr_pct": 10.0,
+          "recorded": 20,
+          "recorded_successes": 2
+        },
+        "on_top": {
+          "successes": 0,
+          "included": 20,
+          "sr_pct": 0.0,
+          "recorded": 20,
+          "recorded_successes": 0
+        }
+      },
+      "columns": [
+        {
+          "label": "Left",
+          "modes": [
+            "left"
+          ],
+          "successes": 1,
+          "included": 20,
+          "sr_pct": 5.0
+        },
+        {
+          "label": "Right",
+          "modes": [
+            "right"
+          ],
+          "successes": 2,
+          "included": 20,
+          "sr_pct": 10.0
+        },
+        {
+          "label": "Top",
+          "modes": [
+            "on_top"
+          ],
+          "successes": 0,
+          "included": 20,
+          "sr_pct": 0.0
+        }
+      ],
+      "avg_pct": 5.0
+    },
+    {
+      "policy": "vlact",
+      "task": "bottle_verb",
+      "complete": true,
+      "completed_blocks": 20,
+      "expected_blocks": 20,
+      "recorded_episodes": 40,
+      "expected_episodes": 40,
+      "recorded_successes": 36,
+      "included_episodes": 40,
+      "partial_group_episodes": 0,
+      "included_seeds": [
+        100002,
+        100003,
+        100004,
+        100005,
+        100006,
+        100007,
+        100008,
+        100009,
+        100010,
+        100011,
+        100016,
+        100017,
+        100018,
+        100019,
+        100020,
+        100021,
+        100022,
+        100023,
+        100024,
+        100025,
+        100026,
+        100027,
+        100030,
+        100031,
+        100032,
+        100033,
+        100038,
+        100039,
+        100042,
+        100043,
+        100048,
+        100049,
+        100050,
+        100051,
+        100052,
+        100053,
+        100054,
+        100055,
+        100056,
+        100057
+      ],
+      "complete_block_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ],
+      "modes": {
+        "pick": {
+          "successes": 16,
+          "included": 20,
+          "sr_pct": 80.0,
+          "recorded": 20,
+          "recorded_successes": 16
+        },
+        "shake": {
+          "successes": 20,
+          "included": 20,
+          "sr_pct": 100.0,
+          "recorded": 20,
+          "recorded_successes": 20
+        }
+      },
+      "columns": [
+        {
+          "label": "Pick",
+          "modes": [
+            "pick"
+          ],
+          "successes": 16,
+          "included": 20,
+          "sr_pct": 80.0
+        },
+        {
+          "label": "Shake",
+          "modes": [
+            "shake"
+          ],
+          "successes": 20,
+          "included": 20,
+          "sr_pct": 100.0
+        }
+      ],
+      "avg_pct": 90.0
+    },
+    {
+      "policy": "vlact",
+      "task": "pick_diverse_object",
+      "complete": true,
+      "completed_blocks": 20,
+      "expected_blocks": 20,
+      "recorded_episodes": 40,
+      "expected_episodes": 40,
+      "recorded_successes": 28,
+      "included_episodes": 40,
+      "partial_group_episodes": 0,
+      "included_seeds": [
+        100002,
+        100003,
+        100004,
+        100005,
+        100006,
+        100007,
+        100008,
+        100009,
+        100012,
+        100013,
+        100014,
+        100015,
+        100018,
+        100019,
+        100020,
+        100021,
+        100024,
+        100025,
+        100034,
+        100035,
+        100036,
+        100037,
+        100038,
+        100039,
+        100040,
+        100041,
+        100042,
+        100043,
+        100048,
+        100049,
+        100052,
+        100053,
+        100054,
+        100055,
+        100056,
+        100057,
+        100060,
+        100061,
+        100066,
+        100067
+      ],
+      "complete_block_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ],
+      "modes": {
+        "seen": {
+          "successes": 16,
+          "included": 20,
+          "sr_pct": 80.0,
+          "recorded": 20,
+          "recorded_successes": 16
+        },
+        "unseen": {
+          "successes": 12,
+          "included": 20,
+          "sr_pct": 60.0,
+          "recorded": 20,
+          "recorded_successes": 12
+        }
+      },
+      "columns": [
+        {
+          "label": "Seen",
+          "modes": [
+            "seen"
+          ],
+          "successes": 16,
+          "included": 20,
+          "sr_pct": 80.0
+        },
+        {
+          "label": "Unseen",
+          "modes": [
+            "unseen"
+          ],
+          "successes": 12,
+          "included": 20,
+          "sr_pct": 60.0
+        }
+      ],
+      "avg_pct": 70.0
+    },
+    {
+      "policy": "vlact",
+      "task": "attribute_select",
+      "complete": true,
+      "completed_blocks": 20,
+      "expected_blocks": 20,
+      "recorded_episodes": 160,
+      "expected_episodes": 160,
+      "recorded_successes": 108,
+      "included_episodes": 160,
+      "partial_group_episodes": 0,
+      "included_seeds": [
+        100000,
+        100001,
+        100002,
+        100003,
+        100004,
+        100005,
+        100006,
+        100007,
+        100008,
+        100009,
+        100010,
+        100011,
+        100012,
+        100013,
+        100014,
+        100015,
+        100016,
+        100017,
+        100018,
+        100019,
+        100020,
+        100021,
+        100022,
+        100023,
+        100024,
+        100025,
+        100026,
+        100027,
+        100028,
+        100029,
+        100030,
+        100031,
+        100032,
+        100033,
+        100034,
+        100035,
+        100036,
+        100037,
+        100038,
+        100039,
+        100040,
+        100041,
+        100042,
+        100043,
+        100044,
+        100045,
+        100046,
+        100047,
+        100048,
+        100049,
+        100050,
+        100051,
+        100052,
+        100053,
+        100054,
+        100055,
+        100064,
+        100065,
+        100066,
+        100067,
+        100068,
+        100069,
+        100070,
+        100071,
+        100072,
+        100073,
+        100074,
+        100075,
+        100076,
+        100077,
+        100078,
+        100079,
+        100080,
+        100081,
+        100082,
+        100083,
+        100084,
+        100085,
+        100086,
+        100087,
+        100088,
+        100089,
+        100090,
+        100091,
+        100092,
+        100093,
+        100094,
+        100095,
+        100096,
+        100097,
+        100098,
+        100099,
+        100100,
+        100101,
+        100102,
+        100103,
+        100104,
+        100105,
+        100106,
+        100107,
+        100108,
+        100109,
+        100110,
+        100111,
+        100112,
+        100113,
+        100114,
+        100115,
+        100116,
+        100117,
+        100118,
+        100119,
+        100120,
+        100121,
+        100122,
+        100123,
+        100124,
+        100125,
+        100126,
+        100127,
+        100128,
+        100129,
+        100130,
+        100131,
+        100132,
+        100133,
+        100134,
+        100135,
+        100144,
+        100145,
+        100146,
+        100147,
+        100148,
+        100149,
+        100150,
+        100151,
+        100152,
+        100153,
+        100154,
+        100155,
+        100156,
+        100157,
+        100158,
+        100159,
+        100160,
+        100161,
+        100162,
+        100163,
+        100164,
+        100165,
+        100166,
+        100167,
+        100168,
+        100169,
+        100170,
+        100171,
+        100172,
+        100173,
+        100174,
+        100175
+      ],
+      "complete_block_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ],
+      "modes": {
+        "color:red": {
+          "successes": 18,
+          "included": 20,
+          "sr_pct": 90.0,
+          "recorded": 20,
+          "recorded_successes": 18
+        },
+        "color:blue": {
+          "successes": 16,
+          "included": 20,
+          "sr_pct": 80.0,
+          "recorded": 20,
+          "recorded_successes": 16
+        },
+        "decal:cat": {
+          "successes": 18,
+          "included": 20,
+          "sr_pct": 90.0,
+          "recorded": 20,
+          "recorded_successes": 18
+        },
+        "decal:dog": {
+          "successes": 7,
+          "included": 20,
+          "sr_pct": 35.0,
+          "recorded": 20,
+          "recorded_successes": 7
+        },
+        "shape:block": {
+          "successes": 15,
+          "included": 20,
+          "sr_pct": 75.0,
+          "recorded": 20,
+          "recorded_successes": 15
+        },
+        "shape:bar": {
+          "successes": 14,
+          "included": 20,
+          "sr_pct": 70.0,
+          "recorded": 20,
+          "recorded_successes": 14
+        },
+        "size:big": {
+          "successes": 0,
+          "included": 20,
+          "sr_pct": 0.0,
+          "recorded": 20,
+          "recorded_successes": 0
+        },
+        "size:small": {
+          "successes": 20,
+          "included": 20,
+          "sr_pct": 100.0,
+          "recorded": 20,
+          "recorded_successes": 20
+        }
+      },
+      "columns": [
+        {
+          "label": "Color",
+          "modes": [
+            "color:red",
+            "color:blue"
+          ],
+          "successes": 34,
+          "included": 40,
+          "sr_pct": 85.0
+        },
+        {
+          "label": "Decal",
+          "modes": [
+            "decal:cat",
+            "decal:dog"
+          ],
+          "successes": 25,
+          "included": 40,
+          "sr_pct": 62.5
+        },
+        {
+          "label": "Shape",
+          "modes": [
+            "shape:block",
+            "shape:bar"
+          ],
+          "successes": 29,
+          "included": 40,
+          "sr_pct": 72.5
+        },
+        {
+          "label": "Size",
+          "modes": [
+            "size:big",
+            "size:small"
+          ],
+          "successes": 20,
+          "included": 40,
+          "sr_pct": 50.0
+        }
+      ],
+      "avg_pct": 67.5
+    },
+    {
+      "policy": "vlact",
+      "task": "arm_select",
+      "complete": true,
+      "completed_blocks": 20,
+      "expected_blocks": 20,
+      "recorded_episodes": 40,
+      "expected_episodes": 40,
+      "recorded_successes": 29,
+      "included_episodes": 40,
+      "partial_group_episodes": 0,
+      "included_seeds": [
+        500000,
+        500001,
+        500002,
+        500003,
+        500004,
+        500005,
+        500006,
+        500007,
+        500008,
+        500009,
+        500010,
+        500011,
+        500012,
+        500013,
+        500014,
+        500015,
+        500016,
+        500017,
+        500018,
+        500019,
+        500020,
+        500021,
+        500022,
+        500023,
+        500024,
+        500025,
+        500026,
+        500027,
+        500028,
+        500029,
+        500030,
+        500031,
+        500032,
+        500033,
+        500034,
+        500035,
+        500036,
+        500037,
+        500038,
+        500039
+      ],
+      "complete_block_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ],
+      "modes": {
+        "left": {
+          "successes": 16,
+          "included": 20,
+          "sr_pct": 80.0,
+          "recorded": 20,
+          "recorded_successes": 16
+        },
+        "right": {
+          "successes": 13,
+          "included": 20,
+          "sr_pct": 65.0,
+          "recorded": 20,
+          "recorded_successes": 13
+        }
+      },
+      "columns": [
+        {
+          "label": "Left",
+          "modes": [
+            "left"
+          ],
+          "successes": 16,
+          "included": 20,
+          "sr_pct": 80.0
+        },
+        {
+          "label": "Right",
+          "modes": [
+            "right"
+          ],
+          "successes": 13,
+          "included": 20,
+          "sr_pct": 65.0
+        }
+      ],
+      "avg_pct": 72.5
+    },
+    {
+      "policy": "vlact",
+      "task": "stack_sequence",
+      "complete": true,
+      "completed_blocks": 20,
+      "expected_blocks": 20,
+      "recorded_episodes": 120,
+      "expected_episodes": 120,
+      "recorded_successes": 15,
+      "included_episodes": 120,
+      "partial_group_episodes": 0,
+      "included_seeds": [
+        100008,
+        100009,
+        100010,
+        100011,
+        100012,
+        100013,
+        100014,
+        100015,
+        100016,
+        100017,
+        100018,
+        100019,
+        100020,
+        100021,
+        100022,
+        100023,
+        100024,
+        100025,
+        100026,
+        100027,
+        100028,
+        100029,
+        100030,
+        100031,
+        100032,
+        100033,
+        100034,
+        100035,
+        100036,
+        100037,
+        100038,
+        100039,
+        100040,
+        100041,
+        100042,
+        100043,
+        100050,
+        100051,
+        100052,
+        100053,
+        100054,
+        100055,
+        100062,
+        100063,
+        100064,
+        100065,
+        100066,
+        100067,
+        100068,
+        100069,
+        100070,
+        100071,
+        100072,
+        100073,
+        100080,
+        100081,
+        100082,
+        100083,
+        100084,
+        100085,
+        100092,
+        100093,
+        100094,
+        100095,
+        100096,
+        100097,
+        100098,
+        100099,
+        100100,
+        100101,
+        100102,
+        100103,
+        100104,
+        100105,
+        100106,
+        100107,
+        100108,
+        100109,
+        100110,
+        100111,
+        100112,
+        100113,
+        100114,
+        100115,
+        100116,
+        100117,
+        100118,
+        100119,
+        100120,
+        100121,
+        100140,
+        100141,
+        100142,
+        100143,
+        100144,
+        100145,
+        100146,
+        100147,
+        100148,
+        100149,
+        100150,
+        100151,
+        100152,
+        100153,
+        100154,
+        100155,
+        100156,
+        100157,
+        100158,
+        100159,
+        100160,
+        100161,
+        100162,
+        100163,
+        100170,
+        100171,
+        100172,
+        100173,
+        100174,
+        100175
+      ],
+      "complete_block_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ],
+      "modes": {
+        "red>green>blue": {
+          "successes": 10,
+          "included": 20,
+          "sr_pct": 50.0,
+          "recorded": 20,
+          "recorded_successes": 10
+        },
+        "red>blue>green": {
+          "successes": 0,
+          "included": 20,
+          "sr_pct": 0.0,
+          "recorded": 20,
+          "recorded_successes": 0
+        },
+        "green>red>blue": {
+          "successes": 1,
+          "included": 20,
+          "sr_pct": 5.0,
+          "recorded": 20,
+          "recorded_successes": 1
+        },
+        "green>blue>red": {
+          "successes": 2,
+          "included": 20,
+          "sr_pct": 10.0,
+          "recorded": 20,
+          "recorded_successes": 2
+        },
+        "blue>red>green": {
+          "successes": 0,
+          "included": 20,
+          "sr_pct": 0.0,
+          "recorded": 20,
+          "recorded_successes": 0
+        },
+        "blue>green>red": {
+          "successes": 2,
+          "included": 20,
+          "sr_pct": 10.0,
+          "recorded": 20,
+          "recorded_successes": 2
+        }
+      },
+      "columns": [
+        {
+          "label": "RGB",
+          "modes": [
+            "red>green>blue"
+          ],
+          "successes": 10,
+          "included": 20,
+          "sr_pct": 50.0
+        },
+        {
+          "label": "RBG",
+          "modes": [
+            "red>blue>green"
+          ],
+          "successes": 0,
+          "included": 20,
+          "sr_pct": 0.0
+        },
+        {
+          "label": "GRB",
+          "modes": [
+            "green>red>blue"
+          ],
+          "successes": 1,
+          "included": 20,
+          "sr_pct": 5.0
+        },
+        {
+          "label": "GBR",
+          "modes": [
+            "green>blue>red"
+          ],
+          "successes": 2,
+          "included": 20,
+          "sr_pct": 10.0
+        },
+        {
+          "label": "BRG",
+          "modes": [
+            "blue>red>green"
+          ],
+          "successes": 0,
+          "included": 20,
+          "sr_pct": 0.0
+        },
+        {
+          "label": "BGR",
+          "modes": [
+            "blue>green>red"
+          ],
+          "successes": 2,
+          "included": 20,
+          "sr_pct": 10.0
+        }
+      ],
+      "avg_pct": 12.5
+    },
+    {
+      "policy": "vlact",
+      "task": "place_relative",
+      "complete": true,
+      "completed_blocks": 20,
+      "expected_blocks": 20,
+      "recorded_episodes": 60,
+      "expected_episodes": 60,
+      "recorded_successes": 19,
+      "included_episodes": 60,
+      "partial_group_episodes": 0,
+      "included_seeds": [
+        100005,
+        100006,
+        100009,
+        100010,
+        100011,
+        100014,
+        100015,
+        100016,
+        100019,
+        100020,
+        100021,
+        100024,
+        100025,
+        100026,
+        100029,
+        100030,
+        100031,
+        100034,
+        100040,
+        100041,
+        100044,
+        100045,
+        100046,
+        100049,
+        100050,
+        100051,
+        100054,
+        100055,
+        100056,
+        100059,
+        100060,
+        100061,
+        100064,
+        100065,
+        100066,
+        100069,
+        100070,
+        100071,
+        100074,
+        100075,
+        100076,
+        100079,
+        100080,
+        100081,
+        100084,
+        100085,
+        100086,
+        100089,
+        100095,
+        100096,
+        100099,
+        100100,
+        100101,
+        100104,
+        100105,
+        100106,
+        100109,
+        100110,
+        100111,
+        100114
+      ],
+      "complete_block_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ],
+      "modes": {
+        "left": {
+          "successes": 11,
+          "included": 20,
+          "sr_pct": 55.0,
+          "recorded": 20,
+          "recorded_successes": 11
+        },
+        "right": {
+          "successes": 7,
+          "included": 20,
+          "sr_pct": 35.0,
+          "recorded": 20,
+          "recorded_successes": 7
+        },
+        "on_top": {
+          "successes": 1,
+          "included": 20,
+          "sr_pct": 5.0,
+          "recorded": 20,
+          "recorded_successes": 1
+        }
+      },
+      "columns": [
+        {
+          "label": "Left",
+          "modes": [
+            "left"
+          ],
+          "successes": 11,
+          "included": 20,
+          "sr_pct": 55.0
+        },
+        {
+          "label": "Right",
+          "modes": [
+            "right"
+          ],
+          "successes": 7,
+          "included": 20,
+          "sr_pct": 35.0
+        },
+        {
+          "label": "Top",
+          "modes": [
+            "on_top"
+          ],
+          "successes": 1,
+          "included": 20,
+          "sr_pct": 5.0
+        }
+      ],
+      "avg_pct": 31.666666666666668
+    },
+    {
+      "policy": "dm05",
+      "task": "bottle_verb",
+      "complete": true,
+      "completed_blocks": 20,
+      "expected_blocks": 20,
+      "recorded_episodes": 40,
+      "expected_episodes": 40,
+      "recorded_successes": 40,
+      "included_episodes": 40,
+      "partial_group_episodes": 0,
+      "included_seeds": [
+        100002,
+        100003,
+        100004,
+        100005,
+        100006,
+        100007,
+        100008,
+        100009,
+        100010,
+        100011,
+        100016,
+        100017,
+        100018,
+        100019,
+        100020,
+        100021,
+        100022,
+        100023,
+        100024,
+        100025,
+        100026,
+        100027,
+        100030,
+        100031,
+        100032,
+        100033,
+        100038,
+        100039,
+        100042,
+        100043,
+        100048,
+        100049,
+        100050,
+        100051,
+        100052,
+        100053,
+        100054,
+        100055,
+        100056,
+        100057
+      ],
+      "complete_block_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ],
+      "modes": {
+        "pick": {
+          "successes": 20,
+          "included": 20,
+          "sr_pct": 100.0,
+          "recorded": 20,
+          "recorded_successes": 20
+        },
+        "shake": {
+          "successes": 20,
+          "included": 20,
+          "sr_pct": 100.0,
+          "recorded": 20,
+          "recorded_successes": 20
+        }
+      },
+      "columns": [
+        {
+          "label": "Pick",
+          "modes": [
+            "pick"
+          ],
+          "successes": 20,
+          "included": 20,
+          "sr_pct": 100.0
+        },
+        {
+          "label": "Shake",
+          "modes": [
+            "shake"
+          ],
+          "successes": 20,
+          "included": 20,
+          "sr_pct": 100.0
+        }
+      ],
+      "avg_pct": 100.0
+    },
+    {
+      "policy": "dm05",
+      "task": "pick_diverse_object",
+      "complete": true,
+      "completed_blocks": 20,
+      "expected_blocks": 20,
+      "recorded_episodes": 40,
+      "expected_episodes": 40,
+      "recorded_successes": 25,
+      "included_episodes": 40,
+      "partial_group_episodes": 0,
+      "included_seeds": [
+        100002,
+        100003,
+        100004,
+        100005,
+        100006,
+        100007,
+        100008,
+        100009,
+        100012,
+        100013,
+        100014,
+        100015,
+        100018,
+        100019,
+        100020,
+        100021,
+        100024,
+        100025,
+        100034,
+        100035,
+        100036,
+        100037,
+        100038,
+        100039,
+        100040,
+        100041,
+        100042,
+        100043,
+        100048,
+        100049,
+        100052,
+        100053,
+        100054,
+        100055,
+        100056,
+        100057,
+        100060,
+        100061,
+        100066,
+        100067
+      ],
+      "complete_block_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ],
+      "modes": {
+        "seen": {
+          "successes": 18,
+          "included": 20,
+          "sr_pct": 90.0,
+          "recorded": 20,
+          "recorded_successes": 18
+        },
+        "unseen": {
+          "successes": 7,
+          "included": 20,
+          "sr_pct": 35.0,
+          "recorded": 20,
+          "recorded_successes": 7
+        }
+      },
+      "columns": [
+        {
+          "label": "Seen",
+          "modes": [
+            "seen"
+          ],
+          "successes": 18,
+          "included": 20,
+          "sr_pct": 90.0
+        },
+        {
+          "label": "Unseen",
+          "modes": [
+            "unseen"
+          ],
+          "successes": 7,
+          "included": 20,
+          "sr_pct": 35.0
+        }
+      ],
+      "avg_pct": 62.5
+    },
+    {
+      "policy": "dm05",
+      "task": "attribute_select",
+      "complete": true,
+      "completed_blocks": 20,
+      "expected_blocks": 20,
+      "recorded_episodes": 160,
+      "expected_episodes": 160,
+      "recorded_successes": 88,
+      "included_episodes": 160,
+      "partial_group_episodes": 0,
+      "included_seeds": [
+        100000,
+        100001,
+        100002,
+        100003,
+        100004,
+        100005,
+        100006,
+        100007,
+        100008,
+        100009,
+        100010,
+        100011,
+        100012,
+        100013,
+        100014,
+        100015,
+        100016,
+        100017,
+        100018,
+        100019,
+        100020,
+        100021,
+        100022,
+        100023,
+        100024,
+        100025,
+        100026,
+        100027,
+        100028,
+        100029,
+        100030,
+        100031,
+        100032,
+        100033,
+        100034,
+        100035,
+        100036,
+        100037,
+        100038,
+        100039,
+        100040,
+        100041,
+        100042,
+        100043,
+        100044,
+        100045,
+        100046,
+        100047,
+        100048,
+        100049,
+        100050,
+        100051,
+        100052,
+        100053,
+        100054,
+        100055,
+        100064,
+        100065,
+        100066,
+        100067,
+        100068,
+        100069,
+        100070,
+        100071,
+        100072,
+        100073,
+        100074,
+        100075,
+        100076,
+        100077,
+        100078,
+        100079,
+        100080,
+        100081,
+        100082,
+        100083,
+        100084,
+        100085,
+        100086,
+        100087,
+        100088,
+        100089,
+        100090,
+        100091,
+        100092,
+        100093,
+        100094,
+        100095,
+        100096,
+        100097,
+        100098,
+        100099,
+        100100,
+        100101,
+        100102,
+        100103,
+        100104,
+        100105,
+        100106,
+        100107,
+        100108,
+        100109,
+        100110,
+        100111,
+        100112,
+        100113,
+        100114,
+        100115,
+        100116,
+        100117,
+        100118,
+        100119,
+        100120,
+        100121,
+        100122,
+        100123,
+        100124,
+        100125,
+        100126,
+        100127,
+        100128,
+        100129,
+        100130,
+        100131,
+        100132,
+        100133,
+        100134,
+        100135,
+        100144,
+        100145,
+        100146,
+        100147,
+        100148,
+        100149,
+        100150,
+        100151,
+        100152,
+        100153,
+        100154,
+        100155,
+        100156,
+        100157,
+        100158,
+        100159,
+        100160,
+        100161,
+        100162,
+        100163,
+        100164,
+        100165,
+        100166,
+        100167,
+        100168,
+        100169,
+        100170,
+        100171,
+        100172,
+        100173,
+        100174,
+        100175
+      ],
+      "complete_block_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ],
+      "modes": {
+        "color:red": {
+          "successes": 20,
+          "included": 20,
+          "sr_pct": 100.0,
+          "recorded": 20,
+          "recorded_successes": 20
+        },
+        "color:blue": {
+          "successes": 0,
+          "included": 20,
+          "sr_pct": 0.0,
+          "recorded": 20,
+          "recorded_successes": 0
+        },
+        "decal:cat": {
+          "successes": 8,
+          "included": 20,
+          "sr_pct": 40.0,
+          "recorded": 20,
+          "recorded_successes": 8
+        },
+        "decal:dog": {
+          "successes": 12,
+          "included": 20,
+          "sr_pct": 60.0,
+          "recorded": 20,
+          "recorded_successes": 12
+        },
+        "shape:block": {
+          "successes": 8,
+          "included": 20,
+          "sr_pct": 40.0,
+          "recorded": 20,
+          "recorded_successes": 8
+        },
+        "shape:bar": {
+          "successes": 20,
+          "included": 20,
+          "sr_pct": 100.0,
+          "recorded": 20,
+          "recorded_successes": 20
+        },
+        "size:big": {
+          "successes": 0,
+          "included": 20,
+          "sr_pct": 0.0,
+          "recorded": 20,
+          "recorded_successes": 0
+        },
+        "size:small": {
+          "successes": 20,
+          "included": 20,
+          "sr_pct": 100.0,
+          "recorded": 20,
+          "recorded_successes": 20
+        }
+      },
+      "columns": [
+        {
+          "label": "Color",
+          "modes": [
+            "color:red",
+            "color:blue"
+          ],
+          "successes": 20,
+          "included": 40,
+          "sr_pct": 50.0
+        },
+        {
+          "label": "Decal",
+          "modes": [
+            "decal:cat",
+            "decal:dog"
+          ],
+          "successes": 20,
+          "included": 40,
+          "sr_pct": 50.0
+        },
+        {
+          "label": "Shape",
+          "modes": [
+            "shape:block",
+            "shape:bar"
+          ],
+          "successes": 28,
+          "included": 40,
+          "sr_pct": 70.0
+        },
+        {
+          "label": "Size",
+          "modes": [
+            "size:big",
+            "size:small"
+          ],
+          "successes": 20,
+          "included": 40,
+          "sr_pct": 50.0
+        }
+      ],
+      "avg_pct": 55.0
+    },
+    {
+      "policy": "dm05",
+      "task": "arm_select",
+      "complete": true,
+      "completed_blocks": 20,
+      "expected_blocks": 20,
+      "recorded_episodes": 40,
+      "expected_episodes": 40,
+      "recorded_successes": 25,
+      "included_episodes": 40,
+      "partial_group_episodes": 0,
+      "included_seeds": [
+        500000,
+        500001,
+        500002,
+        500003,
+        500004,
+        500005,
+        500006,
+        500007,
+        500008,
+        500009,
+        500010,
+        500011,
+        500012,
+        500013,
+        500014,
+        500015,
+        500016,
+        500017,
+        500018,
+        500019,
+        500020,
+        500021,
+        500022,
+        500023,
+        500024,
+        500025,
+        500026,
+        500027,
+        500028,
+        500029,
+        500030,
+        500031,
+        500032,
+        500033,
+        500034,
+        500035,
+        500036,
+        500037,
+        500038,
+        500039
+      ],
+      "complete_block_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ],
+      "modes": {
+        "left": {
+          "successes": 9,
+          "included": 20,
+          "sr_pct": 45.0,
+          "recorded": 20,
+          "recorded_successes": 9
+        },
+        "right": {
+          "successes": 16,
+          "included": 20,
+          "sr_pct": 80.0,
+          "recorded": 20,
+          "recorded_successes": 16
+        }
+      },
+      "columns": [
+        {
+          "label": "Left",
+          "modes": [
+            "left"
+          ],
+          "successes": 9,
+          "included": 20,
+          "sr_pct": 45.0
+        },
+        {
+          "label": "Right",
+          "modes": [
+            "right"
+          ],
+          "successes": 16,
+          "included": 20,
+          "sr_pct": 80.0
+        }
+      ],
+      "avg_pct": 62.5
+    },
+    {
+      "policy": "dm05",
+      "task": "stack_sequence",
+      "complete": true,
+      "completed_blocks": 20,
+      "expected_blocks": 20,
+      "recorded_episodes": 120,
+      "expected_episodes": 120,
+      "recorded_successes": 9,
+      "included_episodes": 120,
+      "partial_group_episodes": 0,
+      "included_seeds": [
+        100008,
+        100009,
+        100010,
+        100011,
+        100012,
+        100013,
+        100014,
+        100015,
+        100016,
+        100017,
+        100018,
+        100019,
+        100020,
+        100021,
+        100022,
+        100023,
+        100024,
+        100025,
+        100026,
+        100027,
+        100028,
+        100029,
+        100030,
+        100031,
+        100032,
+        100033,
+        100034,
+        100035,
+        100036,
+        100037,
+        100038,
+        100039,
+        100040,
+        100041,
+        100042,
+        100043,
+        100050,
+        100051,
+        100052,
+        100053,
+        100054,
+        100055,
+        100062,
+        100063,
+        100064,
+        100065,
+        100066,
+        100067,
+        100068,
+        100069,
+        100070,
+        100071,
+        100072,
+        100073,
+        100080,
+        100081,
+        100082,
+        100083,
+        100084,
+        100085,
+        100092,
+        100093,
+        100094,
+        100095,
+        100096,
+        100097,
+        100098,
+        100099,
+        100100,
+        100101,
+        100102,
+        100103,
+        100104,
+        100105,
+        100106,
+        100107,
+        100108,
+        100109,
+        100110,
+        100111,
+        100112,
+        100113,
+        100114,
+        100115,
+        100116,
+        100117,
+        100118,
+        100119,
+        100120,
+        100121,
+        100140,
+        100141,
+        100142,
+        100143,
+        100144,
+        100145,
+        100146,
+        100147,
+        100148,
+        100149,
+        100150,
+        100151,
+        100152,
+        100153,
+        100154,
+        100155,
+        100156,
+        100157,
+        100158,
+        100159,
+        100160,
+        100161,
+        100162,
+        100163,
+        100170,
+        100171,
+        100172,
+        100173,
+        100174,
+        100175
+      ],
+      "complete_block_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ],
+      "modes": {
+        "red>green>blue": {
+          "successes": 9,
+          "included": 20,
+          "sr_pct": 45.0,
+          "recorded": 20,
+          "recorded_successes": 9
+        },
+        "red>blue>green": {
+          "successes": 0,
+          "included": 20,
+          "sr_pct": 0.0,
+          "recorded": 20,
+          "recorded_successes": 0
+        },
+        "green>red>blue": {
+          "successes": 0,
+          "included": 20,
+          "sr_pct": 0.0,
+          "recorded": 20,
+          "recorded_successes": 0
+        },
+        "green>blue>red": {
+          "successes": 0,
+          "included": 20,
+          "sr_pct": 0.0,
+          "recorded": 20,
+          "recorded_successes": 0
+        },
+        "blue>red>green": {
+          "successes": 0,
+          "included": 20,
+          "sr_pct": 0.0,
+          "recorded": 20,
+          "recorded_successes": 0
+        },
+        "blue>green>red": {
+          "successes": 0,
+          "included": 20,
+          "sr_pct": 0.0,
+          "recorded": 20,
+          "recorded_successes": 0
+        }
+      },
+      "columns": [
+        {
+          "label": "RGB",
+          "modes": [
+            "red>green>blue"
+          ],
+          "successes": 9,
+          "included": 20,
+          "sr_pct": 45.0
+        },
+        {
+          "label": "RBG",
+          "modes": [
+            "red>blue>green"
+          ],
+          "successes": 0,
+          "included": 20,
+          "sr_pct": 0.0
+        },
+        {
+          "label": "GRB",
+          "modes": [
+            "green>red>blue"
+          ],
+          "successes": 0,
+          "included": 20,
+          "sr_pct": 0.0
+        },
+        {
+          "label": "GBR",
+          "modes": [
+            "green>blue>red"
+          ],
+          "successes": 0,
+          "included": 20,
+          "sr_pct": 0.0
+        },
+        {
+          "label": "BRG",
+          "modes": [
+            "blue>red>green"
+          ],
+          "successes": 0,
+          "included": 20,
+          "sr_pct": 0.0
+        },
+        {
+          "label": "BGR",
+          "modes": [
+            "blue>green>red"
+          ],
+          "successes": 0,
+          "included": 20,
+          "sr_pct": 0.0
+        }
+      ],
+      "avg_pct": 7.5
+    },
+    {
+      "policy": "dm05",
+      "task": "place_relative",
+      "complete": true,
+      "completed_blocks": 20,
+      "expected_blocks": 20,
+      "recorded_episodes": 60,
+      "expected_episodes": 60,
+      "recorded_successes": 20,
+      "included_episodes": 60,
+      "partial_group_episodes": 0,
+      "included_seeds": [
+        100005,
+        100006,
+        100009,
+        100010,
+        100011,
+        100014,
+        100015,
+        100016,
+        100019,
+        100020,
+        100021,
+        100024,
+        100025,
+        100026,
+        100029,
+        100030,
+        100031,
+        100034,
+        100040,
+        100041,
+        100044,
+        100045,
+        100046,
+        100049,
+        100050,
+        100051,
+        100054,
+        100055,
+        100056,
+        100059,
+        100060,
+        100061,
+        100064,
+        100065,
+        100066,
+        100069,
+        100070,
+        100071,
+        100074,
+        100075,
+        100076,
+        100079,
+        100080,
+        100081,
+        100084,
+        100085,
+        100086,
+        100089,
+        100095,
+        100096,
+        100099,
+        100100,
+        100101,
+        100104,
+        100105,
+        100106,
+        100109,
+        100110,
+        100111,
+        100114
+      ],
+      "complete_block_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ],
+      "modes": {
+        "left": {
+          "successes": 12,
+          "included": 20,
+          "sr_pct": 60.0,
+          "recorded": 20,
+          "recorded_successes": 12
+        },
+        "right": {
+          "successes": 8,
+          "included": 20,
+          "sr_pct": 40.0,
+          "recorded": 20,
+          "recorded_successes": 8
+        },
+        "on_top": {
+          "successes": 0,
+          "included": 20,
+          "sr_pct": 0.0,
+          "recorded": 20,
+          "recorded_successes": 0
+        }
+      },
+      "columns": [
+        {
+          "label": "Left",
+          "modes": [
+            "left"
+          ],
+          "successes": 12,
+          "included": 20,
+          "sr_pct": 60.0
+        },
+        {
+          "label": "Right",
+          "modes": [
+            "right"
+          ],
+          "successes": 8,
+          "included": 20,
+          "sr_pct": 40.0
+        },
+        {
+          "label": "Top",
+          "modes": [
+            "on_top"
+          ],
+          "successes": 0,
+          "included": 20,
+          "sr_pct": 0.0
+        }
+      ],
+      "avg_pct": 33.333333333333336
+    },
+    {
+      "policy": "hy_vla",
+      "task": "bottle_verb",
+      "complete": true,
+      "completed_blocks": 20,
+      "expected_blocks": 20,
+      "recorded_episodes": 40,
+      "expected_episodes": 40,
+      "recorded_successes": 20,
+      "included_episodes": 40,
+      "partial_group_episodes": 0,
+      "included_seeds": [
+        100002,
+        100003,
+        100004,
+        100005,
+        100006,
+        100007,
+        100008,
+        100009,
+        100010,
+        100011,
+        100016,
+        100017,
+        100018,
+        100019,
+        100020,
+        100021,
+        100022,
+        100023,
+        100024,
+        100025,
+        100026,
+        100027,
+        100030,
+        100031,
+        100032,
+        100033,
+        100038,
+        100039,
+        100042,
+        100043,
+        100048,
+        100049,
+        100050,
+        100051,
+        100052,
+        100053,
+        100054,
+        100055,
+        100056,
+        100057
+      ],
+      "complete_block_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ],
+      "modes": {
+        "pick": {
+          "successes": 0,
+          "included": 20,
+          "sr_pct": 0.0,
+          "recorded": 20,
+          "recorded_successes": 0
+        },
+        "shake": {
+          "successes": 20,
+          "included": 20,
+          "sr_pct": 100.0,
+          "recorded": 20,
+          "recorded_successes": 20
+        }
+      },
+      "columns": [
+        {
+          "label": "Pick",
+          "modes": [
+            "pick"
+          ],
+          "successes": 0,
+          "included": 20,
+          "sr_pct": 0.0
+        },
+        {
+          "label": "Shake",
+          "modes": [
+            "shake"
+          ],
+          "successes": 20,
+          "included": 20,
+          "sr_pct": 100.0
+        }
+      ],
+      "avg_pct": 50.0
+    },
+    {
+      "policy": "hy_vla",
+      "task": "pick_diverse_object",
+      "complete": true,
+      "completed_blocks": 20,
+      "expected_blocks": 20,
+      "recorded_episodes": 40,
+      "expected_episodes": 40,
+      "recorded_successes": 11,
+      "included_episodes": 40,
+      "partial_group_episodes": 0,
+      "included_seeds": [
+        100002,
+        100003,
+        100004,
+        100005,
+        100006,
+        100007,
+        100008,
+        100009,
+        100012,
+        100013,
+        100014,
+        100015,
+        100018,
+        100019,
+        100020,
+        100021,
+        100024,
+        100025,
+        100034,
+        100035,
+        100036,
+        100037,
+        100038,
+        100039,
+        100040,
+        100041,
+        100042,
+        100043,
+        100048,
+        100049,
+        100052,
+        100053,
+        100054,
+        100055,
+        100056,
+        100057,
+        100060,
+        100061,
+        100066,
+        100067
+      ],
+      "complete_block_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ],
+      "modes": {
+        "seen": {
+          "successes": 7,
+          "included": 20,
+          "sr_pct": 35.0,
+          "recorded": 20,
+          "recorded_successes": 7
+        },
+        "unseen": {
+          "successes": 4,
+          "included": 20,
+          "sr_pct": 20.0,
+          "recorded": 20,
+          "recorded_successes": 4
+        }
+      },
+      "columns": [
+        {
+          "label": "Seen",
+          "modes": [
+            "seen"
+          ],
+          "successes": 7,
+          "included": 20,
+          "sr_pct": 35.0
+        },
+        {
+          "label": "Unseen",
+          "modes": [
+            "unseen"
+          ],
+          "successes": 4,
+          "included": 20,
+          "sr_pct": 20.0
+        }
+      ],
+      "avg_pct": 27.5
+    },
+    {
+      "policy": "hy_vla",
+      "task": "attribute_select",
+      "complete": true,
+      "completed_blocks": 20,
+      "expected_blocks": 20,
+      "recorded_episodes": 160,
+      "expected_episodes": 160,
+      "recorded_successes": 83,
+      "included_episodes": 160,
+      "partial_group_episodes": 0,
+      "included_seeds": [
+        100000,
+        100001,
+        100002,
+        100003,
+        100004,
+        100005,
+        100006,
+        100007,
+        100008,
+        100009,
+        100010,
+        100011,
+        100012,
+        100013,
+        100014,
+        100015,
+        100016,
+        100017,
+        100018,
+        100019,
+        100020,
+        100021,
+        100022,
+        100023,
+        100024,
+        100025,
+        100026,
+        100027,
+        100028,
+        100029,
+        100030,
+        100031,
+        100032,
+        100033,
+        100034,
+        100035,
+        100036,
+        100037,
+        100038,
+        100039,
+        100040,
+        100041,
+        100042,
+        100043,
+        100044,
+        100045,
+        100046,
+        100047,
+        100048,
+        100049,
+        100050,
+        100051,
+        100052,
+        100053,
+        100054,
+        100055,
+        100064,
+        100065,
+        100066,
+        100067,
+        100068,
+        100069,
+        100070,
+        100071,
+        100072,
+        100073,
+        100074,
+        100075,
+        100076,
+        100077,
+        100078,
+        100079,
+        100080,
+        100081,
+        100082,
+        100083,
+        100084,
+        100085,
+        100086,
+        100087,
+        100088,
+        100089,
+        100090,
+        100091,
+        100092,
+        100093,
+        100094,
+        100095,
+        100096,
+        100097,
+        100098,
+        100099,
+        100100,
+        100101,
+        100102,
+        100103,
+        100104,
+        100105,
+        100106,
+        100107,
+        100108,
+        100109,
+        100110,
+        100111,
+        100112,
+        100113,
+        100114,
+        100115,
+        100116,
+        100117,
+        100118,
+        100119,
+        100120,
+        100121,
+        100122,
+        100123,
+        100124,
+        100125,
+        100126,
+        100127,
+        100128,
+        100129,
+        100130,
+        100131,
+        100132,
+        100133,
+        100134,
+        100135,
+        100144,
+        100145,
+        100146,
+        100147,
+        100148,
+        100149,
+        100150,
+        100151,
+        100152,
+        100153,
+        100154,
+        100155,
+        100156,
+        100157,
+        100158,
+        100159,
+        100160,
+        100161,
+        100162,
+        100163,
+        100164,
+        100165,
+        100166,
+        100167,
+        100168,
+        100169,
+        100170,
+        100171,
+        100172,
+        100173,
+        100174,
+        100175
+      ],
+      "complete_block_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ],
+      "modes": {
+        "color:red": {
+          "successes": 20,
+          "included": 20,
+          "sr_pct": 100.0,
+          "recorded": 20,
+          "recorded_successes": 20
+        },
+        "color:blue": {
+          "successes": 0,
+          "included": 20,
+          "sr_pct": 0.0,
+          "recorded": 20,
+          "recorded_successes": 0
+        },
+        "decal:cat": {
+          "successes": 11,
+          "included": 20,
+          "sr_pct": 55.0,
+          "recorded": 20,
+          "recorded_successes": 11
+        },
+        "decal:dog": {
+          "successes": 10,
+          "included": 20,
+          "sr_pct": 50.0,
+          "recorded": 20,
+          "recorded_successes": 10
+        },
+        "shape:block": {
+          "successes": 3,
+          "included": 20,
+          "sr_pct": 15.0,
+          "recorded": 20,
+          "recorded_successes": 3
+        },
+        "shape:bar": {
+          "successes": 19,
+          "included": 20,
+          "sr_pct": 95.0,
+          "recorded": 20,
+          "recorded_successes": 19
+        },
+        "size:big": {
+          "successes": 0,
+          "included": 20,
+          "sr_pct": 0.0,
+          "recorded": 20,
+          "recorded_successes": 0
+        },
+        "size:small": {
+          "successes": 20,
+          "included": 20,
+          "sr_pct": 100.0,
+          "recorded": 20,
+          "recorded_successes": 20
+        }
+      },
+      "columns": [
+        {
+          "label": "Color",
+          "modes": [
+            "color:red",
+            "color:blue"
+          ],
+          "successes": 20,
+          "included": 40,
+          "sr_pct": 50.0
+        },
+        {
+          "label": "Decal",
+          "modes": [
+            "decal:cat",
+            "decal:dog"
+          ],
+          "successes": 21,
+          "included": 40,
+          "sr_pct": 52.5
+        },
+        {
+          "label": "Shape",
+          "modes": [
+            "shape:block",
+            "shape:bar"
+          ],
+          "successes": 22,
+          "included": 40,
+          "sr_pct": 55.0
+        },
+        {
+          "label": "Size",
+          "modes": [
+            "size:big",
+            "size:small"
+          ],
+          "successes": 20,
+          "included": 40,
+          "sr_pct": 50.0
+        }
+      ],
+      "avg_pct": 51.875
+    },
+    {
+      "policy": "hy_vla",
+      "task": "arm_select",
+      "complete": true,
+      "completed_blocks": 20,
+      "expected_blocks": 20,
+      "recorded_episodes": 40,
+      "expected_episodes": 40,
+      "recorded_successes": 17,
+      "included_episodes": 40,
+      "partial_group_episodes": 0,
+      "included_seeds": [
+        500000,
+        500001,
+        500002,
+        500003,
+        500004,
+        500005,
+        500006,
+        500007,
+        500008,
+        500009,
+        500010,
+        500011,
+        500012,
+        500013,
+        500014,
+        500015,
+        500016,
+        500017,
+        500018,
+        500019,
+        500020,
+        500021,
+        500022,
+        500023,
+        500024,
+        500025,
+        500026,
+        500027,
+        500028,
+        500029,
+        500030,
+        500031,
+        500032,
+        500033,
+        500034,
+        500035,
+        500036,
+        500037,
+        500038,
+        500039
+      ],
+      "complete_block_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ],
+      "modes": {
+        "left": {
+          "successes": 6,
+          "included": 20,
+          "sr_pct": 30.0,
+          "recorded": 20,
+          "recorded_successes": 6
+        },
+        "right": {
+          "successes": 11,
+          "included": 20,
+          "sr_pct": 55.0,
+          "recorded": 20,
+          "recorded_successes": 11
+        }
+      },
+      "columns": [
+        {
+          "label": "Left",
+          "modes": [
+            "left"
+          ],
+          "successes": 6,
+          "included": 20,
+          "sr_pct": 30.0
+        },
+        {
+          "label": "Right",
+          "modes": [
+            "right"
+          ],
+          "successes": 11,
+          "included": 20,
+          "sr_pct": 55.0
+        }
+      ],
+      "avg_pct": 42.5
+    },
+    {
+      "policy": "hy_vla",
+      "task": "stack_sequence",
+      "complete": true,
+      "completed_blocks": 20,
+      "expected_blocks": 20,
+      "recorded_episodes": 120,
+      "expected_episodes": 120,
+      "recorded_successes": 15,
+      "included_episodes": 120,
+      "partial_group_episodes": 0,
+      "included_seeds": [
+        100008,
+        100009,
+        100010,
+        100011,
+        100012,
+        100013,
+        100014,
+        100015,
+        100016,
+        100017,
+        100018,
+        100019,
+        100020,
+        100021,
+        100022,
+        100023,
+        100024,
+        100025,
+        100026,
+        100027,
+        100028,
+        100029,
+        100030,
+        100031,
+        100032,
+        100033,
+        100034,
+        100035,
+        100036,
+        100037,
+        100038,
+        100039,
+        100040,
+        100041,
+        100042,
+        100043,
+        100050,
+        100051,
+        100052,
+        100053,
+        100054,
+        100055,
+        100062,
+        100063,
+        100064,
+        100065,
+        100066,
+        100067,
+        100068,
+        100069,
+        100070,
+        100071,
+        100072,
+        100073,
+        100080,
+        100081,
+        100082,
+        100083,
+        100084,
+        100085,
+        100092,
+        100093,
+        100094,
+        100095,
+        100096,
+        100097,
+        100098,
+        100099,
+        100100,
+        100101,
+        100102,
+        100103,
+        100104,
+        100105,
+        100106,
+        100107,
+        100108,
+        100109,
+        100110,
+        100111,
+        100112,
+        100113,
+        100114,
+        100115,
+        100116,
+        100117,
+        100118,
+        100119,
+        100120,
+        100121,
+        100140,
+        100141,
+        100142,
+        100143,
+        100144,
+        100145,
+        100146,
+        100147,
+        100148,
+        100149,
+        100150,
+        100151,
+        100152,
+        100153,
+        100154,
+        100155,
+        100156,
+        100157,
+        100158,
+        100159,
+        100160,
+        100161,
+        100162,
+        100163,
+        100170,
+        100171,
+        100172,
+        100173,
+        100174,
+        100175
+      ],
+      "complete_block_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ],
+      "modes": {
+        "red>green>blue": {
+          "successes": 15,
+          "included": 20,
+          "sr_pct": 75.0,
+          "recorded": 20,
+          "recorded_successes": 15
+        },
+        "red>blue>green": {
+          "successes": 0,
+          "included": 20,
+          "sr_pct": 0.0,
+          "recorded": 20,
+          "recorded_successes": 0
+        },
+        "green>red>blue": {
+          "successes": 0,
+          "included": 20,
+          "sr_pct": 0.0,
+          "recorded": 20,
+          "recorded_successes": 0
+        },
+        "green>blue>red": {
+          "successes": 0,
+          "included": 20,
+          "sr_pct": 0.0,
+          "recorded": 20,
+          "recorded_successes": 0
+        },
+        "blue>red>green": {
+          "successes": 0,
+          "included": 20,
+          "sr_pct": 0.0,
+          "recorded": 20,
+          "recorded_successes": 0
+        },
+        "blue>green>red": {
+          "successes": 0,
+          "included": 20,
+          "sr_pct": 0.0,
+          "recorded": 20,
+          "recorded_successes": 0
+        }
+      },
+      "columns": [
+        {
+          "label": "RGB",
+          "modes": [
+            "red>green>blue"
+          ],
+          "successes": 15,
+          "included": 20,
+          "sr_pct": 75.0
+        },
+        {
+          "label": "RBG",
+          "modes": [
+            "red>blue>green"
+          ],
+          "successes": 0,
+          "included": 20,
+          "sr_pct": 0.0
+        },
+        {
+          "label": "GRB",
+          "modes": [
+            "green>red>blue"
+          ],
+          "successes": 0,
+          "included": 20,
+          "sr_pct": 0.0
+        },
+        {
+          "label": "GBR",
+          "modes": [
+            "green>blue>red"
+          ],
+          "successes": 0,
+          "included": 20,
+          "sr_pct": 0.0
+        },
+        {
+          "label": "BRG",
+          "modes": [
+            "blue>red>green"
+          ],
+          "successes": 0,
+          "included": 20,
+          "sr_pct": 0.0
+        },
+        {
+          "label": "BGR",
+          "modes": [
+            "blue>green>red"
+          ],
+          "successes": 0,
+          "included": 20,
+          "sr_pct": 0.0
+        }
+      ],
+      "avg_pct": 12.5
+    },
+    {
+      "policy": "hy_vla",
+      "task": "place_relative",
+      "complete": true,
+      "completed_blocks": 20,
+      "expected_blocks": 20,
+      "recorded_episodes": 60,
+      "expected_episodes": 60,
+      "recorded_successes": 7,
+      "included_episodes": 60,
+      "partial_group_episodes": 0,
+      "included_seeds": [
+        100005,
+        100006,
+        100009,
+        100010,
+        100011,
+        100014,
+        100015,
+        100016,
+        100019,
+        100020,
+        100021,
+        100024,
+        100025,
+        100026,
+        100029,
+        100030,
+        100031,
+        100034,
+        100040,
+        100041,
+        100044,
+        100045,
+        100046,
+        100049,
+        100050,
+        100051,
+        100054,
+        100055,
+        100056,
+        100059,
+        100060,
+        100061,
+        100064,
+        100065,
+        100066,
+        100069,
+        100070,
+        100071,
+        100074,
+        100075,
+        100076,
+        100079,
+        100080,
+        100081,
+        100084,
+        100085,
+        100086,
+        100089,
+        100095,
+        100096,
+        100099,
+        100100,
+        100101,
+        100104,
+        100105,
+        100106,
+        100109,
+        100110,
+        100111,
+        100114
+      ],
+      "complete_block_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ],
+      "modes": {
+        "left": {
+          "successes": 2,
+          "included": 20,
+          "sr_pct": 10.0,
+          "recorded": 20,
+          "recorded_successes": 2
+        },
+        "right": {
+          "successes": 5,
+          "included": 20,
+          "sr_pct": 25.0,
+          "recorded": 20,
+          "recorded_successes": 5
+        },
+        "on_top": {
+          "successes": 0,
+          "included": 20,
+          "sr_pct": 0.0,
+          "recorded": 20,
+          "recorded_successes": 0
+        }
+      },
+      "columns": [
+        {
+          "label": "Left",
+          "modes": [
+            "left"
+          ],
+          "successes": 2,
+          "included": 20,
+          "sr_pct": 10.0
+        },
+        {
+          "label": "Right",
+          "modes": [
+            "right"
+          ],
+          "successes": 5,
+          "included": 20,
+          "sr_pct": 25.0
+        },
+        {
+          "label": "Top",
+          "modes": [
+            "on_top"
+          ],
+          "successes": 0,
+          "included": 20,
+          "sr_pct": 0.0
+        }
+      ],
+      "avg_pct": 11.666666666666666
+    }
+  ],
+  "policies": {
+    "xvla": {
+      "recorded": 460,
+      "expected": 460,
+      "complete_tasks": 6,
+      "complete_blocks": 120,
+      "expected_blocks": 120,
+      "overall_pct": 25.9375
+    },
+    "lingbot_va": {
+      "recorded": 460,
+      "expected": 460,
+      "complete_tasks": 6,
+      "complete_blocks": 120,
+      "expected_blocks": 120,
+      "overall_pct": 57.083333333333336
+    },
+    "lingbot_vla": {
+      "recorded": 460,
+      "expected": 460,
+      "complete_tasks": 6,
+      "complete_blocks": 120,
+      "expected_blocks": 120,
+      "overall_pct": 32.048611111111114
+    },
+    "vlact": {
+      "recorded": 460,
+      "expected": 460,
+      "complete_tasks": 6,
+      "complete_blocks": 120,
+      "expected_blocks": 120,
+      "overall_pct": 57.361111111111114
+    },
+    "dm05": {
+      "recorded": 460,
+      "expected": 460,
+      "complete_tasks": 6,
+      "complete_blocks": 120,
+      "expected_blocks": 120,
+      "overall_pct": 53.47222222222222
+    },
+    "hy_vla": {
+      "recorded": 460,
+      "expected": 460,
+      "complete_tasks": 6,
+      "complete_blocks": 120,
+      "expected_blocks": 120,
+      "overall_pct": 32.673611111111114
+    }
+  }
+}

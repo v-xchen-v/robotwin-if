@@ -1,0 +1,189 @@
+{
+  "schema_version": 1,
+  "failed_setup_attempts": 4,
+  "affected_episodes": [
+    {
+      "policy": "dm05",
+      "seed": 500007
+    },
+    {
+      "policy": "hy_vla",
+      "seed": 500007
+    },
+    {
+      "policy": "lingbot_vla",
+      "seed": 500007
+    },
+    {
+      "policy": "vlact",
+      "seed": 500007
+    }
+  ],
+  "policy_results_retried": false,
+  "seeds_substituted": false,
+  "scope": "Only oracle negatives before any model inference; exact seed recovered in a fresh simulator.",
+  "decisions": [
+    {
+      "path": "batches/20260918T021540-remote03-lane0-000/dm05/arm_select-oracle-retry.json",
+      "sha256": "7c8c893a430d69d2fd65102ad9c987a66d3a1b121c13984fd6584768b9766d78",
+      "policy": "dm05",
+      "seed": 500007,
+      "decision": {
+        "seed": 500007,
+        "prior_failed_attempts": 1,
+        "max_attempts": 3,
+        "failed_records": [
+          "/Data/robotwin-if/evaluations/robotwin-if-arm-only-v2-20blocks-001/batches/20260918T021540-remote03-lane0-000/dm05/arm_select/arm_select_ep500007_result.json"
+        ],
+        "policy_results_retried": false,
+        "reason": "Pre-inference oracle negative; retry the same seed in a fresh simulator"
+      },
+      "final_record": "dm05/arm_select/arm_select_ep500007_result.json",
+      "final_record_sha256": "3587ecbbe1ebdfcd61cda6935a83d5f6b4aaae8a623dd8712c129ca686b22f2b"
+    },
+    {
+      "path": "batches/20260918T021540-remote03-lane2-000/hy_vla/arm_select-oracle-retry.json",
+      "sha256": "a66c32c4d4ee0700bf196e5f5c2cd937e28452034850a12764dc063d6df8689a",
+      "policy": "hy_vla",
+      "seed": 500007,
+      "decision": {
+        "seed": 500007,
+        "prior_failed_attempts": 1,
+        "max_attempts": 3,
+        "failed_records": [
+          "/Data/robotwin-if/evaluations/robotwin-if-arm-only-v2-20blocks-001/batches/20260918T021540-remote03-lane2-000/hy_vla/arm_select/arm_select_ep500007_result.json"
+        ],
+        "policy_results_retried": false,
+        "reason": "Pre-inference oracle negative; retry the same seed in a fresh simulator"
+      },
+      "final_record": "hy_vla/arm_select/arm_select_ep500007_result.json",
+      "final_record_sha256": "8a49f08f4d2bb9dbb52a3c4f00c30a70dc2424f2d2de3de6146aa1fb4201c92a"
+    },
+    {
+      "path": "batches/20260918T021540-remote03-lane2-000/lingbot_vla/arm_select-oracle-retry.json",
+      "sha256": "838b0ebf78b4660c5e2ba73c67881df742913f8a38b5baac0113f57605c1cdcd",
+      "policy": "lingbot_vla",
+      "seed": 500007,
+      "decision": {
+        "seed": 500007,
+        "prior_failed_attempts": 1,
+        "max_attempts": 3,
+        "failed_records": [
+          "/Data/robotwin-if/evaluations/robotwin-if-arm-only-v2-20blocks-001/batches/20260918T021540-remote03-lane2-000/lingbot_vla/arm_select/arm_select_ep500007_result.json"
+        ],
+        "policy_results_retried": false,
+        "reason": "Pre-inference oracle negative; retry the same seed in a fresh simulator"
+      },
+      "final_record": "lingbot_vla/arm_select/arm_select_ep500007_result.json",
+      "final_record_sha256": "44bcab5bc4d86e1946bee6a2c0ecd1e92d4f6f00f62755f7f2785b95ee5ec320"
+    },
+    {
+      "path": "batches/20260918T021540-remote03-lane2-000/vlact/arm_select-oracle-retry.json",
+      "sha256": "a90a3fa27e7c9a44469694b413d9dbfd0351ddbbce3a60bcaa62eeda3358ee04",
+      "policy": "vlact",
+      "seed": 500007,
+      "decision": {
+        "seed": 500007,
+        "prior_failed_attempts": 1,
+        "max_attempts": 3,
+        "failed_records": [
+          "/Data/robotwin-if/evaluations/robotwin-if-arm-only-v2-20blocks-001/batches/20260918T021540-remote03-lane2-000/vlact/arm_select/arm_select_ep500007_result.json"
+        ],
+        "policy_results_retried": false,
+        "reason": "Pre-inference oracle negative; retry the same seed in a fresh simulator"
+      },
+      "final_record": "vlact/arm_select/arm_select_ep500007_result.json",
+      "final_record_sha256": "287d65ed5fc32866e5b64c4762e49f64f64c45c33cb3ad37e379a1015a2087f9"
+    }
+  ],
+  "failed_attempts": [
+    {
+      "path": "batches/20260918T021540-remote03-lane0-000/dm05/arm_select/arm_select_ep500007_result.json",
+      "sha256": "eae5dd0d1b5469facfa1e3ca37662773c6f1abca667b8ccd52d44071ee561402",
+      "record": {
+        "task": "arm_select",
+        "seed": 500007,
+        "status": "error",
+        "success": false,
+        "instruction_type": "unseen",
+        "instruction": null,
+        "action_calls": 0,
+        "chunks": 0,
+        "oracle_success": false,
+        "mode": "right",
+        "error": {
+          "stage": "episode_setup",
+          "type": "RuntimeError",
+          "message": "Exact seed failed oracle qualification; no seed substitution"
+        },
+        "elapsed_seconds": 4.054707304923795
+      }
+    },
+    {
+      "path": "batches/20260918T021540-remote03-lane2-000/hy_vla/arm_select/arm_select_ep500007_result.json",
+      "sha256": "8d011673ff9c5757d629e8afecb2a23f08e7cdf18091499dbee1757de3bf6913",
+      "record": {
+        "task": "arm_select",
+        "seed": 500007,
+        "status": "error",
+        "success": false,
+        "instruction_type": "unseen",
+        "instruction": null,
+        "action_calls": 0,
+        "chunks": 0,
+        "oracle_success": false,
+        "mode": "right",
+        "error": {
+          "stage": "episode_setup",
+          "type": "RuntimeError",
+          "message": "Exact seed failed oracle qualification; no seed substitution"
+        },
+        "elapsed_seconds": 3.8563640089705586
+      }
+    },
+    {
+      "path": "batches/20260918T021540-remote03-lane2-000/lingbot_vla/arm_select/arm_select_ep500007_result.json",
+      "sha256": "f6d9342afc906f58d2ea0ff1893cef7c0bb2b4afb933e451c6a13e0d543831f7",
+      "record": {
+        "task": "arm_select",
+        "seed": 500007,
+        "status": "error",
+        "success": false,
+        "instruction_type": "unseen",
+        "instruction": null,
+        "action_calls": 0,
+        "chunks": 0,
+        "oracle_success": false,
+        "mode": "right",
+        "error": {
+          "stage": "episode_setup",
+          "type": "RuntimeError",
+          "message": "Exact seed failed oracle qualification; no seed substitution"
+        },
+        "elapsed_seconds": 5.8187302210135385
+      }
+    },
+    {
+      "path": "batches/20260918T021540-remote03-lane2-000/vlact/arm_select/arm_select_ep500007_result.json",
+      "sha256": "68adc0d73da44af62a8f78168247b0ec02953770116ea3a009fcb3764c43f653",
+      "record": {
+        "task": "arm_select",
+        "seed": 500007,
+        "status": "error",
+        "success": false,
+        "instruction_type": "unseen",
+        "instruction": null,
+        "action_calls": 0,
+        "chunks": 0,
+        "oracle_success": false,
+        "mode": "right",
+        "error": {
+          "stage": "episode_setup",
+          "type": "RuntimeError",
+          "message": "Exact seed failed oracle qualification; no seed substitution"
+        },
+        "elapsed_seconds": 3.9604948320193216
+      }
+    }
+  ]
+}
