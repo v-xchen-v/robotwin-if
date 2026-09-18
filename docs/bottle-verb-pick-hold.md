@@ -58,7 +58,7 @@ oracle / collection 不受 policy 的末尾裁决限制；pick oracle 提起轨�
 
 ## 历史结果与复用
 
-当前 README 与 [v6 结果包](../result/if-ext-v2-six-tasks-spatial3-bottle-v6-terminal-20blocks/README.md)
+当前 README 与 [v6 结果包](../result-archive/if-ext-v2-six-tasks-spatial3-bottle-v6-terminal-20blocks/README.md)
 已使用完整重测的 Bottle-Verb 分数和重算的 Overall，六个 policy 均完成 20/20 blocks。
 旧判定结果包、五模式/三模式历史证据独立保留，原标签不改写。
 原始视频不是精确的仿真时钟，既有动作 NPZ 也不包含完整瓶子 pose 序列；旧成功回合还会在旧高度线处
@@ -282,7 +282,7 @@ VLAct All、DM05、Hy-VLA。保留温度、显存、日志停滞检测和源码�
 
 正式队列已于 **2026-09-15 22:44 UTC** 全部完成，视频帧数、动作轨迹、跨 policy 初始场景、
 判定版本及参数校验均通过。`support/launch-and-export.py` 已自动导出
-[v6 结果包](../result/if-ext-v2-six-tasks-spatial3-bottle-v6-terminal-20blocks/README.md)，更新 README 的 Verb / Overall。
+[v6 结果包](../result-archive/if-ext-v2-six-tasks-spatial3-bottle-v6-terminal-20blocks/README.md)，更新 README 的 Verb / Overall。
 其余五项的统计与记录哈希均与旧结果一致；`status.json` / `publication.json` 均为 `complete`。
 
 | Policy | Pick 成功 | Shake 成功 | Bottle 成功 | 完成 blocks | 六任务 Overall (%) |

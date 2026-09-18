@@ -7,7 +7,7 @@
 - [独立 taskset](../seed-manifests/robotwin-if-arm-only-v2-20-per-mode/README.md)
 - [复用源码审计](../seed-manifests/robotwin-if-arm-only-v2-20-per-mode/reuse-audit.json)
 - [新 Arm 判据与真实仿真验证](arm-select-target-arm-only.md)
-- [父结果](../result/robotwin-if-attribute-v2-20blocks/README.md)
+- [父结果](../result-archive/robotwin-if-attribute-v2-20blocks/README.md)
 
 运行目录（msrait-04）：
 

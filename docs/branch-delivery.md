@@ -107,7 +107,7 @@ GPU 查询超过 8 秒、温度达到 87°C 或显存超限会停止本次 sim�
 六个 policies 已完成 **2760/2760 episodes、720/720 blocks**，每个 policy 为 460 episodes；2026-09-18 05:26 UTC 正式校验通过。
 Arm 按 target-arm-only-lift-v2 全新运行 240 回合，其余五任务复用 Attribute-v2 的 2520 回合，包含成功和失败。
 初始观测、记录哈希、统计及 checkpoint 身份核对通过，见 [Arm 重评说明](arm-select-target-only-v2-evaluation.md)。
-历史结果保留原始判据和计数，入口在 [结果索引](../result/README.md)。
+历史成绩与判据验证证据已归档到 [result-archive/](../result-archive/README.md)，原始判据、计数和哈希保持不变；旧路径保留兼容软链接。
 
 提供 `results.html/md/json/csv`、`episodes.csv`、六份 frozen manifests、checkpoint 身份、
 provenance 与 `SHA256SUMS`。可离线查看汇总表和逐回合计数，不依赖原机器。
@@ -118,7 +118,7 @@ provenance 与 `SHA256SUMS`。可离线查看汇总表和逐回合计数，不�
 ```
 
 完整视频和动作轨迹体积较大，仍保存在结果 README 指定的原始评测目录，不包含在此轻量结果包中。
-历史七任务结果单独保留在 `result/if-ext-v2-wide-20blocks/`；当前分数不与七任务 Overall 混用。
+历史七任务结果单独保留在 `result-archive/if-ext-v2-wide-20blocks/`；当前分数不与七任务 Overall 混用。
 `bak/`、历史 releases 和原机部署记录用于追溯，不属于接收方默认运行路径。
 
 ## 交付检查

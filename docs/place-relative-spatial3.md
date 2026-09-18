@@ -30,7 +30,7 @@ Back 总计 **0/120**；Front 总计 **2/120**；此次移除 **240 回合：2 �
 - [240 回合明细](../bak/place_relative-five-modes/excluded-episodes.csv)：原 block、seed、mode、指令、判定、record 路径与 SHA-256。
 - [视频证据索引](../bak/place_relative-five-modes/evidence.json)：全部被排除回合的 video 路径、SHA-256、review query。
 - [14 份示例原始 result](../bak/place_relative-five-modes/records/)：12 个共同失败与两个自动成功。
-- [原五模式结果](../result/if-ext-v2-six-tasks-20blocks/results.md) 和 [原 manifest](../seed-manifests/if-ext-v2-six-tasks-20-per-mode/place_relative.json) 保持不变。
+- [原五模式结果](../result-archive/if-ext-v2-six-tasks-20blocks/results.md) 和 [原 manifest](../seed-manifests/if-ext-v2-six-tasks-20-per-mode/place_relative.json) 保持不变。
 
 复核页默认隐藏已下线模式；打开“包含已下线的任务 / 模式”后选择 `place_relative`、`front/back`。
 也可在运行中的复核页地址后添加 `?episode=vlact/place_relative/100077` 或
@@ -84,7 +84,7 @@ front/back = 5k + 2, 5k + 3             # 已下线，运行前拒绝
 | DM05 | 21.0 | 33.3 | 51.4 | 53.5 | 460/460 ep；120/120 B |
 | Hy-VLA | 7.0 | 11.7 | 35.6 | 36.4 | 460/460 ep；120/120 B |
 
-[新版结果包](../result/if-ext-v2-six-tasks-spatial3-20blocks/README.md) ·
+[新版结果包](../result-archive/if-ext-v2-six-tasks-spatial3-20blocks/README.md) ·
 [新版 manifest](../seed-manifests/if-ext-v2-six-tasks-spatial3-20-per-mode/README.md)。
 X-VLA clean-only checkpoint 的比较限制，以及 Hy-VLA coffee-box 回合的待复核备注继续保留。
 

@@ -8,8 +8,8 @@
 - 原始运行：`/Data/robotwin-if/evaluations/robotwin-if-attribute-v2-20blocks-001`
 - 实时进度：[report.md](../outputs/policy-eval/robotwin-if-attribute-v2-20blocks-001/report.md)
 - 工作流状态：[workflow.json](../outputs/policy-eval/robotwin-if-attribute-v2-20blocks-001/workflow.json)
-- 完成后结果目录：`result/robotwin-if-attribute-v2-20blocks/`
-- 父结果：[cube-v3 六任务结果](../result/robotwin-if-cube-v3-20blocks/README.md)
+- 完成后结果目录：`result-archive/robotwin-if-attribute-v2-20blocks/`
+- 父结果：[cube-v3 六任务结果](../result-archive/robotwin-if-cube-v3-20blocks/README.md)
 
 每项任务 20 blocks；每个 policy 的 Attribute 有 8 modes × 20 = 160 回合。
 六个 policies 共 **960 新回合 + 1800 复用回合 = 2760 回合、720 blocks**。

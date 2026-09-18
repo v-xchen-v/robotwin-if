@@ -29,9 +29,9 @@
 
 ## 历史结果与后续评测
 
-现有 [cube-v3 六任务结果包](../result/robotwin-if-cube-v3-20blocks/README.md)中的
+现有 [cube-v3 六任务结果包](../result-archive/robotwin-if-cube-v3-20blocks/README.md)中的
 Attribute-Select 使用旧判据。原始视频、动作和计数保留，不能把它们标成新判据的结果。
-修正后的[完整成绩](../result/robotwin-if-attribute-v2-20blocks/README.md)已完成：六个 policies 重跑 Attribute 的 960 回合，其他五任务复用 cube-v3 的 1800 回合，共 2760 回合、720 blocks。历史汇总分数不改写。
+修正后的[完整成绩](../result-archive/robotwin-if-attribute-v2-20blocks/README.md)已完成：六个 policies 重跑 Attribute 的 960 回合，其他五任务复用 cube-v3 的 1800 回合，共 2760 回合、720 blocks。历史汇总分数不改写。
 
 [`run_formal_policy_suite.py`](../tools/run_formal_policy_suite.py) 为新计划固定
 `target-only-lift-v2` 和 `lift_m=0.05`。旧版本或缺少版本标记的 Attribute-Select 成功/失败记录，
@@ -40,7 +40,7 @@ Attribute-Select 使用旧判据。原始视频、动作和计数保留，不能
 ## 验证入口
 
 两个用户指出的案例和一个正确抓取对照均完成原始动作回放，轻量证据保存在
-[`result/attribute-select-target-only-v2-review/`](../result/attribute-select-target-only-v2-review/README.md)。
+[`result-archive/attribute-select-target-only-v2-review/`](../result-archive/attribute-select-target-only-v2-review/README.md)。
 
 | Policy / seed | 错误物体首次越过 5 cm 的 action | 干扰物最高抬升 | 原始动作数 | 新判据 |
 |---|---:|---:|---:|---|

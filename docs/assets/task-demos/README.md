@@ -1,10 +1,11 @@
 # README 任务视频素材
 
 这六组视频用于介绍任务行为。Arm-Select 已换为 cube-v3 新评测中完成的左右臂回合；
-其余五组保留 [历史结果包](../../../result/if-ext-v2-six-tasks-20blocks/README.md)中的示例。
+其余五组保留 [历史结果包](../../../result-archive/if-ext-v2-six-tasks-20blocks/README.md)中的示例。
 每个画面选用一个在对应规则下标记成功的回合；视频选例不参与结果计算，导出过程没有重跑仿真或模型。
 Bottle-Verb 已完成 v6 重测；此处 Hy-VLA pick / shake 视频仍为旧判定演示，不作为 v6 成功证据。
-当前成绩见 [cube-v3 六任务结果包](../../../result/robotwin-if-cube-v3-20blocks/README.md)，评测与复用证据见[运行说明](../../arm-select-cube-v3-evaluation.md)。
+当前成绩见 [Arm-only-v2 六任务结果包](../../../result/robotwin-if-arm-only-v2-20blocks/README.md)。
+这里的 cube-v3 示例来源及评测复用证据见[当时的运行说明](../../arm-select-cube-v3-evaluation.md)。
 
 | Task | Policy | Seeds（按画面从左到右、从上到下） | 展示内容 | 存档播放倍速 |
 |---|---|---|---|---:|

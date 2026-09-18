@@ -4,7 +4,7 @@
 Grasp-Approach 已暂时下线，见 [归档说明](../bak/grasp_cube_approach/README.md)。
 当前使用 [RoboTwin-IF Arm-only-v2 taskset](../seed-manifests/robotwin-if-arm-only-v2-20-per-mode/README.md)，
 各 policy 460 回合，全套 **2760/2760 回合、720/720 blocks** 已于 2026-09-18 05:26 UTC 完成校验。
-Arm 按 target-arm-only-lift-v2 重跑 240 回合，其他五任务复用 [Attribute-v2](../result/robotwin-if-attribute-v2-20blocks/README.md) 的 2520 回合。
+Arm 按 target-arm-only-lift-v2 重跑 240 回合，其他五任务复用 [Attribute-v2](../result-archive/robotwin-if-attribute-v2-20blocks/README.md) 的 2520 回合。
 [最新结果](../result/robotwin-if-arm-only-v2-20blocks/README.md)及 [远端推理/并发调度记录](arm-select-target-only-v2-evaluation.md)已归档。
 正式 runner 的 `--release` 默认值已同步到该版本；旧清单实体见 [历史归档](../seed-manifests-archive/README.md)。
 [新的 pick 稳定保持判定](bottle-verb-pick-hold.md)下，prepare 会排除旧 Bottle-Verb 结果并保留原 seed 重测；该轮重测现已完成。

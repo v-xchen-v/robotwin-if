@@ -43,7 +43,7 @@
 
 ## 验证入口
 
-2026-09-18 已完成 **4/4 组真实仿真与 76 项 CPU 回归**，见[验证包](../result/arm-select-target-arm-only-v2-review/README.md)。
+2026-09-18 已完成 **4/4 组真实仿真与 76 项 CPU 回归**，见[验证包](../result-archive/arm-select-target-arm-only-v2-review/README.md)。
 两个方向均真实执行“错误臂拿起→放回→指定臂拿起”，最终仍失败；直接正确抓取的两个对照仍成功。
 4 组初始观测逐数组匹配旧 cube-v3 同 seed 的观测。
 
