@@ -1,0 +1,335 @@
+{
+  "diagnostic_only": true,
+  "complete": true,
+  "all_checks_passed": true,
+  "simulator_pci": "0000:af:00.0",
+  "task_config": "demo_clean_arm_select_v3",
+  "episodes": [
+    {
+      "seed": 500000,
+      "wrong_first": false,
+      "passed": true,
+      "phases": [
+        {
+          "phase": "initial",
+          "success": false,
+          "plan_success": true,
+          "signals": {
+            "arm": "left",
+            "arm_match": false,
+            "lifted": false,
+            "lift_delta": 0.0,
+            "dist_cmd_tcp": 0.41360152541433026,
+            "dist_other_tcp": 0.4290401895125192,
+            "checker_version": "target-arm-only-lift-v2",
+            "thresholds": {
+              "lift_m": 0.05,
+              "near_tcp_m": 0.2
+            },
+            "lifted_by": null,
+            "first_lifted_arm": null,
+            "wrong_arm_lifted_ever": false,
+            "first_wrong_arm_lift_action": null,
+            "target_arm_only_success": false
+          }
+        },
+        {
+          "phase": "target-arm-lift",
+          "success": true,
+          "plan_success": true,
+          "signals": {
+            "arm": "left",
+            "arm_match": true,
+            "lifted": true,
+            "lift_delta": 0.09824144840240479,
+            "dist_cmd_tcp": 0.13060954634803487,
+            "dist_other_tcp": 0.40265014436221747,
+            "checker_version": "target-arm-only-lift-v2",
+            "thresholds": {
+              "lift_m": 0.05,
+              "near_tcp_m": 0.2
+            },
+            "lifted_by": "left",
+            "first_lifted_arm": "left",
+            "wrong_arm_lifted_ever": false,
+            "first_wrong_arm_lift_action": null,
+            "target_arm_only_success": true
+          }
+        }
+      ],
+      "initial_matches_parent": true,
+      "target_arm": "left",
+      "old_end_state_success": true,
+      "new_success": true
+    },
+    {
+      "seed": 500000,
+      "wrong_first": true,
+      "passed": true,
+      "phases": [
+        {
+          "phase": "initial",
+          "success": false,
+          "plan_success": true,
+          "signals": {
+            "arm": "left",
+            "arm_match": false,
+            "lifted": false,
+            "lift_delta": 0.0,
+            "dist_cmd_tcp": 0.41360152541433026,
+            "dist_other_tcp": 0.4290401895125192,
+            "checker_version": "target-arm-only-lift-v2",
+            "thresholds": {
+              "lift_m": 0.05,
+              "near_tcp_m": 0.2
+            },
+            "lifted_by": null,
+            "first_lifted_arm": null,
+            "wrong_arm_lifted_ever": false,
+            "first_wrong_arm_lift_action": null,
+            "target_arm_only_success": false
+          }
+        },
+        {
+          "phase": "wrong-arm-lift",
+          "success": false,
+          "plan_success": true,
+          "signals": {
+            "arm": "left",
+            "arm_match": false,
+            "lifted": true,
+            "lift_delta": 0.09835034608840942,
+            "dist_cmd_tcp": 0.3826033885271554,
+            "dist_other_tcp": 0.13059582767802738,
+            "checker_version": "target-arm-only-lift-v2",
+            "thresholds": {
+              "lift_m": 0.05,
+              "near_tcp_m": 0.2
+            },
+            "lifted_by": "right",
+            "first_lifted_arm": "right",
+            "wrong_arm_lifted_ever": true,
+            "first_wrong_arm_lift_action": 0,
+            "target_arm_only_success": false
+          }
+        },
+        {
+          "phase": "put-down-and-retreat",
+          "success": false,
+          "plan_success": true,
+          "signals": {
+            "arm": "left",
+            "arm_match": false,
+            "lifted": false,
+            "lift_delta": 5.960464477539063e-08,
+            "dist_cmd_tcp": 0.4142144036119375,
+            "dist_other_tcp": 0.42851601441115905,
+            "checker_version": "target-arm-only-lift-v2",
+            "thresholds": {
+              "lift_m": 0.05,
+              "near_tcp_m": 0.2
+            },
+            "lifted_by": null,
+            "first_lifted_arm": "right",
+            "wrong_arm_lifted_ever": true,
+            "first_wrong_arm_lift_action": 0,
+            "target_arm_only_success": false
+          }
+        },
+        {
+          "phase": "target-arm-lift",
+          "success": false,
+          "plan_success": true,
+          "signals": {
+            "arm": "left",
+            "arm_match": true,
+            "lifted": true,
+            "lift_delta": 0.0983133316040039,
+            "dist_cmd_tcp": 0.13062161702078384,
+            "dist_other_tcp": 0.4019921473958737,
+            "checker_version": "target-arm-only-lift-v2",
+            "thresholds": {
+              "lift_m": 0.05,
+              "near_tcp_m": 0.2
+            },
+            "lifted_by": "left",
+            "first_lifted_arm": "right",
+            "wrong_arm_lifted_ever": true,
+            "first_wrong_arm_lift_action": 0,
+            "target_arm_only_success": false
+          }
+        }
+      ],
+      "initial_matches_parent": true,
+      "target_arm": "left",
+      "old_end_state_success": true,
+      "new_success": false
+    },
+    {
+      "seed": 500001,
+      "wrong_first": false,
+      "passed": true,
+      "phases": [
+        {
+          "phase": "initial",
+          "success": false,
+          "plan_success": true,
+          "signals": {
+            "arm": "right",
+            "arm_match": false,
+            "lifted": false,
+            "lift_delta": 0.0,
+            "dist_cmd_tcp": 0.4290401895125192,
+            "dist_other_tcp": 0.41360152541433026,
+            "checker_version": "target-arm-only-lift-v2",
+            "thresholds": {
+              "lift_m": 0.05,
+              "near_tcp_m": 0.2
+            },
+            "lifted_by": null,
+            "first_lifted_arm": null,
+            "wrong_arm_lifted_ever": false,
+            "first_wrong_arm_lift_action": null,
+            "target_arm_only_success": false
+          }
+        },
+        {
+          "phase": "target-arm-lift",
+          "success": true,
+          "plan_success": true,
+          "signals": {
+            "arm": "right",
+            "arm_match": true,
+            "lifted": true,
+            "lift_delta": 0.09834820032119751,
+            "dist_cmd_tcp": 0.1306146845941414,
+            "dist_other_tcp": 0.38250317147357604,
+            "checker_version": "target-arm-only-lift-v2",
+            "thresholds": {
+              "lift_m": 0.05,
+              "near_tcp_m": 0.2
+            },
+            "lifted_by": "right",
+            "first_lifted_arm": "right",
+            "wrong_arm_lifted_ever": false,
+            "first_wrong_arm_lift_action": null,
+            "target_arm_only_success": true
+          }
+        }
+      ],
+      "initial_matches_parent": true,
+      "target_arm": "right",
+      "old_end_state_success": true,
+      "new_success": true
+    },
+    {
+      "seed": 500001,
+      "wrong_first": true,
+      "passed": true,
+      "phases": [
+        {
+          "phase": "initial",
+          "success": false,
+          "plan_success": true,
+          "signals": {
+            "arm": "right",
+            "arm_match": false,
+            "lifted": false,
+            "lift_delta": 0.0,
+            "dist_cmd_tcp": 0.4290401895125192,
+            "dist_other_tcp": 0.41360152541433026,
+            "checker_version": "target-arm-only-lift-v2",
+            "thresholds": {
+              "lift_m": 0.05,
+              "near_tcp_m": 0.2
+            },
+            "lifted_by": null,
+            "first_lifted_arm": null,
+            "wrong_arm_lifted_ever": false,
+            "first_wrong_arm_lift_action": null,
+            "target_arm_only_success": false
+          }
+        },
+        {
+          "phase": "wrong-arm-lift",
+          "success": false,
+          "plan_success": true,
+          "signals": {
+            "arm": "right",
+            "arm_match": false,
+            "lifted": true,
+            "lift_delta": 0.09827631711959839,
+            "dist_cmd_tcp": 0.40265815291569174,
+            "dist_other_tcp": 0.1305982440022045,
+            "checker_version": "target-arm-only-lift-v2",
+            "thresholds": {
+              "lift_m": 0.05,
+              "near_tcp_m": 0.2
+            },
+            "lifted_by": "left",
+            "first_lifted_arm": "left",
+            "wrong_arm_lifted_ever": true,
+            "first_wrong_arm_lift_action": 0,
+            "target_arm_only_success": false
+          }
+        },
+        {
+          "phase": "put-down-and-retreat",
+          "success": false,
+          "plan_success": true,
+          "signals": {
+            "arm": "right",
+            "arm_match": false,
+            "lifted": false,
+            "lift_delta": 0.0,
+            "dist_cmd_tcp": 0.43187880010727714,
+            "dist_other_tcp": 0.4112778506399647,
+            "checker_version": "target-arm-only-lift-v2",
+            "thresholds": {
+              "lift_m": 0.05,
+              "near_tcp_m": 0.2
+            },
+            "lifted_by": null,
+            "first_lifted_arm": "left",
+            "wrong_arm_lifted_ever": true,
+            "first_wrong_arm_lift_action": 0,
+            "target_arm_only_success": false
+          }
+        },
+        {
+          "phase": "target-arm-lift",
+          "success": false,
+          "plan_success": true,
+          "signals": {
+            "arm": "right",
+            "arm_match": true,
+            "lifted": true,
+            "lift_delta": 0.09832632541656494,
+            "dist_cmd_tcp": 0.13064027619351593,
+            "dist_other_tcp": 0.38011769342573476,
+            "checker_version": "target-arm-only-lift-v2",
+            "thresholds": {
+              "lift_m": 0.05,
+              "near_tcp_m": 0.2
+            },
+            "lifted_by": "right",
+            "first_lifted_arm": "left",
+            "wrong_arm_lifted_ever": true,
+            "first_wrong_arm_lift_action": 0,
+            "target_arm_only_success": false
+          }
+        }
+      ],
+      "initial_matches_parent": true,
+      "target_arm": "right",
+      "old_end_state_success": true,
+      "new_success": false
+    }
+  ],
+  "sources_sha256": {
+    "tasks/envs/arm_select.py": "baf6f8c10a660f82293ce82f6ddfbe0e776f88461d986430a9916f4fc0bc3480",
+    "tasks/envs/_if_grounding.py": "c9110198824b605aec8ea876ad50570c3c54c7212463eab821217e4277486ac7",
+    "tasks/task_config/demo_clean_arm_select_v3.yml": "b45833e1a638042c6fe6e3bc4394697a1c77769fd512364bcf4f1fa773065974",
+    "tests/arm_select/verify_target_arm_only.py": "166dea972bff20fa3eb228a9183c2737c4f5ab658deaa16d7530270d63c2d50d"
+  }
+}

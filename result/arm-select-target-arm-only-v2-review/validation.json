@@ -1,0 +1,99 @@
+{
+  "diagnostic_only": true,
+  "complete": true,
+  "all_checks_passed": true,
+  "verified_at": "2026-09-18T02:05:04.240248+00:00",
+  "raw_directory": "/Data/robotwin-if/evaluations/arm-select-target-arm-only-v2-review-001",
+  "current_sources_match_simulation": true,
+  "physics_history_verified": true,
+  "video_frame_counts_verified": true,
+  "initial_observations_match_parent": true,
+  "episodes": [
+    {
+      "case": "500000-target-only",
+      "physics_steps": 1170,
+      "video_frames": 38,
+      "first_wrong_physics_step": null,
+      "files_sha256": {
+        "500000-target-only/initial.npz": "a0b1f00df5b84a185dc12ac05dc38074ba9cecaebbafa03a2cf8ce6c3840652e",
+        "500000-target-only/initial.png": "cc29463351eea4b70b3f697dbc250f91f9e41abde855f51320ea7e5e8c777f33",
+        "500000-target-only/phases.json": "0a4b1b1ddc2ede8336130630259c70ccaab1cc5ce8c8dd839c5a61518fbc5ba2",
+        "500000-target-only/physics-trace.json": "e91b1348f61c2f27a07fb59baeddc2b612441ab4eaf50e99e6e171284e45fb6c",
+        "500000-target-only/result.json": "f9ec448430aa0a12419e5de3e27481caf7edeb6fba7ba2214c839c85737a9381",
+        "500000-target-only/rollout.mp4": "ae2811a06a1c6bbe3830b0c181d46a7a440202d25cbc739d3d2d3997b5121a7a",
+        "500000-target-only/target-arm-lift.png": "bbf9d82f0b2b6742c1cc84f7bd3215e0d6c86ea17579a761226f54ff2d09c36e"
+      }
+    },
+    {
+      "case": "500000-wrong-then-target",
+      "physics_steps": 3579,
+      "video_frames": 115,
+      "first_wrong_physics_step": 1098,
+      "files_sha256": {
+        "500000-wrong-then-target/initial.npz": "a0b1f00df5b84a185dc12ac05dc38074ba9cecaebbafa03a2cf8ce6c3840652e",
+        "500000-wrong-then-target/initial.png": "cc29463351eea4b70b3f697dbc250f91f9e41abde855f51320ea7e5e8c777f33",
+        "500000-wrong-then-target/phases.json": "eb8dfa6be171fbf3e4fd206771746c189565c951b92ea7be5f01d1211959eb8d",
+        "500000-wrong-then-target/physics-trace.json": "3f9cb345d09cc6d953fd158fff7b2411d577ad822e187d4c222dbbac3024d441",
+        "500000-wrong-then-target/put-down-and-retreat.png": "7a29f278fcb16f2392b3b64074b8598b79bc93db44434ca12b8a107b05b8a2c5",
+        "500000-wrong-then-target/result.json": "3d4dc1ab71e1747d95157bbd9ee3b786860b348c7d308ad19ac03ef1a9eaec13",
+        "500000-wrong-then-target/rollout.mp4": "b8931ea9253a9af4c4f7c5235d775818a780dc0822385ca7274c805b5abb1294",
+        "500000-wrong-then-target/target-arm-lift.png": "625d58ce18e3ea608343d43bb156e4305d47d8e9e984306615590cf4f0e12329",
+        "500000-wrong-then-target/wrong-arm-lift.png": "cc6548595b3baa7568c594d6e9abdd9d97be28b8fd98204afb97f5150c3f0d93"
+      }
+    },
+    {
+      "case": "500001-target-only",
+      "physics_steps": 1183,
+      "video_frames": 38,
+      "first_wrong_physics_step": null,
+      "files_sha256": {
+        "500001-target-only/initial.npz": "a0b1f00df5b84a185dc12ac05dc38074ba9cecaebbafa03a2cf8ce6c3840652e",
+        "500001-target-only/initial.png": "cc29463351eea4b70b3f697dbc250f91f9e41abde855f51320ea7e5e8c777f33",
+        "500001-target-only/phases.json": "21ebec575e8738d0218a439c8f049eb0a8d7c2341f457e7313eabc50f47e140d",
+        "500001-target-only/physics-trace.json": "b5eedccac2117e0d9a684630f68486d111a613ae73e015546b7872ccb801967e",
+        "500001-target-only/result.json": "390e7ef407ba7232d5f33738997a1f0917395096bc0c977993464b41635b3239",
+        "500001-target-only/rollout.mp4": "c65dc1b2a79e522a517f36a69dfc5b7c1d501ee13817aa9d01ad7649e691f8e7",
+        "500001-target-only/target-arm-lift.png": "6f0456f237082ae1492a1932b25c95ff85793e6ad7aec2973d578cc5cf61dbf5"
+      }
+    },
+    {
+      "case": "500001-wrong-then-target",
+      "physics_steps": 3581,
+      "video_frames": 115,
+      "first_wrong_physics_step": 1086,
+      "files_sha256": {
+        "500001-wrong-then-target/initial.npz": "a0b1f00df5b84a185dc12ac05dc38074ba9cecaebbafa03a2cf8ce6c3840652e",
+        "500001-wrong-then-target/initial.png": "cc29463351eea4b70b3f697dbc250f91f9e41abde855f51320ea7e5e8c777f33",
+        "500001-wrong-then-target/phases.json": "599a6e8942d270b3bf0b1aea6c2d31d0d107bca900aaf23fd9fabb21549dc8b9",
+        "500001-wrong-then-target/physics-trace.json": "9c9cf24dfd0b05329388b5a55fe7a6c9cc5b8df7f6daf3bd2adfbd2351f0383f",
+        "500001-wrong-then-target/put-down-and-retreat.png": "877fc3e5ad0e7c725196fece00fd7cb5400bd2474f9e95ea01f63d9966ccfacc",
+        "500001-wrong-then-target/result.json": "896d42a6f525f3e670121160cc06b04ad36dc69cdec5e0fadb5739b5c81aa3be",
+        "500001-wrong-then-target/rollout.mp4": "ec684f23fe8650f68e25c5732ba9fbab55cf3651775a33d55cfa1d3a0a678a3f",
+        "500001-wrong-then-target/target-arm-lift.png": "58d344166c3036105e7f0b367628588364354d74fa98657a12a727e2ffe8df31",
+        "500001-wrong-then-target/wrong-arm-lift.png": "70b0252889adb4fed1c5804ad98549824f5cc18b5e1de4c4cd9bce3b6bf7f294"
+      }
+    }
+  ],
+  "cpu_tests": [
+    {
+      "command": "python -m unittest discover -s tests/arm_select -p 'test_*.py' -v",
+      "passed": 17
+    },
+    {
+      "command": "python -m unittest discover -s tests -p 'test_formal*.py' -v",
+      "passed": 25
+    },
+    {
+      "command": "python -m unittest discover -s tests -p test_attribute_select_success.py -v",
+      "passed": 9
+    },
+    {
+      "command": "python -m unittest discover -s tests -p test_evaluation_setup.py -v",
+      "passed": 9
+    },
+    {
+      "command": "python -m unittest discover -s tests -p test_eval_step_limits.py -v",
+      "passed": 16
+    }
+  ]
+}

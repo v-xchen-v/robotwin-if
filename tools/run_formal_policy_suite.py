@@ -100,13 +100,17 @@ def current_success_checker(task):
     """Pin new plans to the checker actually used by the current task source."""
     from dataclasses import asdict
     from tasks.envs._if_bottle_verb import PickHoldMonitor, PickHoldRules
-    from tasks.envs._if_grounding import AttributePickMonitor
+    from tasks.envs._if_grounding import ArmPickMonitor, AttributePickMonitor
     if task == 'bottle_verb':
         return dict(success_checker_version=PickHoldMonitor.VERSION,
                     success_checker_parameters=asdict(PickHoldRules()))
     if task == 'attribute_select':
         return dict(success_checker_version=AttributePickMonitor.VERSION,
                     success_checker_parameters={'lift_m': AttributePickMonitor.LIFT_THRESH})
+    if task == 'arm_select':
+        return dict(success_checker_version=ArmPickMonitor.VERSION,
+                    success_checker_parameters={'lift_m': ArmPickMonitor.LIFT_THRESH,
+                                                'near_tcp_m': ArmPickMonitor.NEAR_TCP})
     return dict(success_checker_version=None, success_checker_parameters=None)
 
 

@@ -80,6 +80,28 @@ class FormalReuseTest(unittest.TestCase):
             suite.write(direct / name, {})
         self.assertEqual(suite.prior_metadata_directory(self.base, 'xvla', 'bottle_verb'), direct)
 
+    def test_arm_history_contract_excludes_legacy_successes_and_failures(self):
+        spec = dict(task='arm_select', **suite.current_success_checker('arm_select'))
+        self.assertEqual(spec['success_checker_version'], 'target-arm-only-lift-v2')
+        self.assertEqual(spec['success_checker_parameters'], {'lift_m': .05, 'near_tcp_m': .20})
+        rows = []
+        source = self.base / 'arm-source'
+        for seed, success in ((500000, True), (500001, False), (500002, True)):
+            signals = dict(lifted=success, arm_match=success)
+            if seed == 500002:
+                signals.update(checker_version=spec['success_checker_version'],
+                               thresholds=spec['success_checker_parameters'])
+            suite.write(source / f'arm_select_ep{seed}_result.json',
+                        dict(success=success, signals=signals))
+            rows.append(dict(policy='xvla', task='arm_select', seed=seed,
+                             source_directory=str(source)))
+        accepted, excluded = suite.compatible_reuse([spec], rows)
+        self.assertEqual([r['seed'] for r in accepted], [500002])
+        self.assertEqual([r['seed'] for r in excluded], [500000, 500001])
+        for thresholds in ({'lift_m': .02, 'near_tcp_m': .20}, {'lift_m': .05, 'near_tcp_m': .30}):
+            self.assertFalse(suite.matches_success_checker(spec, dict(signals=dict(
+                checker_version=spec['success_checker_version'], thresholds=thresholds))))
+        self.assertTrue(suite.matches_success_checker(dict(task='arm_select'), {}))
 
     def test_same_checker_version_with_changed_thresholds_is_not_reused(self):
         spec = dict(self.spec, success_checker_version='relative-lift-hold-v3',

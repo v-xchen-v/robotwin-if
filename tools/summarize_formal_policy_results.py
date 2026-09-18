@@ -223,6 +223,8 @@ def generate(data, output):
         legend.insert(0, 'Spatial 当前仅统计 left/right/on_top；front/back 的历史回合保留但排除计分。这是评测后的范围调整，不代表模型性能提升。')
     if attribute_v2:
         legend.insert(0, 'Attribute 使用 target-only-lift-v2：目标当前抬升超过 5 cm，且干扰物整回合从未超过该阈值；先抓错再抓对仍失败。')
+    if data.get('success_checkers', {}).get('arm_select') == 'target-arm-only-lift-v2':
+        legend.insert(0, 'Arm 使用 target-arm-only-lift-v2：指定臂当前抬升超过 5 cm，且非指定臂整回合从未完成该抬升；先错后对仍失败。')
     if data['excluded_tasks']:
         legend.insert(0, '当前范围排除已下线任务：' + ', '.join(data['excluded_tasks']) + '；原始七任务结果未改写。')
     if replacement := data.get('checkpoint_replacement'):

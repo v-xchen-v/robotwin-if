@@ -1,5 +1,6 @@
 from ._base_task import Base_Task
 from ._if_eval import apply_if_eval_step_limit
+from ._if_grounding import ArmPickMonitor
 from .utils import *
 from ._GLOBAL_CONFIGS import *
 import sapien
@@ -30,10 +31,10 @@ class arm_select(Base_Task):
     version requires its own config and qualified seed manifest.
 
     Success is STATE-BASED (invariant 3): policy eval cannot trust the oracle's
-    ArmTag, so we infer the executing arm from the end state -- the box must be
-    lifted AND end near the COMMANDED arm's TCP (and strictly nearer it than the
-    idle arm's TCP). An oracle that grasps with the wrong arm therefore fails even
-    though the box is lifted (Layer-B counter-example).
+    ArmTag, so we infer the executing arm from the physical state -- the box
+    must be lifted AND near the COMMANDED arm's TCP (and strictly nearer it than
+    the other arm's TCP). Every physics step records wrong-arm lifts: using the
+    wrong arm first cannot be repaired by later using the commanded arm.
     """
 
     # Reused handover_block box: tall block, both arms proven to grasp it.
@@ -68,12 +69,12 @@ class arm_select(Base_Task):
     LIFT_Z = 0.1
 
     # Success thresholds (state-based).
-    LIFT_THRESH = 0.05              # box center must rise at least this much (m)
+    LIFT_THRESH = ArmPickMonitor.LIFT_THRESH  # box center must rise strictly above this (m)
     # The "long" box is tall: a side grasp holds it near the top, so even a clean
     # grasp leaves the box CENTER ~0.14m from the TCP (measured). NEAR_TCP just
     # rules out "no arm holds it" (box knocked away / idle arm at origin ~0.56m);
     # the real arm-identity signal is d_cmd < d_other, which has a huge margin.
-    NEAR_TCP = 0.20                 # box must end within this of the commanded TCP
+    NEAR_TCP = ArmPickMonitor.NEAR_TCP
 
     # IF wiring: mode derives from the SEED so one collection run yields BOTH arms
     # with a pixel-identical paired scene. ARM_OVERRIDE forces one arm for the
@@ -85,6 +86,8 @@ class arm_select(Base_Task):
     ORACLE_ARM = None
 
     def setup_demo(self, **kwags):
+        self._detach_pick_observer()
+        self._pick_monitor = None
         # Capture the seed so mode/scene derive purely from it (IF wiring).
         self._seed = kwags.get("seed", 0)
         self.scene_version = kwags.pop("arm_select_scene_version", "fixed-v1")
@@ -101,6 +104,38 @@ class arm_select(Base_Task):
         # Capture the settled initial height for both oracle and policy paths.
         self._init_box_z = float(self.box.get_pose().p[2])
         self.info["arm_select_scene"] = dict(self._scene_spec)
+        self._pick_monitor = ArmPickMonitor(self.mode, self.LIFT_THRESH, self.NEAR_TCP)
+        self._attach_pick_observer()
+
+    def _observe_pick(self):
+        if self._pick_monitor is not None:
+            _, _, lift_delta, d_cmd, d_other = self._compute_signals()
+            self._pick_monitor.observe(lift_delta, d_cmd, d_other,
+                                       getattr(self, "take_action_cnt", 0))
+
+    def _attach_pick_observer(self):
+        scene = self.scene
+        original_step = scene.step
+
+        def observed_step():
+            result = original_step()
+            self._observe_pick()
+            return result
+
+        self._pick_observer = (scene, original_step, observed_step)
+        scene.step = observed_step
+
+    def _detach_pick_observer(self):
+        observer = getattr(self, "_pick_observer", None)
+        if observer is not None:
+            scene, original_step, observed_step = observer
+            if scene.step is observed_step:
+                scene.step = original_step
+            self._pick_observer = None
+
+    def close_env(self, clear_cache=False):
+        self._detach_pick_observer()
+        return super().close_env(clear_cache=clear_cache)
 
     @classmethod
     def scene_pose(cls, scene_seed, version):
@@ -150,7 +185,7 @@ class arm_select(Base_Task):
         self._init_box_z = None
 
     def play_once(self):
-        self._init_box_z = float(self.box.get_pose().p[2])
+        # Keep the settled setup baseline and any earlier wrong-arm history.
         # The commanded arm -- NOT geometry-derived. This is the whole point of
         # the task: the instruction word decides the arm.
         arm_tag = ArmTag(self.mode)
@@ -180,10 +215,7 @@ class arm_select(Base_Task):
             "{A}": "the block",
             "{a}": str(arm_tag),
         }
-        self.info["signals"] = {
-            "arm_match": sig["arm_match"],
-            "lifted": sig["lifted"],
-        }
+        self.info["signals"] = sig
         return self.info
 
     def _tcp_xyz(self, arm_tag):
@@ -211,23 +243,12 @@ class arm_select(Base_Task):
         return lifted, arm_match, lift_delta, d_cmd, d_other
 
     def eval_signals(self):
-        """Split/directional metric for policy eval: report arm_match (the IF
-        signal) and lifted (execution) separately, plus the distances -- NOT the
-        AND. Collection still gates on both via check_success."""
-        lifted, arm_match, lift_delta, d_cmd, d_other = self._compute_signals()
-        return {
-            "arm": self.mode,
-            "arm_match": bool(arm_match),
-            "lifted": bool(lifted),
-            "lift_delta": lift_delta,
-            "dist_cmd_tcp": d_cmd,
-            "dist_other_tcp": d_other,
-        }
+        """Report current execution signals and irreversible wrong-arm history."""
+        self._observe_pick()
+        return self._pick_monitor.signals()
 
     def check_success(self):
-        # Strict AND: a *collectable demo* must use the commanded arm AND lift the
-        # box. Eval should prefer eval_signals() (split metric).
-        if self._init_box_z is None:
+        if self._pick_monitor is None:
             return False
-        lifted, arm_match, _, _, _ = self._compute_signals()
-        return bool(lifted and arm_match)
+        self._observe_pick()
+        return bool(self._pick_monitor.success)

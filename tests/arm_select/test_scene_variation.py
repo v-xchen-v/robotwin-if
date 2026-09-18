@@ -11,6 +11,7 @@ import unittest
 from unittest.mock import patch
 
 import numpy as np
+from tasks.envs._if_grounding import ArmPickMonitor
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -22,6 +23,7 @@ class Pose:
 
 class Base:
     def _init_task_env_(self, **kwargs):
+        self.scene = SimpleNamespace(step=lambda: None)
         self.info = {}
         self.load_actors()
 
@@ -33,6 +35,7 @@ source = ROOT / "tasks/envs/arm_select.py"
 tree = ast.parse(source.read_text())
 tree.body = [node for node in tree.body if isinstance(node, ast.ClassDef)]
 namespace = {"Base_Task": Base, "np": np, "sapien": SimpleNamespace(Pose=Pose),
+             "ArmPickMonitor": ArmPickMonitor,
              "create_box": lambda **kw: SimpleNamespace(get_pose=lambda: kw["pose"]),
              "apply_if_eval_step_limit": lambda env: None}
 exec(compile(tree, str(source), "exec"), namespace)
