@@ -99,22 +99,13 @@ Overall 仅在该 policy 六任务全部完成后显示，按六个 Task Avg. �
 如需还原原七任务统计，显式传 `--include-archived-tasks`；报告会标明七任务范围，分母恢复为 3,240/840/42。
 新旧范围的 Overall 不直接比较；源 summary 与已发布的 `result/` 文件均不改写。
 
-## 历史版本与归档
+## 冻结运行与调度器维护
 
-- 宽范围 grasp v2：x=[0,8] cm、y=[-8.5,-3.5] cm；12-block release 按三个 x 分层
-  各选四个完整 blocks，20-block release 的分层数量为 7/7/6。旧窄范围结果仍需配套旧场景源码。
-- VLAct All：`StarVLA/VLAct_Qwen3OFT_Robotwin_all_Finetune`，revision
-  `999b37d4d7c1bd0f5588f78d72a185f6f052bf83`。2026-09-12 的七任务重跑替换旧 Clean 50K
-  模型结果；20-block 扩展沿用 All checkpoint。
-- 早期窄范围 12-block 套件复用了 276 条结果；两个已改场景任务的 48 条旧结果未复用。
-  宽范围迁移、VLAct 替换和 20-block 扩展各自在对应运行目录保留 provenance。
-- 历史加速阶段使用过多机分片、双 sim 与远端模型服务，双队列还有 80/72°C 暂停降温逻辑。
-  两台主机曾测出 RGB 差异，因此历史任务的 sim 主机不能任意互换。
-  双队列在 2026-09-14 因降温等待超时停止后恢复，全部结果最终于 2026-09-15 完成。
+已完成的运行目录保留其源码/config 快照。当前源码发生变化后，原冻结运行的源码哈希检查
+仍会拒绝直接续跑；应使用原快照复现，或为新运行准备新的配置和源码哈希，不能绕过校验。
 
-历史部署与代码保存在正式运行的 `support/source-snapshot/`、
-`deployment/dual-queues-20blocks-001/code/` 和
-`deployment/dual-queues-20blocks-001/recovery-20260914T080009/`。
-本次清理前的完整相关源码及未提交 diff 另存于
-`/Data/robotwin-if/evaluations/refactor-source-backup-20260915T065847Z/`。
-历史工具仅用于还原旧运行，不再作为当前仓库的运行入口。
+远端调度与 Hy-VLA 双实例入口见 [Arm 重评说明](arm-select-target-only-v2-evaluation.md)。
+旧单机 Attribute 双路入口已移除；共享的进程身份、模型显存预算、父场景和源码检查位于
+`tools/remote_eval_support.py`，由现有远端/分片调度器使用。
+`support/parallel-source-hashes.json` 保留原元数据文件名；新运行需要记录新的 helper 与控制器源码哈希。
+历史部署流水账及旧调度器保存在 Git 历史 `833d496`，不作为当前运行入口。

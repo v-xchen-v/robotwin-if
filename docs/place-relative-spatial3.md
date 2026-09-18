@@ -45,8 +45,8 @@ Back 总计 **0/120**；Front 总计 **2/120**；此次移除 **240 回合：2 �
 
 ## 代码、seed 与复用契约
 
-当前任务 `ORDER/PHRASES` 仅包含三个方向；旧任务实现和几何 helper 在
-[bak/place_relative-five-modes](../bak/place_relative-five-modes/README.md)。
+当前任务 `ORDER/PHRASES` 仅包含三个方向；旧实现与几何 helper 仅保留在 Git 历史 `833d496`。
+[排除回合证据](../bak/place_relative-five-modes/README.md)继续保留供核对评测范围。
 保留当前 left/right/on_top 的几何、物体采样、指令模板和 success 判定阈值。
 
 ```text

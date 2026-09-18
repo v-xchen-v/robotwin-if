@@ -1,12 +1,7 @@
-# Arm-Select cube-v3：输入、处理与输出
+# Arm-Select cube-v3：场景与资格验证
 
-2026-09-18 补充：[新成功判据](../arm-select-target-arm-only.md) 会记录整回合的错误手臂抬升，
-先错后对仍失败。下文是 2026-09-16 的场景改动与旧判据验证记录，已发布 policy 成绩尚未按新判据重跑。
-
-核对日期：2026-09-16。范围：任务环境、配对语言、oracle 预检与历史结果备份。
-父仓库基线 `9db9463d0659d0ba13470403a9b529387e297a55`；RoboTwin 检出及 gitlink
-均为 `b82ffb81d291d14c24be444bb7b6f81719481e0f`，存在本地桥接及配置修改。
-环境源码由 RoboTwin 中的链接加载到本仓库；本次没有重置这些已有修改。
+当前正式场景采用 5 cm cube，成功规则为 [target-arm-only-v2](../arm-select-target-arm-only.md)。
+六个 policies 的 240 个 Arm 回合已完成重跑，见[当前结果](../../result/robotwin-if-arm-only-v2-20blocks/README.md)。
 
 ## 目的与实现
 
@@ -43,65 +38,18 @@ v3 必须显式选择新配置，旧 manifest 与新配置不匹配时 evaluator
 Cube-v3 已纳入[新的六任务 taskset](../../seed-manifests/robotwin-if-arm-only-v2-20-per-mode/README.md)，
 六个 policies 的独立重跑与五任务复用见[合并评测说明](../arm-select-target-only-v2-evaluation.md)。
 
-## 输出与数据流
+## 资格验证与边界
 
-| 输出 | 路径/消费者 | 条件与证据状态 |
-|---|---|---|
-| 场景元数据 | `env.info['arm_select_scene']`，包含位姿、分区、尺寸、boxtype | 源码定义；不进入 instruction placeholders |
-| 分离信号 | `eval_signals()` 的 `arm_match` / `lifted` / 相对高度 / 两臂距离 | 供 evaluator 记录；`check_success` 还要求错误臂整回合从未完成抬升 |
-| 备份 | [`bak/arm_select-long-v2-20260916`](../../bak/arm_select-long-v2-20260916/README.md) | 保留源码；本机原始视频/动作备份不变，旧发布包与清单仅保留在 Git 历史中 |
-| 探索原始证据 | `outputs/policy-eval/arm-select-cube-v3-probe-00N/`、`arm-select-cube-v3-validation-001/`、`arm-select-cube-v3-20blocks-001/` | 本次运行：源码快照、哈希、GPU/阶段日志、每回合初始 NPZ 和初末 PNG |
-| 验证结论 | 上述目录的 `episodes.json` / `blocks.json` / `report.json` | 失败也保留；`complete=true` 表示跑完，`all_checks_passed=true` 才表示全通过 |
-| qualified manifest | 上述目录的 `arm_select.json` | 仅在候选双臂、配对一致性、复测、错误手臂反例及启用的边界检查全部通过后写出 |
-| 当前清单与证据 | [20-block 清单](../../seed-manifests/robotwin-if-arm-only-v2-20-per-mode/README.md) / [发布溯源](../release-provenance.md) | 旧 oracle 开发/验证材料通过固定 Git commit 追溯；新运行逐回合检查 oracle |
+当前 20 个场景使用固定 seeds `500000–500039`。发布前完成左右臂可执行性、配对
+RGB/位姿/指令、复测和错误手臂反例检查；先错后对的当前判据另有[真实仿真验证](../arm-select-target-arm-only.md)。
+`env.info['arm_select_scene']` 记录采样元数据；`eval_signals()` 记录当前抬升、手臂归属和整回合错误历史。
+这些诊断字段不进入语言指令。
 
-```mermaid
-flowchart LR
-    I[seed + cube-v3 配置] --> S[setup_demo / scene_pose]
-    S -->|同场景配对 + 不同指令| E[oracle 或 policy rollout]
-    E -->|物体高度与两臂 TCP| V[arm_match + lifted]
-    S -->|三路 RGB 与位姿| P[配对 / 复现 / 边界检查]
-    V --> P
-    P -->|全部通过| M[独立 manifest 与报告]
-```
+![最终双臂可用范围与探索中的失败角落](../assets/task-demos/arm_select_cube_v3_workspace.png)
 
-## 验证结果与边界
-
-- 第一轮 `probe-001` 保留 v2 的 x ±2 cm、y 10–12 cm、yaw ±3°：24 次 cube 抓取
-  全部规划失败。原始失败与当时源码保留，未替换 seeds。
-- 第二轮 `probe-002` 移到前侧中央，x ±4 cm、y −8 至 −4 cm、yaw ±15°：
-  24/24 随机场景抓取、6/6 复测、6/6 错误手臂反例通过，但边界只有 23/26 通过。
-  x=+4 cm、y=−4 cm 的左臂在三个 yaw 下均抬升规划失败，因此该范围未获 manifest。
-- 第三轮 `probe-003` 保持原先 12 个 blocks（seeds 300000–300023），把 y 上界收紧到 −6 cm。
-  再次检查 4 个 xy 角点 × 3 个 yaw（−15°/0°/+15°）和中心点，每点左右臂各执行一次。
-  另用 `validation-001` 的 seeds 400000–400023 检查未参与上述范围调整的 12 个新场景。
-  两轮分别 **64/64、38/38 检查通过**，supervisor 均正常退出。源码和配置哈希与当前交付一致。
-- `20blocks-001` 使用另行预先固定的 seeds 500000–500039，与上述两批无重叠。
-  **20/20 blocks、54/54 检查回合通过**，未替换候选 seed；x 左/中/右分区各 6/7/7 个场景。
-  六个 policy evaluator 均能加载该清单并选择完整 20 blocks；逐项记录见清单目录的 `verification.json`。
-
-| 检查 | 开发集 probe-003 | 独立 validation-001 | 20blocks-001 |
-|---|---:|---:|---:|
-| 正确手臂随机场景抓取 | 24/24 | 24/24 | 40/40 |
-| 正确手臂复测 | 6/6 | 6/6 | 6/6 |
-| 错误手臂抬起但判失败 | 6/6 | 6/6 | 6/6 |
-| xy 角点 × yaw 极值/零值及中心，左右臂各一次 | 26/26 | — | — |
-| fixed-v1 历史回归 | 2/2 | 2/2 | 2/2 |
-| 配对三路 RGB / 位姿 / 句式完全一致 | 12/12 blocks | 12/12 blocks | 20/20 blocks |
-
-三批合计 44 个不同初始场景，复测图像也完全重现。独立验证集实际抬升约 9.8–10.2 cm，
-指定 TCP 距离最大约 13.1 cm，另一臂距离最小约 36.9 cm；当前 20 cm TCP 阈值保留充足区分。
-
-![较宽范围的失败角落与最终双臂可用范围；箭头显示采样 yaw](../assets/task-demos/arm_select_cube_v3_workspace.png)
-
-- CPU 检查：arm_select 10 项、共享 setup 9 项、step-limit 16 项通过。
-  覆盖配对位姿/语言、跨场景变化、版本 reset 隔离、无 oracle 的 policy 成功与错误手臂拒绝。
-- 更广的 `test_if_policy_evaluation` 中，六个 policy 的旧 place_relative v1 manifest
-  包含已下线模式，产生 6 个子用例错误；用备份的改动前 evaluator 复现相同错误。
-  此问题与本次 arm_select 修改无关。
-- 旧 fixed-v1 / jitter-v2 采样器与备份源码逐值比较，两个版本各 10,000 个 scene seeds 完全相同。
-- 有限样本和边界测试不能证明整个连续空间必然可达；正式 evaluator 仍逐 seed 做 oracle qualification。
-  上述结果为 oracle 验证，不能当成 policy 改善幅度；策略结果由后续独立重跑产生。
+资格证据通过[发布溯源](../release-provenance.md)读取固定 Git 提交；
+有限样本不保证整个连续空间均可达，正式 evaluator 仍在每个 seed 上执行 oracle qualification。
+场景开发过程、旧长柱源码和逐次探测日志仅保留在 Git 历史 `833d496` 中。
 
 ## 最小调用
 
@@ -112,23 +60,17 @@ flowchart LR
 ln -s "$(pwd)/tasks/task_config/demo_clean_arm_select_v3.yml" third_party/robotwin/task_config/demo_clean_arm_select_v3.yml
 ```
 
-本次第三轮命令（输出目录必须不存在）：
+需要为场景修改重新做串行 oracle 预检时，使用保留的工具（输出目录必须不存在）：
 
 ```bash
-/home/xichen6/miniconda3/envs/RoboTwin/bin/python tools/probe_arm_select_variation.py \
+python tools/probe_arm_select_variation.py \
   --scene-version cube-v3 --blocks 12 --seed-start 300000 --check-boundaries \
-  --sim-gpu 0 --output outputs/policy-eval/arm-select-cube-v3-probe-003
+  --sim-gpu 0 --output outputs/policy-eval/arm-select-cube-v3-probe-new
 ```
 
-独立验证也已执行：同一命令改用 `--seed-start 400000`、`--sim-gpu 1`，省略
-`--check-boundaries`，输出到 `outputs/policy-eval/arm-select-cube-v3-validation-001`。
-
-20-block 清单生成也已执行：改用 `--blocks 20 --seed-start 500000 --sim-gpu 0`，省略
-`--check-boundaries`，输出到 `outputs/policy-eval/arm-select-cube-v3-20blocks-001`。
-
-预检默认还对 fixed-v1 的两个历史回合逐像素核对三路初始 RGB，默认参考位置是
-`outputs/policy-eval/if-seven-tasks-2blocks-001`；参考归档不在此处时用 `--reference PATH`。
-脚本需要本地 GPU，无模型 server；现有输出目录直接拒绝覆盖。
+这项开发检查需要 GPU 和 fixed-v1 参考观测；参考目录通过 `--reference PATH` 指定，
+默认是 `outputs/policy-eval/if-seven-tasks-2blocks-001`。普通新评测直接使用下面的正式清单，
+不需要历史探测产物，也不应重选 seeds。
 
 六个 policy evaluator 均可使用已生成的清单，模型连接参数沿各 policy README：
 

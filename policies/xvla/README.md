@@ -62,7 +62,7 @@ python -m deploy \
 | IF `arm_select` / left | 100000 | 成功，抬升与手臂匹配均通过 | 101 |
 | IF `arm_select` / right | 100001 | 达到动作上限；抬升与手臂匹配均未通过 | 400 |
 
-IF 首个完整 block 共 2 个 episodes，结果为 1/2，无跳过或补抽。左右 episode 的三路初始 RGB 与 proprio 完全一致。两项初始接入 gate 已有成功 episode；右臂失败作为策略结果保留，完整 benchmark 尚未运行。已将运行证据按 CogACT 的 episode 格式整理到 `outputs/policy-eval/raw-smoke-001/xvla/click_bell/` 和 `outputs/policy-eval/smoke-blocks1/xvla/arm_select/`；这是已有结果的离线转换，没有重跑推理。
+IF 首个完整 block 共 2 个 episodes，结果为 1/2，无跳过或补抽。左右 episode 的三路初始 RGB 与 proprio 完全一致。两项初始接入 gate 已有成功 episode；右臂失败作为策略结果保留，当前完整 benchmark 已完成，见[正式成绩](../../result/robotwin-if-arm-only-v2-20blocks/README.md)。已将运行证据按 CogACT 的 episode 格式整理到 `outputs/policy-eval/raw-smoke-001/xvla/click_bell/` 和 `outputs/policy-eval/smoke-blocks1/xvla/arm_select/`；这是已有结果的离线转换，没有重跑推理。
 
 后续可以扩大固定 seed 覆盖，或单独诊断右臂失败；当前三次 rollout 只支持初次集成结论，不能估计 benchmark 成功率。
 

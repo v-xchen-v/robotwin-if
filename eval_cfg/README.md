@@ -13,7 +13,7 @@
 
 `eval_cfg/all_tasks_plus_if.yml` is a compatibility list for callers that want one loop over the locked RoboTwin native 50 followed by the maintained IF six. Its final six entries must exactly equal `if_tasks.yml`; `tests/test_task_manifests.py` enforces this relationship.
 
-`grasp_cube_approach` was retired on 2026-09-15 and moved to [bak/](../bak/grasp_cube_approach/README.md). It is excluded from generation, installation, evaluation and current Overall scores. Historical seven-task results remain archived.
+`grasp_cube_approach` was retired on 2026-09-15; [retirement notes](../bak/grasp_cube_approach/README.md) remain while its implementation is kept in Git history. It is excluded from generation, installation, evaluation and current Overall scores. Historical seven-task results remain archived.
 
 ## Membership and readiness
 

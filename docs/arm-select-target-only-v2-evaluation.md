@@ -50,16 +50,14 @@ GPU 1 另外做前 8 个 seeds 的新判据初始化预检。
 
 ## Hy-VLA 双实例分片
 
-2026-09-18 04:37 UTC 按用户要求增加第二份 Hy-VLA 模型和 simulator。
-切换时已有 200/240 个新回合完成，其中 Hy-VLA 为 9/40、DM05 为 31/40。
-两个现有 worker 都先完成当前回合并停在下一个回合开始前；随后替换调度器，
-模型服务保留。没有中断正在执行的回合，也没有重跑已完成的成功或失败结果。
+本次运行已完成；以下保留独立模型实例与 simulator 分片的执行契约。
+切换分片前先让原 worker 完成当前回合并停止领取新回合，完成的成功和失败均不重跑。
 
 新入口为 [`run_sharded_remote_suite.py`](../tools/run_sharded_remote_suite.py)：
 
-- 原 Hy-VLA 使用 03 GPU 2 推理、04 GPU 1 仿真，分配剩余 15 个 seeds。
-- 新 Hy-VLA 使用 03 GPU 3 推理、04 GPU 0 仿真，分配剩余 16 个 seeds。
-- DM05 保留其余 9 个 seeds，在结束前与新 Hy-VLA 共用 04 GPU 0。
+- 原 Hy-VLA 使用 03 GPU 2 推理、04 GPU 1 仿真。
+- 第二个 Hy-VLA 使用 03 GPU 3 推理、04 GPU 0 仿真。
+- 当时的 DM05 worker 与第二个 Hy-VLA 共用 04 GPU 0，仍受 GPU 准入限制。
 - 两份 Hy-VLA 使用独立服务端口和客户端历史。按原 manifest 的 block 分组，
   两组 seed 不重叠；已完成半个 block 的剩余回合只分给一个 worker。
 - 保留完整原 manifest 的哈希、全局 block 编号、checker、动作预算和推理参数。
@@ -70,3 +68,8 @@ GPU 1 另外做前 8 个 seeds 的新判据初始化预检。
 原 provenance 哈希、独立模型服务记录及新工作流。`plan.json` 记录此次调度变更，
 每个分片回合另有 `_execution_shard.json`，可追溯 seed 所属实例。
 新工作流在所有分片完成后继续调用原有校验、打包和 README 更新工具。
+
+共享实现位于 [`remote_eval_support.py`](../tools/remote_eval_support.py)，保留 PID 身份核对、
+显存预算、源码冻结和父场景检查。原 Attribute 单机双路 scheduler 已移除。
+当前控制器与历史源码快照的哈希不同；新调度使用新配置和相应源码哈希，
+历史冻结运行须使用原快照，不能绕过版本检查直接续跑。

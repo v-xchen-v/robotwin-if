@@ -318,48 +318,5 @@
       }
     }
   ],
-  "historical_examples": [
-    {
-      "task": "arm_select",
-      "policy": "dm05",
-      "playback_speed": 1,
-      "mp4": "arm_select.mp4",
-      "gif": "arm_select.gif",
-      "duration_seconds": 9.6,
-      "episodes": [
-        {
-          "policy": "dm05",
-          "seed": 200010,
-          "mode": "left",
-          "instruction": "Employ the left arm to lift the block.",
-          "record": "dm05/arm_select/arm_select_ep200010_result.json",
-          "record_sha256": "609c69fbbdf4aaf77f948a3ab77c0f07ba9c2a511a68766a2f844178418d6099",
-          "source_video": "dm05/arm_select/arm_select_ep200010_1.mp4",
-          "source_video_sha256": "a120f6cbc7c62a896de82a758e8b75158541fa9ba3b7be28ff78798e898de341",
-          "source_duration_seconds": 7.9,
-          "label": "LEFT ARM"
-        },
-        {
-          "policy": "dm05",
-          "seed": 200011,
-          "mode": "right",
-          "instruction": "Employ the right arm to lift the block.",
-          "record": "dm05/arm_select/arm_select_ep200011_result.json",
-          "record_sha256": "35f38d71b669909aeb7b7712784a624ef6781ce359556c5b2ece7b29916951fd",
-          "source_video": "dm05/arm_select/arm_select_ep200011_1.mp4",
-          "source_video_sha256": "67164d542aba386585261fa53327f7f57f1059dc4adcdfb3fac52c89e4c6167f",
-          "source_duration_seconds": 8.1,
-          "label": "RIGHT ARM"
-        }
-      ],
-      "sha256": {
-        "arm_select.mp4": "879030f07fa08aa1e0416c00f88ed6a55b14d26e5740243e02c2f279a100459a",
-        "arm_select.gif": "ad34fd9fc2256d8552071d60a7be8a3fd9ddd70e6d92a7ad1c88a79dda31055b"
-      },
-      "source_run": "if-seven-tasks-v2-wide-20blocks-001",
-      "source_results": "https://github.com/v-xchen-v/robotwin-if/blob/2670a13f53f6e3f1cc2e6f0fdae558782cb88d7d/result-archive/if-ext-v2-six-tasks-20blocks/episodes.csv",
-      "task_config": "demo_clean_arm_select_v2"
-    }
-  ],
-  "source_overrides": "source_run and source_results are defaults for historical entries; per-task fields override them. historical_examples retain superseded task illustrations."
+  "source_overrides": "source_run and source_results are defaults; per-task fields override them."
 }

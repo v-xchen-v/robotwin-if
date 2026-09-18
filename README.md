@@ -11,7 +11,7 @@
 | Sequence | [`stack_sequence`](#stack-sequence) | 六种 bottom-to-top 顺序 |
 | Spatial-Direction | [`place_relative`](#place-relative) | left / right / on top |
 
-Grasp-Approach 已于 2026-09-15 暂时下线；实现、配置、测试和 probe 归档到 [`bak/grasp_cube_approach/`](bak/grasp_cube_approach/README.md)。当前默认生成、安装与评测均只包含以上六项。
+Grasp-Approach 已于 2026-09-15 暂时下线；旧实现仅保留在 Git 历史中，见[下线说明](bak/grasp_cube_approach/README.md)。当前默认生成、安装与评测均只包含以上六项。
 
 唯一正式维护的 IF inventory 是 [`eval_cfg/if_tasks.yml`](eval_cfg/if_tasks.yml)。其他 env/JSON 可以为历史或实验目的留在仓库中，但只要没有列入该文件，就不属于 active suite。Manifest membership 与 production readiness 分开管理：例如 `pick_diverse_object` 属于上述六项，其已锁定的四类 Unseen production pool 仍由独立测试 gate 持续约束。
 
@@ -105,7 +105,7 @@ Spatial 的 Top 表示 on_top。每个 policy 的每项任务均已完成 20/20 
 
 ### Arm cube-v3 — `arm_select`
 
-本表使用 5 cm cube；场景平移、旋转与配对验证见 [cube-v3 环境说明](docs/recon/arm-select-cube-v3.md)。旧长柱代码和 240 回合结果已[备份](bak/arm_select-long-v2-20260916/README.md)。
+本表使用 5 cm cube；场景平移、旋转与配对验证见 [cube-v3 环境说明](docs/recon/arm-select-cube-v3.md)。旧长柱材料只保留在 Git 历史中。
 
 | Policy | Left | Right | Avg. (%) |
 |---|---:|---:|---:|
@@ -209,7 +209,7 @@ pick 跑满 700 个动作后判定：允许拿起后平移，末尾保持抬升�
 
 [![Arm-Select cube-v3：同一方块分别由指定的左臂和右臂抓起](docs/assets/task-demos/arm_select_cube_v3.gif)](docs/assets/task-demos/arm_select_cube_v3.mp4)
 
-[观看 MP4](docs/assets/task-demos/arm_select_cube_v3.mp4) · 示例 policy：LingBot-VA · seeds 500000/500001 · [旧 v2 演示](docs/assets/task-demos/arm_select.mp4)。
+[观看 MP4](docs/assets/task-demos/arm_select_cube_v3.mp4) · 示例 policy：LingBot-VA · seeds 500000/500001。
 
 <a id="stack-sequence"></a>
 
@@ -347,31 +347,18 @@ done
 
 ### 4. Policy 评测
 
-以下为初次接入时的 smoke 验证记录，Arm-Select 使用当时的长柱环境。
-当前 Attribute-v2 的六个 policies、20-block 正式成绩见[评测结果](#policy-results)。
-
-本仓库维护的策略入口见 [`policies/README.md`](policies/README.md)。X-VLA 环境安装命令为 `bash policies/xvla/setup_env.sh`，服务启动与最小评测命令见其 [README](policies/xvla/README.md)。初次闭环验证已完成：raw `click_bell` 1/1 成功，IF `arm_select` 的一个完整左右臂 block 为 1/2（左成功、右达到动作上限），结果属于 smoke 验证。每个策略先验证一个 raw RoboTwin task，再验证一个 IF task。
-
-第二个策略 [LingBot-VA](policies/lingbot_va/README.md) 也已完成同一验证顺序：raw `click_bell` 1/1，IF `arm_select` 的完整左右臂 block 为 2/2。使用 `bash policies/lingbot_va/setup_env.sh` 安装独立环境；checkpoint 下载、服务和评测命令见该策略 README。两种策略均采用统一的 episode 输出格式；这些结果只用于初次接入验证。
-
-[LingBot-VLA 4B](policies/lingbot_vla/README.md) 的 `robbyant/lingbot-vla-4b-posttrain-robotwin` 接入位于 `policies/lingbot_vla/`，使用独立环境和 WebSocket 端口 8012，输出 14D 绝对关节动作。真实 checkpoint 的 raw `click_bell` 1/1 成功；IF `arm_select` 完整左右臂 block 为 0/2，均达到动作上限，IF 成功验收尚未通过。安装、下载、启动及验证证据见该策略 README。
-
-[VLAct Qwen3OFT](policies/vlact/README.md) 的 `StarVLA/VLAct_Qwen3OFT_Robotwin_Finetune` 接入位于 `policies/vlact/`，使用独立环境 `robotwin-if-vlact` 和 WebSocket 端口 8013。输入三路 RGB 与指令，按训练配置 `robotwin_wrap_32` 解码并重排 32 步、14D 绝对关节动作。真实 checkpoint 的 raw `click_bell` 1/1 成功；IF `arm_select` 完整左右臂 block 为 1/2（左达到动作上限、右成功）。安装、下载、启动和验证证据见该策略 README。
-
-[DM05](policies/dm05/README.md) 的 `Dexmal/DM05-robotwin2` 接入位于 `policies/dm05/`，使用独立环境 `/Data/robotwin-if/envs/robotwin-if-dm05` 和 HTTP 端口 8014。输入三路 RGB、实测关节状态与指令，输出 50 步、14D 绝对关节动作。真实 checkpoint 的 raw `click_bell` 1/1 成功；IF `arm_select` 完整左右臂 block 为 2/2。安装、下载、启动、上游 CUDA Graph 回退说明和验证证据见该策略 README。
-
-[Hy-VLA](policies/hy_vla/README.md) 的 `tencent/Hy-Embodied-0.5-VLA-RoboTwin` 接入位于 `policies/hy_vla/`，使用独立环境 `/Data/robotwin-if/envs/robotwin-if-hy-vla` 和 WebSocket 端口 8015。输入三路 RGB、六帧历史、实测末端状态与指令，按官方相对/绝对动作混合解码得到 20 步、16D 末端目标，每 7 步重规划。真实 checkpoint 的 raw `click_bell` 1/1 成功；IF `arm_select` 完整左右臂 block 为 0/2，均达到 400 步上限，IF 成功验收尚未通过。安装、下载、启动和验证证据见该策略 README。
-
-RoboTwin 没有统一的顶层 eval 命令；每个 policy 使用自己的 `eval.sh`，参数签名也可能不同。常见入口为：
+六个开源策略的安装、权重与服务入口见 [`policies/`](policies/README.md)。
+当前 Arm-only-v2 六任务正式成绩见[评测结果](#policy-results)。
+先在独立终端启动所选模型，再在 RoboTwin 环境执行统一入口：
 
 ```bash
-cd third_party/robotwin/policy/<PolicyName>
-bash eval.sh <task_name> demo_randomized <ckpt_setting> <expert_data_num> <seed> <gpu_id>
+bash scripts/eval.sh --policy hy_vla --sim-gpu 0 --model-gpu 1 \
+  --output-dir outputs/policy-eval/hy-vla-new
 ```
 
-- 把 `task_name` 换成 task inventory 中任一新增任务即可完成 runtime 加载；checkpoint 必须具备相应行为 repertoire，结果才有诊断意义。
-- 各 policy 的 `deploy_policy.yml` 通常以 `instruction_type: unseen` 做正式 IF 评测；`seen` 只用于 sanity check。
-- 原生 eval 会跳过 oracle-invalid candidate seeds，适合 smoke test，但不能保证每个 mode denominator 均衡。
+默认按正式清单完成每任务 20 blocks；使用 `--dry-run` 查看命令，
+或用 `--task arm_select --blocks 2` 先验证完整配对场景。
+外部 evaluator 的接入、seed/mode 格式和输出契约见[交付说明](docs/branch-delivery.md)。
 
 六项 task 在 eval mode 使用集中维护的 policy-action budget（collect 不受影响）：
 
@@ -384,7 +371,7 @@ bash eval.sh <task_name> demo_randomized <ckpt_setting> <expert_data_num> <seed>
 | `stack_sequence` | 1200 | `stack_blocks_three` |
 | `place_relative` | 400 | `place_a2b_left` |
 
-Mapping 位于 `tasks/envs/_if_eval.py`，task 在 `_init_task_env_` 返回后覆盖 eval limit，因此不修改 upstream config。Locked Base_Task 对未知 task 可能先打印 fallback-to-1000 提示，但 policy rollout 实际读取的是随后覆盖的固定值。现有 oracle trajectory 最大 recorded frames（按表中 task 顺序）为 255/103/89/89/479/163，只能支持相对复杂度判断；`step_lim` 统计 policy action calls，仍需在后续 CogACT rollout 中监测是否有 episode 撞到 limit。
+Mapping 位于 `tasks/envs/_if_eval.py`，task 在 `_init_task_env_` 返回后覆盖 eval limit，因此不修改 upstream config。Locked Base_Task 对未知 task 可能先打印 fallback-to-1000 提示，但 policy rollout 实际读取的是随后覆盖的固定值。`step_lim` 统计 policy action calls；Bottle pick 在完整预算执行结束后判定，其他任务保留各自的终止协议。
 
 正式 IF 结果不能任意跳过单个 seed。应先按 task 的完整 balance block 验证并固化 seed manifest，再让所有 policy 重放同一批 episodes。这里的 block 不一定是同一物理场景：`attribute_select` 的 8-seed block 包含四个 same-scene pair，`pick_diverse_object` 的 seen/unseen block 则是两个独立 familiarity scenes。具体 contract 见 [`eval_cfg/README.md`](eval_cfg/README.md)。
 
@@ -449,7 +436,7 @@ eval_cfg/               canonical IF 六项与 native 50 + IF 六项 task invent
 scripts/                thin shell entrypoints + stdlib ownership installer
 tests/                  inventory、seed pipeline、routing 与 success invariants
 tools/                  seed generator/validator、probe、report 与可视化工具
-bak/                    暂时下线任务的源码、配置与专用材料
+bak/                    下线说明与 Spatial 范围调整证据
 docs/                   设计及逐任务实现记录
 notes/                  实验、评审与集成证据
 third_party/robotwin/    锁定的 RoboTwin 2.0 submodule

@@ -1,7 +1,7 @@
 # README 任务视频素材
 
 这六组视频用于介绍任务行为。Arm-Select 已换为 cube-v3 新评测中完成的左右臂回合；
-其余五组保留 历史运行中的示例。
+其余五组保留历史运行中的示例。
 每个画面选用一个在对应规则下标记成功的回合；视频选例不参与结果计算，导出过程没有重跑仿真或模型。
 Bottle-Verb 已完成 v6 重测；此处 Hy-VLA pick / shake 视频仍为旧判定演示，不作为 v6 成功证据。
 当前成绩见 [Arm-only-v2 六任务结果包](../../../result/robotwin-if-arm-only-v2-20blocks/README.md)。
@@ -19,7 +19,7 @@ Bottle-Verb 已完成 v6 重测；此处 Hy-VLA pick / shake 视频仍为旧判�
 Bottle-Verb、Arm-Select、Stack-Sequence 和 Place-Relative 各自的两个例子来自同一个 block。
 Noun-Grounding 的 seen/unseen 是两个独立场景；Attribute-Select 展示同一个 block 中四个不同属性的场景，未展示全部八个 modes。
 
-旧 Arm-Select v2 的 [MP4](arm_select.mp4) / [GIF](arm_select.gif) 原样保留，来源移入 `sources.json` 的 `historical_examples`。
+已替换的 Arm 长柱演示及其来源索引仅保留在 Git 历史中。
 新的 cube-v3 示例来自 LingBot-VA：左/右回合分别在第 82/84 次动作后成功，记录的方块抬升均超过 5 cm，且指定臂匹配。
 
 Noun-Grounding 的 Seen 示例已从 Hy-VLA seed 100052（coffee box）替换为 DM05 seed 100014（mug）。
