@@ -90,17 +90,6 @@ class SparseSpatialTest(unittest.TestCase):
         self.assertFalse(hasattr(task,'initialized'))
         task.DIRECTION=None;task.setup_demo(seed=4);self.assertTrue(task.initialized)
 
-    def test_scene_sampling_code_is_identical_to_archived_implementation(self):
-        def actors(path):
-            tree=ast.parse(path.read_text())
-            cls=next(n for n in tree.body if isinstance(n,ast.ClassDef))
-            method=next(n for n in cls.body if isinstance(n,ast.FunctionDef) and n.name=='load_actors')
-            # The one intentional difference is direction lookup; all RNG/poses/objects stay identical.
-            method.body=[n for n in method.body if not (isinstance(n,ast.Assign) and
-                isinstance(n.targets[0],ast.Attribute) and n.targets[0].attr=='direction')]
-            return ast.dump(method,include_attributes=False)
-        self.assertEqual(actors(ROOT/'tasks/envs/place_relative.py'),actors(ROOT/'bak/place_relative-five-modes/envs/place_relative.py'))
-
     def test_current_frozen_result_has_only_active_modes_and_independent_counts(self):
         def read_csv(path):
             with path.open(newline='') as f:return list(csv.DictReader(f))

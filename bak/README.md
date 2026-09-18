@@ -1,6 +1,9 @@
-# 暂时下线任务
+# 历史说明与范围调整证据
 
-- [grasp_cube_approach](grasp_cube_approach/README.md)：2026-09-15 暂时下线，保留实现与专用材料供后续改进。
-- [arm_select 长柱 v1/v2](arm_select-long-v2-20260916/README.md)：2026-09-16 在探索 cube-v3 前备份任务和 240 回合结果；旧版本仍可通过原配置复现。
+本目录不含可运行的旧任务副本，也不属于当前 task inventory。
 
-本目录不属于 active task inventory，也不参与默认安装、seed 生成或评测。
+- [Grasp-Approach 下线说明](grasp_cube_approach/README.md)
+- [Arm 长柱历史说明](arm_select-long-v2-20260916/README.md)
+- [Spatial 排除回合证据](place_relative-five-modes/README.md)：保留评测范围调整的逐回合来源与哈希。
+
+旧代码、测试、配置和试验文档可从 Git 历史 `833d496` 恢复。

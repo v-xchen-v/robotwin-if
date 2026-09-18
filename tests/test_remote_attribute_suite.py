@@ -46,8 +46,8 @@ class RemoteAttributeTests(unittest.TestCase):
             remote.formal.write(base / 'support/vlact-service.json', dict(pid=123, start_ticks='old'))
             cfg = dict(remote=dict(base=tmp), lanes=[dict(model_gpu='assigned')])
             with patch.object(remote, 'gpu_rows', return_value=[dict(uuid='assigned', temperature=90)]), \
-                 patch.object(remote.parallel, 'proc_identity', return_value=dict(start_ticks='new')), \
-                 patch.object(remote.parallel, 'stop_process') as stop:
+                 patch.object(remote.support, 'proc_identity', return_value=dict(start_ticks='new')), \
+                 patch.object(remote.support, 'stop_process') as stop:
                 self.assertTrue(remote.service(cfg, 'stop', 0, 'vlact', '')['stopped'])
                 stop.assert_not_called()
 

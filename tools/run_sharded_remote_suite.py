@@ -22,7 +22,7 @@ import traceback
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from tools import run_formal_policy_suite as formal
-from tools import run_parallel_attribute_suite as parallel
+from tools import remote_eval_support as support
 from tools import run_remote_attribute_suite as remote
 
 
@@ -67,7 +67,7 @@ def load_config(path):
     for name, sha in formal.read(path.parent / 'source-hashes.json').items():
         assert formal.digest(ROOT / name) == sha, ('Shard deployment changed', name)
     base = Path(cfg['run_dir'])
-    parallel.check_sources(base)
+    support.check_sources(base)
     for slot in cfg['slots']:
         path = Path(slot['config'])
         assert formal.digest(path) == slot['config_sha256']
@@ -148,7 +148,7 @@ def run(cfg, config_path):
 
     def launch(job):
         slot = job['slot']
-        parallel.check_sources(base)
+        support.check_sources(base)
         formal.check_oracle_budget(base, slot['policy'], spec)
         batch = base / 'batches' / f"{session}-{slot['id']}-{job['attempt']:03d}" / slot['policy']
         batch.mkdir(parents=True, exist_ok=False)

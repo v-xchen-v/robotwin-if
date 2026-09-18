@@ -1,4 +1,4 @@
-"""Resource admission and live-process identity checks for two-policy execution."""
+"""Process ownership and parent-scene guards shared by remote schedulers."""
 import subprocess
 from pathlib import Path
 import tempfile
@@ -8,46 +8,17 @@ from unittest.mock import patch
 
 import numpy as np
 
-from tools import run_parallel_attribute_suite as parallel
+from tools import remote_eval_support as support
 
 
-class ParallelAttributeTests(unittest.TestCase):
-    def setUp(self):
-        self.gpus = [[0, 6000, 49140, 78, 70], [1, 4100, 49140, 65, 20]]
-        self.available = 30 * 1024**3
-
-    def test_second_model_has_room_with_existing_xvla(self):
-        self.assertTrue(parallel.admission('lingbot_va', ['xvla'], self.gpus, self.available))
-
-    def test_never_admit_a_third_server_or_duplicate_policy(self):
-        self.assertFalse(parallel.admission('vlact', ['xvla', 'lingbot_va'], self.gpus, self.available))
-        self.assertFalse(parallel.admission('xvla', ['xvla'], self.gpus, self.available))
-
-    def test_largest_models_do_not_share_reserved_memory(self):
-        self.gpus[1][1] = 33854
-        self.assertFalse(parallel.admission('dm05', ['lingbot_va'], self.gpus, self.available))
-        self.assertTrue(parallel.admission('lingbot_vla', ['lingbot_va'], self.gpus, self.available))
-
-    def test_real_pressure_can_override_expected_model_peak(self):
-        self.gpus[1][1] = 44000
-        self.assertFalse(parallel.admission('xvla', [], self.gpus, self.available))
-        self.gpus[1][1] = 4100
-        self.gpus[0][1] = parallel.SIM_ADMISSION_MIB
-        self.assertFalse(parallel.admission('xvla', [], self.gpus, self.available))
-
-    def test_temperature_and_host_memory_block_new_loads(self):
-        self.gpus[0][3] = parallel.PAUSE_TEMPERATURE
-        self.assertFalse(parallel.admission('lingbot_va', ['xvla'], self.gpus, self.available))
-        self.gpus[0][3] = 78
-        self.assertFalse(parallel.admission('lingbot_va', ['xvla'], self.gpus, 11 * 1024**3))
-
+class ProcessOwnershipTests(unittest.TestCase):
     def test_adoption_verifies_process_identity_without_interrupting_it(self):
         proc = subprocess.Popen(['sleep', '10'], start_new_session=True)
-        self.addCleanup(lambda: parallel.formal.stop(proc))
-        identity = parallel.proc_identity(proc.pid)
+        self.addCleanup(lambda: support.formal.stop(proc))
+        identity = support.proc_identity(proc.pid)
         with self.assertRaises(AssertionError):
-            parallel.AdoptedProcess(proc.pid, 'wrong-start-time')
-        adopted = parallel.AdoptedProcess(proc.pid, identity['start_ticks'])
+            support.AdoptedProcess(proc.pid, 'wrong-start-time')
+        adopted = support.AdoptedProcess(proc.pid, identity['start_ticks'])
         self.assertIsNone(adopted.poll())
         self.assertIsNone(proc.poll())
         proc.terminate()
@@ -56,13 +27,13 @@ class ParallelAttributeTests(unittest.TestCase):
 
     def test_changed_pid_is_treated_as_exited(self):
         identity = dict(pid=123, start_ticks='original')
-        with patch.object(parallel, 'proc_identity', return_value=identity), \
-             patch.object(parallel.os, 'getpgid', return_value=123):
-            process = parallel.AdoptedProcess(123, 'original')
-        with patch.object(parallel, 'proc_identity', return_value=dict(pid=123, start_ticks='different')):
+        with patch.object(support, 'proc_identity', return_value=identity), \
+             patch.object(support.os, 'getpgid', return_value=123):
+            process = support.AdoptedProcess(123, 'original')
+        with patch.object(support, 'proc_identity', return_value=dict(pid=123, start_ticks='different')):
             self.assertEqual(process.poll(), 0)
-            with patch.object(parallel.formal, 'stop') as stop:
-                parallel.stop_process(process)
+            with patch.object(support.formal, 'stop') as stop:
+                support.stop_process(process)
                 stop.assert_not_called()
 
 
@@ -82,23 +53,23 @@ class ParentSceneTests(unittest.TestCase):
         np.savez(initial, proprio=self.state, **{name: self.obs['observation'][name]['rgb'] for name in cameras})
         record = self.directory / (self.stem + '_result.json')
         # Deliberately an old success without the new checker contract.
-        parallel.formal.write(record, dict(instruction='pick blue', step_limit=400, success=True))
-        parallel.formal.write(self.directory / (self.stem + '_provenance.json'),
-                              dict(files_sha256={p.name: parallel.formal.digest(p) for p in (record, initial)}))
-        parallel.formal.write(self.base / 'plan.json', dict(old_run=str(self.parent)))
+        support.formal.write(record, dict(instruction='pick blue', step_limit=400, success=True))
+        support.formal.write(self.directory / (self.stem + '_provenance.json'),
+                              dict(files_sha256={p.name: support.formal.digest(p) for p in (record, initial)}))
+        support.formal.write(self.base / 'plan.json', dict(old_run=str(self.parent)))
         self.patch = patch('policies.xvla.client.encode_proprio', return_value=self.state)
         self.patch.start()
         self.addCleanup(self.patch.stop)
 
     def check(self):
-        parallel.check_parent_scene(self.base, 'lingbot_va',
-            dict(success_checker_version='target-only-lift-v2'), 100001,
+        support.check_parent_scene(self.base, 'lingbot_va',
+            dict(task='attribute_select', success_checker_version='target-only-lift-v2'), 100001,
             'pick blue', self.obs, SimpleNamespace(step_lim=400),
             lambda suffix: self.base / (self.stem + suffix))
 
     def test_parent_scene_is_available_without_new_xvla_verdict(self):
         self.check()
-        evidence = parallel.formal.read(self.base / (self.stem + '_same_host_scene.json'))
+        evidence = support.formal.read(self.base / (self.stem + '_same_host_scene.json'))
         self.assertFalse(evidence['reference_verdict_reused'])
         self.assertTrue(evidence['exact_rgb'])
         self.assertEqual(evidence['reference_policy'], 'xvla')
@@ -112,19 +83,19 @@ class ParentSceneTests(unittest.TestCase):
         np.savez(initial, proprio=self.state, **{
             name: self.obs['observation'][name]['rgb'] for name in self.obs['observation']})
         record = directory / (stem + '_result.json')
-        parallel.formal.write(record, dict(instruction='use right arm', step_limit=400))
-        parallel.formal.write(directory / (stem + '_provenance.json'), dict(
-            files_sha256={p.name: parallel.formal.digest(p) for p in (record, initial)}))
+        support.formal.write(record, dict(instruction='use right arm', step_limit=400))
+        support.formal.write(directory / (stem + '_provenance.json'), dict(
+            files_sha256={p.name: support.formal.digest(p) for p in (record, initial)}))
         args = (self.base, 'lingbot_va', dict(task='arm_select',
                 success_checker_version='target-arm-only-lift-v2'), 500001,
                 'use right arm', self.obs, SimpleNamespace(step_lim=400),
                 lambda suffix: self.base / (stem + suffix))
-        parallel.check_parent_scene(*args)
-        evidence = parallel.formal.read(self.base / (stem + '_same_host_scene.json'))
+        support.check_parent_scene(*args)
+        evidence = support.formal.read(self.base / (stem + '_same_host_scene.json'))
         self.assertEqual(evidence['reference'], str(directory / stem))
         self.obs['observation']['head_camera']['rgb'][0, 0, 0] = 1
         with self.assertRaises(AssertionError):
-            parallel.check_parent_scene(*args)
+            support.check_parent_scene(*args)
 
     def test_policy_specific_sixteen_dimensional_npz_is_not_the_scene_reference(self):
         policy_directory = self.parent / 'lingbot_va/attribute_select'

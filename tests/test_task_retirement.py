@@ -35,7 +35,6 @@ class RetirementTest(unittest.TestCase):
         self.assertEqual(len(manifest['seeds']), 40)
         self.assertNotIn(manifest['task'], IF_SEED_CONTRACTS)
         self.assertFalse((ROOT / 'tasks/envs/grasp_cube_approach.py').exists())
-        self.assertTrue((ROOT / 'bak/grasp_cube_approach/tasks/envs/grasp_cube_approach.py').is_file())
 
     def test_formal_runs_require_full_current_inventory(self):
         specs = [dict(task=t) for t in IF_SEED_CONTRACTS]

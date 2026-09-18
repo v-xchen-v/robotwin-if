@@ -22,7 +22,7 @@ import traceback
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from tools import run_formal_policy_suite as formal
-from tools import run_parallel_attribute_suite as parallel
+from tools import remote_eval_support as support
 
 def task_name(cfg):
     task = cfg.get('task', 'attribute_select')
@@ -99,11 +99,11 @@ def model_gpu(cfg, lane_index, policy):
 
 
 def model_admitted(cfg, policy, active, row):
-    reserve = sum(parallel.MODEL_MIB[p] for p in active + [policy])
+    reserve = sum(support.MODEL_MIB[p] for p in active + [policy])
     shared = row['uuid'] in cfg.get('shared_model_gpus', [])
     return (policy not in active and len(active) < 2
-            and reserve <= parallel.MODEL_ADMISSION_MIB
-            and row['used'] + parallel.MODEL_MIB[policy] <= parallel.MODEL_ADMISSION_MIB
+            and reserve <= support.MODEL_ADMISSION_MIB
+            and row['used'] + support.MODEL_MIB[policy] <= support.MODEL_ADMISSION_MIB
             and row['temperature'] < 83
             and (bool(active) or shared or (row['used'] < 2048 and row['utilization'] < 10)))
 
@@ -157,7 +157,7 @@ def load_config(path, remote=False):
     validate_lanes(cfg)
     assert formal.digest(Path(__file__)) == cfg['controller_sha256'], 'Controller changed'
     if not remote:
-        parallel.check_sources(Path(cfg['run_dir']))
+        support.check_sources(Path(cfg['run_dir']))
     else:
         for name, sha in cfg['remote_sources'].items():
             assert formal.digest(ROOT / name) == sha, ('Remote source changed', name)
@@ -194,19 +194,19 @@ def service_locked(cfg, action, lane_index, policy, session):
         selected_gpu(rows, assigned_gpu)
     path = base / 'support' / (policy + '-service.json')
     state = formal.read(path) if path.exists() else None
-    identity = parallel.proc_identity(state['pid']) if state else None
+    identity = support.proc_identity(state['pid']) if state else None
     running = bool(identity and identity['start_ticks'] == state['start_ticks'])
     if running:
         assert state['policy'] == policy and state['gpu'] == assigned_gpu
     if action == 'stop':
         if running:
-            parallel.stop_process(parallel.AdoptedProcess(state['pid'], state['start_ticks']))
+            support.stop_process(support.AdoptedProcess(state['pid'], state['start_ticks']))
         return dict(stopped=True, state=state)
     if action == 'start' and not running:
         active = []
         for marker in (base / 'support').glob('*-service.json'):
             other = formal.read(marker)
-            live = parallel.proc_identity(other['pid'])
+            live = support.proc_identity(other['pid'])
             if (live and live['start_ticks'] == other['start_ticks']
                     and other['gpu'] == assigned_gpu):
                 active.append(other['policy'])
@@ -230,7 +230,7 @@ def service_locked(cfg, action, lane_index, policy, session):
         with log.open('x') as stream:
             process = subprocess.Popen(command, cwd=cfg['remote_cwds'][policy], env=env,
                 stdin=subprocess.DEVNULL, stdout=stream, stderr=subprocess.STDOUT, start_new_session=True)
-        identity = parallel.proc_identity(process.pid)
+        identity = support.proc_identity(process.pid)
         assert identity
         state = dict(policy=policy, pid=process.pid, start_ticks=identity['start_ticks'], argv=command,
                      gpu=assigned_gpu, port=port, output=str(out), log=str(log), started=time.time(), session=session)
@@ -278,7 +278,7 @@ def worker(cfg, lane_index, policy, output):
 
     def checked_setup(env, config, args, seed, split, record, path):
         instruction, obs = setup(env, config, args, seed, split, record, path)
-        parallel.check_parent_scene(base, policy, spec, seed, instruction, obs, env, path)
+        support.check_parent_scene(base, policy, spec, seed, instruction, obs, env, path)
         formal.write(path('_execution_host.json'), dict(sim_host=socket.gethostname(), sim_gpu=lane['sim_gpu'],
             model_host=cfg['remote']['host'], model_gpu=model_gpu(cfg, lane_index, policy), transport='SSH loopback forward',
             controller_sha256=cfg['controller_sha256'], action_cooling=cfg.get('action_cooling')))
@@ -326,7 +326,7 @@ def scene_probe(cfg, lane_index, output):
         try:
             record = dict(mode=describe_seed(task, seed).mode)
             instruction, obs = setup_episode(env, config, args, seed, 'unseen', record, path)
-            parallel.check_parent_scene(base, 'xvla', spec, seed, instruction, obs, env, path)
+            support.check_parent_scene(base, 'xvla', spec, seed, instruction, obs, env, path)
             rows.append(dict(seed=seed, exact_rgb=True, state_atol=1e-6, instruction_equal=True))
             formal.write(output / 'progress.json', rows)
             print('SCENE_MATCH', seed, flush=True)
@@ -367,7 +367,7 @@ def run(cfg, config_path):
     def launch_worker(job):
         policy, index = job['policy'], job['lane']
         formal.check_oracle_budget(base, policy, spec)
-        parallel.check_sources(base)
+        support.check_sources(base)
         batch = base / 'batches' / f"{session}-lane{index}-{job['attempt']:03d}" / policy
         output, log = batch / task, batch / (task + '-launch.log')
         batch.mkdir(parents=True, exist_ok=True)
