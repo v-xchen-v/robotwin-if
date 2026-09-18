@@ -1,0 +1,23 @@
+{
+  "seed-manifests/robotwin-if-cube-v3-20-per-mode/suite.yml": "f009999b83a4cc2e83bc048466de90c5e5bfe8bc1d9661f32112df865626e3bc",
+  "seed-manifests/robotwin-if-cube-v3-20-per-mode/qualification-files.json": "6256d31f807fe4779cb8bcf5b977ad28c098f6e240c25984398a1735c001ded2",
+  "seed-manifests/robotwin-if-cube-v3-20-per-mode/bottle_verb.json": "8b709174d715181b5a08f70af3adfbed06d7da338814014b61c62566f238a231",
+  "seed-manifests/robotwin-if-cube-v3-20-per-mode/pick_diverse_object.json": "2c5cc9d5162062fe598f46be0244be5399b102b65cc92ef74a95c45916e9ed79",
+  "seed-manifests/robotwin-if-cube-v3-20-per-mode/attribute_select.json": "03bb5beb48737996acc856aad219d7cefcd095de4af56f9ff4323999b90d1043",
+  "seed-manifests/robotwin-if-cube-v3-20-per-mode/arm_select.json": "334b5ab9a6f908dd603694f23a441aab1bbf8a7a1af6e5ae528d5c7e513aedd6",
+  "seed-manifests/robotwin-if-cube-v3-20-per-mode/stack_sequence.json": "c5806f106c92ec33ea01896319e1e497ddf6d9ef7091ab80d980fcc102762c42",
+  "seed-manifests/robotwin-if-cube-v3-20-per-mode/place_relative.json": "eb165c97c2175b2415d1a053290d4f5a0f70c9bf6385da39cf64943a9b03be5a",
+  "result/robotwin-if-cube-v3-20blocks/SHA256SUMS": "1923a5e5ae0313254f4ddf55e2de7c83b94fe4599f4ca2e8f96e5eaf025ce3d9",
+  "result/robotwin-if-cube-v3-20blocks/episodes.csv": "e4da0d7220ba1f33d6346f5a45dda9234ebe07e03c5606ddffd05bbe30062e3b",
+  "result/robotwin-if-cube-v3-20blocks/plan.json": "6cdcf8bf917a64e23bcf0112d629421d5ed0b28ffdc003c0dae5fbf7eb2de64e",
+  "result/robotwin-if-cube-v3-20blocks/checkpoints.json": "09dd9f17dc4bbb1c06cc75edaa0f8b5b48bd9e6d7bb13fc525c5b535dc7ef6ac",
+  "result/robotwin-if-cube-v3-20blocks/validation.json": "71c186bf1611e641defbe947762dbcfd8f8d6c5e5d49c86ea52b0e71b89aed29",
+  "result/attribute-select-target-only-v2-review/README.md": "9ce3792c021113386c39a62987b8d4cf5da1b2352d7b3d1ecbce9eedf77cf5a6",
+  "result/attribute-select-target-only-v2-review/lingbot_va-100003.result.json": "ebc26639834c2c94862873d19510ceaa82ea596a0107787116e1a2011d313b7e",
+  "result/attribute-select-target-only-v2-review/lingbot_va-100002.events.json": "d3ce20bed9bed476437b556595b2141a6c40d2fccbc9c29dffbf948888889d2b",
+  "result/attribute-select-target-only-v2-review/xvla-100001.events.json": "8d849b6dac27d566a79936edb7f5d5c367809e949cface241fb428b0cc5a1c61",
+  "result/attribute-select-target-only-v2-review/xvla-100001.result.json": "8e0740dd094a2f0ba32fb13bea548d0096d87cafe8717e027be2154de15d0362",
+  "result/attribute-select-target-only-v2-review/SHA256SUMS": "d26ca9c8cbd9c5b5d38f059430553961bceb24547c9e7d155db360b88c81395a",
+  "result/attribute-select-target-only-v2-review/lingbot_va-100003.events.json": "845040e466aff62a5faad183d0c2729934d01bde0fa085a8ab1207407f2c8858",
+  "result/attribute-select-target-only-v2-review/lingbot_va-100002.result.json": "32a878c4caad11d665ec709b83c59c58d758fdf3eaa58d1aa262efdf5b31843d"
+}

@@ -1,0 +1,24 @@
+{
+  "previous_run": "/Data/robotwin-if/evaluations/robotwin-if-attribute-v2-20blocks-001",
+  "reused_episodes": 2520,
+  "new_arm_select_episodes": 240,
+  "source_differences": [
+    "tasks/envs/_if_grounding.py",
+    "tasks/envs/arm_select.py",
+    "third_party/robotwin/envs/_if_grounding.py",
+    "third_party/robotwin/envs/arm_select.py",
+    "tools/run_formal_policy_suite.py"
+  ],
+  "source_difference_sha256": {
+    "tasks/envs/_if_grounding.py": "c9110198824b605aec8ea876ad50570c3c54c7212463eab821217e4277486ac7",
+    "tasks/envs/arm_select.py": "baf6f8c10a660f82293ce82f6ddfbe0e776f88461d986430a9916f4fc0bc3480",
+    "third_party/robotwin/envs/_if_grounding.py": "c9110198824b605aec8ea876ad50570c3c54c7212463eab821217e4277486ac7",
+    "third_party/robotwin/envs/arm_select.py": "baf6f8c10a660f82293ce82f6ddfbe0e776f88461d986430a9916f4fc0bc3480",
+    "tools/run_formal_policy_suite.py": "43e29e259fafc5fef2690eabd82feff4dd66f0f67f9a7004d744fe31a1d4f16d"
+  },
+  "unchanged_five_task_sources": true,
+  "unchanged_all_six_task_manifests": true,
+  "shared_grounding_audit": "AST unchanged after removing the added ArmPickMonitor class.",
+  "runner_change": "Pin Arm checker contract; inference logic unchanged.",
+  "checkpoint_metadata": "Retain prior run metadata and services-before-recovery.json through formal prepare."
+}

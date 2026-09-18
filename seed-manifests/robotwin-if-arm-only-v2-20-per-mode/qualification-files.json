@@ -1,0 +1,20 @@
+{
+  "seed-manifests/robotwin-if-attribute-v2-20-per-mode/suite.yml": "8fa55b677e1870b40c0b0770172253c2eb1af33c15213e7cd2496716bdaba1c6",
+  "seed-manifests/robotwin-if-attribute-v2-20-per-mode/qualification-files.json": "e26a40f64161d0c9ebf81c8e7dc0835d11d7c1ca77d81818297b9a3b9f332aa7",
+  "seed-manifests/robotwin-if-attribute-v2-20-per-mode/bottle_verb.json": "8b709174d715181b5a08f70af3adfbed06d7da338814014b61c62566f238a231",
+  "seed-manifests/robotwin-if-attribute-v2-20-per-mode/pick_diverse_object.json": "2c5cc9d5162062fe598f46be0244be5399b102b65cc92ef74a95c45916e9ed79",
+  "seed-manifests/robotwin-if-attribute-v2-20-per-mode/attribute_select.json": "03bb5beb48737996acc856aad219d7cefcd095de4af56f9ff4323999b90d1043",
+  "seed-manifests/robotwin-if-attribute-v2-20-per-mode/arm_select.json": "334b5ab9a6f908dd603694f23a441aab1bbf8a7a1af6e5ae528d5c7e513aedd6",
+  "seed-manifests/robotwin-if-attribute-v2-20-per-mode/stack_sequence.json": "c5806f106c92ec33ea01896319e1e497ddf6d9ef7091ab80d980fcc102762c42",
+  "seed-manifests/robotwin-if-attribute-v2-20-per-mode/place_relative.json": "eb165c97c2175b2415d1a053290d4f5a0f70c9bf6385da39cf64943a9b03be5a",
+  "result/robotwin-if-attribute-v2-20blocks/SHA256SUMS": "9a271b487b0334102a0ef098211307b3e06c7d6508a34d3bc54314935658164a",
+  "result/robotwin-if-attribute-v2-20blocks/episodes.csv": "743de32643fe86d437db0cf425b44736a90fbb02dd45de500566e39355ddd2aa",
+  "result/robotwin-if-attribute-v2-20blocks/plan.json": "bfd4a210d040e51c63006fa7d64e464daca8a190496b74e9e7f5b51b4161c837",
+  "result/robotwin-if-attribute-v2-20blocks/checkpoints.json": "09dd9f17dc4bbb1c06cc75edaa0f8b5b48bd9e6d7bb13fc525c5b535dc7ef6ac",
+  "result/robotwin-if-attribute-v2-20blocks/validation.json": "77a6de576522eadbd40bbc10f38f23a77a46d5f4d34cdde3a3cef74069ca36f8",
+  "result/arm-select-target-arm-only-v2-review/wrong-then-target.png": "59eadd5dafb940713a31f2d4c877b328455d262c88bcb99ff885b000681c0704",
+  "result/arm-select-target-arm-only-v2-review/README.md": "b5115979e6b4cba07901854e1c1e3f3631cc5ef3b8849d27918abb526d21f8a0",
+  "result/arm-select-target-arm-only-v2-review/report.json": "ba65488a0b73d06d8730ad34142b84ad4133cc6bf1a5e7208c179180cf2c0ef9",
+  "result/arm-select-target-arm-only-v2-review/validation.json": "f8fd94fe3406f0452d4c9f8287eb655d60e62dd940ff82863847a4ebe8389f92",
+  "result/arm-select-target-arm-only-v2-review/SHA256SUMS": "0f04e92e3a781fe21518529a1ff8e1b7af8f11a72b3fbcac3630fa394f8cb95c"
+}
