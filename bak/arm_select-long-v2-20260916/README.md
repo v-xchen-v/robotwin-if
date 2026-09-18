@@ -1,17 +1,14 @@
-# Arm-Select 长柱 v1/v2 备份（2026-09-16）
+# Arm-Select 长柱 v1/v2 源码备份（2026-09-16）
 
-在探索 cube-v3 前保存。旧物体尺寸 6 × 6 × 20 cm，oracle 使用侧面抓取。
+这里保留 cube-v3 之前的任务实现、配置、指令、测试、评测入口与 RoboTwin 关键依赖源码。
+旧物体尺寸为 6 × 6 × 20 cm，oracle 使用侧面抓取；这些文件不作为当前评测入口。
 
-- `source/`：当时的任务、配置、指令、测试、seed manifests、评测入口与 RoboTwin 关键依赖源码快照。
-- `result-package/`：当时最新六任务发布包的完整副本；其中 Arm v2 共 240 回合。
-- `arm_select-episodes.csv`：提取的 6 个 policy × 40 回合记录。
-- `raw-results/<policy>/arm_select/`：240 回合的独立文件副本，包括视频、动作、初始观测、JSON 和日志（约 296 MiB，Git 忽略）。这些不是链接或硬链接。
-- `inventory.json`：复制文件的大小和 SHA-256；240 个 episode JSON 另与发布包记录的哈希核对通过。
-- `provenance.json`：备份时间、父仓库/RoboTwin commit、原结果位置和备份前 Git 状态。
+旧发布包、seed manifests、逐回合表和带旧成绩的 README 副本已从当前分支移除，
+可通过 Git commit `2670a13f53f6e3f1cc2e6f0fdae558782cb88d7d` 追溯。
+`inventory.json` 和 `provenance.json` 保留备份时的文件哈希、原位置与版本身份。
+其中记录的旧发布文件路径属于历史清单，不表示该文件仍在当前 checkout 中。
 
-旧成功数：X-VLA 25/40、LingBot-VA 37/40、LingBot-VLA 15/40、VLAct 0/40、DM05 39/40、Hy-VLA 8/40。
-它们属于长柱环境，不能用作 cube-v3 的结果。
+本机 `raw-results/<policy>/arm_select/` 保留视频、动作、初始观测和日志的独立副本，
+约 296 MiB，Git 忽略；本次整理没有移动或删除这些原始仿真文件。
 
-需要恢复任务时，从 `source/tasks/envs/arm_select.py` 复制回同名工作区路径；
-配置、指令和 evaluator 的旧版本也都在 `source/` 对应路径。恢复前先保留届时的新改动。
-原 `result/` 发布包和原运行目录没有移动或改写。
+当前清单、结果与溯源要求见[发布说明](../../docs/release-provenance.md)。

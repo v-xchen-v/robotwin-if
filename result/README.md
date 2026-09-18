@@ -21,15 +21,10 @@ Arm 按 `target-arm-only-lift-v2` 重跑 240 回合；其余五任务逐字节�
 (cd result/robotwin-if-arm-only-v2-20blocks && sha256sum --check --quiet SHA256SUMS)
 ```
 
-## 历史包与验证证据
+## 当前判据证据
 
-其余 **6 个历史成绩包和 2 份判据验证证据**已移入 [result-archive/](../result-archive/README.md)。
-本目录中对应的旧名字是兼容软链接，保留已发布证据中的路径和哈希，不是重复的结果数据。
-所有 119 个归档文件及当前结果包逐字节保持原样，原始仿真输出未移动。
+[Arm/Attribute 验证证据](robotwin-if-arm-only-v2-20blocks/evidence/README.md)
+随最新版保留，用于解释当前成功判据，不是另一套模型成绩。
 
-- [历史成绩与版本差异](../result-archive/README.md#历史成绩)
-- [当前判据的验证证据](../result-archive/README.md#当前判据的验证证据)
-- [归档校验清单](../result-archive/SHA256SUMS)
-
-在代码托管网站查旧结果，请从归档索引进入实体目录；本地旧路径继续支持读取与校验。
-历史任务范围或判据不同的成绩不能直接当作当前分数比较。
+本目录只提供上面的最新结果包。旧成绩、归档目录及兼容软链接已从当前分支移除；
+原始来源记录和历史哈希仍保留，详见[发布溯源说明](../docs/release-provenance.md)。

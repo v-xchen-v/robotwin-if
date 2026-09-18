@@ -73,7 +73,7 @@ class PolicyEvaluationTests(unittest.TestCase):
         for policy in ('xvla','lingbot_va','lingbot_vla','vlact','dm05','hy_vla'):
             module = importlib.import_module(f'policies.{policy}.eval')
             for task, contract in IF_SEED_CONTRACTS.items():
-                manifest_path = ROOT/'seed-manifests/if-ext-v2-six-tasks-spatial3-20-per-mode'/f'{task}.json'
+                manifest_path = ROOT/'seed-manifests/robotwin-if-arm-only-v2-20-per-mode'/f'{task}.json'
                 with self.subTest(policy=policy, task=task), patch.object(sys, 'argv', [
                     'eval.py','--task',task,'--seed-manifest',
                     str(manifest_path), '--task-config', load_manifest(manifest_path)['task_config'],

@@ -26,8 +26,7 @@ class SeedModeDeliveryTest(unittest.TestCase):
         self.assertEqual(data['episodes_per_policy'], 460)
         self.assertEqual([t['task'] for t in data['tasks']], list(IF_SEED_CONTRACTS))
         for task in data['tasks']:
-            source = (ROOT / 'seed-manifests/arm-select-cube-v3-20-per-mode' if task['task'] == 'arm_select'
-                      else ROOT / 'result/if-ext-v2-six-tasks-spatial3-bottle-v6-terminal-20blocks/manifests')
+            source = ROOT / 'result/robotwin-if-arm-only-v2-20blocks/manifests'
             frozen = json.loads((source / task['manifest']).read_text())
             self.assertEqual([r['seed'] for r in task['episodes']], frozen['seeds'])
             self.assertEqual(task['mode_counts'], dict.fromkeys(IF_SEED_CONTRACTS[task['task']].modes, 20))

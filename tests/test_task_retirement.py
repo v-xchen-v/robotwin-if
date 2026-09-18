@@ -6,7 +6,7 @@ import unittest
 from unittest.mock import patch
 
 from if_benchmark.seed_contracts import IF_SEED_CONTRACTS
-from if_benchmark.seed_manifest import load_manifest
+from if_benchmark.seed_manifest import validate_manifest
 from policies.xvla.eval import load_task
 from tools.run_formal_policy_suite import check_active_tasks
 
@@ -29,7 +29,9 @@ class RetirementTest(unittest.TestCase):
             load_task(ROOT / 'third_party/robotwin', 'grasp_cube_approach', 'demo_clean')
 
     def test_archived_manifest_still_parses_without_reactivating_task(self):
-        manifest = load_manifest(ROOT / 'seed-manifests/if-ext-v2-wide-20-per-mode/grasp_cube_approach.json')
+        manifest = dict(schema_version=1, task='grasp_cube_approach', task_config='demo_clean',
+                        seeds=list(range(40)))
+        validate_manifest(manifest)
         self.assertEqual(len(manifest['seeds']), 40)
         self.assertNotIn(manifest['task'], IF_SEED_CONTRACTS)
         self.assertFalse((ROOT / 'tasks/envs/grasp_cube_approach.py').exists())

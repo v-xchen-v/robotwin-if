@@ -6,6 +6,7 @@ import hashlib
 import json
 from pathlib import Path
 from types import SimpleNamespace
+import tempfile
 import unittest
 
 from if_benchmark.seed_contracts import describe_seed, expand_block, first_block_at_or_above, validate_active_seeds
@@ -16,8 +17,8 @@ import test_formal_result_scope as scope
 from tools import summarize_formal_policy_results as report
 
 ROOT = Path(__file__).resolve().parents[1]
-RELEASE = ROOT / 'seed-manifests/if-ext-v2-six-tasks-spatial3-20-per-mode'
-RESULT = ROOT / 'result/if-ext-v2-six-tasks-spatial3-20blocks'
+RELEASE = ROOT / 'seed-manifests/robotwin-if-arm-only-v2-20-per-mode'
+RESULT = ROOT / 'result/robotwin-if-arm-only-v2-20blocks'
 
 
 class SparseSpatialTest(unittest.TestCase):
@@ -45,8 +46,12 @@ class SparseSpatialTest(unittest.TestCase):
 
     def test_all_policy_seed_entrypoint_rejects_old_manifest_even_for_one_block(self):
         args = SimpleNamespace(task='place_relative', task_config='demo_clean', blocks=1,
-            seed_manifest=ROOT/'seed-manifests/if-ext-v2-six-tasks-20-per-mode/place_relative.json', instruction_type='unseen')
-        with self.assertRaisesRegex(ValueError, 'Retired'): select_seeds(args)
+                               instruction_type='unseen')
+        with tempfile.TemporaryDirectory() as temporary:
+            args.seed_manifest = Path(temporary) / 'old.json'
+            args.seed_manifest.write_text(json.dumps(dict(schema_version=1, task='place_relative',
+                task_config='demo_clean', seeds=[0, 1, 2, 3, 4])))
+            with self.assertRaisesRegex(ValueError, 'Retired'): select_seeds(args)
         args.seed_manifest=RELEASE/'place_relative.json'
         seeds, _, _ = select_seeds(args)
         self.assertEqual(seeds, load_manifest(args.seed_manifest)['seeds'][:3])
@@ -96,14 +101,15 @@ class SparseSpatialTest(unittest.TestCase):
             return ast.dump(method,include_attributes=False)
         self.assertEqual(actors(ROOT/'tasks/envs/place_relative.py'),actors(ROOT/'bak/place_relative-five-modes/envs/place_relative.py'))
 
-    def test_frozen_result_is_exact_projection_with_independent_counts(self):
+    def test_current_frozen_result_has_only_active_modes_and_independent_counts(self):
         def read_csv(path):
             with path.open(newline='') as f:return list(csv.DictReader(f))
-        source=read_csv(ROOT/'result/if-ext-v2-six-tasks-20blocks/episodes.csv')
-        kept=[r for r in source if not (r['task']=='place_relative' and r['mode'] in ('front','back'))]
-        self.assertEqual(read_csv(RESULT/'episodes.csv'),kept)
+        kept=read_csv(RESULT/'episodes.csv')
+        spatial=[r for r in kept if r['task']=='place_relative']
+        self.assertEqual({r['mode'] for r in spatial}, {'left','right','on_top'})
+        self.assertEqual(len(spatial),360)
         self.assertEqual(len(kept),2760)
-        self.assertEqual(sum(int(r['success']) for r in kept),1259)
+        self.assertEqual(sum(int(r['success']) for r in kept),1097)
         data=json.loads((RESULT/'results.json').read_text())
         for policy,p in data['policies'].items():
             scores=[]

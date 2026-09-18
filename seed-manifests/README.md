@@ -18,19 +18,15 @@ Arm 新跑 240 回合，其他五任务复用 Attribute-v2 的 2520 回合。
 最近 cube-v3、Attribute-v2 和 Arm-only-v2 的六份 flat seed JSON 逐字节相同，
 版本差异主要记录成功判据、重跑范围和结果来源；实际判据由配套任务代码执行。
 
-## 历史归档
+## 发布与校验
 
-其余 **12 份**实体目录已集中到 [`seed-manifests-archive/`](../seed-manifests-archive/README.md)，
-包含旧正式套件及开发/验证清单。旧位置保留相对软链接，兼容本地已发布结果的相对链接、
-资格证据中的固定路径及旧校验脚本；这些软链接不是重复的 manifest 数据。
-历史文件逐字节保留，归档校验清单见 [SHA256SUMS](../seed-manifests-archive/SHA256SUMS)。
-归档单独放在仓库根目录，与原目录保持相同层级，保留旧文档相对链接。
-需要运行历史校验时，使用 `python tools/verify_archived_seed_release.py <版本名>`；
-该入口临时还原旧实体目录布局，避免旧脚本的固定路径检查被归档位置影响。
+本目录只包含上面的当前正式清单，旧版本和兼容软链接已移除。
+新评测无需旧结果或 Git 历史；接入其他 repo 时请固定当前 commit 和上述路径。
 
-日常选用上面的当前入口；历史版本按归档索引查找。清理软链接前仍需迁移其引用，
-不能只按目录名删除父版本或 Arm oracle 资格证据。Git checkout 需保留符号链接（评测环境为 Linux）。
-在代码托管网站浏览历史清单时，请从归档索引进入实体目录。
+```bash
+(cd seed-manifests/robotwin-if-arm-only-v2-20-per-mode && sha256sum -c SHA256SUMS)
+```
 
-`seed-modes.json/csv` 的便携校验只依赖仓库文件；各 release 的 `verify.py` 还可能需要
-原机运行目录、源码快照和原始产物，用于验证历史复用来源。
+`verify.py` 用于完整历史溯源：从固定 Git commit 在临时目录读取原始资格证据，
+并检查原机运行数据，不会将旧版本写回当前目录。
+清单中保留的旧路径是来源记录；完整要求见[发布溯源说明](../docs/release-provenance.md)。
