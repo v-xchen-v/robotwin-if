@@ -5,6 +5,7 @@
 - [Seed manifest](../seed-manifests/robotwin-if-arm-only-v2-20-per-mode/README.md)：每任务 20 blocks，460 回合/policy。
 - [Result](../result/robotwin-if-arm-only-v2-20blocks/README.md)：6 policies，共 2760 回合、720 blocks。
 - [当前判据的验证证据](../result/robotwin-if-arm-only-v2-20blocks/evidence/README.md)：Arm/Attribute 的诊断控制，不是另一套模型成绩。
+- [开源模型评测来源总表](recon/open-source-eval-provenance.md)：实际代码与任务版本、checkpoint、精确 seeds，以及公开结果和原始产物的位置。
 
 旧清单、旧成绩、归档目录、兼容软链接和旧版本的一次性发布工具已从当前分支移除。
 依赖本仓库的项目应固定本次整理之后的 commit，并使用上面的当前入口。
