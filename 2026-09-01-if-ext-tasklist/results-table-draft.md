@@ -5,6 +5,9 @@
 > Canonical task inventory：[eval_cfg/README.md](../../eval_cfg/README.md)、[eval_cfg/if_tasks.yml](../../eval_cfg/if_tasks.yml)。  
 > 母设计：[docs/features/09-IF-Ext-单轴扩展任务集设计.md](../../docs/features/09-IF-Ext-单轴扩展任务集设计.md)。
 
+当前实验结果已按本草稿的分轴口径试填：[结果与进度（Markdown）](results-current.md)、[两 panel 合并表头版（HTML）](results-current.html)。
+运行中额外展示成功/纳入回合数、完整 blocks 和已完成/计划回合数；评分仅使用完整均衡 blocks，暂定 Avg. 标 `†`，七项全部跑齐后才填写 Overall。文件内注明快照时间，可用 `tools/summarize_formal_policy_results.py` 刷新。
+
 ## 主结果表：论文式两 panel 设计
 
 > 主表行 = policy，列 = task 下的 mode / 子轴及该 task 的 `Avg.`。所有 policy 均在同一 RoboTwin raw 50-task training set 上 fine-tune；IF-Ext 仅用于 evaluation，不使用任何 IF-Ext training data。  

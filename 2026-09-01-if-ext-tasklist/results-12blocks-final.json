@@ -1,0 +1,7367 @@
+{
+  "updated_at": "2026-09-12T21:57:10.878189+00:00",
+  "run_dir": "/Data/robotwin-if/evaluations/if-seven-tasks-v2-wide-12blocks-vlact-all-001",
+  "checkpoint_replacement": {
+    "policy": "vlact",
+    "old": {
+      "repo_id": "StarVLA/VLAct_Qwen3OFT_Robotwin_Finetune",
+      "revision": "dcf0f1d7239b28ae81a039c8d05bdfcd1d4792a5",
+      "weights": "checkpoints/steps_50000_pytorch_model.pt",
+      "weights_sha256": "e3823ca683057371ab94d4d66434538e2e2a53b861a87ee77a1981f941209873",
+      "data_mix": "robotwin_wrap_32"
+    },
+    "new": {
+      "repo_id": "StarVLA/VLAct_Qwen3OFT_Robotwin_all_Finetune",
+      "revision": "999b37d4d7c1bd0f5588f78d72a185f6f052bf83",
+      "weights": "checkpoints/steps_100000_pytorch_model.pt",
+      "weights_sha256": "beb2c0ec39c3bc7173a5bd90eb59ef99854b73ca1aa3bf50fb6ffc353f477c2a",
+      "data_mix": "robotwin_all_wrap_32"
+    },
+    "expected_new_episodes": 324,
+    "reuse_replaced_policy": false
+  },
+  "source_summary": {
+    "status": "complete",
+    "updated_at": "2026-09-12T21:57:10.878189+00:00",
+    "expected_episodes": 1944,
+    "completed_episodes": 1944,
+    "pending_episodes": 0,
+    "reused_episodes": 1620,
+    "new_episodes": 324,
+    "successes": 804,
+    "policy_failures": 1140,
+    "complete_task_policy_runs": 42,
+    "completed_blocks": 504,
+    "expected_blocks": 504,
+    "current": {
+      "local": {
+        "host": "msrait-04",
+        "phase": "episodes_complete_awaiting_central_validation",
+        "updated_at": "2026-09-12T21:53:57.946324+00:00",
+        "shard": {
+          "host": "msrait-04",
+          "status": "episodes_complete_awaiting_central_validation",
+          "updated_at": "2026-09-12T21:53:57.889696+00:00",
+          "policies": [
+            "xvla",
+            "lingbot_va",
+            "lingbot_vla",
+            "vlact",
+            "dm05",
+            "hy_vla"
+          ],
+          "tasks": [
+            "bottle_verb",
+            "pick_diverse_object",
+            "attribute_select",
+            "arm_select",
+            "stack_sequence",
+            "place_relative"
+          ],
+          "current": {},
+          "error": null,
+          "completed_episodes": 1800,
+          "expected_episodes": 1800,
+          "completed_blocks": 432,
+          "expected_blocks": 432
+        }
+      },
+      "remote": {
+        "host": "msrait-03",
+        "phase": "episodes_complete_awaiting_central_validation",
+        "updated_at": "2026-09-12T15:30:14.816989+00:00",
+        "shard": {
+          "host": "msrait-03",
+          "status": "episodes_complete_awaiting_central_validation",
+          "updated_at": "2026-09-12T15:30:14.798369+00:00",
+          "policies": [
+            "xvla",
+            "lingbot_va",
+            "lingbot_vla",
+            "vlact",
+            "dm05",
+            "hy_vla"
+          ],
+          "tasks": [
+            "grasp_cube_approach"
+          ],
+          "current": {},
+          "error": null,
+          "completed_episodes": 144,
+          "expected_episodes": 144,
+          "completed_blocks": 72,
+          "expected_blocks": 72
+        }
+      }
+    },
+    "error": null,
+    "sim_gpu": 0,
+    "model_gpu": 1,
+    "tasks": [
+      {
+        "policy": "xvla",
+        "task": "bottle_verb",
+        "expected_episodes": 24,
+        "recorded_episodes": 24,
+        "successes": 14,
+        "reused": 24,
+        "new": 0,
+        "complete": true,
+        "completed_blocks": 12,
+        "expected_blocks": 12,
+        "partial_blocks": 0,
+        "pending_seeds": [],
+        "per_mode": {
+          "pick": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 2
+          },
+          "shake": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 12
+          }
+        }
+      },
+      {
+        "policy": "xvla",
+        "task": "pick_diverse_object",
+        "expected_episodes": 24,
+        "recorded_episodes": 24,
+        "successes": 9,
+        "reused": 24,
+        "new": 0,
+        "complete": true,
+        "completed_blocks": 12,
+        "expected_blocks": 12,
+        "partial_blocks": 0,
+        "pending_seeds": [],
+        "per_mode": {
+          "seen": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 5
+          },
+          "unseen": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 4
+          }
+        }
+      },
+      {
+        "policy": "xvla",
+        "task": "attribute_select",
+        "expected_episodes": 96,
+        "recorded_episodes": 96,
+        "successes": 60,
+        "reused": 96,
+        "new": 0,
+        "complete": true,
+        "completed_blocks": 12,
+        "expected_blocks": 12,
+        "partial_blocks": 0,
+        "pending_seeds": [],
+        "per_mode": {
+          "color:red": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 9
+          },
+          "color:blue": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 11
+          },
+          "decal:cat": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 6
+          },
+          "decal:dog": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 7
+          },
+          "shape:block": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 4
+          },
+          "shape:bar": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 8
+          },
+          "size:big": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 3
+          },
+          "size:small": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 12
+          }
+        }
+      },
+      {
+        "policy": "xvla",
+        "task": "arm_select",
+        "expected_episodes": 24,
+        "recorded_episodes": 24,
+        "successes": 15,
+        "reused": 24,
+        "new": 0,
+        "complete": true,
+        "completed_blocks": 12,
+        "expected_blocks": 12,
+        "partial_blocks": 0,
+        "pending_seeds": [],
+        "per_mode": {
+          "left": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 12
+          },
+          "right": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 3
+          }
+        }
+      },
+      {
+        "policy": "xvla",
+        "task": "stack_sequence",
+        "expected_episodes": 72,
+        "recorded_episodes": 72,
+        "successes": 0,
+        "reused": 72,
+        "new": 0,
+        "complete": true,
+        "completed_blocks": 12,
+        "expected_blocks": 12,
+        "partial_blocks": 0,
+        "pending_seeds": [],
+        "per_mode": {
+          "red>green>blue": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 0
+          },
+          "red>blue>green": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 0
+          },
+          "green>red>blue": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 0
+          },
+          "green>blue>red": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 0
+          },
+          "blue>red>green": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 0
+          },
+          "blue>green>red": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 0
+          }
+        }
+      },
+      {
+        "policy": "xvla",
+        "task": "place_relative",
+        "expected_episodes": 60,
+        "recorded_episodes": 60,
+        "successes": 3,
+        "reused": 60,
+        "new": 0,
+        "complete": true,
+        "completed_blocks": 12,
+        "expected_blocks": 12,
+        "partial_blocks": 0,
+        "pending_seeds": [],
+        "per_mode": {
+          "left": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 2
+          },
+          "right": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 1
+          },
+          "front": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 0
+          },
+          "back": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 0
+          },
+          "on_top": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 0
+          }
+        }
+      },
+      {
+        "policy": "xvla",
+        "task": "grasp_cube_approach",
+        "expected_episodes": 24,
+        "recorded_episodes": 24,
+        "successes": 3,
+        "reused": 24,
+        "new": 0,
+        "complete": true,
+        "completed_blocks": 12,
+        "expected_blocks": 12,
+        "partial_blocks": 0,
+        "pending_seeds": [],
+        "per_mode": {
+          "top": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 3
+          },
+          "side": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 0
+          }
+        }
+      },
+      {
+        "policy": "lingbot_va",
+        "task": "bottle_verb",
+        "expected_episodes": 24,
+        "recorded_episodes": 24,
+        "successes": 13,
+        "reused": 24,
+        "new": 0,
+        "complete": true,
+        "completed_blocks": 12,
+        "expected_blocks": 12,
+        "partial_blocks": 0,
+        "pending_seeds": [],
+        "per_mode": {
+          "pick": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 1
+          },
+          "shake": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 12
+          }
+        }
+      },
+      {
+        "policy": "lingbot_va",
+        "task": "pick_diverse_object",
+        "expected_episodes": 24,
+        "recorded_episodes": 24,
+        "successes": 17,
+        "reused": 24,
+        "new": 0,
+        "complete": true,
+        "completed_blocks": 12,
+        "expected_blocks": 12,
+        "partial_blocks": 0,
+        "pending_seeds": [],
+        "per_mode": {
+          "seen": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 7
+          },
+          "unseen": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 10
+          }
+        }
+      },
+      {
+        "policy": "lingbot_va",
+        "task": "attribute_select",
+        "expected_episodes": 96,
+        "recorded_episodes": 96,
+        "successes": 83,
+        "reused": 96,
+        "new": 0,
+        "complete": true,
+        "completed_blocks": 12,
+        "expected_blocks": 12,
+        "partial_blocks": 0,
+        "pending_seeds": [],
+        "per_mode": {
+          "color:red": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 12
+          },
+          "color:blue": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 11
+          },
+          "decal:cat": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 9
+          },
+          "decal:dog": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 10
+          },
+          "shape:block": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 12
+          },
+          "shape:bar": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 10
+          },
+          "size:big": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 7
+          },
+          "size:small": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 12
+          }
+        }
+      },
+      {
+        "policy": "lingbot_va",
+        "task": "arm_select",
+        "expected_episodes": 24,
+        "recorded_episodes": 24,
+        "successes": 23,
+        "reused": 24,
+        "new": 0,
+        "complete": true,
+        "completed_blocks": 12,
+        "expected_blocks": 12,
+        "partial_blocks": 0,
+        "pending_seeds": [],
+        "per_mode": {
+          "left": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 12
+          },
+          "right": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 11
+          }
+        }
+      },
+      {
+        "policy": "lingbot_va",
+        "task": "stack_sequence",
+        "expected_episodes": 72,
+        "recorded_episodes": 72,
+        "successes": 10,
+        "reused": 72,
+        "new": 0,
+        "complete": true,
+        "completed_blocks": 12,
+        "expected_blocks": 12,
+        "partial_blocks": 0,
+        "pending_seeds": [],
+        "per_mode": {
+          "red>green>blue": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 10
+          },
+          "red>blue>green": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 0
+          },
+          "green>red>blue": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 0
+          },
+          "green>blue>red": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 0
+          },
+          "blue>red>green": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 0
+          },
+          "blue>green>red": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 0
+          }
+        }
+      },
+      {
+        "policy": "lingbot_va",
+        "task": "place_relative",
+        "expected_episodes": 60,
+        "recorded_episodes": 60,
+        "successes": 18,
+        "reused": 60,
+        "new": 0,
+        "complete": true,
+        "completed_blocks": 12,
+        "expected_blocks": 12,
+        "partial_blocks": 0,
+        "pending_seeds": [],
+        "per_mode": {
+          "left": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 9
+          },
+          "right": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 4
+          },
+          "front": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 0
+          },
+          "back": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 0
+          },
+          "on_top": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 5
+          }
+        }
+      },
+      {
+        "policy": "lingbot_va",
+        "task": "grasp_cube_approach",
+        "expected_episodes": 24,
+        "recorded_episodes": 24,
+        "successes": 12,
+        "reused": 24,
+        "new": 0,
+        "complete": true,
+        "completed_blocks": 12,
+        "expected_blocks": 12,
+        "partial_blocks": 0,
+        "pending_seeds": [],
+        "per_mode": {
+          "top": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 12
+          },
+          "side": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 0
+          }
+        }
+      },
+      {
+        "policy": "lingbot_vla",
+        "task": "bottle_verb",
+        "expected_episodes": 24,
+        "recorded_episodes": 24,
+        "successes": 13,
+        "reused": 24,
+        "new": 0,
+        "complete": true,
+        "completed_blocks": 12,
+        "expected_blocks": 12,
+        "partial_blocks": 0,
+        "pending_seeds": [],
+        "per_mode": {
+          "pick": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 1
+          },
+          "shake": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 12
+          }
+        }
+      },
+      {
+        "policy": "lingbot_vla",
+        "task": "pick_diverse_object",
+        "expected_episodes": 24,
+        "recorded_episodes": 24,
+        "successes": 8,
+        "reused": 24,
+        "new": 0,
+        "complete": true,
+        "completed_blocks": 12,
+        "expected_blocks": 12,
+        "partial_blocks": 0,
+        "pending_seeds": [],
+        "per_mode": {
+          "seen": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 6
+          },
+          "unseen": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 2
+          }
+        }
+      },
+      {
+        "policy": "lingbot_vla",
+        "task": "attribute_select",
+        "expected_episodes": 96,
+        "recorded_episodes": 96,
+        "successes": 57,
+        "reused": 96,
+        "new": 0,
+        "complete": true,
+        "completed_blocks": 12,
+        "expected_blocks": 12,
+        "partial_blocks": 0,
+        "pending_seeds": [],
+        "per_mode": {
+          "color:red": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 11
+          },
+          "color:blue": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 10
+          },
+          "decal:cat": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 7
+          },
+          "decal:dog": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 6
+          },
+          "shape:block": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 2
+          },
+          "shape:bar": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 8
+          },
+          "size:big": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 1
+          },
+          "size:small": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 12
+          }
+        }
+      },
+      {
+        "policy": "lingbot_vla",
+        "task": "arm_select",
+        "expected_episodes": 24,
+        "recorded_episodes": 24,
+        "successes": 7,
+        "reused": 24,
+        "new": 0,
+        "complete": true,
+        "completed_blocks": 12,
+        "expected_blocks": 12,
+        "partial_blocks": 0,
+        "pending_seeds": [],
+        "per_mode": {
+          "left": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 4
+          },
+          "right": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 3
+          }
+        }
+      },
+      {
+        "policy": "lingbot_vla",
+        "task": "stack_sequence",
+        "expected_episodes": 72,
+        "recorded_episodes": 72,
+        "successes": 7,
+        "reused": 72,
+        "new": 0,
+        "complete": true,
+        "completed_blocks": 12,
+        "expected_blocks": 12,
+        "partial_blocks": 0,
+        "pending_seeds": [],
+        "per_mode": {
+          "red>green>blue": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 7
+          },
+          "red>blue>green": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 0
+          },
+          "green>red>blue": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 0
+          },
+          "green>blue>red": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 0
+          },
+          "blue>red>green": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 0
+          },
+          "blue>green>red": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 0
+          }
+        }
+      },
+      {
+        "policy": "lingbot_vla",
+        "task": "place_relative",
+        "expected_episodes": 60,
+        "recorded_episodes": 60,
+        "successes": 1,
+        "reused": 60,
+        "new": 0,
+        "complete": true,
+        "completed_blocks": 12,
+        "expected_blocks": 12,
+        "partial_blocks": 0,
+        "pending_seeds": [],
+        "per_mode": {
+          "left": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 1
+          },
+          "right": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 0
+          },
+          "front": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 0
+          },
+          "back": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 0
+          },
+          "on_top": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 0
+          }
+        }
+      },
+      {
+        "policy": "lingbot_vla",
+        "task": "grasp_cube_approach",
+        "expected_episodes": 24,
+        "recorded_episodes": 24,
+        "successes": 10,
+        "reused": 24,
+        "new": 0,
+        "complete": true,
+        "completed_blocks": 12,
+        "expected_blocks": 12,
+        "partial_blocks": 0,
+        "pending_seeds": [],
+        "per_mode": {
+          "top": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 10
+          },
+          "side": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 0
+          }
+        }
+      },
+      {
+        "policy": "vlact",
+        "task": "bottle_verb",
+        "expected_episodes": 24,
+        "recorded_episodes": 24,
+        "successes": 12,
+        "reused": 0,
+        "new": 24,
+        "complete": true,
+        "completed_blocks": 12,
+        "expected_blocks": 12,
+        "partial_blocks": 0,
+        "pending_seeds": [],
+        "per_mode": {
+          "pick": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 0
+          },
+          "shake": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 12
+          }
+        }
+      },
+      {
+        "policy": "vlact",
+        "task": "pick_diverse_object",
+        "expected_episodes": 24,
+        "recorded_episodes": 24,
+        "successes": 16,
+        "reused": 0,
+        "new": 24,
+        "complete": true,
+        "completed_blocks": 12,
+        "expected_blocks": 12,
+        "partial_blocks": 0,
+        "pending_seeds": [],
+        "per_mode": {
+          "seen": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 11
+          },
+          "unseen": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 5
+          }
+        }
+      },
+      {
+        "policy": "vlact",
+        "task": "attribute_select",
+        "expected_episodes": 96,
+        "recorded_episodes": 96,
+        "successes": 80,
+        "reused": 0,
+        "new": 96,
+        "complete": true,
+        "completed_blocks": 12,
+        "expected_blocks": 12,
+        "partial_blocks": 0,
+        "pending_seeds": [],
+        "per_mode": {
+          "color:red": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 12
+          },
+          "color:blue": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 11
+          },
+          "decal:cat": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 11
+          },
+          "decal:dog": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 8
+          },
+          "shape:block": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 9
+          },
+          "shape:bar": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 12
+          },
+          "size:big": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 5
+          },
+          "size:small": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 12
+          }
+        }
+      },
+      {
+        "policy": "vlact",
+        "task": "arm_select",
+        "expected_episodes": 24,
+        "recorded_episodes": 24,
+        "successes": 0,
+        "reused": 0,
+        "new": 24,
+        "complete": true,
+        "completed_blocks": 12,
+        "expected_blocks": 12,
+        "partial_blocks": 0,
+        "pending_seeds": [],
+        "per_mode": {
+          "left": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 0
+          },
+          "right": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 0
+          }
+        }
+      },
+      {
+        "policy": "vlact",
+        "task": "stack_sequence",
+        "expected_episodes": 72,
+        "recorded_episodes": 72,
+        "successes": 11,
+        "reused": 0,
+        "new": 72,
+        "complete": true,
+        "completed_blocks": 12,
+        "expected_blocks": 12,
+        "partial_blocks": 0,
+        "pending_seeds": [],
+        "per_mode": {
+          "red>green>blue": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 6
+          },
+          "red>blue>green": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 0
+          },
+          "green>red>blue": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 1
+          },
+          "green>blue>red": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 2
+          },
+          "blue>red>green": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 0
+          },
+          "blue>green>red": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 2
+          }
+        }
+      },
+      {
+        "policy": "vlact",
+        "task": "place_relative",
+        "expected_episodes": 60,
+        "recorded_episodes": 60,
+        "successes": 12,
+        "reused": 0,
+        "new": 60,
+        "complete": true,
+        "completed_blocks": 12,
+        "expected_blocks": 12,
+        "partial_blocks": 0,
+        "pending_seeds": [],
+        "per_mode": {
+          "left": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 9
+          },
+          "right": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 2
+          },
+          "front": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 0
+          },
+          "back": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 0
+          },
+          "on_top": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 1
+          }
+        }
+      },
+      {
+        "policy": "vlact",
+        "task": "grasp_cube_approach",
+        "expected_episodes": 24,
+        "recorded_episodes": 24,
+        "successes": 7,
+        "reused": 0,
+        "new": 24,
+        "complete": true,
+        "completed_blocks": 12,
+        "expected_blocks": 12,
+        "partial_blocks": 0,
+        "pending_seeds": [],
+        "per_mode": {
+          "top": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 7
+          },
+          "side": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 0
+          }
+        }
+      },
+      {
+        "policy": "dm05",
+        "task": "bottle_verb",
+        "expected_episodes": 24,
+        "recorded_episodes": 24,
+        "successes": 12,
+        "reused": 24,
+        "new": 0,
+        "complete": true,
+        "completed_blocks": 12,
+        "expected_blocks": 12,
+        "partial_blocks": 0,
+        "pending_seeds": [],
+        "per_mode": {
+          "pick": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 0
+          },
+          "shake": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 12
+          }
+        }
+      },
+      {
+        "policy": "dm05",
+        "task": "pick_diverse_object",
+        "expected_episodes": 24,
+        "recorded_episodes": 24,
+        "successes": 15,
+        "reused": 24,
+        "new": 0,
+        "complete": true,
+        "completed_blocks": 12,
+        "expected_blocks": 12,
+        "partial_blocks": 0,
+        "pending_seeds": [],
+        "per_mode": {
+          "seen": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 11
+          },
+          "unseen": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 4
+          }
+        }
+      },
+      {
+        "policy": "dm05",
+        "task": "attribute_select",
+        "expected_episodes": 96,
+        "recorded_episodes": 96,
+        "successes": 68,
+        "reused": 96,
+        "new": 0,
+        "complete": true,
+        "completed_blocks": 12,
+        "expected_blocks": 12,
+        "partial_blocks": 0,
+        "pending_seeds": [],
+        "per_mode": {
+          "color:red": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 12
+          },
+          "color:blue": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 9
+          },
+          "decal:cat": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 6
+          },
+          "decal:dog": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 10
+          },
+          "shape:block": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 5
+          },
+          "shape:bar": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 12
+          },
+          "size:big": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 2
+          },
+          "size:small": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 12
+          }
+        }
+      },
+      {
+        "policy": "dm05",
+        "task": "arm_select",
+        "expected_episodes": 24,
+        "recorded_episodes": 24,
+        "successes": 24,
+        "reused": 24,
+        "new": 0,
+        "complete": true,
+        "completed_blocks": 12,
+        "expected_blocks": 12,
+        "partial_blocks": 0,
+        "pending_seeds": [],
+        "per_mode": {
+          "left": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 12
+          },
+          "right": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 12
+          }
+        }
+      },
+      {
+        "policy": "dm05",
+        "task": "stack_sequence",
+        "expected_episodes": 72,
+        "recorded_episodes": 72,
+        "successes": 7,
+        "reused": 72,
+        "new": 0,
+        "complete": true,
+        "completed_blocks": 12,
+        "expected_blocks": 12,
+        "partial_blocks": 0,
+        "pending_seeds": [],
+        "per_mode": {
+          "red>green>blue": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 7
+          },
+          "red>blue>green": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 0
+          },
+          "green>red>blue": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 0
+          },
+          "green>blue>red": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 0
+          },
+          "blue>red>green": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 0
+          },
+          "blue>green>red": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 0
+          }
+        }
+      },
+      {
+        "policy": "dm05",
+        "task": "place_relative",
+        "expected_episodes": 60,
+        "recorded_episodes": 60,
+        "successes": 12,
+        "reused": 60,
+        "new": 0,
+        "complete": true,
+        "completed_blocks": 12,
+        "expected_blocks": 12,
+        "partial_blocks": 0,
+        "pending_seeds": [],
+        "per_mode": {
+          "left": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 9
+          },
+          "right": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 3
+          },
+          "front": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 0
+          },
+          "back": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 0
+          },
+          "on_top": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 0
+          }
+        }
+      },
+      {
+        "policy": "dm05",
+        "task": "grasp_cube_approach",
+        "expected_episodes": 24,
+        "recorded_episodes": 24,
+        "successes": 10,
+        "reused": 24,
+        "new": 0,
+        "complete": true,
+        "completed_blocks": 12,
+        "expected_blocks": 12,
+        "partial_blocks": 0,
+        "pending_seeds": [],
+        "per_mode": {
+          "top": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 10
+          },
+          "side": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 0
+          }
+        }
+      },
+      {
+        "policy": "hy_vla",
+        "task": "bottle_verb",
+        "expected_episodes": 24,
+        "recorded_episodes": 24,
+        "successes": 13,
+        "reused": 24,
+        "new": 0,
+        "complete": true,
+        "completed_blocks": 12,
+        "expected_blocks": 12,
+        "partial_blocks": 0,
+        "pending_seeds": [],
+        "per_mode": {
+          "pick": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 1
+          },
+          "shake": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 12
+          }
+        }
+      },
+      {
+        "policy": "hy_vla",
+        "task": "pick_diverse_object",
+        "expected_episodes": 24,
+        "recorded_episodes": 24,
+        "successes": 5,
+        "reused": 24,
+        "new": 0,
+        "complete": true,
+        "completed_blocks": 12,
+        "expected_blocks": 12,
+        "partial_blocks": 0,
+        "pending_seeds": [],
+        "per_mode": {
+          "seen": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 4
+          },
+          "unseen": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 1
+          }
+        }
+      },
+      {
+        "policy": "hy_vla",
+        "task": "attribute_select",
+        "expected_episodes": 96,
+        "recorded_episodes": 96,
+        "successes": 87,
+        "reused": 96,
+        "new": 0,
+        "complete": true,
+        "completed_blocks": 12,
+        "expected_blocks": 12,
+        "partial_blocks": 0,
+        "pending_seeds": [],
+        "per_mode": {
+          "color:red": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 12
+          },
+          "color:blue": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 10
+          },
+          "decal:cat": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 10
+          },
+          "decal:dog": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 10
+          },
+          "shape:block": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 10
+          },
+          "shape:bar": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 12
+          },
+          "size:big": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 11
+          },
+          "size:small": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 12
+          }
+        }
+      },
+      {
+        "policy": "hy_vla",
+        "task": "arm_select",
+        "expected_episodes": 24,
+        "recorded_episodes": 24,
+        "successes": 7,
+        "reused": 24,
+        "new": 0,
+        "complete": true,
+        "completed_blocks": 12,
+        "expected_blocks": 12,
+        "partial_blocks": 0,
+        "pending_seeds": [],
+        "per_mode": {
+          "left": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 1
+          },
+          "right": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 6
+          }
+        }
+      },
+      {
+        "policy": "hy_vla",
+        "task": "stack_sequence",
+        "expected_episodes": 72,
+        "recorded_episodes": 72,
+        "successes": 8,
+        "reused": 72,
+        "new": 0,
+        "complete": true,
+        "completed_blocks": 12,
+        "expected_blocks": 12,
+        "partial_blocks": 0,
+        "pending_seeds": [],
+        "per_mode": {
+          "red>green>blue": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 8
+          },
+          "red>blue>green": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 0
+          },
+          "green>red>blue": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 0
+          },
+          "green>blue>red": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 0
+          },
+          "blue>red>green": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 0
+          },
+          "blue>green>red": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 0
+          }
+        }
+      },
+      {
+        "policy": "hy_vla",
+        "task": "place_relative",
+        "expected_episodes": 60,
+        "recorded_episodes": 60,
+        "successes": 3,
+        "reused": 60,
+        "new": 0,
+        "complete": true,
+        "completed_blocks": 12,
+        "expected_blocks": 12,
+        "partial_blocks": 0,
+        "pending_seeds": [],
+        "per_mode": {
+          "left": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 1
+          },
+          "right": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 2
+          },
+          "front": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 0
+          },
+          "back": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 0
+          },
+          "on_top": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 0
+          }
+        }
+      },
+      {
+        "policy": "hy_vla",
+        "task": "grasp_cube_approach",
+        "expected_episodes": 24,
+        "recorded_episodes": 24,
+        "successes": 12,
+        "reused": 24,
+        "new": 0,
+        "complete": true,
+        "completed_blocks": 12,
+        "expected_blocks": 12,
+        "partial_blocks": 0,
+        "pending_seeds": [],
+        "per_mode": {
+          "top": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 12
+          },
+          "side": {
+            "expected": 12,
+            "recorded": 12,
+            "successes": 0
+          }
+        }
+      }
+    ]
+  },
+  "rows": [
+    {
+      "policy": "xvla",
+      "task": "bottle_verb",
+      "complete": true,
+      "completed_blocks": 12,
+      "expected_blocks": 12,
+      "recorded_episodes": 24,
+      "expected_episodes": 24,
+      "recorded_successes": 14,
+      "included_episodes": 24,
+      "partial_group_episodes": 0,
+      "included_seeds": [
+        100002,
+        100003,
+        100004,
+        100005,
+        100006,
+        100007,
+        100008,
+        100009,
+        100010,
+        100011,
+        100016,
+        100017,
+        100018,
+        100019,
+        100020,
+        100021,
+        100022,
+        100023,
+        100024,
+        100025,
+        100026,
+        100027,
+        100030,
+        100031
+      ],
+      "complete_block_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "modes": {
+        "pick": {
+          "successes": 2,
+          "included": 12,
+          "sr_pct": 16.666666666666668,
+          "recorded": 12,
+          "recorded_successes": 2
+        },
+        "shake": {
+          "successes": 12,
+          "included": 12,
+          "sr_pct": 100.0,
+          "recorded": 12,
+          "recorded_successes": 12
+        }
+      },
+      "columns": [
+        {
+          "label": "Pick",
+          "modes": [
+            "pick"
+          ],
+          "successes": 2,
+          "included": 12,
+          "sr_pct": 16.666666666666668
+        },
+        {
+          "label": "Shake",
+          "modes": [
+            "shake"
+          ],
+          "successes": 12,
+          "included": 12,
+          "sr_pct": 100.0
+        }
+      ],
+      "avg_pct": 58.333333333333336
+    },
+    {
+      "policy": "xvla",
+      "task": "pick_diverse_object",
+      "complete": true,
+      "completed_blocks": 12,
+      "expected_blocks": 12,
+      "recorded_episodes": 24,
+      "expected_episodes": 24,
+      "recorded_successes": 9,
+      "included_episodes": 24,
+      "partial_group_episodes": 0,
+      "included_seeds": [
+        100002,
+        100003,
+        100004,
+        100005,
+        100006,
+        100007,
+        100008,
+        100009,
+        100012,
+        100013,
+        100014,
+        100015,
+        100018,
+        100019,
+        100020,
+        100021,
+        100024,
+        100025,
+        100034,
+        100035,
+        100036,
+        100037,
+        100038,
+        100039
+      ],
+      "complete_block_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "modes": {
+        "seen": {
+          "successes": 5,
+          "included": 12,
+          "sr_pct": 41.666666666666664,
+          "recorded": 12,
+          "recorded_successes": 5
+        },
+        "unseen": {
+          "successes": 4,
+          "included": 12,
+          "sr_pct": 33.333333333333336,
+          "recorded": 12,
+          "recorded_successes": 4
+        }
+      },
+      "columns": [
+        {
+          "label": "Seen",
+          "modes": [
+            "seen"
+          ],
+          "successes": 5,
+          "included": 12,
+          "sr_pct": 41.666666666666664
+        },
+        {
+          "label": "Unseen",
+          "modes": [
+            "unseen"
+          ],
+          "successes": 4,
+          "included": 12,
+          "sr_pct": 33.333333333333336
+        }
+      ],
+      "avg_pct": 37.5
+    },
+    {
+      "policy": "xvla",
+      "task": "attribute_select",
+      "complete": true,
+      "completed_blocks": 12,
+      "expected_blocks": 12,
+      "recorded_episodes": 96,
+      "expected_episodes": 96,
+      "recorded_successes": 60,
+      "included_episodes": 96,
+      "partial_group_episodes": 0,
+      "included_seeds": [
+        100000,
+        100001,
+        100002,
+        100003,
+        100004,
+        100005,
+        100006,
+        100007,
+        100008,
+        100009,
+        100010,
+        100011,
+        100012,
+        100013,
+        100014,
+        100015,
+        100016,
+        100017,
+        100018,
+        100019,
+        100020,
+        100021,
+        100022,
+        100023,
+        100024,
+        100025,
+        100026,
+        100027,
+        100028,
+        100029,
+        100030,
+        100031,
+        100032,
+        100033,
+        100034,
+        100035,
+        100036,
+        100037,
+        100038,
+        100039,
+        100040,
+        100041,
+        100042,
+        100043,
+        100044,
+        100045,
+        100046,
+        100047,
+        100048,
+        100049,
+        100050,
+        100051,
+        100052,
+        100053,
+        100054,
+        100055,
+        100064,
+        100065,
+        100066,
+        100067,
+        100068,
+        100069,
+        100070,
+        100071,
+        100072,
+        100073,
+        100074,
+        100075,
+        100076,
+        100077,
+        100078,
+        100079,
+        100080,
+        100081,
+        100082,
+        100083,
+        100084,
+        100085,
+        100086,
+        100087,
+        100088,
+        100089,
+        100090,
+        100091,
+        100092,
+        100093,
+        100094,
+        100095,
+        100096,
+        100097,
+        100098,
+        100099,
+        100100,
+        100101,
+        100102,
+        100103
+      ],
+      "complete_block_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "modes": {
+        "color:red": {
+          "successes": 9,
+          "included": 12,
+          "sr_pct": 75.0,
+          "recorded": 12,
+          "recorded_successes": 9
+        },
+        "color:blue": {
+          "successes": 11,
+          "included": 12,
+          "sr_pct": 91.66666666666667,
+          "recorded": 12,
+          "recorded_successes": 11
+        },
+        "decal:cat": {
+          "successes": 6,
+          "included": 12,
+          "sr_pct": 50.0,
+          "recorded": 12,
+          "recorded_successes": 6
+        },
+        "decal:dog": {
+          "successes": 7,
+          "included": 12,
+          "sr_pct": 58.333333333333336,
+          "recorded": 12,
+          "recorded_successes": 7
+        },
+        "shape:block": {
+          "successes": 4,
+          "included": 12,
+          "sr_pct": 33.333333333333336,
+          "recorded": 12,
+          "recorded_successes": 4
+        },
+        "shape:bar": {
+          "successes": 8,
+          "included": 12,
+          "sr_pct": 66.66666666666667,
+          "recorded": 12,
+          "recorded_successes": 8
+        },
+        "size:big": {
+          "successes": 3,
+          "included": 12,
+          "sr_pct": 25.0,
+          "recorded": 12,
+          "recorded_successes": 3
+        },
+        "size:small": {
+          "successes": 12,
+          "included": 12,
+          "sr_pct": 100.0,
+          "recorded": 12,
+          "recorded_successes": 12
+        }
+      },
+      "columns": [
+        {
+          "label": "Color",
+          "modes": [
+            "color:red",
+            "color:blue"
+          ],
+          "successes": 20,
+          "included": 24,
+          "sr_pct": 83.33333333333334
+        },
+        {
+          "label": "Decal",
+          "modes": [
+            "decal:cat",
+            "decal:dog"
+          ],
+          "successes": 13,
+          "included": 24,
+          "sr_pct": 54.16666666666667
+        },
+        {
+          "label": "Shape",
+          "modes": [
+            "shape:block",
+            "shape:bar"
+          ],
+          "successes": 12,
+          "included": 24,
+          "sr_pct": 50.0
+        },
+        {
+          "label": "Size",
+          "modes": [
+            "size:big",
+            "size:small"
+          ],
+          "successes": 15,
+          "included": 24,
+          "sr_pct": 62.5
+        }
+      ],
+      "avg_pct": 62.5
+    },
+    {
+      "policy": "xvla",
+      "task": "arm_select",
+      "complete": true,
+      "completed_blocks": 12,
+      "expected_blocks": 12,
+      "recorded_episodes": 24,
+      "expected_episodes": 24,
+      "recorded_successes": 15,
+      "included_episodes": 24,
+      "partial_group_episodes": 0,
+      "included_seeds": [
+        200000,
+        200001,
+        200002,
+        200003,
+        200004,
+        200005,
+        200006,
+        200007,
+        200008,
+        200009,
+        200010,
+        200011,
+        200012,
+        200013,
+        200016,
+        200017,
+        200018,
+        200019,
+        200020,
+        200021,
+        200022,
+        200023,
+        200026,
+        200027
+      ],
+      "complete_block_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "modes": {
+        "left": {
+          "successes": 12,
+          "included": 12,
+          "sr_pct": 100.0,
+          "recorded": 12,
+          "recorded_successes": 12
+        },
+        "right": {
+          "successes": 3,
+          "included": 12,
+          "sr_pct": 25.0,
+          "recorded": 12,
+          "recorded_successes": 3
+        }
+      },
+      "columns": [
+        {
+          "label": "Left",
+          "modes": [
+            "left"
+          ],
+          "successes": 12,
+          "included": 12,
+          "sr_pct": 100.0
+        },
+        {
+          "label": "Right",
+          "modes": [
+            "right"
+          ],
+          "successes": 3,
+          "included": 12,
+          "sr_pct": 25.0
+        }
+      ],
+      "avg_pct": 62.5
+    },
+    {
+      "policy": "xvla",
+      "task": "stack_sequence",
+      "complete": true,
+      "completed_blocks": 12,
+      "expected_blocks": 12,
+      "recorded_episodes": 72,
+      "expected_episodes": 72,
+      "recorded_successes": 0,
+      "included_episodes": 72,
+      "partial_group_episodes": 0,
+      "included_seeds": [
+        100008,
+        100009,
+        100010,
+        100011,
+        100012,
+        100013,
+        100014,
+        100015,
+        100016,
+        100017,
+        100018,
+        100019,
+        100020,
+        100021,
+        100022,
+        100023,
+        100024,
+        100025,
+        100026,
+        100027,
+        100028,
+        100029,
+        100030,
+        100031,
+        100032,
+        100033,
+        100034,
+        100035,
+        100036,
+        100037,
+        100038,
+        100039,
+        100040,
+        100041,
+        100042,
+        100043,
+        100050,
+        100051,
+        100052,
+        100053,
+        100054,
+        100055,
+        100062,
+        100063,
+        100064,
+        100065,
+        100066,
+        100067,
+        100068,
+        100069,
+        100070,
+        100071,
+        100072,
+        100073,
+        100080,
+        100081,
+        100082,
+        100083,
+        100084,
+        100085,
+        100092,
+        100093,
+        100094,
+        100095,
+        100096,
+        100097,
+        100098,
+        100099,
+        100100,
+        100101,
+        100102,
+        100103
+      ],
+      "complete_block_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "modes": {
+        "red>green>blue": {
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0,
+          "recorded": 12,
+          "recorded_successes": 0
+        },
+        "red>blue>green": {
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0,
+          "recorded": 12,
+          "recorded_successes": 0
+        },
+        "green>red>blue": {
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0,
+          "recorded": 12,
+          "recorded_successes": 0
+        },
+        "green>blue>red": {
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0,
+          "recorded": 12,
+          "recorded_successes": 0
+        },
+        "blue>red>green": {
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0,
+          "recorded": 12,
+          "recorded_successes": 0
+        },
+        "blue>green>red": {
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0,
+          "recorded": 12,
+          "recorded_successes": 0
+        }
+      },
+      "columns": [
+        {
+          "label": "RGB",
+          "modes": [
+            "red>green>blue"
+          ],
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0
+        },
+        {
+          "label": "RBG",
+          "modes": [
+            "red>blue>green"
+          ],
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0
+        },
+        {
+          "label": "GRB",
+          "modes": [
+            "green>red>blue"
+          ],
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0
+        },
+        {
+          "label": "GBR",
+          "modes": [
+            "green>blue>red"
+          ],
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0
+        },
+        {
+          "label": "BRG",
+          "modes": [
+            "blue>red>green"
+          ],
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0
+        },
+        {
+          "label": "BGR",
+          "modes": [
+            "blue>green>red"
+          ],
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0
+        }
+      ],
+      "avg_pct": 0.0
+    },
+    {
+      "policy": "xvla",
+      "task": "place_relative",
+      "complete": true,
+      "completed_blocks": 12,
+      "expected_blocks": 12,
+      "recorded_episodes": 60,
+      "expected_episodes": 60,
+      "recorded_successes": 3,
+      "included_episodes": 60,
+      "partial_group_episodes": 0,
+      "included_seeds": [
+        100005,
+        100006,
+        100007,
+        100008,
+        100009,
+        100010,
+        100011,
+        100012,
+        100013,
+        100014,
+        100015,
+        100016,
+        100017,
+        100018,
+        100019,
+        100020,
+        100021,
+        100022,
+        100023,
+        100024,
+        100025,
+        100026,
+        100027,
+        100028,
+        100029,
+        100030,
+        100031,
+        100032,
+        100033,
+        100034,
+        100040,
+        100041,
+        100042,
+        100043,
+        100044,
+        100045,
+        100046,
+        100047,
+        100048,
+        100049,
+        100050,
+        100051,
+        100052,
+        100053,
+        100054,
+        100055,
+        100056,
+        100057,
+        100058,
+        100059,
+        100060,
+        100061,
+        100062,
+        100063,
+        100064,
+        100065,
+        100066,
+        100067,
+        100068,
+        100069
+      ],
+      "complete_block_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "modes": {
+        "left": {
+          "successes": 2,
+          "included": 12,
+          "sr_pct": 16.666666666666668,
+          "recorded": 12,
+          "recorded_successes": 2
+        },
+        "right": {
+          "successes": 1,
+          "included": 12,
+          "sr_pct": 8.333333333333334,
+          "recorded": 12,
+          "recorded_successes": 1
+        },
+        "front": {
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0,
+          "recorded": 12,
+          "recorded_successes": 0
+        },
+        "back": {
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0,
+          "recorded": 12,
+          "recorded_successes": 0
+        },
+        "on_top": {
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0,
+          "recorded": 12,
+          "recorded_successes": 0
+        }
+      },
+      "columns": [
+        {
+          "label": "Left",
+          "modes": [
+            "left"
+          ],
+          "successes": 2,
+          "included": 12,
+          "sr_pct": 16.666666666666668
+        },
+        {
+          "label": "Right",
+          "modes": [
+            "right"
+          ],
+          "successes": 1,
+          "included": 12,
+          "sr_pct": 8.333333333333334
+        },
+        {
+          "label": "Front",
+          "modes": [
+            "front"
+          ],
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0
+        },
+        {
+          "label": "Back",
+          "modes": [
+            "back"
+          ],
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0
+        },
+        {
+          "label": "Top",
+          "modes": [
+            "on_top"
+          ],
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0
+        }
+      ],
+      "avg_pct": 5.0
+    },
+    {
+      "policy": "xvla",
+      "task": "grasp_cube_approach",
+      "complete": true,
+      "completed_blocks": 12,
+      "expected_blocks": 12,
+      "recorded_episodes": 24,
+      "expected_episodes": 24,
+      "recorded_successes": 3,
+      "included_episodes": 24,
+      "partial_group_episodes": 0,
+      "included_seeds": [
+        500000,
+        500001,
+        500004,
+        500005,
+        500006,
+        500007,
+        500008,
+        500009,
+        500010,
+        500011,
+        500012,
+        500013,
+        500016,
+        500017,
+        500018,
+        500019,
+        500020,
+        500021,
+        500022,
+        500023,
+        500026,
+        500027,
+        500032,
+        500033
+      ],
+      "complete_block_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "modes": {
+        "top": {
+          "successes": 3,
+          "included": 12,
+          "sr_pct": 25.0,
+          "recorded": 12,
+          "recorded_successes": 3
+        },
+        "side": {
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0,
+          "recorded": 12,
+          "recorded_successes": 0
+        }
+      },
+      "columns": [
+        {
+          "label": "Top",
+          "modes": [
+            "top"
+          ],
+          "successes": 3,
+          "included": 12,
+          "sr_pct": 25.0
+        },
+        {
+          "label": "Side",
+          "modes": [
+            "side"
+          ],
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0
+        }
+      ],
+      "avg_pct": 12.5
+    },
+    {
+      "policy": "lingbot_va",
+      "task": "bottle_verb",
+      "complete": true,
+      "completed_blocks": 12,
+      "expected_blocks": 12,
+      "recorded_episodes": 24,
+      "expected_episodes": 24,
+      "recorded_successes": 13,
+      "included_episodes": 24,
+      "partial_group_episodes": 0,
+      "included_seeds": [
+        100002,
+        100003,
+        100004,
+        100005,
+        100006,
+        100007,
+        100008,
+        100009,
+        100010,
+        100011,
+        100016,
+        100017,
+        100018,
+        100019,
+        100020,
+        100021,
+        100022,
+        100023,
+        100024,
+        100025,
+        100026,
+        100027,
+        100030,
+        100031
+      ],
+      "complete_block_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "modes": {
+        "pick": {
+          "successes": 1,
+          "included": 12,
+          "sr_pct": 8.333333333333334,
+          "recorded": 12,
+          "recorded_successes": 1
+        },
+        "shake": {
+          "successes": 12,
+          "included": 12,
+          "sr_pct": 100.0,
+          "recorded": 12,
+          "recorded_successes": 12
+        }
+      },
+      "columns": [
+        {
+          "label": "Pick",
+          "modes": [
+            "pick"
+          ],
+          "successes": 1,
+          "included": 12,
+          "sr_pct": 8.333333333333334
+        },
+        {
+          "label": "Shake",
+          "modes": [
+            "shake"
+          ],
+          "successes": 12,
+          "included": 12,
+          "sr_pct": 100.0
+        }
+      ],
+      "avg_pct": 54.166666666666664
+    },
+    {
+      "policy": "lingbot_va",
+      "task": "pick_diverse_object",
+      "complete": true,
+      "completed_blocks": 12,
+      "expected_blocks": 12,
+      "recorded_episodes": 24,
+      "expected_episodes": 24,
+      "recorded_successes": 17,
+      "included_episodes": 24,
+      "partial_group_episodes": 0,
+      "included_seeds": [
+        100002,
+        100003,
+        100004,
+        100005,
+        100006,
+        100007,
+        100008,
+        100009,
+        100012,
+        100013,
+        100014,
+        100015,
+        100018,
+        100019,
+        100020,
+        100021,
+        100024,
+        100025,
+        100034,
+        100035,
+        100036,
+        100037,
+        100038,
+        100039
+      ],
+      "complete_block_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "modes": {
+        "seen": {
+          "successes": 7,
+          "included": 12,
+          "sr_pct": 58.333333333333336,
+          "recorded": 12,
+          "recorded_successes": 7
+        },
+        "unseen": {
+          "successes": 10,
+          "included": 12,
+          "sr_pct": 83.33333333333333,
+          "recorded": 12,
+          "recorded_successes": 10
+        }
+      },
+      "columns": [
+        {
+          "label": "Seen",
+          "modes": [
+            "seen"
+          ],
+          "successes": 7,
+          "included": 12,
+          "sr_pct": 58.333333333333336
+        },
+        {
+          "label": "Unseen",
+          "modes": [
+            "unseen"
+          ],
+          "successes": 10,
+          "included": 12,
+          "sr_pct": 83.33333333333333
+        }
+      ],
+      "avg_pct": 70.83333333333333
+    },
+    {
+      "policy": "lingbot_va",
+      "task": "attribute_select",
+      "complete": true,
+      "completed_blocks": 12,
+      "expected_blocks": 12,
+      "recorded_episodes": 96,
+      "expected_episodes": 96,
+      "recorded_successes": 83,
+      "included_episodes": 96,
+      "partial_group_episodes": 0,
+      "included_seeds": [
+        100000,
+        100001,
+        100002,
+        100003,
+        100004,
+        100005,
+        100006,
+        100007,
+        100008,
+        100009,
+        100010,
+        100011,
+        100012,
+        100013,
+        100014,
+        100015,
+        100016,
+        100017,
+        100018,
+        100019,
+        100020,
+        100021,
+        100022,
+        100023,
+        100024,
+        100025,
+        100026,
+        100027,
+        100028,
+        100029,
+        100030,
+        100031,
+        100032,
+        100033,
+        100034,
+        100035,
+        100036,
+        100037,
+        100038,
+        100039,
+        100040,
+        100041,
+        100042,
+        100043,
+        100044,
+        100045,
+        100046,
+        100047,
+        100048,
+        100049,
+        100050,
+        100051,
+        100052,
+        100053,
+        100054,
+        100055,
+        100064,
+        100065,
+        100066,
+        100067,
+        100068,
+        100069,
+        100070,
+        100071,
+        100072,
+        100073,
+        100074,
+        100075,
+        100076,
+        100077,
+        100078,
+        100079,
+        100080,
+        100081,
+        100082,
+        100083,
+        100084,
+        100085,
+        100086,
+        100087,
+        100088,
+        100089,
+        100090,
+        100091,
+        100092,
+        100093,
+        100094,
+        100095,
+        100096,
+        100097,
+        100098,
+        100099,
+        100100,
+        100101,
+        100102,
+        100103
+      ],
+      "complete_block_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "modes": {
+        "color:red": {
+          "successes": 12,
+          "included": 12,
+          "sr_pct": 100.0,
+          "recorded": 12,
+          "recorded_successes": 12
+        },
+        "color:blue": {
+          "successes": 11,
+          "included": 12,
+          "sr_pct": 91.66666666666667,
+          "recorded": 12,
+          "recorded_successes": 11
+        },
+        "decal:cat": {
+          "successes": 9,
+          "included": 12,
+          "sr_pct": 75.0,
+          "recorded": 12,
+          "recorded_successes": 9
+        },
+        "decal:dog": {
+          "successes": 10,
+          "included": 12,
+          "sr_pct": 83.33333333333333,
+          "recorded": 12,
+          "recorded_successes": 10
+        },
+        "shape:block": {
+          "successes": 12,
+          "included": 12,
+          "sr_pct": 100.0,
+          "recorded": 12,
+          "recorded_successes": 12
+        },
+        "shape:bar": {
+          "successes": 10,
+          "included": 12,
+          "sr_pct": 83.33333333333333,
+          "recorded": 12,
+          "recorded_successes": 10
+        },
+        "size:big": {
+          "successes": 7,
+          "included": 12,
+          "sr_pct": 58.333333333333336,
+          "recorded": 12,
+          "recorded_successes": 7
+        },
+        "size:small": {
+          "successes": 12,
+          "included": 12,
+          "sr_pct": 100.0,
+          "recorded": 12,
+          "recorded_successes": 12
+        }
+      },
+      "columns": [
+        {
+          "label": "Color",
+          "modes": [
+            "color:red",
+            "color:blue"
+          ],
+          "successes": 23,
+          "included": 24,
+          "sr_pct": 95.83333333333334
+        },
+        {
+          "label": "Decal",
+          "modes": [
+            "decal:cat",
+            "decal:dog"
+          ],
+          "successes": 19,
+          "included": 24,
+          "sr_pct": 79.16666666666666
+        },
+        {
+          "label": "Shape",
+          "modes": [
+            "shape:block",
+            "shape:bar"
+          ],
+          "successes": 22,
+          "included": 24,
+          "sr_pct": 91.66666666666666
+        },
+        {
+          "label": "Size",
+          "modes": [
+            "size:big",
+            "size:small"
+          ],
+          "successes": 19,
+          "included": 24,
+          "sr_pct": 79.16666666666667
+        }
+      ],
+      "avg_pct": 86.45833333333333
+    },
+    {
+      "policy": "lingbot_va",
+      "task": "arm_select",
+      "complete": true,
+      "completed_blocks": 12,
+      "expected_blocks": 12,
+      "recorded_episodes": 24,
+      "expected_episodes": 24,
+      "recorded_successes": 23,
+      "included_episodes": 24,
+      "partial_group_episodes": 0,
+      "included_seeds": [
+        200000,
+        200001,
+        200002,
+        200003,
+        200004,
+        200005,
+        200006,
+        200007,
+        200008,
+        200009,
+        200010,
+        200011,
+        200012,
+        200013,
+        200016,
+        200017,
+        200018,
+        200019,
+        200020,
+        200021,
+        200022,
+        200023,
+        200026,
+        200027
+      ],
+      "complete_block_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "modes": {
+        "left": {
+          "successes": 12,
+          "included": 12,
+          "sr_pct": 100.0,
+          "recorded": 12,
+          "recorded_successes": 12
+        },
+        "right": {
+          "successes": 11,
+          "included": 12,
+          "sr_pct": 91.66666666666667,
+          "recorded": 12,
+          "recorded_successes": 11
+        }
+      },
+      "columns": [
+        {
+          "label": "Left",
+          "modes": [
+            "left"
+          ],
+          "successes": 12,
+          "included": 12,
+          "sr_pct": 100.0
+        },
+        {
+          "label": "Right",
+          "modes": [
+            "right"
+          ],
+          "successes": 11,
+          "included": 12,
+          "sr_pct": 91.66666666666667
+        }
+      ],
+      "avg_pct": 95.83333333333334
+    },
+    {
+      "policy": "lingbot_va",
+      "task": "stack_sequence",
+      "complete": true,
+      "completed_blocks": 12,
+      "expected_blocks": 12,
+      "recorded_episodes": 72,
+      "expected_episodes": 72,
+      "recorded_successes": 10,
+      "included_episodes": 72,
+      "partial_group_episodes": 0,
+      "included_seeds": [
+        100008,
+        100009,
+        100010,
+        100011,
+        100012,
+        100013,
+        100014,
+        100015,
+        100016,
+        100017,
+        100018,
+        100019,
+        100020,
+        100021,
+        100022,
+        100023,
+        100024,
+        100025,
+        100026,
+        100027,
+        100028,
+        100029,
+        100030,
+        100031,
+        100032,
+        100033,
+        100034,
+        100035,
+        100036,
+        100037,
+        100038,
+        100039,
+        100040,
+        100041,
+        100042,
+        100043,
+        100050,
+        100051,
+        100052,
+        100053,
+        100054,
+        100055,
+        100062,
+        100063,
+        100064,
+        100065,
+        100066,
+        100067,
+        100068,
+        100069,
+        100070,
+        100071,
+        100072,
+        100073,
+        100080,
+        100081,
+        100082,
+        100083,
+        100084,
+        100085,
+        100092,
+        100093,
+        100094,
+        100095,
+        100096,
+        100097,
+        100098,
+        100099,
+        100100,
+        100101,
+        100102,
+        100103
+      ],
+      "complete_block_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "modes": {
+        "red>green>blue": {
+          "successes": 10,
+          "included": 12,
+          "sr_pct": 83.33333333333333,
+          "recorded": 12,
+          "recorded_successes": 10
+        },
+        "red>blue>green": {
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0,
+          "recorded": 12,
+          "recorded_successes": 0
+        },
+        "green>red>blue": {
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0,
+          "recorded": 12,
+          "recorded_successes": 0
+        },
+        "green>blue>red": {
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0,
+          "recorded": 12,
+          "recorded_successes": 0
+        },
+        "blue>red>green": {
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0,
+          "recorded": 12,
+          "recorded_successes": 0
+        },
+        "blue>green>red": {
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0,
+          "recorded": 12,
+          "recorded_successes": 0
+        }
+      },
+      "columns": [
+        {
+          "label": "RGB",
+          "modes": [
+            "red>green>blue"
+          ],
+          "successes": 10,
+          "included": 12,
+          "sr_pct": 83.33333333333333
+        },
+        {
+          "label": "RBG",
+          "modes": [
+            "red>blue>green"
+          ],
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0
+        },
+        {
+          "label": "GRB",
+          "modes": [
+            "green>red>blue"
+          ],
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0
+        },
+        {
+          "label": "GBR",
+          "modes": [
+            "green>blue>red"
+          ],
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0
+        },
+        {
+          "label": "BRG",
+          "modes": [
+            "blue>red>green"
+          ],
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0
+        },
+        {
+          "label": "BGR",
+          "modes": [
+            "blue>green>red"
+          ],
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0
+        }
+      ],
+      "avg_pct": 13.888888888888888
+    },
+    {
+      "policy": "lingbot_va",
+      "task": "place_relative",
+      "complete": true,
+      "completed_blocks": 12,
+      "expected_blocks": 12,
+      "recorded_episodes": 60,
+      "expected_episodes": 60,
+      "recorded_successes": 18,
+      "included_episodes": 60,
+      "partial_group_episodes": 0,
+      "included_seeds": [
+        100005,
+        100006,
+        100007,
+        100008,
+        100009,
+        100010,
+        100011,
+        100012,
+        100013,
+        100014,
+        100015,
+        100016,
+        100017,
+        100018,
+        100019,
+        100020,
+        100021,
+        100022,
+        100023,
+        100024,
+        100025,
+        100026,
+        100027,
+        100028,
+        100029,
+        100030,
+        100031,
+        100032,
+        100033,
+        100034,
+        100040,
+        100041,
+        100042,
+        100043,
+        100044,
+        100045,
+        100046,
+        100047,
+        100048,
+        100049,
+        100050,
+        100051,
+        100052,
+        100053,
+        100054,
+        100055,
+        100056,
+        100057,
+        100058,
+        100059,
+        100060,
+        100061,
+        100062,
+        100063,
+        100064,
+        100065,
+        100066,
+        100067,
+        100068,
+        100069
+      ],
+      "complete_block_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "modes": {
+        "left": {
+          "successes": 9,
+          "included": 12,
+          "sr_pct": 75.0,
+          "recorded": 12,
+          "recorded_successes": 9
+        },
+        "right": {
+          "successes": 4,
+          "included": 12,
+          "sr_pct": 33.333333333333336,
+          "recorded": 12,
+          "recorded_successes": 4
+        },
+        "front": {
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0,
+          "recorded": 12,
+          "recorded_successes": 0
+        },
+        "back": {
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0,
+          "recorded": 12,
+          "recorded_successes": 0
+        },
+        "on_top": {
+          "successes": 5,
+          "included": 12,
+          "sr_pct": 41.666666666666664,
+          "recorded": 12,
+          "recorded_successes": 5
+        }
+      },
+      "columns": [
+        {
+          "label": "Left",
+          "modes": [
+            "left"
+          ],
+          "successes": 9,
+          "included": 12,
+          "sr_pct": 75.0
+        },
+        {
+          "label": "Right",
+          "modes": [
+            "right"
+          ],
+          "successes": 4,
+          "included": 12,
+          "sr_pct": 33.333333333333336
+        },
+        {
+          "label": "Front",
+          "modes": [
+            "front"
+          ],
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0
+        },
+        {
+          "label": "Back",
+          "modes": [
+            "back"
+          ],
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0
+        },
+        {
+          "label": "Top",
+          "modes": [
+            "on_top"
+          ],
+          "successes": 5,
+          "included": 12,
+          "sr_pct": 41.666666666666664
+        }
+      ],
+      "avg_pct": 30.0
+    },
+    {
+      "policy": "lingbot_va",
+      "task": "grasp_cube_approach",
+      "complete": true,
+      "completed_blocks": 12,
+      "expected_blocks": 12,
+      "recorded_episodes": 24,
+      "expected_episodes": 24,
+      "recorded_successes": 12,
+      "included_episodes": 24,
+      "partial_group_episodes": 0,
+      "included_seeds": [
+        500000,
+        500001,
+        500004,
+        500005,
+        500006,
+        500007,
+        500008,
+        500009,
+        500010,
+        500011,
+        500012,
+        500013,
+        500016,
+        500017,
+        500018,
+        500019,
+        500020,
+        500021,
+        500022,
+        500023,
+        500026,
+        500027,
+        500032,
+        500033
+      ],
+      "complete_block_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "modes": {
+        "top": {
+          "successes": 12,
+          "included": 12,
+          "sr_pct": 100.0,
+          "recorded": 12,
+          "recorded_successes": 12
+        },
+        "side": {
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0,
+          "recorded": 12,
+          "recorded_successes": 0
+        }
+      },
+      "columns": [
+        {
+          "label": "Top",
+          "modes": [
+            "top"
+          ],
+          "successes": 12,
+          "included": 12,
+          "sr_pct": 100.0
+        },
+        {
+          "label": "Side",
+          "modes": [
+            "side"
+          ],
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0
+        }
+      ],
+      "avg_pct": 50.0
+    },
+    {
+      "policy": "lingbot_vla",
+      "task": "bottle_verb",
+      "complete": true,
+      "completed_blocks": 12,
+      "expected_blocks": 12,
+      "recorded_episodes": 24,
+      "expected_episodes": 24,
+      "recorded_successes": 13,
+      "included_episodes": 24,
+      "partial_group_episodes": 0,
+      "included_seeds": [
+        100002,
+        100003,
+        100004,
+        100005,
+        100006,
+        100007,
+        100008,
+        100009,
+        100010,
+        100011,
+        100016,
+        100017,
+        100018,
+        100019,
+        100020,
+        100021,
+        100022,
+        100023,
+        100024,
+        100025,
+        100026,
+        100027,
+        100030,
+        100031
+      ],
+      "complete_block_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "modes": {
+        "pick": {
+          "successes": 1,
+          "included": 12,
+          "sr_pct": 8.333333333333334,
+          "recorded": 12,
+          "recorded_successes": 1
+        },
+        "shake": {
+          "successes": 12,
+          "included": 12,
+          "sr_pct": 100.0,
+          "recorded": 12,
+          "recorded_successes": 12
+        }
+      },
+      "columns": [
+        {
+          "label": "Pick",
+          "modes": [
+            "pick"
+          ],
+          "successes": 1,
+          "included": 12,
+          "sr_pct": 8.333333333333334
+        },
+        {
+          "label": "Shake",
+          "modes": [
+            "shake"
+          ],
+          "successes": 12,
+          "included": 12,
+          "sr_pct": 100.0
+        }
+      ],
+      "avg_pct": 54.166666666666664
+    },
+    {
+      "policy": "lingbot_vla",
+      "task": "pick_diverse_object",
+      "complete": true,
+      "completed_blocks": 12,
+      "expected_blocks": 12,
+      "recorded_episodes": 24,
+      "expected_episodes": 24,
+      "recorded_successes": 8,
+      "included_episodes": 24,
+      "partial_group_episodes": 0,
+      "included_seeds": [
+        100002,
+        100003,
+        100004,
+        100005,
+        100006,
+        100007,
+        100008,
+        100009,
+        100012,
+        100013,
+        100014,
+        100015,
+        100018,
+        100019,
+        100020,
+        100021,
+        100024,
+        100025,
+        100034,
+        100035,
+        100036,
+        100037,
+        100038,
+        100039
+      ],
+      "complete_block_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "modes": {
+        "seen": {
+          "successes": 6,
+          "included": 12,
+          "sr_pct": 50.0,
+          "recorded": 12,
+          "recorded_successes": 6
+        },
+        "unseen": {
+          "successes": 2,
+          "included": 12,
+          "sr_pct": 16.666666666666668,
+          "recorded": 12,
+          "recorded_successes": 2
+        }
+      },
+      "columns": [
+        {
+          "label": "Seen",
+          "modes": [
+            "seen"
+          ],
+          "successes": 6,
+          "included": 12,
+          "sr_pct": 50.0
+        },
+        {
+          "label": "Unseen",
+          "modes": [
+            "unseen"
+          ],
+          "successes": 2,
+          "included": 12,
+          "sr_pct": 16.666666666666668
+        }
+      ],
+      "avg_pct": 33.333333333333336
+    },
+    {
+      "policy": "lingbot_vla",
+      "task": "attribute_select",
+      "complete": true,
+      "completed_blocks": 12,
+      "expected_blocks": 12,
+      "recorded_episodes": 96,
+      "expected_episodes": 96,
+      "recorded_successes": 57,
+      "included_episodes": 96,
+      "partial_group_episodes": 0,
+      "included_seeds": [
+        100000,
+        100001,
+        100002,
+        100003,
+        100004,
+        100005,
+        100006,
+        100007,
+        100008,
+        100009,
+        100010,
+        100011,
+        100012,
+        100013,
+        100014,
+        100015,
+        100016,
+        100017,
+        100018,
+        100019,
+        100020,
+        100021,
+        100022,
+        100023,
+        100024,
+        100025,
+        100026,
+        100027,
+        100028,
+        100029,
+        100030,
+        100031,
+        100032,
+        100033,
+        100034,
+        100035,
+        100036,
+        100037,
+        100038,
+        100039,
+        100040,
+        100041,
+        100042,
+        100043,
+        100044,
+        100045,
+        100046,
+        100047,
+        100048,
+        100049,
+        100050,
+        100051,
+        100052,
+        100053,
+        100054,
+        100055,
+        100064,
+        100065,
+        100066,
+        100067,
+        100068,
+        100069,
+        100070,
+        100071,
+        100072,
+        100073,
+        100074,
+        100075,
+        100076,
+        100077,
+        100078,
+        100079,
+        100080,
+        100081,
+        100082,
+        100083,
+        100084,
+        100085,
+        100086,
+        100087,
+        100088,
+        100089,
+        100090,
+        100091,
+        100092,
+        100093,
+        100094,
+        100095,
+        100096,
+        100097,
+        100098,
+        100099,
+        100100,
+        100101,
+        100102,
+        100103
+      ],
+      "complete_block_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "modes": {
+        "color:red": {
+          "successes": 11,
+          "included": 12,
+          "sr_pct": 91.66666666666667,
+          "recorded": 12,
+          "recorded_successes": 11
+        },
+        "color:blue": {
+          "successes": 10,
+          "included": 12,
+          "sr_pct": 83.33333333333333,
+          "recorded": 12,
+          "recorded_successes": 10
+        },
+        "decal:cat": {
+          "successes": 7,
+          "included": 12,
+          "sr_pct": 58.333333333333336,
+          "recorded": 12,
+          "recorded_successes": 7
+        },
+        "decal:dog": {
+          "successes": 6,
+          "included": 12,
+          "sr_pct": 50.0,
+          "recorded": 12,
+          "recorded_successes": 6
+        },
+        "shape:block": {
+          "successes": 2,
+          "included": 12,
+          "sr_pct": 16.666666666666668,
+          "recorded": 12,
+          "recorded_successes": 2
+        },
+        "shape:bar": {
+          "successes": 8,
+          "included": 12,
+          "sr_pct": 66.66666666666667,
+          "recorded": 12,
+          "recorded_successes": 8
+        },
+        "size:big": {
+          "successes": 1,
+          "included": 12,
+          "sr_pct": 8.333333333333334,
+          "recorded": 12,
+          "recorded_successes": 1
+        },
+        "size:small": {
+          "successes": 12,
+          "included": 12,
+          "sr_pct": 100.0,
+          "recorded": 12,
+          "recorded_successes": 12
+        }
+      },
+      "columns": [
+        {
+          "label": "Color",
+          "modes": [
+            "color:red",
+            "color:blue"
+          ],
+          "successes": 21,
+          "included": 24,
+          "sr_pct": 87.5
+        },
+        {
+          "label": "Decal",
+          "modes": [
+            "decal:cat",
+            "decal:dog"
+          ],
+          "successes": 13,
+          "included": 24,
+          "sr_pct": 54.16666666666667
+        },
+        {
+          "label": "Shape",
+          "modes": [
+            "shape:block",
+            "shape:bar"
+          ],
+          "successes": 10,
+          "included": 24,
+          "sr_pct": 41.66666666666667
+        },
+        {
+          "label": "Size",
+          "modes": [
+            "size:big",
+            "size:small"
+          ],
+          "successes": 13,
+          "included": 24,
+          "sr_pct": 54.166666666666664
+        }
+      ],
+      "avg_pct": 59.375
+    },
+    {
+      "policy": "lingbot_vla",
+      "task": "arm_select",
+      "complete": true,
+      "completed_blocks": 12,
+      "expected_blocks": 12,
+      "recorded_episodes": 24,
+      "expected_episodes": 24,
+      "recorded_successes": 7,
+      "included_episodes": 24,
+      "partial_group_episodes": 0,
+      "included_seeds": [
+        200000,
+        200001,
+        200002,
+        200003,
+        200004,
+        200005,
+        200006,
+        200007,
+        200008,
+        200009,
+        200010,
+        200011,
+        200012,
+        200013,
+        200016,
+        200017,
+        200018,
+        200019,
+        200020,
+        200021,
+        200022,
+        200023,
+        200026,
+        200027
+      ],
+      "complete_block_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "modes": {
+        "left": {
+          "successes": 4,
+          "included": 12,
+          "sr_pct": 33.333333333333336,
+          "recorded": 12,
+          "recorded_successes": 4
+        },
+        "right": {
+          "successes": 3,
+          "included": 12,
+          "sr_pct": 25.0,
+          "recorded": 12,
+          "recorded_successes": 3
+        }
+      },
+      "columns": [
+        {
+          "label": "Left",
+          "modes": [
+            "left"
+          ],
+          "successes": 4,
+          "included": 12,
+          "sr_pct": 33.333333333333336
+        },
+        {
+          "label": "Right",
+          "modes": [
+            "right"
+          ],
+          "successes": 3,
+          "included": 12,
+          "sr_pct": 25.0
+        }
+      ],
+      "avg_pct": 29.166666666666668
+    },
+    {
+      "policy": "lingbot_vla",
+      "task": "stack_sequence",
+      "complete": true,
+      "completed_blocks": 12,
+      "expected_blocks": 12,
+      "recorded_episodes": 72,
+      "expected_episodes": 72,
+      "recorded_successes": 7,
+      "included_episodes": 72,
+      "partial_group_episodes": 0,
+      "included_seeds": [
+        100008,
+        100009,
+        100010,
+        100011,
+        100012,
+        100013,
+        100014,
+        100015,
+        100016,
+        100017,
+        100018,
+        100019,
+        100020,
+        100021,
+        100022,
+        100023,
+        100024,
+        100025,
+        100026,
+        100027,
+        100028,
+        100029,
+        100030,
+        100031,
+        100032,
+        100033,
+        100034,
+        100035,
+        100036,
+        100037,
+        100038,
+        100039,
+        100040,
+        100041,
+        100042,
+        100043,
+        100050,
+        100051,
+        100052,
+        100053,
+        100054,
+        100055,
+        100062,
+        100063,
+        100064,
+        100065,
+        100066,
+        100067,
+        100068,
+        100069,
+        100070,
+        100071,
+        100072,
+        100073,
+        100080,
+        100081,
+        100082,
+        100083,
+        100084,
+        100085,
+        100092,
+        100093,
+        100094,
+        100095,
+        100096,
+        100097,
+        100098,
+        100099,
+        100100,
+        100101,
+        100102,
+        100103
+      ],
+      "complete_block_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "modes": {
+        "red>green>blue": {
+          "successes": 7,
+          "included": 12,
+          "sr_pct": 58.333333333333336,
+          "recorded": 12,
+          "recorded_successes": 7
+        },
+        "red>blue>green": {
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0,
+          "recorded": 12,
+          "recorded_successes": 0
+        },
+        "green>red>blue": {
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0,
+          "recorded": 12,
+          "recorded_successes": 0
+        },
+        "green>blue>red": {
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0,
+          "recorded": 12,
+          "recorded_successes": 0
+        },
+        "blue>red>green": {
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0,
+          "recorded": 12,
+          "recorded_successes": 0
+        },
+        "blue>green>red": {
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0,
+          "recorded": 12,
+          "recorded_successes": 0
+        }
+      },
+      "columns": [
+        {
+          "label": "RGB",
+          "modes": [
+            "red>green>blue"
+          ],
+          "successes": 7,
+          "included": 12,
+          "sr_pct": 58.333333333333336
+        },
+        {
+          "label": "RBG",
+          "modes": [
+            "red>blue>green"
+          ],
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0
+        },
+        {
+          "label": "GRB",
+          "modes": [
+            "green>red>blue"
+          ],
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0
+        },
+        {
+          "label": "GBR",
+          "modes": [
+            "green>blue>red"
+          ],
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0
+        },
+        {
+          "label": "BRG",
+          "modes": [
+            "blue>red>green"
+          ],
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0
+        },
+        {
+          "label": "BGR",
+          "modes": [
+            "blue>green>red"
+          ],
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0
+        }
+      ],
+      "avg_pct": 9.722222222222223
+    },
+    {
+      "policy": "lingbot_vla",
+      "task": "place_relative",
+      "complete": true,
+      "completed_blocks": 12,
+      "expected_blocks": 12,
+      "recorded_episodes": 60,
+      "expected_episodes": 60,
+      "recorded_successes": 1,
+      "included_episodes": 60,
+      "partial_group_episodes": 0,
+      "included_seeds": [
+        100005,
+        100006,
+        100007,
+        100008,
+        100009,
+        100010,
+        100011,
+        100012,
+        100013,
+        100014,
+        100015,
+        100016,
+        100017,
+        100018,
+        100019,
+        100020,
+        100021,
+        100022,
+        100023,
+        100024,
+        100025,
+        100026,
+        100027,
+        100028,
+        100029,
+        100030,
+        100031,
+        100032,
+        100033,
+        100034,
+        100040,
+        100041,
+        100042,
+        100043,
+        100044,
+        100045,
+        100046,
+        100047,
+        100048,
+        100049,
+        100050,
+        100051,
+        100052,
+        100053,
+        100054,
+        100055,
+        100056,
+        100057,
+        100058,
+        100059,
+        100060,
+        100061,
+        100062,
+        100063,
+        100064,
+        100065,
+        100066,
+        100067,
+        100068,
+        100069
+      ],
+      "complete_block_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "modes": {
+        "left": {
+          "successes": 1,
+          "included": 12,
+          "sr_pct": 8.333333333333334,
+          "recorded": 12,
+          "recorded_successes": 1
+        },
+        "right": {
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0,
+          "recorded": 12,
+          "recorded_successes": 0
+        },
+        "front": {
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0,
+          "recorded": 12,
+          "recorded_successes": 0
+        },
+        "back": {
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0,
+          "recorded": 12,
+          "recorded_successes": 0
+        },
+        "on_top": {
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0,
+          "recorded": 12,
+          "recorded_successes": 0
+        }
+      },
+      "columns": [
+        {
+          "label": "Left",
+          "modes": [
+            "left"
+          ],
+          "successes": 1,
+          "included": 12,
+          "sr_pct": 8.333333333333334
+        },
+        {
+          "label": "Right",
+          "modes": [
+            "right"
+          ],
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0
+        },
+        {
+          "label": "Front",
+          "modes": [
+            "front"
+          ],
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0
+        },
+        {
+          "label": "Back",
+          "modes": [
+            "back"
+          ],
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0
+        },
+        {
+          "label": "Top",
+          "modes": [
+            "on_top"
+          ],
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0
+        }
+      ],
+      "avg_pct": 1.6666666666666667
+    },
+    {
+      "policy": "lingbot_vla",
+      "task": "grasp_cube_approach",
+      "complete": true,
+      "completed_blocks": 12,
+      "expected_blocks": 12,
+      "recorded_episodes": 24,
+      "expected_episodes": 24,
+      "recorded_successes": 10,
+      "included_episodes": 24,
+      "partial_group_episodes": 0,
+      "included_seeds": [
+        500000,
+        500001,
+        500004,
+        500005,
+        500006,
+        500007,
+        500008,
+        500009,
+        500010,
+        500011,
+        500012,
+        500013,
+        500016,
+        500017,
+        500018,
+        500019,
+        500020,
+        500021,
+        500022,
+        500023,
+        500026,
+        500027,
+        500032,
+        500033
+      ],
+      "complete_block_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "modes": {
+        "top": {
+          "successes": 10,
+          "included": 12,
+          "sr_pct": 83.33333333333333,
+          "recorded": 12,
+          "recorded_successes": 10
+        },
+        "side": {
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0,
+          "recorded": 12,
+          "recorded_successes": 0
+        }
+      },
+      "columns": [
+        {
+          "label": "Top",
+          "modes": [
+            "top"
+          ],
+          "successes": 10,
+          "included": 12,
+          "sr_pct": 83.33333333333333
+        },
+        {
+          "label": "Side",
+          "modes": [
+            "side"
+          ],
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0
+        }
+      ],
+      "avg_pct": 41.666666666666664
+    },
+    {
+      "policy": "vlact",
+      "task": "bottle_verb",
+      "complete": true,
+      "completed_blocks": 12,
+      "expected_blocks": 12,
+      "recorded_episodes": 24,
+      "expected_episodes": 24,
+      "recorded_successes": 12,
+      "included_episodes": 24,
+      "partial_group_episodes": 0,
+      "included_seeds": [
+        100002,
+        100003,
+        100004,
+        100005,
+        100006,
+        100007,
+        100008,
+        100009,
+        100010,
+        100011,
+        100016,
+        100017,
+        100018,
+        100019,
+        100020,
+        100021,
+        100022,
+        100023,
+        100024,
+        100025,
+        100026,
+        100027,
+        100030,
+        100031
+      ],
+      "complete_block_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "modes": {
+        "pick": {
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0,
+          "recorded": 12,
+          "recorded_successes": 0
+        },
+        "shake": {
+          "successes": 12,
+          "included": 12,
+          "sr_pct": 100.0,
+          "recorded": 12,
+          "recorded_successes": 12
+        }
+      },
+      "columns": [
+        {
+          "label": "Pick",
+          "modes": [
+            "pick"
+          ],
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0
+        },
+        {
+          "label": "Shake",
+          "modes": [
+            "shake"
+          ],
+          "successes": 12,
+          "included": 12,
+          "sr_pct": 100.0
+        }
+      ],
+      "avg_pct": 50.0
+    },
+    {
+      "policy": "vlact",
+      "task": "pick_diverse_object",
+      "complete": true,
+      "completed_blocks": 12,
+      "expected_blocks": 12,
+      "recorded_episodes": 24,
+      "expected_episodes": 24,
+      "recorded_successes": 16,
+      "included_episodes": 24,
+      "partial_group_episodes": 0,
+      "included_seeds": [
+        100002,
+        100003,
+        100004,
+        100005,
+        100006,
+        100007,
+        100008,
+        100009,
+        100012,
+        100013,
+        100014,
+        100015,
+        100018,
+        100019,
+        100020,
+        100021,
+        100024,
+        100025,
+        100034,
+        100035,
+        100036,
+        100037,
+        100038,
+        100039
+      ],
+      "complete_block_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "modes": {
+        "seen": {
+          "successes": 11,
+          "included": 12,
+          "sr_pct": 91.66666666666667,
+          "recorded": 12,
+          "recorded_successes": 11
+        },
+        "unseen": {
+          "successes": 5,
+          "included": 12,
+          "sr_pct": 41.666666666666664,
+          "recorded": 12,
+          "recorded_successes": 5
+        }
+      },
+      "columns": [
+        {
+          "label": "Seen",
+          "modes": [
+            "seen"
+          ],
+          "successes": 11,
+          "included": 12,
+          "sr_pct": 91.66666666666667
+        },
+        {
+          "label": "Unseen",
+          "modes": [
+            "unseen"
+          ],
+          "successes": 5,
+          "included": 12,
+          "sr_pct": 41.666666666666664
+        }
+      ],
+      "avg_pct": 66.66666666666667
+    },
+    {
+      "policy": "vlact",
+      "task": "attribute_select",
+      "complete": true,
+      "completed_blocks": 12,
+      "expected_blocks": 12,
+      "recorded_episodes": 96,
+      "expected_episodes": 96,
+      "recorded_successes": 80,
+      "included_episodes": 96,
+      "partial_group_episodes": 0,
+      "included_seeds": [
+        100000,
+        100001,
+        100002,
+        100003,
+        100004,
+        100005,
+        100006,
+        100007,
+        100008,
+        100009,
+        100010,
+        100011,
+        100012,
+        100013,
+        100014,
+        100015,
+        100016,
+        100017,
+        100018,
+        100019,
+        100020,
+        100021,
+        100022,
+        100023,
+        100024,
+        100025,
+        100026,
+        100027,
+        100028,
+        100029,
+        100030,
+        100031,
+        100032,
+        100033,
+        100034,
+        100035,
+        100036,
+        100037,
+        100038,
+        100039,
+        100040,
+        100041,
+        100042,
+        100043,
+        100044,
+        100045,
+        100046,
+        100047,
+        100048,
+        100049,
+        100050,
+        100051,
+        100052,
+        100053,
+        100054,
+        100055,
+        100064,
+        100065,
+        100066,
+        100067,
+        100068,
+        100069,
+        100070,
+        100071,
+        100072,
+        100073,
+        100074,
+        100075,
+        100076,
+        100077,
+        100078,
+        100079,
+        100080,
+        100081,
+        100082,
+        100083,
+        100084,
+        100085,
+        100086,
+        100087,
+        100088,
+        100089,
+        100090,
+        100091,
+        100092,
+        100093,
+        100094,
+        100095,
+        100096,
+        100097,
+        100098,
+        100099,
+        100100,
+        100101,
+        100102,
+        100103
+      ],
+      "complete_block_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "modes": {
+        "color:red": {
+          "successes": 12,
+          "included": 12,
+          "sr_pct": 100.0,
+          "recorded": 12,
+          "recorded_successes": 12
+        },
+        "color:blue": {
+          "successes": 11,
+          "included": 12,
+          "sr_pct": 91.66666666666667,
+          "recorded": 12,
+          "recorded_successes": 11
+        },
+        "decal:cat": {
+          "successes": 11,
+          "included": 12,
+          "sr_pct": 91.66666666666667,
+          "recorded": 12,
+          "recorded_successes": 11
+        },
+        "decal:dog": {
+          "successes": 8,
+          "included": 12,
+          "sr_pct": 66.66666666666667,
+          "recorded": 12,
+          "recorded_successes": 8
+        },
+        "shape:block": {
+          "successes": 9,
+          "included": 12,
+          "sr_pct": 75.0,
+          "recorded": 12,
+          "recorded_successes": 9
+        },
+        "shape:bar": {
+          "successes": 12,
+          "included": 12,
+          "sr_pct": 100.0,
+          "recorded": 12,
+          "recorded_successes": 12
+        },
+        "size:big": {
+          "successes": 5,
+          "included": 12,
+          "sr_pct": 41.666666666666664,
+          "recorded": 12,
+          "recorded_successes": 5
+        },
+        "size:small": {
+          "successes": 12,
+          "included": 12,
+          "sr_pct": 100.0,
+          "recorded": 12,
+          "recorded_successes": 12
+        }
+      },
+      "columns": [
+        {
+          "label": "Color",
+          "modes": [
+            "color:red",
+            "color:blue"
+          ],
+          "successes": 23,
+          "included": 24,
+          "sr_pct": 95.83333333333334
+        },
+        {
+          "label": "Decal",
+          "modes": [
+            "decal:cat",
+            "decal:dog"
+          ],
+          "successes": 19,
+          "included": 24,
+          "sr_pct": 79.16666666666667
+        },
+        {
+          "label": "Shape",
+          "modes": [
+            "shape:block",
+            "shape:bar"
+          ],
+          "successes": 21,
+          "included": 24,
+          "sr_pct": 87.5
+        },
+        {
+          "label": "Size",
+          "modes": [
+            "size:big",
+            "size:small"
+          ],
+          "successes": 17,
+          "included": 24,
+          "sr_pct": 70.83333333333333
+        }
+      ],
+      "avg_pct": 83.33333333333333
+    },
+    {
+      "policy": "vlact",
+      "task": "arm_select",
+      "complete": true,
+      "completed_blocks": 12,
+      "expected_blocks": 12,
+      "recorded_episodes": 24,
+      "expected_episodes": 24,
+      "recorded_successes": 0,
+      "included_episodes": 24,
+      "partial_group_episodes": 0,
+      "included_seeds": [
+        200000,
+        200001,
+        200002,
+        200003,
+        200004,
+        200005,
+        200006,
+        200007,
+        200008,
+        200009,
+        200010,
+        200011,
+        200012,
+        200013,
+        200016,
+        200017,
+        200018,
+        200019,
+        200020,
+        200021,
+        200022,
+        200023,
+        200026,
+        200027
+      ],
+      "complete_block_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "modes": {
+        "left": {
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0,
+          "recorded": 12,
+          "recorded_successes": 0
+        },
+        "right": {
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0,
+          "recorded": 12,
+          "recorded_successes": 0
+        }
+      },
+      "columns": [
+        {
+          "label": "Left",
+          "modes": [
+            "left"
+          ],
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0
+        },
+        {
+          "label": "Right",
+          "modes": [
+            "right"
+          ],
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0
+        }
+      ],
+      "avg_pct": 0.0
+    },
+    {
+      "policy": "vlact",
+      "task": "stack_sequence",
+      "complete": true,
+      "completed_blocks": 12,
+      "expected_blocks": 12,
+      "recorded_episodes": 72,
+      "expected_episodes": 72,
+      "recorded_successes": 11,
+      "included_episodes": 72,
+      "partial_group_episodes": 0,
+      "included_seeds": [
+        100008,
+        100009,
+        100010,
+        100011,
+        100012,
+        100013,
+        100014,
+        100015,
+        100016,
+        100017,
+        100018,
+        100019,
+        100020,
+        100021,
+        100022,
+        100023,
+        100024,
+        100025,
+        100026,
+        100027,
+        100028,
+        100029,
+        100030,
+        100031,
+        100032,
+        100033,
+        100034,
+        100035,
+        100036,
+        100037,
+        100038,
+        100039,
+        100040,
+        100041,
+        100042,
+        100043,
+        100050,
+        100051,
+        100052,
+        100053,
+        100054,
+        100055,
+        100062,
+        100063,
+        100064,
+        100065,
+        100066,
+        100067,
+        100068,
+        100069,
+        100070,
+        100071,
+        100072,
+        100073,
+        100080,
+        100081,
+        100082,
+        100083,
+        100084,
+        100085,
+        100092,
+        100093,
+        100094,
+        100095,
+        100096,
+        100097,
+        100098,
+        100099,
+        100100,
+        100101,
+        100102,
+        100103
+      ],
+      "complete_block_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "modes": {
+        "red>green>blue": {
+          "successes": 6,
+          "included": 12,
+          "sr_pct": 50.0,
+          "recorded": 12,
+          "recorded_successes": 6
+        },
+        "red>blue>green": {
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0,
+          "recorded": 12,
+          "recorded_successes": 0
+        },
+        "green>red>blue": {
+          "successes": 1,
+          "included": 12,
+          "sr_pct": 8.333333333333334,
+          "recorded": 12,
+          "recorded_successes": 1
+        },
+        "green>blue>red": {
+          "successes": 2,
+          "included": 12,
+          "sr_pct": 16.666666666666668,
+          "recorded": 12,
+          "recorded_successes": 2
+        },
+        "blue>red>green": {
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0,
+          "recorded": 12,
+          "recorded_successes": 0
+        },
+        "blue>green>red": {
+          "successes": 2,
+          "included": 12,
+          "sr_pct": 16.666666666666668,
+          "recorded": 12,
+          "recorded_successes": 2
+        }
+      },
+      "columns": [
+        {
+          "label": "RGB",
+          "modes": [
+            "red>green>blue"
+          ],
+          "successes": 6,
+          "included": 12,
+          "sr_pct": 50.0
+        },
+        {
+          "label": "RBG",
+          "modes": [
+            "red>blue>green"
+          ],
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0
+        },
+        {
+          "label": "GRB",
+          "modes": [
+            "green>red>blue"
+          ],
+          "successes": 1,
+          "included": 12,
+          "sr_pct": 8.333333333333334
+        },
+        {
+          "label": "GBR",
+          "modes": [
+            "green>blue>red"
+          ],
+          "successes": 2,
+          "included": 12,
+          "sr_pct": 16.666666666666668
+        },
+        {
+          "label": "BRG",
+          "modes": [
+            "blue>red>green"
+          ],
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0
+        },
+        {
+          "label": "BGR",
+          "modes": [
+            "blue>green>red"
+          ],
+          "successes": 2,
+          "included": 12,
+          "sr_pct": 16.666666666666668
+        }
+      ],
+      "avg_pct": 15.277777777777779
+    },
+    {
+      "policy": "vlact",
+      "task": "place_relative",
+      "complete": true,
+      "completed_blocks": 12,
+      "expected_blocks": 12,
+      "recorded_episodes": 60,
+      "expected_episodes": 60,
+      "recorded_successes": 12,
+      "included_episodes": 60,
+      "partial_group_episodes": 0,
+      "included_seeds": [
+        100005,
+        100006,
+        100007,
+        100008,
+        100009,
+        100010,
+        100011,
+        100012,
+        100013,
+        100014,
+        100015,
+        100016,
+        100017,
+        100018,
+        100019,
+        100020,
+        100021,
+        100022,
+        100023,
+        100024,
+        100025,
+        100026,
+        100027,
+        100028,
+        100029,
+        100030,
+        100031,
+        100032,
+        100033,
+        100034,
+        100040,
+        100041,
+        100042,
+        100043,
+        100044,
+        100045,
+        100046,
+        100047,
+        100048,
+        100049,
+        100050,
+        100051,
+        100052,
+        100053,
+        100054,
+        100055,
+        100056,
+        100057,
+        100058,
+        100059,
+        100060,
+        100061,
+        100062,
+        100063,
+        100064,
+        100065,
+        100066,
+        100067,
+        100068,
+        100069
+      ],
+      "complete_block_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "modes": {
+        "left": {
+          "successes": 9,
+          "included": 12,
+          "sr_pct": 75.0,
+          "recorded": 12,
+          "recorded_successes": 9
+        },
+        "right": {
+          "successes": 2,
+          "included": 12,
+          "sr_pct": 16.666666666666668,
+          "recorded": 12,
+          "recorded_successes": 2
+        },
+        "front": {
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0,
+          "recorded": 12,
+          "recorded_successes": 0
+        },
+        "back": {
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0,
+          "recorded": 12,
+          "recorded_successes": 0
+        },
+        "on_top": {
+          "successes": 1,
+          "included": 12,
+          "sr_pct": 8.333333333333334,
+          "recorded": 12,
+          "recorded_successes": 1
+        }
+      },
+      "columns": [
+        {
+          "label": "Left",
+          "modes": [
+            "left"
+          ],
+          "successes": 9,
+          "included": 12,
+          "sr_pct": 75.0
+        },
+        {
+          "label": "Right",
+          "modes": [
+            "right"
+          ],
+          "successes": 2,
+          "included": 12,
+          "sr_pct": 16.666666666666668
+        },
+        {
+          "label": "Front",
+          "modes": [
+            "front"
+          ],
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0
+        },
+        {
+          "label": "Back",
+          "modes": [
+            "back"
+          ],
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0
+        },
+        {
+          "label": "Top",
+          "modes": [
+            "on_top"
+          ],
+          "successes": 1,
+          "included": 12,
+          "sr_pct": 8.333333333333334
+        }
+      ],
+      "avg_pct": 20.0
+    },
+    {
+      "policy": "vlact",
+      "task": "grasp_cube_approach",
+      "complete": true,
+      "completed_blocks": 12,
+      "expected_blocks": 12,
+      "recorded_episodes": 24,
+      "expected_episodes": 24,
+      "recorded_successes": 7,
+      "included_episodes": 24,
+      "partial_group_episodes": 0,
+      "included_seeds": [
+        500000,
+        500001,
+        500004,
+        500005,
+        500006,
+        500007,
+        500008,
+        500009,
+        500010,
+        500011,
+        500012,
+        500013,
+        500016,
+        500017,
+        500018,
+        500019,
+        500020,
+        500021,
+        500022,
+        500023,
+        500026,
+        500027,
+        500032,
+        500033
+      ],
+      "complete_block_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "modes": {
+        "top": {
+          "successes": 7,
+          "included": 12,
+          "sr_pct": 58.333333333333336,
+          "recorded": 12,
+          "recorded_successes": 7
+        },
+        "side": {
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0,
+          "recorded": 12,
+          "recorded_successes": 0
+        }
+      },
+      "columns": [
+        {
+          "label": "Top",
+          "modes": [
+            "top"
+          ],
+          "successes": 7,
+          "included": 12,
+          "sr_pct": 58.333333333333336
+        },
+        {
+          "label": "Side",
+          "modes": [
+            "side"
+          ],
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0
+        }
+      ],
+      "avg_pct": 29.166666666666668
+    },
+    {
+      "policy": "dm05",
+      "task": "bottle_verb",
+      "complete": true,
+      "completed_blocks": 12,
+      "expected_blocks": 12,
+      "recorded_episodes": 24,
+      "expected_episodes": 24,
+      "recorded_successes": 12,
+      "included_episodes": 24,
+      "partial_group_episodes": 0,
+      "included_seeds": [
+        100002,
+        100003,
+        100004,
+        100005,
+        100006,
+        100007,
+        100008,
+        100009,
+        100010,
+        100011,
+        100016,
+        100017,
+        100018,
+        100019,
+        100020,
+        100021,
+        100022,
+        100023,
+        100024,
+        100025,
+        100026,
+        100027,
+        100030,
+        100031
+      ],
+      "complete_block_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "modes": {
+        "pick": {
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0,
+          "recorded": 12,
+          "recorded_successes": 0
+        },
+        "shake": {
+          "successes": 12,
+          "included": 12,
+          "sr_pct": 100.0,
+          "recorded": 12,
+          "recorded_successes": 12
+        }
+      },
+      "columns": [
+        {
+          "label": "Pick",
+          "modes": [
+            "pick"
+          ],
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0
+        },
+        {
+          "label": "Shake",
+          "modes": [
+            "shake"
+          ],
+          "successes": 12,
+          "included": 12,
+          "sr_pct": 100.0
+        }
+      ],
+      "avg_pct": 50.0
+    },
+    {
+      "policy": "dm05",
+      "task": "pick_diverse_object",
+      "complete": true,
+      "completed_blocks": 12,
+      "expected_blocks": 12,
+      "recorded_episodes": 24,
+      "expected_episodes": 24,
+      "recorded_successes": 15,
+      "included_episodes": 24,
+      "partial_group_episodes": 0,
+      "included_seeds": [
+        100002,
+        100003,
+        100004,
+        100005,
+        100006,
+        100007,
+        100008,
+        100009,
+        100012,
+        100013,
+        100014,
+        100015,
+        100018,
+        100019,
+        100020,
+        100021,
+        100024,
+        100025,
+        100034,
+        100035,
+        100036,
+        100037,
+        100038,
+        100039
+      ],
+      "complete_block_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "modes": {
+        "seen": {
+          "successes": 11,
+          "included": 12,
+          "sr_pct": 91.66666666666667,
+          "recorded": 12,
+          "recorded_successes": 11
+        },
+        "unseen": {
+          "successes": 4,
+          "included": 12,
+          "sr_pct": 33.333333333333336,
+          "recorded": 12,
+          "recorded_successes": 4
+        }
+      },
+      "columns": [
+        {
+          "label": "Seen",
+          "modes": [
+            "seen"
+          ],
+          "successes": 11,
+          "included": 12,
+          "sr_pct": 91.66666666666667
+        },
+        {
+          "label": "Unseen",
+          "modes": [
+            "unseen"
+          ],
+          "successes": 4,
+          "included": 12,
+          "sr_pct": 33.333333333333336
+        }
+      ],
+      "avg_pct": 62.5
+    },
+    {
+      "policy": "dm05",
+      "task": "attribute_select",
+      "complete": true,
+      "completed_blocks": 12,
+      "expected_blocks": 12,
+      "recorded_episodes": 96,
+      "expected_episodes": 96,
+      "recorded_successes": 68,
+      "included_episodes": 96,
+      "partial_group_episodes": 0,
+      "included_seeds": [
+        100000,
+        100001,
+        100002,
+        100003,
+        100004,
+        100005,
+        100006,
+        100007,
+        100008,
+        100009,
+        100010,
+        100011,
+        100012,
+        100013,
+        100014,
+        100015,
+        100016,
+        100017,
+        100018,
+        100019,
+        100020,
+        100021,
+        100022,
+        100023,
+        100024,
+        100025,
+        100026,
+        100027,
+        100028,
+        100029,
+        100030,
+        100031,
+        100032,
+        100033,
+        100034,
+        100035,
+        100036,
+        100037,
+        100038,
+        100039,
+        100040,
+        100041,
+        100042,
+        100043,
+        100044,
+        100045,
+        100046,
+        100047,
+        100048,
+        100049,
+        100050,
+        100051,
+        100052,
+        100053,
+        100054,
+        100055,
+        100064,
+        100065,
+        100066,
+        100067,
+        100068,
+        100069,
+        100070,
+        100071,
+        100072,
+        100073,
+        100074,
+        100075,
+        100076,
+        100077,
+        100078,
+        100079,
+        100080,
+        100081,
+        100082,
+        100083,
+        100084,
+        100085,
+        100086,
+        100087,
+        100088,
+        100089,
+        100090,
+        100091,
+        100092,
+        100093,
+        100094,
+        100095,
+        100096,
+        100097,
+        100098,
+        100099,
+        100100,
+        100101,
+        100102,
+        100103
+      ],
+      "complete_block_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "modes": {
+        "color:red": {
+          "successes": 12,
+          "included": 12,
+          "sr_pct": 100.0,
+          "recorded": 12,
+          "recorded_successes": 12
+        },
+        "color:blue": {
+          "successes": 9,
+          "included": 12,
+          "sr_pct": 75.0,
+          "recorded": 12,
+          "recorded_successes": 9
+        },
+        "decal:cat": {
+          "successes": 6,
+          "included": 12,
+          "sr_pct": 50.0,
+          "recorded": 12,
+          "recorded_successes": 6
+        },
+        "decal:dog": {
+          "successes": 10,
+          "included": 12,
+          "sr_pct": 83.33333333333333,
+          "recorded": 12,
+          "recorded_successes": 10
+        },
+        "shape:block": {
+          "successes": 5,
+          "included": 12,
+          "sr_pct": 41.666666666666664,
+          "recorded": 12,
+          "recorded_successes": 5
+        },
+        "shape:bar": {
+          "successes": 12,
+          "included": 12,
+          "sr_pct": 100.0,
+          "recorded": 12,
+          "recorded_successes": 12
+        },
+        "size:big": {
+          "successes": 2,
+          "included": 12,
+          "sr_pct": 16.666666666666668,
+          "recorded": 12,
+          "recorded_successes": 2
+        },
+        "size:small": {
+          "successes": 12,
+          "included": 12,
+          "sr_pct": 100.0,
+          "recorded": 12,
+          "recorded_successes": 12
+        }
+      },
+      "columns": [
+        {
+          "label": "Color",
+          "modes": [
+            "color:red",
+            "color:blue"
+          ],
+          "successes": 21,
+          "included": 24,
+          "sr_pct": 87.5
+        },
+        {
+          "label": "Decal",
+          "modes": [
+            "decal:cat",
+            "decal:dog"
+          ],
+          "successes": 16,
+          "included": 24,
+          "sr_pct": 66.66666666666666
+        },
+        {
+          "label": "Shape",
+          "modes": [
+            "shape:block",
+            "shape:bar"
+          ],
+          "successes": 17,
+          "included": 24,
+          "sr_pct": 70.83333333333333
+        },
+        {
+          "label": "Size",
+          "modes": [
+            "size:big",
+            "size:small"
+          ],
+          "successes": 14,
+          "included": 24,
+          "sr_pct": 58.333333333333336
+        }
+      ],
+      "avg_pct": 70.83333333333333
+    },
+    {
+      "policy": "dm05",
+      "task": "arm_select",
+      "complete": true,
+      "completed_blocks": 12,
+      "expected_blocks": 12,
+      "recorded_episodes": 24,
+      "expected_episodes": 24,
+      "recorded_successes": 24,
+      "included_episodes": 24,
+      "partial_group_episodes": 0,
+      "included_seeds": [
+        200000,
+        200001,
+        200002,
+        200003,
+        200004,
+        200005,
+        200006,
+        200007,
+        200008,
+        200009,
+        200010,
+        200011,
+        200012,
+        200013,
+        200016,
+        200017,
+        200018,
+        200019,
+        200020,
+        200021,
+        200022,
+        200023,
+        200026,
+        200027
+      ],
+      "complete_block_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "modes": {
+        "left": {
+          "successes": 12,
+          "included": 12,
+          "sr_pct": 100.0,
+          "recorded": 12,
+          "recorded_successes": 12
+        },
+        "right": {
+          "successes": 12,
+          "included": 12,
+          "sr_pct": 100.0,
+          "recorded": 12,
+          "recorded_successes": 12
+        }
+      },
+      "columns": [
+        {
+          "label": "Left",
+          "modes": [
+            "left"
+          ],
+          "successes": 12,
+          "included": 12,
+          "sr_pct": 100.0
+        },
+        {
+          "label": "Right",
+          "modes": [
+            "right"
+          ],
+          "successes": 12,
+          "included": 12,
+          "sr_pct": 100.0
+        }
+      ],
+      "avg_pct": 100.0
+    },
+    {
+      "policy": "dm05",
+      "task": "stack_sequence",
+      "complete": true,
+      "completed_blocks": 12,
+      "expected_blocks": 12,
+      "recorded_episodes": 72,
+      "expected_episodes": 72,
+      "recorded_successes": 7,
+      "included_episodes": 72,
+      "partial_group_episodes": 0,
+      "included_seeds": [
+        100008,
+        100009,
+        100010,
+        100011,
+        100012,
+        100013,
+        100014,
+        100015,
+        100016,
+        100017,
+        100018,
+        100019,
+        100020,
+        100021,
+        100022,
+        100023,
+        100024,
+        100025,
+        100026,
+        100027,
+        100028,
+        100029,
+        100030,
+        100031,
+        100032,
+        100033,
+        100034,
+        100035,
+        100036,
+        100037,
+        100038,
+        100039,
+        100040,
+        100041,
+        100042,
+        100043,
+        100050,
+        100051,
+        100052,
+        100053,
+        100054,
+        100055,
+        100062,
+        100063,
+        100064,
+        100065,
+        100066,
+        100067,
+        100068,
+        100069,
+        100070,
+        100071,
+        100072,
+        100073,
+        100080,
+        100081,
+        100082,
+        100083,
+        100084,
+        100085,
+        100092,
+        100093,
+        100094,
+        100095,
+        100096,
+        100097,
+        100098,
+        100099,
+        100100,
+        100101,
+        100102,
+        100103
+      ],
+      "complete_block_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "modes": {
+        "red>green>blue": {
+          "successes": 7,
+          "included": 12,
+          "sr_pct": 58.333333333333336,
+          "recorded": 12,
+          "recorded_successes": 7
+        },
+        "red>blue>green": {
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0,
+          "recorded": 12,
+          "recorded_successes": 0
+        },
+        "green>red>blue": {
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0,
+          "recorded": 12,
+          "recorded_successes": 0
+        },
+        "green>blue>red": {
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0,
+          "recorded": 12,
+          "recorded_successes": 0
+        },
+        "blue>red>green": {
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0,
+          "recorded": 12,
+          "recorded_successes": 0
+        },
+        "blue>green>red": {
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0,
+          "recorded": 12,
+          "recorded_successes": 0
+        }
+      },
+      "columns": [
+        {
+          "label": "RGB",
+          "modes": [
+            "red>green>blue"
+          ],
+          "successes": 7,
+          "included": 12,
+          "sr_pct": 58.333333333333336
+        },
+        {
+          "label": "RBG",
+          "modes": [
+            "red>blue>green"
+          ],
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0
+        },
+        {
+          "label": "GRB",
+          "modes": [
+            "green>red>blue"
+          ],
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0
+        },
+        {
+          "label": "GBR",
+          "modes": [
+            "green>blue>red"
+          ],
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0
+        },
+        {
+          "label": "BRG",
+          "modes": [
+            "blue>red>green"
+          ],
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0
+        },
+        {
+          "label": "BGR",
+          "modes": [
+            "blue>green>red"
+          ],
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0
+        }
+      ],
+      "avg_pct": 9.722222222222223
+    },
+    {
+      "policy": "dm05",
+      "task": "place_relative",
+      "complete": true,
+      "completed_blocks": 12,
+      "expected_blocks": 12,
+      "recorded_episodes": 60,
+      "expected_episodes": 60,
+      "recorded_successes": 12,
+      "included_episodes": 60,
+      "partial_group_episodes": 0,
+      "included_seeds": [
+        100005,
+        100006,
+        100007,
+        100008,
+        100009,
+        100010,
+        100011,
+        100012,
+        100013,
+        100014,
+        100015,
+        100016,
+        100017,
+        100018,
+        100019,
+        100020,
+        100021,
+        100022,
+        100023,
+        100024,
+        100025,
+        100026,
+        100027,
+        100028,
+        100029,
+        100030,
+        100031,
+        100032,
+        100033,
+        100034,
+        100040,
+        100041,
+        100042,
+        100043,
+        100044,
+        100045,
+        100046,
+        100047,
+        100048,
+        100049,
+        100050,
+        100051,
+        100052,
+        100053,
+        100054,
+        100055,
+        100056,
+        100057,
+        100058,
+        100059,
+        100060,
+        100061,
+        100062,
+        100063,
+        100064,
+        100065,
+        100066,
+        100067,
+        100068,
+        100069
+      ],
+      "complete_block_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "modes": {
+        "left": {
+          "successes": 9,
+          "included": 12,
+          "sr_pct": 75.0,
+          "recorded": 12,
+          "recorded_successes": 9
+        },
+        "right": {
+          "successes": 3,
+          "included": 12,
+          "sr_pct": 25.0,
+          "recorded": 12,
+          "recorded_successes": 3
+        },
+        "front": {
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0,
+          "recorded": 12,
+          "recorded_successes": 0
+        },
+        "back": {
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0,
+          "recorded": 12,
+          "recorded_successes": 0
+        },
+        "on_top": {
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0,
+          "recorded": 12,
+          "recorded_successes": 0
+        }
+      },
+      "columns": [
+        {
+          "label": "Left",
+          "modes": [
+            "left"
+          ],
+          "successes": 9,
+          "included": 12,
+          "sr_pct": 75.0
+        },
+        {
+          "label": "Right",
+          "modes": [
+            "right"
+          ],
+          "successes": 3,
+          "included": 12,
+          "sr_pct": 25.0
+        },
+        {
+          "label": "Front",
+          "modes": [
+            "front"
+          ],
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0
+        },
+        {
+          "label": "Back",
+          "modes": [
+            "back"
+          ],
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0
+        },
+        {
+          "label": "Top",
+          "modes": [
+            "on_top"
+          ],
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0
+        }
+      ],
+      "avg_pct": 20.0
+    },
+    {
+      "policy": "dm05",
+      "task": "grasp_cube_approach",
+      "complete": true,
+      "completed_blocks": 12,
+      "expected_blocks": 12,
+      "recorded_episodes": 24,
+      "expected_episodes": 24,
+      "recorded_successes": 10,
+      "included_episodes": 24,
+      "partial_group_episodes": 0,
+      "included_seeds": [
+        500000,
+        500001,
+        500004,
+        500005,
+        500006,
+        500007,
+        500008,
+        500009,
+        500010,
+        500011,
+        500012,
+        500013,
+        500016,
+        500017,
+        500018,
+        500019,
+        500020,
+        500021,
+        500022,
+        500023,
+        500026,
+        500027,
+        500032,
+        500033
+      ],
+      "complete_block_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "modes": {
+        "top": {
+          "successes": 10,
+          "included": 12,
+          "sr_pct": 83.33333333333333,
+          "recorded": 12,
+          "recorded_successes": 10
+        },
+        "side": {
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0,
+          "recorded": 12,
+          "recorded_successes": 0
+        }
+      },
+      "columns": [
+        {
+          "label": "Top",
+          "modes": [
+            "top"
+          ],
+          "successes": 10,
+          "included": 12,
+          "sr_pct": 83.33333333333333
+        },
+        {
+          "label": "Side",
+          "modes": [
+            "side"
+          ],
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0
+        }
+      ],
+      "avg_pct": 41.666666666666664
+    },
+    {
+      "policy": "hy_vla",
+      "task": "bottle_verb",
+      "complete": true,
+      "completed_blocks": 12,
+      "expected_blocks": 12,
+      "recorded_episodes": 24,
+      "expected_episodes": 24,
+      "recorded_successes": 13,
+      "included_episodes": 24,
+      "partial_group_episodes": 0,
+      "included_seeds": [
+        100002,
+        100003,
+        100004,
+        100005,
+        100006,
+        100007,
+        100008,
+        100009,
+        100010,
+        100011,
+        100016,
+        100017,
+        100018,
+        100019,
+        100020,
+        100021,
+        100022,
+        100023,
+        100024,
+        100025,
+        100026,
+        100027,
+        100030,
+        100031
+      ],
+      "complete_block_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "modes": {
+        "pick": {
+          "successes": 1,
+          "included": 12,
+          "sr_pct": 8.333333333333334,
+          "recorded": 12,
+          "recorded_successes": 1
+        },
+        "shake": {
+          "successes": 12,
+          "included": 12,
+          "sr_pct": 100.0,
+          "recorded": 12,
+          "recorded_successes": 12
+        }
+      },
+      "columns": [
+        {
+          "label": "Pick",
+          "modes": [
+            "pick"
+          ],
+          "successes": 1,
+          "included": 12,
+          "sr_pct": 8.333333333333334
+        },
+        {
+          "label": "Shake",
+          "modes": [
+            "shake"
+          ],
+          "successes": 12,
+          "included": 12,
+          "sr_pct": 100.0
+        }
+      ],
+      "avg_pct": 54.166666666666664
+    },
+    {
+      "policy": "hy_vla",
+      "task": "pick_diverse_object",
+      "complete": true,
+      "completed_blocks": 12,
+      "expected_blocks": 12,
+      "recorded_episodes": 24,
+      "expected_episodes": 24,
+      "recorded_successes": 5,
+      "included_episodes": 24,
+      "partial_group_episodes": 0,
+      "included_seeds": [
+        100002,
+        100003,
+        100004,
+        100005,
+        100006,
+        100007,
+        100008,
+        100009,
+        100012,
+        100013,
+        100014,
+        100015,
+        100018,
+        100019,
+        100020,
+        100021,
+        100024,
+        100025,
+        100034,
+        100035,
+        100036,
+        100037,
+        100038,
+        100039
+      ],
+      "complete_block_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "modes": {
+        "seen": {
+          "successes": 4,
+          "included": 12,
+          "sr_pct": 33.333333333333336,
+          "recorded": 12,
+          "recorded_successes": 4
+        },
+        "unseen": {
+          "successes": 1,
+          "included": 12,
+          "sr_pct": 8.333333333333334,
+          "recorded": 12,
+          "recorded_successes": 1
+        }
+      },
+      "columns": [
+        {
+          "label": "Seen",
+          "modes": [
+            "seen"
+          ],
+          "successes": 4,
+          "included": 12,
+          "sr_pct": 33.333333333333336
+        },
+        {
+          "label": "Unseen",
+          "modes": [
+            "unseen"
+          ],
+          "successes": 1,
+          "included": 12,
+          "sr_pct": 8.333333333333334
+        }
+      ],
+      "avg_pct": 20.833333333333336
+    },
+    {
+      "policy": "hy_vla",
+      "task": "attribute_select",
+      "complete": true,
+      "completed_blocks": 12,
+      "expected_blocks": 12,
+      "recorded_episodes": 96,
+      "expected_episodes": 96,
+      "recorded_successes": 87,
+      "included_episodes": 96,
+      "partial_group_episodes": 0,
+      "included_seeds": [
+        100000,
+        100001,
+        100002,
+        100003,
+        100004,
+        100005,
+        100006,
+        100007,
+        100008,
+        100009,
+        100010,
+        100011,
+        100012,
+        100013,
+        100014,
+        100015,
+        100016,
+        100017,
+        100018,
+        100019,
+        100020,
+        100021,
+        100022,
+        100023,
+        100024,
+        100025,
+        100026,
+        100027,
+        100028,
+        100029,
+        100030,
+        100031,
+        100032,
+        100033,
+        100034,
+        100035,
+        100036,
+        100037,
+        100038,
+        100039,
+        100040,
+        100041,
+        100042,
+        100043,
+        100044,
+        100045,
+        100046,
+        100047,
+        100048,
+        100049,
+        100050,
+        100051,
+        100052,
+        100053,
+        100054,
+        100055,
+        100064,
+        100065,
+        100066,
+        100067,
+        100068,
+        100069,
+        100070,
+        100071,
+        100072,
+        100073,
+        100074,
+        100075,
+        100076,
+        100077,
+        100078,
+        100079,
+        100080,
+        100081,
+        100082,
+        100083,
+        100084,
+        100085,
+        100086,
+        100087,
+        100088,
+        100089,
+        100090,
+        100091,
+        100092,
+        100093,
+        100094,
+        100095,
+        100096,
+        100097,
+        100098,
+        100099,
+        100100,
+        100101,
+        100102,
+        100103
+      ],
+      "complete_block_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "modes": {
+        "color:red": {
+          "successes": 12,
+          "included": 12,
+          "sr_pct": 100.0,
+          "recorded": 12,
+          "recorded_successes": 12
+        },
+        "color:blue": {
+          "successes": 10,
+          "included": 12,
+          "sr_pct": 83.33333333333333,
+          "recorded": 12,
+          "recorded_successes": 10
+        },
+        "decal:cat": {
+          "successes": 10,
+          "included": 12,
+          "sr_pct": 83.33333333333333,
+          "recorded": 12,
+          "recorded_successes": 10
+        },
+        "decal:dog": {
+          "successes": 10,
+          "included": 12,
+          "sr_pct": 83.33333333333333,
+          "recorded": 12,
+          "recorded_successes": 10
+        },
+        "shape:block": {
+          "successes": 10,
+          "included": 12,
+          "sr_pct": 83.33333333333333,
+          "recorded": 12,
+          "recorded_successes": 10
+        },
+        "shape:bar": {
+          "successes": 12,
+          "included": 12,
+          "sr_pct": 100.0,
+          "recorded": 12,
+          "recorded_successes": 12
+        },
+        "size:big": {
+          "successes": 11,
+          "included": 12,
+          "sr_pct": 91.66666666666667,
+          "recorded": 12,
+          "recorded_successes": 11
+        },
+        "size:small": {
+          "successes": 12,
+          "included": 12,
+          "sr_pct": 100.0,
+          "recorded": 12,
+          "recorded_successes": 12
+        }
+      },
+      "columns": [
+        {
+          "label": "Color",
+          "modes": [
+            "color:red",
+            "color:blue"
+          ],
+          "successes": 22,
+          "included": 24,
+          "sr_pct": 91.66666666666666
+        },
+        {
+          "label": "Decal",
+          "modes": [
+            "decal:cat",
+            "decal:dog"
+          ],
+          "successes": 20,
+          "included": 24,
+          "sr_pct": 83.33333333333333
+        },
+        {
+          "label": "Shape",
+          "modes": [
+            "shape:block",
+            "shape:bar"
+          ],
+          "successes": 22,
+          "included": 24,
+          "sr_pct": 91.66666666666666
+        },
+        {
+          "label": "Size",
+          "modes": [
+            "size:big",
+            "size:small"
+          ],
+          "successes": 23,
+          "included": 24,
+          "sr_pct": 95.83333333333334
+        }
+      ],
+      "avg_pct": 90.625
+    },
+    {
+      "policy": "hy_vla",
+      "task": "arm_select",
+      "complete": true,
+      "completed_blocks": 12,
+      "expected_blocks": 12,
+      "recorded_episodes": 24,
+      "expected_episodes": 24,
+      "recorded_successes": 7,
+      "included_episodes": 24,
+      "partial_group_episodes": 0,
+      "included_seeds": [
+        200000,
+        200001,
+        200002,
+        200003,
+        200004,
+        200005,
+        200006,
+        200007,
+        200008,
+        200009,
+        200010,
+        200011,
+        200012,
+        200013,
+        200016,
+        200017,
+        200018,
+        200019,
+        200020,
+        200021,
+        200022,
+        200023,
+        200026,
+        200027
+      ],
+      "complete_block_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "modes": {
+        "left": {
+          "successes": 1,
+          "included": 12,
+          "sr_pct": 8.333333333333334,
+          "recorded": 12,
+          "recorded_successes": 1
+        },
+        "right": {
+          "successes": 6,
+          "included": 12,
+          "sr_pct": 50.0,
+          "recorded": 12,
+          "recorded_successes": 6
+        }
+      },
+      "columns": [
+        {
+          "label": "Left",
+          "modes": [
+            "left"
+          ],
+          "successes": 1,
+          "included": 12,
+          "sr_pct": 8.333333333333334
+        },
+        {
+          "label": "Right",
+          "modes": [
+            "right"
+          ],
+          "successes": 6,
+          "included": 12,
+          "sr_pct": 50.0
+        }
+      ],
+      "avg_pct": 29.166666666666668
+    },
+    {
+      "policy": "hy_vla",
+      "task": "stack_sequence",
+      "complete": true,
+      "completed_blocks": 12,
+      "expected_blocks": 12,
+      "recorded_episodes": 72,
+      "expected_episodes": 72,
+      "recorded_successes": 8,
+      "included_episodes": 72,
+      "partial_group_episodes": 0,
+      "included_seeds": [
+        100008,
+        100009,
+        100010,
+        100011,
+        100012,
+        100013,
+        100014,
+        100015,
+        100016,
+        100017,
+        100018,
+        100019,
+        100020,
+        100021,
+        100022,
+        100023,
+        100024,
+        100025,
+        100026,
+        100027,
+        100028,
+        100029,
+        100030,
+        100031,
+        100032,
+        100033,
+        100034,
+        100035,
+        100036,
+        100037,
+        100038,
+        100039,
+        100040,
+        100041,
+        100042,
+        100043,
+        100050,
+        100051,
+        100052,
+        100053,
+        100054,
+        100055,
+        100062,
+        100063,
+        100064,
+        100065,
+        100066,
+        100067,
+        100068,
+        100069,
+        100070,
+        100071,
+        100072,
+        100073,
+        100080,
+        100081,
+        100082,
+        100083,
+        100084,
+        100085,
+        100092,
+        100093,
+        100094,
+        100095,
+        100096,
+        100097,
+        100098,
+        100099,
+        100100,
+        100101,
+        100102,
+        100103
+      ],
+      "complete_block_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "modes": {
+        "red>green>blue": {
+          "successes": 8,
+          "included": 12,
+          "sr_pct": 66.66666666666667,
+          "recorded": 12,
+          "recorded_successes": 8
+        },
+        "red>blue>green": {
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0,
+          "recorded": 12,
+          "recorded_successes": 0
+        },
+        "green>red>blue": {
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0,
+          "recorded": 12,
+          "recorded_successes": 0
+        },
+        "green>blue>red": {
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0,
+          "recorded": 12,
+          "recorded_successes": 0
+        },
+        "blue>red>green": {
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0,
+          "recorded": 12,
+          "recorded_successes": 0
+        },
+        "blue>green>red": {
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0,
+          "recorded": 12,
+          "recorded_successes": 0
+        }
+      },
+      "columns": [
+        {
+          "label": "RGB",
+          "modes": [
+            "red>green>blue"
+          ],
+          "successes": 8,
+          "included": 12,
+          "sr_pct": 66.66666666666667
+        },
+        {
+          "label": "RBG",
+          "modes": [
+            "red>blue>green"
+          ],
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0
+        },
+        {
+          "label": "GRB",
+          "modes": [
+            "green>red>blue"
+          ],
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0
+        },
+        {
+          "label": "GBR",
+          "modes": [
+            "green>blue>red"
+          ],
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0
+        },
+        {
+          "label": "BRG",
+          "modes": [
+            "blue>red>green"
+          ],
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0
+        },
+        {
+          "label": "BGR",
+          "modes": [
+            "blue>green>red"
+          ],
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0
+        }
+      ],
+      "avg_pct": 11.111111111111112
+    },
+    {
+      "policy": "hy_vla",
+      "task": "place_relative",
+      "complete": true,
+      "completed_blocks": 12,
+      "expected_blocks": 12,
+      "recorded_episodes": 60,
+      "expected_episodes": 60,
+      "recorded_successes": 3,
+      "included_episodes": 60,
+      "partial_group_episodes": 0,
+      "included_seeds": [
+        100005,
+        100006,
+        100007,
+        100008,
+        100009,
+        100010,
+        100011,
+        100012,
+        100013,
+        100014,
+        100015,
+        100016,
+        100017,
+        100018,
+        100019,
+        100020,
+        100021,
+        100022,
+        100023,
+        100024,
+        100025,
+        100026,
+        100027,
+        100028,
+        100029,
+        100030,
+        100031,
+        100032,
+        100033,
+        100034,
+        100040,
+        100041,
+        100042,
+        100043,
+        100044,
+        100045,
+        100046,
+        100047,
+        100048,
+        100049,
+        100050,
+        100051,
+        100052,
+        100053,
+        100054,
+        100055,
+        100056,
+        100057,
+        100058,
+        100059,
+        100060,
+        100061,
+        100062,
+        100063,
+        100064,
+        100065,
+        100066,
+        100067,
+        100068,
+        100069
+      ],
+      "complete_block_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "modes": {
+        "left": {
+          "successes": 1,
+          "included": 12,
+          "sr_pct": 8.333333333333334,
+          "recorded": 12,
+          "recorded_successes": 1
+        },
+        "right": {
+          "successes": 2,
+          "included": 12,
+          "sr_pct": 16.666666666666668,
+          "recorded": 12,
+          "recorded_successes": 2
+        },
+        "front": {
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0,
+          "recorded": 12,
+          "recorded_successes": 0
+        },
+        "back": {
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0,
+          "recorded": 12,
+          "recorded_successes": 0
+        },
+        "on_top": {
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0,
+          "recorded": 12,
+          "recorded_successes": 0
+        }
+      },
+      "columns": [
+        {
+          "label": "Left",
+          "modes": [
+            "left"
+          ],
+          "successes": 1,
+          "included": 12,
+          "sr_pct": 8.333333333333334
+        },
+        {
+          "label": "Right",
+          "modes": [
+            "right"
+          ],
+          "successes": 2,
+          "included": 12,
+          "sr_pct": 16.666666666666668
+        },
+        {
+          "label": "Front",
+          "modes": [
+            "front"
+          ],
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0
+        },
+        {
+          "label": "Back",
+          "modes": [
+            "back"
+          ],
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0
+        },
+        {
+          "label": "Top",
+          "modes": [
+            "on_top"
+          ],
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0
+        }
+      ],
+      "avg_pct": 5.0
+    },
+    {
+      "policy": "hy_vla",
+      "task": "grasp_cube_approach",
+      "complete": true,
+      "completed_blocks": 12,
+      "expected_blocks": 12,
+      "recorded_episodes": 24,
+      "expected_episodes": 24,
+      "recorded_successes": 12,
+      "included_episodes": 24,
+      "partial_group_episodes": 0,
+      "included_seeds": [
+        500000,
+        500001,
+        500004,
+        500005,
+        500006,
+        500007,
+        500008,
+        500009,
+        500010,
+        500011,
+        500012,
+        500013,
+        500016,
+        500017,
+        500018,
+        500019,
+        500020,
+        500021,
+        500022,
+        500023,
+        500026,
+        500027,
+        500032,
+        500033
+      ],
+      "complete_block_ids": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "modes": {
+        "top": {
+          "successes": 12,
+          "included": 12,
+          "sr_pct": 100.0,
+          "recorded": 12,
+          "recorded_successes": 12
+        },
+        "side": {
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0,
+          "recorded": 12,
+          "recorded_successes": 0
+        }
+      },
+      "columns": [
+        {
+          "label": "Top",
+          "modes": [
+            "top"
+          ],
+          "successes": 12,
+          "included": 12,
+          "sr_pct": 100.0
+        },
+        {
+          "label": "Side",
+          "modes": [
+            "side"
+          ],
+          "successes": 0,
+          "included": 12,
+          "sr_pct": 0.0
+        }
+      ],
+      "avg_pct": 50.0
+    }
+  ],
+  "policies": {
+    "xvla": {
+      "recorded": 324,
+      "expected": 324,
+      "complete_tasks": 7,
+      "complete_blocks": 84,
+      "expected_blocks": 84,
+      "overall_pct": 34.04761904761905
+    },
+    "lingbot_va": {
+      "recorded": 324,
+      "expected": 324,
+      "complete_tasks": 7,
+      "complete_blocks": 84,
+      "expected_blocks": 84,
+      "overall_pct": 57.31150793650794
+    },
+    "lingbot_vla": {
+      "recorded": 324,
+      "expected": 324,
+      "complete_tasks": 7,
+      "complete_blocks": 84,
+      "expected_blocks": 84,
+      "overall_pct": 32.7281746031746
+    },
+    "vlact": {
+      "recorded": 324,
+      "expected": 324,
+      "complete_tasks": 7,
+      "complete_blocks": 84,
+      "expected_blocks": 84,
+      "overall_pct": 37.77777777777778
+    },
+    "dm05": {
+      "recorded": 324,
+      "expected": 324,
+      "complete_tasks": 7,
+      "complete_blocks": 84,
+      "expected_blocks": 84,
+      "overall_pct": 50.67460317460317
+    },
+    "hy_vla": {
+      "recorded": 324,
+      "expected": 324,
+      "complete_tasks": 7,
+      "complete_blocks": 84,
+      "expected_blocks": 84,
+      "overall_pct": 37.2718253968254
+    }
+  }
+}
