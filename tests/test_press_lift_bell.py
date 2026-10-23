@@ -6,19 +6,20 @@ from types import SimpleNamespace
 import unittest
 from unittest.mock import patch
 
-from tasks.envs._press_lift_bell import BellMonitor, INSTRUCTIONS, mode_for_seed
+from tasks.envs._press_lift_bell import BellMonitor, BellRules, INSTRUCTIONS, bell_contacts, mode_for_seed
 from tools.press_lift_bell import selected_seeds, summarize_pairs
 from policies.evaluation import setup_episode
 
 
 class Trajectory:
-    def __init__(self):
-        self.monitor = BellMonitor()
+    def __init__(self, dt=.02):
+        self.monitor = BellMonitor(BellRules(sample_seconds=dt))
+        self.dt = dt
         self.t = 0
 
     def step(self, n=1, *, z=0.90, touching=False, top=False, closed=True, rise=0., xy=0., supported=True):
         for _ in range(n):
-            self.t += .02
+            self.t += self.dt
             a = dict(ee_z=z, touching=touching, top_touch=top, closed=closed)
             idle = dict(ee_z=1., touching=False, top_touch=False, closed=False)
             self.monitor.observe(self.t, rise, xy, supported, dict(left=a, right=idle))
@@ -37,6 +38,31 @@ class Trajectory:
 
 
 class ClassifierTests(unittest.TestCase):
+    def test_one_physics_step_contact_is_enough_to_arm_press(self):
+        t = Trajectory(dt=.004)
+        t.step(25)
+        t.step(1, z=.88, touching=True, top=True)
+        self.assertTrue(t.step(20, z=.91).success('press'))
+
+    def test_native_contact_reports_do_not_require_impulse(self):
+        def contact(other, position, impulse):
+            return SimpleNamespace(bodies=[SimpleNamespace(entity=SimpleNamespace(name=n))
+                                          for n in ('bell', other)],
+                                   points=[SimpleNamespace(position=position, impulse=impulse)])
+        cp = [0., 0., 1.]
+        names = dict(left={'finger'}, right={'other_finger'})
+        for impulse in ([0., 0., 0.], [1e-10, 0., 0.]):
+            supported, arms = bell_contacts([contact('finger', cp, impulse), contact('table', cp, impulse)],
+                                           'bell', 'table', names, cp, BellRules())
+            self.assertTrue(supported)
+            self.assertTrue(arms['left']['touching'])
+            self.assertTrue(arms['left']['top_touch'])
+            self.assertFalse(arms['right']['touching'])
+        _, arms = bell_contacts([contact('finger', [.026, 0., 1.], [1., 0., 0.])],
+                               'bell', 'table', names, cp, BellRules())
+        self.assertTrue(arms['left']['touching'])
+        self.assertFalse(arms['left']['top_touch'])
+
     def test_press_and_grasp_then_lift_are_exclusive(self):
         for action in ("press", "lift"):
             t = Trajectory()

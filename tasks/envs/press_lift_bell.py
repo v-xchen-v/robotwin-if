@@ -4,7 +4,7 @@ import numpy as np
 import sapien
 
 from ._base_task import Base_Task
-from ._press_lift_bell import BellMonitor, INSTRUCTIONS, mode_for_seed
+from ._press_lift_bell import BellMonitor, BellRules, INSTRUCTIONS, bell_contacts, mode_for_seed
 from .utils import ArmTag, create_actor
 
 
@@ -25,8 +25,9 @@ class press_lift_bell(Base_Task):
         if self.eval_mode:
             self.step_lim = self.ACTION_LIMIT
         self.initial_position = self.bell.get_pose().p.copy()
-        self.monitor = BellMonitor()
-        self._simulation_time = self._sample_time = 0.0
+        self.monitor = BellMonitor(BellRules(sample_seconds=round(float(self.scene.get_timestep()), 9)))
+        self._simulation_time = 0.0
+        self.native_click_first_time = None
         self._gripper_names = {}
         for arm in ("left", "right"):
             names = list(getattr(self.robot, f"{arm}_fix_gripper_name"))
@@ -56,30 +57,12 @@ class press_lift_bell(Base_Task):
                 self.context_objects.append(actor)
 
     def _physical_signals(self):
-        arms = {arm: dict(closed=bool(getattr(self, f"is_{arm}_gripper_close")()),
-                         ee_z=float(self.get_arm_pose(ArmTag(arm))[2]), touching=False,
-                         top_touch=False, contact_links=[]) for arm in ("left", "right")}
         cp = np.asarray(self.bell.get_contact_point(0)[:3])
-        supported = False
-        for contact in self.scene.get_contacts():
-            names = [body.entity.name for body in contact.bodies]
-            if self.bell.get_name() not in names:
-                continue
-            other = names[1] if names[0] == self.bell.get_name() else names[0]
-            points = [p for p in contact.points if np.linalg.norm(p.impulse) > 1e-7]
-            if not points:
-                continue
-            if other == self.table.get_name():
-                supported = True
-            for arm, gripper_names in self._gripper_names.items():
-                if other not in gripper_names:
-                    continue
-                arms[arm]["touching"] = True
-                arms[arm]["contact_links"].append(other)
-                for point in points:
-                    d = np.abs(np.asarray(point.position) - cp)
-                    if np.all(d[:2] < self.monitor.rules.top_xy_m) and d[2] < self.monitor.rules.top_z_m:
-                        arms[arm]["top_touch"] = True
+        supported, arms = bell_contacts(self.scene.get_contacts(), self.bell.get_name(), self.table.get_name(),
+                                        self._gripper_names, cp, self.monitor.rules)
+        for arm in arms:
+            arms[arm].update(closed=bool(getattr(self, f"is_{arm}_gripper_close")()),
+                             ee_z=float(self.get_arm_pose(ArmTag(arm))[2]))
         p = self.bell.get_pose().p
         return float(p[2] - self.initial_position[2]), float(np.linalg.norm(p[:2] - self.initial_position[:2])), supported, arms
 
@@ -88,11 +71,14 @@ class press_lift_bell(Base_Task):
         def observed_step():
             result = original()
             self._simulation_time += float(scene.get_timestep())
-            if self._simulation_time - self._sample_time + 1e-9 >= self.monitor.rules.sample_seconds:
-                self._sample_time = self._simulation_time
-                self.monitor.observe(self._simulation_time, *self._physical_signals())
-                if self.trace_callback is not None:
-                    self.trace_callback(self)
+            signals = self._physical_signals()
+            arms = signals[3]
+            if (self.native_click_first_time is None and arms[str(self.arm_tag)]["closed"]
+                    and any(a["top_touch"] for a in arms.values())):
+                self.native_click_first_time = self._simulation_time
+            self.monitor.observe(self._simulation_time, *signals)
+            if self.trace_callback is not None:
+                self.trace_callback(self)
             return result
         self._observer = scene, original, observed_step
         scene.step = observed_step
@@ -120,6 +106,9 @@ class press_lift_bell(Base_Task):
 
     def eval_signals(self):
         return dict(self.monitor.signals(), mode=self.mode, scene_seed=self.scene_seed,
+                    contact_protocol="native-all-contact-points", sampling_protocol="every-physics-step",
+                    native_click_success=self.native_click_first_time is not None,
+                    native_click_first_time=self.native_click_first_time,
                     bell_id=self.bell_id, scene_layout=self.scene_layout,
                     context_objects=[dict(name=a.get_name(), position=a.get_pose().p.tolist())
                                      for a in self.context_objects],

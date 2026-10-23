@@ -14,7 +14,7 @@ def mode_for_seed(seed):
 
 @dataclass(frozen=True)
 class BellRules:
-    sample_seconds: float = 0.02
+    sample_seconds: float = 0.004
     lift_height_m: float = 0.03
     lift_seconds: float = 0.10
     preclosed_seconds: float = 0.08
@@ -27,8 +27,32 @@ class BellRules:
     top_z_m: float = 0.03
 
 
+def bell_contacts(contacts, bell_name, table_name, gripper_names, cp, rules):
+    """Use native contact reports, including zero-impulse proximity contacts."""
+    supported = False
+    arms = {arm: dict(touching=False, top_touch=False, contact_links=[])
+            for arm in gripper_names}
+    for contact in contacts:
+        names = [body.entity.name for body in contact.bodies]
+        if bell_name not in names or not contact.points:
+            continue
+        other = names[1] if names[0] == bell_name else names[0]
+        if other == table_name:
+            supported = True
+        for arm, names in gripper_names.items():
+            if other not in names:
+                continue
+            arms[arm]['touching'] = True
+            arms[arm]['contact_links'].append(other)
+            for point in contact.points:
+                delta = [abs(float(point.position[i]) - float(cp[i])) for i in range(3)]
+                if delta[0] < rules.top_xy_m and delta[1] < rules.top_xy_m and delta[2] < rules.top_z_m:
+                    arms[arm]['top_touch'] = True
+    return supported, arms
+
+
 class BellMonitor:
-    VERSION = "press-lift-bell-v2-first-action"
+    VERSION = "press-lift-bell-v3-native-contacts-every-step"
 
     def __init__(self, rules=BellRules()):
         if any(not math.isfinite(v) or v <= 0 for v in asdict(rules).values()):

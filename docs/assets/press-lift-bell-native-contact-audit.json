@@ -1,0 +1,69 @@
+{
+  "source": "outputs/policy-eval/press-lift-bell-six-models-2blocks-004/native-click-geometry-audit",
+  "method": "Replay saved LingBot-VA EE actions on original v2 task. Compare unmodified native check every physics step; counterfactual removes gripper impulse filter from the v2 50 Hz classifier only. No new inference.",
+  "limitation": "Initial RGB/proprio/joints exact; action-boundary positions differ by less than 1 mm, internal planner duration differs. These are replay diagnostics, not relabelled policy scores or an exact reconstruction of every original physics step.",
+  "records": [
+    {
+      "seed": 0,
+      "initial_rgb_proprio_joint_state_exact": true,
+      "saved_action_count": 250,
+      "replay_action_count": 250,
+      "physics_timestep": 0.004000000189989805,
+      "counts": {
+        "physics_steps": 12896,
+        "raw_contact_steps": 2962,
+        "raw_top_steps": 2962,
+        "native_success_steps": 2962,
+        "impulse_contact_steps": 0,
+        "impulse_top_steps": 0
+      },
+      "max_contact_impulse": 0.0,
+      "measured_position_max_abs_difference_m": 0.0008103847503662109,
+      "trace_same_length": false,
+      "original_sample_count": 3502,
+      "replay_sample_count": 2579,
+      "native_click_first_action": 59,
+      "native_click_first_time": 15.876000754069537,
+      "minimum_reported_separation_m": 0.0012208898551762104,
+      "maximum_reported_separation_m": 0.019999362528324127,
+      "without_impulse_filter_first_action": "press",
+      "without_impulse_filter_events": [
+        {
+          "action": "press",
+          "time": 20.10000095469877
+        }
+      ]
+    },
+    {
+      "seed": 6,
+      "initial_rgb_proprio_joint_state_exact": true,
+      "saved_action_count": 250,
+      "replay_action_count": 250,
+      "physics_timestep": 0.004000000189989805,
+      "counts": {
+        "physics_steps": 12813,
+        "raw_contact_steps": 4996,
+        "raw_top_steps": 4996,
+        "native_success_steps": 4624,
+        "impulse_contact_steps": 0,
+        "impulse_top_steps": 0
+      },
+      "max_contact_impulse": 0.0,
+      "measured_position_max_abs_difference_m": 0.0006585121154785156,
+      "trace_same_length": false,
+      "original_sample_count": 3706,
+      "replay_sample_count": 2562,
+      "native_click_first_action": 59,
+      "native_click_first_time": 14.672000696882606,
+      "minimum_reported_separation_m": 0.0040341331623494625,
+      "maximum_reported_separation_m": 0.019999826326966286,
+      "without_impulse_filter_first_action": "press",
+      "without_impulse_filter_events": [
+        {
+          "action": "press",
+          "time": 18.26000086730346
+        }
+      ]
+    }
+  ]
+}
