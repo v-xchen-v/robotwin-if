@@ -45,6 +45,16 @@ class ClassifierTests(unittest.TestCase):
             self.assertTrue(m.success(action))
             self.assertFalse(m.success("lift" if action == "press" else "press"))
 
+    def test_slow_press_and_intermittent_contact_keep_the_descent_evidence(self):
+        t = Trajectory()
+        t.step(10)
+        for index in range(10):
+            t.step(15, z=.90 - index * .002)
+        t.step(2, z=.88, touching=True, top=True)
+        t.step(1, z=.88)
+        t.step(2, z=.88, touching=True, top=True)
+        self.assertTrue(t.step(5, z=.91).success('press'))
+
     def test_touch_without_withdrawal_does_not_complete_press(self):
         t = Trajectory()
         t.step(10)

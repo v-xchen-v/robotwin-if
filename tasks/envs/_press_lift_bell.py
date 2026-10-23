@@ -1,5 +1,4 @@
 """Physics-time first-completed-action classifier; independent of commanded mode."""
-from collections import deque
 from dataclasses import asdict, dataclass
 import math
 
@@ -20,7 +19,6 @@ class BellRules:
     lift_seconds: float = 0.10
     preclosed_seconds: float = 0.08
     descent_m: float = 0.005
-    descent_window_seconds: float = 0.50
     retract_m: float = 0.02
     release_seconds: float = 0.06
     press_max_rise_m: float = 0.015
@@ -30,7 +28,7 @@ class BellRules:
 
 
 class BellMonitor:
-    VERSION = "press-lift-bell-v1-first-action"
+    VERSION = "press-lift-bell-v2-first-action"
 
     def __init__(self, rules=BellRules()):
         if any(not math.isfinite(v) or v <= 0 for v in asdict(rules).values()):
@@ -42,7 +40,7 @@ class BellMonitor:
         self.lift_since = None
         self.max_rise = 0.0
         self.max_xy = 0.0
-        self.arms = {arm: dict(closed_since=None, history=deque(), touching=False,
+        self.arms = {arm: dict(closed_since=None, approach_high_z=None, touching=False,
                               candidate=None, release_since=None) for arm in ("left", "right")}
         self.latest = {}
 
@@ -65,20 +63,18 @@ class BellMonitor:
         for arm, a in arms.items():
             state = self.arms[arm]
             if gap:
-                state.update(closed_since=None, candidate=None, release_since=None)
-                state["history"].clear()
+                state.update(closed_since=None, approach_high_z=None, candidate=None, release_since=None)
             if not a["closed"]:
                 state["closed_since"] = None
+                state["approach_high_z"] = None
             elif state["closed_since"] is None:
                 state["closed_since"] = time
-            history = state["history"]
-            while history and time - history[0][0] > self.rules.descent_window_seconds:
-                history.popleft()
-            descended = bool(history) and max(z for _, z in history) - a["ee_z"] >= self.rules.descent_m
+            high = state["approach_high_z"]
+            descended = high is not None and high - a["ee_z"] >= self.rules.descent_m
             preclosed = state["closed_since"] is not None and time - state["closed_since"] >= self.rules.preclosed_seconds
             # Only arm on the FIRST contact after an already-closed downward approach.
             # Closing fingers onto the bell is not a press.
-            if a["touching"] and not state["touching"]:
+            if a["touching"] and not state["touching"] and state["candidate"] is None:
                 state["candidate"] = (dict(touch_z=a["ee_z"], max_rise=rise, max_xy=xy)
                     if a["top_touch"] and preclosed and descended and supported else None)
             candidate = state["candidate"]
@@ -101,7 +97,11 @@ class BellMonitor:
                             self._complete("press")
                             state["candidate"] = None
             state["touching"] = a["touching"]
-            history.append((time, a["ee_z"]))
+            # Geometric descent since closure / last contact, without imposing
+            # a pressing speed. Brief contact gaps must not erase an armed press.
+            if a["closed"]:
+                state["approach_high_z"] = (a["ee_z"] if a["touching"] or high is None
+                                             else max(high, a["ee_z"]))
 
     def _complete(self, action):
         if action not in [e["action"] for e in self.events]:

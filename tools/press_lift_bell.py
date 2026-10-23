@@ -172,6 +172,8 @@ def main(argv=None):
     parser.add_argument("--start-pair", type=int, default=0)
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--sim-gpu", default="0")
+    parser.add_argument("--scene-layout", choices=("context", "bare"), default="context",
+                        help="Bell with mouse/toycar context, or the single-bell baseline")
     parser.add_argument("--no-video", action="store_true", help="Skip oracle video; keep images and traces")
     parser.add_argument("--policy", choices=("oracle", *POLICIES), default="oracle")
     parser.add_argument("--server-url", help="Defaults to the selected policy's local endpoint")
@@ -223,6 +225,7 @@ def main(argv=None):
         random_light=False, crazy_random_light_rate=0)
     config["save_freq"] = None
     config["policy_name"] = args.policy
+    config["bell_scene_layout"] = args.scene_layout
     write_json(output / "resolved_config.json", config)
     qualification = qualify(env, config, seeds, output / "oracle", not args.no_video)
     if not qualification["qualified"] or args.policy == "oracle":
