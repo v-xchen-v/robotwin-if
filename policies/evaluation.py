@@ -7,6 +7,12 @@ import time
 from if_benchmark.seed_contracts import observed_mode
 
 
+def _episode_mode(task, env):
+    if hasattr(env, "policy_instruction"):
+        return env.mode
+    return observed_mode(task, env)
+
+
 def finalize_episode_success(env, record):
     """Finalize a normal rollout after its last complete action, never on error.
 
@@ -33,7 +39,7 @@ def setup_episode(env, config, args, seed, split, record, path):
     started = time.monotonic()
     random.seed(seed)
     env.setup_demo(now_ep_num=0, seed=seed, is_test=True, **config)
-    if record["mode"] is not None and observed_mode(args.task, env) != record["mode"]:
+    if record["mode"] is not None and _episode_mode(args.task, env) != record["mode"]:
         raise RuntimeError("Oracle scene mode does not match the seed contract")
     info = deepcopy(env.play_once())
     record["oracle_success"] = bool(env.plan_success and env.check_success())
@@ -49,13 +55,21 @@ def setup_episode(env, config, args, seed, split, record, path):
     started = time.monotonic()
     random.seed(seed)
     env.setup_demo(now_ep_num=0, seed=seed, is_test=True, **config)
-    if record["mode"] is not None and observed_mode(args.task, env) != record["mode"]:
+    if record["mode"] is not None and _episode_mode(args.task, env) != record["mode"]:
         raise RuntimeError("Policy scene mode does not match the seed contract")
     if args.task == "arm_select" and env._init_box_z is None:
         raise RuntimeError("arm_select did not initialize its policy success baseline")
     if hasattr(env, "start_policy_rollout"):
         env.start_policy_rollout()
-    instruction = instruction_for(args.task, info, split, seed)
+    if hasattr(env, "policy_instruction"):
+        # Opt-in experimental tasks may supply an exact instruction pair without
+        # registering themselves in the maintained suite or changing its text.
+        instruction = env.policy_instruction(split)
+        if getattr(env, "mode", None) != info.get("mode"):
+            raise RuntimeError("Experimental oracle and policy modes differ")
+        record["mode"] = info["mode"]
+    else:
+        instruction = instruction_for(args.task, info, split, seed)
     env.set_instruction(instruction)
     record.update(instruction=instruction, step_limit=env.step_lim)
     obs = env.get_obs()
