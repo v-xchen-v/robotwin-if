@@ -14,8 +14,10 @@ class ResultScopeTest(unittest.TestCase):
         self.addCleanup(tmp.cleanup)
         self.base = Path(tmp.name)
 
-    def fixture(self, historical=True, incomplete_grasp=False):
+    def fixture(self, historical=True, incomplete_grasp=False, bell=False):
         tasks = list(report.TASKS) + (list(report.ARCHIVED_TASKS) if historical else [])
+        if bell:
+            tasks[0] = 'press_lift_bell'
         specs = [dict(task=t, seeds=list(expand_block(t, 0, legacy=historical))) for t in tasks]
         rows = []
         for policy in report.POLICIES:
@@ -25,7 +27,7 @@ class ResultScopeTest(unittest.TestCase):
                 modes = {}
                 for seed in spec['seeds']:
                     mode = describe_seed(task, seed).mode
-                    success = task != 'bottle_verb'  # Equal task weighting differs from pooled episodes.
+                    success = task not in ('bottle_verb', 'press_lift_bell')
                     modes[mode] = dict(recorded=int(seed not in pending), successes=int(success and seed not in pending))
                     if seed in pending:
                         continue
@@ -74,6 +76,17 @@ class ResultScopeTest(unittest.TestCase):
         data = report.snapshot(self.base)
         self.assertEqual(data['tasks'], list(report.TASKS))
         self.assertEqual(data['excluded_tasks'], [])
+
+    def test_bell_replaces_bottle_without_changing_denominators(self):
+        self.fixture(historical=False, bell=True)
+        data = report.snapshot(self.base)
+        self.assertEqual(data['tasks'][0], 'press_lift_bell')
+        self.assertNotIn('bottle_verb', data['tasks'])
+        self.assertEqual(data['summary']['expected_episodes'], 138)
+        self.assertAlmostEqual(data['policies']['xvla']['overall_pct'], 500/6)
+        report.generate(data, self.base / 'bell.md')
+        self.assertIn('Press', (self.base / 'bell.md').read_text())
+        self.assertIn('Lift', (self.base / 'bell.md').read_text())
 
     def test_cube_report_uses_its_recorded_config_without_relabeling_history(self):
         self.fixture(historical=False)

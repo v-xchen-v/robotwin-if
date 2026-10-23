@@ -101,6 +101,10 @@ def current_success_checker(task):
     from dataclasses import asdict
     from tasks.envs._if_bottle_verb import PickHoldMonitor, PickHoldRules
     from tasks.envs._if_grounding import ArmPickMonitor, AttributePickMonitor
+    if task == 'press_lift_bell':
+        from tasks.envs._press_lift_bell import BellMonitor, BellRules
+        return dict(success_checker_version=BellMonitor.VERSION,
+                    success_checker_parameters=asdict(BellRules()))
     if task == 'bottle_verb':
         return dict(success_checker_version=PickHoldMonitor.VERSION,
                     success_checker_parameters=asdict(PickHoldRules()))
@@ -188,7 +192,8 @@ def source_paths():
                    'third_party/robotwin/task_config', 'third_party/robotwin/description'):
         paths.update(p for p in (ROOT / folder).rglob('*')
                      if p.is_file() and p.suffix in ('.py', '.json', '.yml', '.yaml'))
-    paths.update((Path(__file__).resolve(), ROOT / 'tools/sim_device.py'))
+    paths.update((Path(__file__).resolve(), ROOT / 'tools/sim_device.py',
+                  ROOT / 'tools/prepare_bell_policy_suite.py'))
     return sorted(paths)
 
 
@@ -347,6 +352,19 @@ def completed_record(base, policy, spec, seed):
 
 def check_scene(base, policy, spec, seed, instruction, obs, env, path):
     """X-VLA establishes each scene; subsequent policies must match it exactly."""
+    if spec['task'] == 'press_lift_bell':
+        from policies.xvla.client import encode_proprio
+        evidence = read(base / 'manifests/press_lift_bell.generation.json')
+        expected = next(e['diagnostics'] for b in evidence['blocks'] if b['accepted']
+                        for e in b['episodes'] if e['seed'] == seed)
+        arrays = {c: obs['observation'][c]['rgb'] for c in ('head_camera', 'left_camera', 'right_camera')}
+        arrays['proprio'] = encode_proprio(obs)
+        hashes = {k: dict(sha256=hashlib.sha256(v.tobytes()).hexdigest(),
+                          dtype=str(v.dtype), shape=list(v.shape)) for k, v in arrays.items()}
+        assert hashes == expected['initial_arrays'], ('Bell qualification scene differs', policy, seed)
+        assert instruction == expected['instruction'] and env.step_lim == expected['action_limit'] == 250
+        write(path('_manifest_scene.json'), dict(seed=seed, exact_rgb=True, exact_proprio=True,
+              instruction=instruction, action_limit=env.step_lim))
     if policy == 'xvla':
         return
     import numpy as np
@@ -388,7 +406,7 @@ def worker(base, policy, task, output):
     """
     plan = read(base / 'plan.json')
     spec = next(s for s in plan['tasks'] if s['task'] == task)
-    old_args = read(base / 'provenance/reused' / policy / task / 'run.json')['arguments']
+    old_args = read(inference_reference(base, policy, task) / 'run.json')['arguments']
     module = importlib.import_module('policies.' + policy + '.eval')
     original = module.run_episode
     retained = {s: r for s in spec['seeds'] if (r := completed_record(base, policy, spec, s)) is not None}
@@ -469,12 +487,18 @@ def stop(proc):
 def server_identity(base, policy, directory):
     if policy == 'xvla':
         return  # Pinned local snapshot in recorded argv; official /act cannot attest identity.
-    expected = read(base / 'provenance/reused' / policy / 'bottle_verb/run.json')['server_metadata']
+    task = read(base / 'plan.json').get('inference_reference_task', 'bottle_verb')
+    expected = read(inference_reference(base, policy, task) / 'run.json')['server_metadata']
     actual = read(directory / 'server.json')
     volatile = {'created_at', 'gpu', 'source_sha256'}
     for key, value in expected.items():
         if key not in volatile:
             assert actual.get(key) == value, (policy, 'server identity/options changed', key)
+
+
+def inference_reference(base, policy, task):
+    dedicated = base / 'provenance/inference-reference' / policy / task
+    return dedicated if dedicated.is_dir() else base / 'provenance/reused' / policy / task
 
 
 def ingest_batch(base, policy, spec, output):
