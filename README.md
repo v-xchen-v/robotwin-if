@@ -15,6 +15,8 @@ Grasp-Approach 已于 2026-09-15 暂时下线；旧实现仅保留在 Git 历史
 
 唯一正式维护的 IF inventory 是 [`eval_cfg/if_tasks.yml`](eval_cfg/if_tasks.yml)。其他 env/JSON 可以为历史或实验目的留在仓库中，但只要没有列入该文件，就不属于 active suite。Manifest membership 与 production readiness 分开管理：例如 `pick_diverse_object` 属于上述六项，其已锁定的四类 Unseen production pool 仍由独立测试 gate 持续约束。
 
+独立实验 [`bottle_hold_place`](docs/bottle-hold-place-experiment.md) 比较在蓝垫上方稳定握持和放到蓝垫后释放；使用单独入口，不计入上述六任务成绩。
+
 本仓库维护 benchmark task（场景、干扰物、指令模板、成功判定与评测语义），并在 [`policies/`](policies/README.md) 中维护 X-VLA、LingBot-VA 等开源策略的独立推理环境与适配代码，**不在本仓库训练模型**。模型服务与 RoboTwin 仿真使用不同的 Conda 环境；也可由外部 CogACT/X-VLA 集成提供推理。
 
 **当前结果包：[`result/robotwin-if-arm-only-v2-20blocks/`](result/robotwin-if-arm-only-v2-20blocks/README.md)** ·

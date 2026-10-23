@@ -1,0 +1,6 @@
+{
+  "full_description": "Experimental pair: hold the bottle steadily above the blue pad, or place it on the pad and release it.",
+  "schema": "{I} is the entire fixed instruction selected by the episode mode. Keep it unchanged so the object and target descriptions are identical across the pair.",
+  "seen": ["{I}"],
+  "unseen": ["{I}"]
+}
