@@ -162,7 +162,9 @@ class bottle_hold_place(Base_Task):
             self.move(self.open_gripper(self.arm_tag))
             self.move(self.move_by_displacement(self.arm_tag, z=0.12))
         # Time advances only through real physics in oracle and policy runs.
-        for _ in range(math.ceil((self.monitor.rules.stable_seconds + 0.5) / self.scene.get_timestep())):
+        # Allow release wobble to settle before the required stable window.
+        settle_seconds = self.monitor.rules.required_stable_seconds(self.mode) + 3.0
+        for _ in range(math.ceil(settle_seconds / self.scene.get_timestep())):
             self.scene.step()
         self.info.update(mode=self.mode, scene_seed=self.scene_seed, bottle_id=self.bottle_id,
                          instruction=INSTRUCTIONS[self.mode], signals=self.eval_signals())

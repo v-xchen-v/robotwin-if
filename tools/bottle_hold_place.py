@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run paired oracle checks, optionally followed by an X-VLA experiment.
+"""Run paired oracle checks, optionally followed by an open-source policy experiment.
 
 No task bridge or maintained-suite registration is needed. This process adds the
 local experimental modules to RoboTwin's env package search path only.
@@ -9,6 +9,7 @@ import argparse
 from contextlib import redirect_stderr, redirect_stdout
 from datetime import datetime, timezone
 import hashlib
+import importlib
 import json
 import os
 from pathlib import Path
@@ -19,6 +20,14 @@ import traceback
 ROOT = Path(__file__).resolve().parents[1]
 TASK = "bottle_hold_place"
 sys.path.insert(0, str(ROOT))
+POLICIES = {
+    "xvla": ("XVLAClient", "http://127.0.0.1:8010", "2toINF/X-VLA-RoboTwin2"),
+    "lingbot_va": ("LingBotClient", "ws://127.0.0.1:8011", "robbyant/lingbot-va-posttrain-robotwin"),
+    "lingbot_vla": ("LingBotVLAClient", "ws://127.0.0.1:8012", "robbyant/lingbot-vla-4b-posttrain-robotwin"),
+    "vlact": ("VLActClient", "ws://127.0.0.1:8013", "StarVLA/VLAct_Qwen3OFT_Robotwin_all_Finetune"),
+    "dm05": ("DM05Client", "http://127.0.0.1:8014", "Dexmal/DM05-robotwin2"),
+    "hy_vla": ("HyVLAClient", "ws://127.0.0.1:8015", "tencent/Hy-Embodied-0.5-VLA-RoboTwin"),
+}
 
 
 def write_json(path, value):
@@ -29,6 +38,33 @@ def pair_seeds(start_pair, pairs):
     if start_pair < 0 or pairs < 1 or 2 * (start_pair + pairs) > 2**32:
         raise ValueError("provide a nonnegative start pair and a positive uint32-range pair count")
     return list(range(2 * start_pair, 2 * (start_pair + pairs)))
+
+
+def selected_seeds(start_pair, pairs, scene_seeds):
+    if scene_seeds is None:
+        return pair_seeds(start_pair, 4 if pairs is None else pairs)
+    if start_pair != 0 or pairs is not None or not scene_seeds or len(set(scene_seeds)) != len(scene_seeds):
+        raise ValueError("provide distinct scene seeds, without --start-pair or --pairs/--blocks")
+    return [seed for scene in scene_seeds for seed in pair_seeds(scene, 1)]
+
+
+def make_policy_client(policy, server_url, timeout):
+    module = importlib.import_module(f"policies.{policy}.client")
+    return getattr(module, POLICIES[policy][0])(server_url, timeout)
+
+
+def check_policy_observation(oracle_dir, seed, instruction, obs, env):
+    """Compare canonical RGB/state before the first policy request or action."""
+    import numpy as np
+    from policies.xvla.client import CAMERAS, encode_proprio
+    from tasks.envs._bottle_hold_place import INSTRUCTIONS, mode_for_seed
+
+    if instruction != INSTRUCTIONS[mode_for_seed(seed)] or env.step_lim != env.ACTION_LIMIT:
+        raise RuntimeError("Policy instruction or action budget differs from the experiment")
+    with np.load(oracle_dir / f"{TASK}_ep{seed}_initial.npz") as expected:
+        for camera in CAMERAS:
+            np.testing.assert_array_equal(obs["observation"][camera]["rgb"], expected[camera])
+        np.testing.assert_array_equal(encode_proprio(obs), expected["proprio"])
 
 
 def summarize_pairs(records):
@@ -130,21 +166,29 @@ def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--robotwin-dir", type=Path, default=ROOT / "third_party/robotwin")
     parser.add_argument("--task-config", default="demo_clean")
-    parser.add_argument("--pairs", type=int, default=4)
+    selection = parser.add_mutually_exclusive_group()
+    selection.add_argument("--pairs", "--blocks", type=int, help="Number of consecutive scene pairs (default: 4)")
+    selection.add_argument("--scene-seeds", type=int, nargs="+", help="Explicit scene IDs, always running both modes")
     parser.add_argument("--start-pair", type=int, default=0)
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--sim-gpu", default="0")
     parser.add_argument("--no-video", action="store_true", help="Skip oracle video; keep images and traces")
-    parser.add_argument("--policy", choices=("oracle", "xvla"), default="oracle")
-    parser.add_argument("--server-url", default="http://127.0.0.1:8010")
-    parser.add_argument("--checkpoint", default="2toINF/X-VLA-RoboTwin2", help="Declared server checkpoint")
+    parser.add_argument("--policy", choices=("oracle", *POLICIES), default="oracle")
+    parser.add_argument("--server-url", help="Defaults to the selected policy's local endpoint")
+    parser.add_argument("--request-timeout", type=float, default=600)
+    parser.add_argument("--checkpoint", help="Declared server checkpoint; server metadata is recorded when available")
     args = parser.parse_args(argv)
     try:
-        seeds = pair_seeds(args.start_pair, args.pairs)
+        seeds = selected_seeds(args.start_pair, args.pairs, args.scene_seeds)
     except ValueError as exc:
         parser.error(str(exc))
     if Path(args.task_config).name != args.task_config:
         parser.error("task config must be a simple name")
+    if args.request_timeout <= 0:
+        parser.error("request timeout must be positive")
+    if args.policy != "oracle":
+        args.server_url = args.server_url or POLICIES[args.policy][1]
+        args.checkpoint = args.checkpoint or POLICIES[args.policy][2]
     target, output = args.robotwin_dir.resolve(), args.output_dir.resolve()
     output.mkdir(parents=True, exist_ok=False)
     os.environ["CUDA_VISIBLE_DEVICES"] = args.sim_gpu
@@ -153,24 +197,32 @@ def main(argv=None):
     sys.path.insert(0, str(target))
     import envs
     envs.__path__.append(str(ROOT / "tasks/envs"))
-    from policies.xvla.eval import git_identity, load_task, run_episode
+    from tools.sim_device import pin_renderer
+    pin_renderer()
+    from policies.xvla.eval import git_identity, load_task
 
     source_files = ("tasks/envs/bottle_hold_place.py", "tasks/envs/_bottle_hold_place.py",
                     "tasks/task_instruction/bottle_hold_place.json", "tools/bottle_hold_place.py",
                     "policies/evaluation.py", "policies/xvla/eval.py")
-    write_json(output / "run.json", dict(
+    source_files = set(source_files) | {"tools/sim_device.py", "policies/xvla/client.py", "policies/xvla/outputs.py"}
+    if args.policy != "oracle":
+        source_files.update(str(p.relative_to(ROOT)) for p in (ROOT / "policies" / args.policy).glob("*.py"))
+    metadata = dict(
         created_at=datetime.now(timezone.utc).isoformat(), purpose="experimental-bottle-hold-place",
         task=TASK, policy=args.policy, seeds=seeds, checkpoint=args.checkpoint if args.policy != "oracle" else None,
         server_url=args.server_url if args.policy != "oracle" else None,
         robotwin=git_identity(target), robotwin_if=git_identity(ROOT),
-        source_sha256={p: hashlib.sha256((ROOT / p).read_bytes()).hexdigest() for p in source_files},
-        task_config_sha256=hashlib.sha256((target / "task_config" / f"{args.task_config}.yml").read_bytes()).hexdigest()))
+        arguments={k: str(v) if isinstance(v, Path) else v for k, v in vars(args).items()},
+        source_sha256={p: hashlib.sha256((ROOT / p).read_bytes()).hexdigest() for p in sorted(source_files)},
+        task_config_sha256=hashlib.sha256((target / "task_config" / f"{args.task_config}.yml").read_bytes()).hexdigest())
+    write_json(output / "run.json", metadata)
     env, config = load_task(target, TASK, args.task_config)
     # The pilot deliberately fixes clean conditions; record the effective config.
     config["domain_randomization"] = dict(config["domain_randomization"], random_background=False,
         cluttered_table=False, random_head_camera_dis=0, random_table_height=0,
         random_light=False, crazy_random_light_rate=0)
     config["save_freq"] = None
+    config["policy_name"] = args.policy
     write_json(output / "resolved_config.json", config)
     qualification = qualify(env, config, seeds, output / "oracle", not args.no_video)
     if not qualification["qualified"] or args.policy == "oracle":
@@ -179,22 +231,45 @@ def main(argv=None):
         print(json.dumps(summary), flush=True)
         return 0 if qualification["qualified"] else 2
 
-    from policies.xvla.client import XVLAClient
+    module = importlib.import_module(f"policies.{args.policy}.eval")
     records = []
     args.task = TASK
-    client = XVLAClient(args.server_url)
+    client, error = None, None
+    original_setup = module.setup_episode
+
+    def checked_setup(env, config, args, seed, split, record, path):
+        instruction, obs = original_setup(env, config, args, seed, split, record, path)
+        check_policy_observation(output / "oracle", seed, instruction, obs, env)
+        write_json(path("_scene_check.json"), dict(seed=seed, exact_rgb=True, exact_proprio=True,
+                   instruction=instruction, action_limit=env.step_lim))
+        return instruction, obs
+
     try:
-        for seed in seeds:
-            record = run_episode(env, config, client, args, seed, "unseen", output / "xvla", block=seed // 2)
+        client = make_policy_client(args.policy, args.server_url, args.request_timeout)
+        metadata["server_metadata"] = getattr(client, "server_metadata", None)
+        write_json(output / "run.json", metadata)
+        module.setup_episode = checked_setup
+        for index, seed in enumerate(seeds):
+            record = module.run_episode(env, config, client, args, seed, "unseen", output / args.policy, block=index // 2)
             records.append(record)
+            with (output / "results.jsonl").open("a") as stream:
+                stream.write(json.dumps(record, allow_nan=False) + "\n")
             print(f"policy seed={seed} status={record['status']}", flush=True)
             if record["status"] == "error":
                 break
+    except (Exception, SystemExit) as exc:
+        error = f"{type(exc).__name__}: {exc}"
+        traceback.print_exc()
     finally:
-        client.close()
+        module.setup_episode = original_setup
+        if client is not None:
+            try:
+                client.close()
+            except Exception as exc:
+                error = f"Client close failed: {type(exc).__name__}: {exc}"
     summary = dict(summarize_pairs(records),
-                   complete=len(records) == len(seeds) and all(r["status"] != "error" for r in records),
-                   expected_episodes=len(seeds), oracle_qualified=True)
+                   complete=len(records) == len(seeds) and all(r["status"] != "error" for r in records) and error is None,
+                   expected_episodes=len(seeds), oracle_qualified=True, policy=args.policy, error=error)
     write_json(output / "summary.json", summary)
     print(json.dumps(summary), flush=True)
     return 0 if summary["complete"] else 2

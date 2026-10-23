@@ -1,6 +1,6 @@
 {
-  "full_description": "Experimental pair: hold the bottle steadily above the blue pad, or place it on the pad and release it.",
-  "schema": "{I} is the entire fixed instruction selected by the episode mode. Keep it unchanged so the object and target descriptions are identical across the pair.",
+  "full_description": "Experimental pair: pick up the bottle, then either hold it steady above the blue pad or place it on the blue pad and release it.",
+  "schema": "{I} is the entire fixed instruction selected by the episode mode. Both instructions start with 'Pick up the bottle and' and refer to 'the blue pad'. Keep the instruction unchanged: hold requires steady suspended grasping above the pad; place requires placement on the pad followed by release. Do not add an arm, an upright orientation, or a shaking instruction. The seen/unseen keys are interface-compatible aliases for the same fixed pair, not separate language pools.",
   "seen": ["{I}"],
   "unseen": ["{I}"]
 }

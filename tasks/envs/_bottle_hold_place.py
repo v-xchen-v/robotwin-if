@@ -5,9 +5,10 @@ import math
 
 
 MODES = ("hold", "place")
+# Both modes explicitly require pickup; the remaining clause names the terminal state.
 INSTRUCTIONS = {
-    "hold": "Hold the bottle steadily above the blue pad.",
-    "place": "Place the bottle on the blue pad and release it.",
+    "hold": "Pick up the bottle and hold it steady above the blue pad.",
+    "place": "Pick up the bottle and place it on the blue pad, then release it.",
 }
 
 
@@ -22,10 +23,16 @@ class HoldPlaceRules:
     target_radius_m: float = 0.05
     min_clearance_m: float = 0.05
     max_clearance_m: float = 0.20
-    stable_seconds: float = 2.0
+    hold_seconds: float = 5.0
+    place_seconds: float = 2.0
     position_tolerance_m: float = 0.015
     rotation_tolerance_degrees: float = 10.0
     sample_seconds: float = 0.02
+
+    def required_stable_seconds(self, mode):
+        if mode not in MODES:
+            raise ValueError(f"unknown mode: {mode}")
+        return self.hold_seconds if mode == "hold" else self.place_seconds
 
 
 def rotation_degrees(a, b):
@@ -42,7 +49,7 @@ class HoldPlaceMonitor:
     Contacts come from physics, not a height-only proxy for holding/releasing.
     """
 
-    VERSION = "bottle-hold-place-v1-terminal"
+    VERSION = "bottle-hold-place-v3-terminal-5s-hold"
 
     def __init__(self, rules=HoldPlaceRules()):
         if any(not math.isfinite(v) or v <= 0 for v in asdict(rules).values()):
@@ -111,9 +118,8 @@ class HoldPlaceMonitor:
         return 0.0 if self.since is None else self.time - self.since
 
     def success(self, mode):
-        if mode not in MODES:
-            raise ValueError(f"unknown mode: {mode}")
-        return self.candidate == mode and self.stable_seconds + 1e-9 >= self.rules.stable_seconds
+        required_seconds = self.rules.required_stable_seconds(mode)
+        return self.candidate == mode and self.stable_seconds + 1e-9 >= required_seconds
 
     def signals(self):
         return dict(checker_version=self.VERSION, thresholds=asdict(self.rules),

@@ -3,6 +3,7 @@
 import ast
 import math
 from pathlib import Path
+from copy import deepcopy
 import tempfile
 from types import SimpleNamespace
 import unittest
@@ -10,13 +11,13 @@ from unittest.mock import patch
 
 from policies.evaluation import setup_episode
 from tasks.envs._bottle_hold_place import HoldPlaceMonitor, INSTRUCTIONS, mode_for_seed
-from tools.bottle_hold_place import pair_seeds, summarize_pairs
+from tools.bottle_hold_place import check_policy_observation, pair_seeds, selected_seeds, summarize_pairs
 
 
 ROOT = Path(__file__).resolve().parents[1]
 
 
-def feed(monitor, seconds=2.2, *, position=(0, 0, 1), clearance=.12,
+def feed(monitor, seconds=5.2, *, position=(0, 0, 1), clearance=.12,
          held=True, supported=False, motion=None):
     start = monitor.time
     for i in range(1, round(seconds / .02) + 1):
@@ -28,12 +29,57 @@ def feed(monitor, seconds=2.2, *, position=(0, 0, 1), clearance=.12,
 
 
 class MonitorTests(unittest.TestCase):
+    def test_hold_requires_five_seconds_while_place_requires_two(self):
+        for mode, required_seconds in (("hold", 5.0), ("place", 2.0)):
+            with self.subTest(mode=mode):
+                monitor = HoldPlaceMonitor()
+                # Both instructions require a prior pickup.
+                feed(monitor, .1, position=(.2, 0, 1))
+                state = dict(held=mode == "hold", supported=mode == "place",
+                             clearance=.12 if mode == "hold" else 0)
+                feed(monitor, required_seconds, **state)
+                self.assertAlmostEqual(monitor.stable_seconds, required_seconds - .02)
+                self.assertFalse(monitor.success(mode))
+                feed(monitor, .02, **state)
+                self.assertAlmostEqual(monitor.stable_seconds, required_seconds)
+                self.assertTrue(monitor.success(mode))
+
+    def test_brief_hover_before_placement_never_passes_hold(self):
+        for pause_seconds in (2.2, 3.0, 4.9):
+            with self.subTest(pause_seconds=pause_seconds):
+                monitor = HoldPlaceMonitor()
+                feed(monitor, pause_seconds)
+                self.assertFalse(monitor.success("hold"))
+                feed(monitor, 2.2, held=False, supported=True, clearance=0)
+                self.assertFalse(monitor.success("hold"))
+                self.assertTrue(monitor.success("place"))
+
+    def test_interrupted_hover_must_restart_the_full_five_seconds(self):
+        interruptions = (
+            dict(held=False), dict(supported=True), dict(clearance=.01),
+            dict(position=(.2, 0, 1)), dict(position=(0, 0, 1.02)),
+            dict(motion=lambda t: ((0, 0, 1), (math.cos(math.radians(10)),
+                                              math.sin(math.radians(10)), 0, 0))),
+        )
+        for interruption in interruptions:
+            with self.subTest(interruption=interruption):
+                monitor = HoldPlaceMonitor()
+                feed(monitor, 4.0)
+                feed(monitor, .02, **interruption)
+                feed(monitor, 2.2)
+                self.assertFalse(monitor.success("hold"))
+                feed(monitor, 2.8)
+                self.assertFalse(monitor.success("hold"))
+                feed(monitor, .02)
+                self.assertTrue(monitor.success("hold"))
+
     def test_hold_and_released_place_are_exclusive(self):
         for mode in ("hold", "place"):
             with self.subTest(mode=mode):
                 monitor = HoldPlaceMonitor()
                 feed(monitor, .1, position=(.2, 0, 1))
-                feed(monitor, held=mode == "hold", supported=mode == "place",
+                feed(monitor, 5.2 if mode == "hold" else 2.2,
+                     held=mode == "hold", supported=mode == "place",
                      clearance=.12 if mode == "hold" else 0)
                 self.assertTrue(monitor.success(mode))
                 self.assertFalse(monitor.success("place" if mode == "hold" else "hold"))
@@ -50,7 +96,7 @@ class MonitorTests(unittest.TestCase):
 
     def test_bottle_pushed_onto_pad_without_a_pick_does_not_count_as_place(self):
         monitor = HoldPlaceMonitor()
-        feed(monitor, held=False, supported=True, clearance=0)
+        feed(monitor, 2.2, held=False, supported=True, clearance=0)
         self.assertFalse(monitor.success("place"))
 
     def test_queries_do_not_create_stability_and_observation_gap_resets(self):
@@ -69,7 +115,7 @@ class MonitorTests(unittest.TestCase):
         self.assertTrue(monitor.success("hold"))
         feed(monitor, .1, held=False)
         self.assertFalse(monitor.success("hold"))
-        feed(monitor, held=False, supported=True, clearance=0)
+        feed(monitor, 2.2, held=False, supported=True, clearance=0)
         self.assertTrue(monitor.success("place"))
         feed(monitor, .1, supported=True, clearance=0)
         self.assertFalse(monitor.success("place"))
@@ -81,7 +127,7 @@ class MonitorTests(unittest.TestCase):
                 q = (math.cos(math.radians(degrees / 2)), math.sin(math.radians(degrees / 2)), 0, 0)
                 return ((0, 0, 1) if rotating else (.03 * math.sin(t * 10), 0, 1)), q
             monitor = HoldPlaceMonitor()
-            feed(monitor, 5, motion=motion)
+            feed(monitor, 7, motion=motion)
             self.assertFalse(monitor.success("hold"))
             # This experiment allows correction followed by sustained success.
             feed(monitor)
@@ -112,7 +158,8 @@ class TerminalTaskTests(unittest.TestCase):
             env.mode, env.monitor, env.step_lim = mode, HoldPlaceMonitor(), 700
             env._terminal = False
             feed(env.monitor, .1, position=(.2, 0, 1))
-            feed(env.monitor, held=mode == "hold", supported=mode == "place",
+            feed(env.monitor, 5.2 if mode == "hold" else 2.2,
+                 held=mode == "hold", supported=mode == "place",
                  clearance=.12 if mode == "hold" else 0)
             self.assertTrue(env.check_success())
             env.start_policy_rollout()
@@ -126,6 +173,21 @@ class TerminalTaskTests(unittest.TestCase):
             feed(env.monitor, .1, held=False, supported=False)
             self.assertFalse(env.finalize_policy_success())
 
+    def test_terminal_hold_rejects_a_short_pause_or_later_placement(self):
+        for pause_seconds in (2.2, 4.0, 5.2):
+            for place_after in (False, True):
+                with self.subTest(pause_seconds=pause_seconds, place_after=place_after):
+                    env = task_class()()
+                    env.mode, env.monitor, env.step_lim = "hold", HoldPlaceMonitor(), 700
+                    env.start_policy_rollout()
+                    feed(env.monitor, pause_seconds)
+                    if place_after:
+                        feed(env.monitor, 2.2, held=False, supported=True, clearance=0)
+                    env.take_action_cnt = 700
+                    self.assertFalse(env.check_success())
+                    self.assertEqual(env.finalize_policy_success(),
+                                     pause_seconds >= 5 and not place_after)
+
     def test_task_names_are_not_accepted_as_instructions(self):
         env = task_class()()
         env.mode = "hold"
@@ -135,6 +197,41 @@ class TerminalTaskTests(unittest.TestCase):
 
 
 class ExperimentTests(unittest.TestCase):
+    def test_explicit_scenes_always_expand_to_distinct_complete_blocks(self):
+        self.assertEqual(selected_seeds(0, None, [0, 3]), [0, 1, 6, 7])
+        self.assertEqual(selected_seeds(2, 2, None), [4, 5, 6, 7])
+        for args in ((0, None, []), (0, None, [0, 0]), (0, None, [-1]),
+                     (0, None, [2**31]), (1, None, [3]), (0, 2, [3])):
+            with self.subTest(args=args), self.assertRaises(ValueError):
+                selected_seeds(*args)
+
+    def test_policy_scene_guard_rejects_camera_state_instruction_and_budget_changes(self):
+        import numpy as np
+        from policies.xvla.client import CAMERAS, encode_proprio
+        obs = {"observation": {c: {"rgb": np.zeros((2, 3, 3), dtype=np.uint8)} for c in CAMERAS},
+               "endpose": {f"{arm}_{key}": value for arm in ("left", "right")
+                           for key, value in (("endpose", [0, 0, 1, 1, 0, 0, 0]), ("gripper", 1))}}
+        with tempfile.TemporaryDirectory() as tmp:
+            directory = Path(tmp)
+            np.savez_compressed(directory / "bottle_hold_place_ep0_initial.npz",
+                                proprio=encode_proprio(obs), **{c: obs["observation"][c]["rgb"] for c in CAMERAS})
+            env = SimpleNamespace(step_lim=700, ACTION_LIMIT=700)
+            check_policy_observation(directory, 0, INSTRUCTIONS["hold"], obs, env)
+            for field in ("camera", "state", "instruction", "budget"):
+                altered = deepcopy(obs)
+                instruction = INSTRUCTIONS["hold"]
+                env.step_lim = 700
+                if field == "camera":
+                    altered["observation"][CAMERAS[1]]["rgb"][0, 0, 0] = 1
+                elif field == "state":
+                    altered["endpose"]["left_endpose"][0] = .1
+                elif field == "instruction":
+                    instruction = INSTRUCTIONS["place"]
+                else:
+                    env.step_lim = 699
+                with self.subTest(field=field), self.assertRaises((AssertionError, RuntimeError)):
+                    check_policy_observation(directory, 0, instruction, altered, env)
+
     def test_balanced_uint32_seeds_and_pair_success(self):
         self.assertEqual(pair_seeds(4, 2), [8, 9, 10, 11])
         for args in ((-1, 2), (0, 0), (2**31 - 1, 2)):
