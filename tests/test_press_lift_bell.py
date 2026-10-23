@@ -196,7 +196,7 @@ class RunnerTests(unittest.TestCase):
             env, record = Env(), dict(mode=None)
             instruction, obs = setup_episode(env, {}, SimpleNamespace(task='press_lift_bell'), 1,
                 'unseen', record, lambda suffix: Path(directory) / ('episode' + suffix))
-            self.assertEqual(instruction, 'Lift the bell.')
+            self.assertEqual(instruction, 'Pick up the bell.')
             self.assertEqual(record['mode'], 'lift')
             generator.assert_not_called()
 

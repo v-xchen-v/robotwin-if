@@ -3,7 +3,7 @@
 分支 `press_lift_bell`，从 master `8035546` 新建。旧瓶子实验已保存在
 [`experiment/bottle-hold-place` 的 e7a7f7c](https://github.com/v-xchen-v/robotwin-if/commit/e7a7f7c)。
 
-本任务在铃铛、鼠标、玩具车的共享场景中，用一个可移动铃铛比较 `Press the bell.` 和 `Lift the bell.`。去掉第二个目标、搬运和长时间悬停，
+本任务在铃铛、鼠标、玩具车的共享场景中，用一个可移动铃铛比较 `Press down on the bell.` 和 `Pick up the bell.`。去掉第二个目标、搬运和长时间悬停，
 测试第一项完成的动作是否符合指令；不加入正式六任务成绩。
 
 ## 场景与原生依据
@@ -20,7 +20,8 @@
   布置区别于原生单铃铛 click 和“物体+展台”place 场景，目的是减少整场景模板识别；尚未做 bare/context 模型对照，不能声称已降低捷径，也不能保证消除铃铛的按压先验。
   陪衬物体带来少量目标识别要求，但只有一个铃铛，指令无需增加颜色、位置或手臂描述。
   主指标是同一画面下两条指令都成功，不能仅凭总成功率声称模型理解动词。
-- 两句只改变动词，不指定手臂。`seen/unseen` 仅为 runner 兼容值，实际都返回同一句固定指令。
+- 两句共享对象短语 `the bell`，只改变动作短语 `Press down on` / `Pick up`，不指定手臂。
+  `seen/unseen` 仅为 runner 兼容值，实际都返回当前 mode 对应的同一句固定指令。
 - 原生 `click_bell` 支持按压，但使用静态铃铛；原生 `place_object_scale` / `place_object_stand` 的动态资产池
   包含铃铛，oracle 会先抓起它。它们的 instruction 是完整搬运任务，不能证明模型见过独立的 `Lift the bell.`。
 
@@ -196,3 +197,36 @@ X-VLA seed 0 已满足原生 click，但相对首次接触的最大撤离为 1.3
 随机布局的 oracle 已 **8/8 成功**，四对初始三路 RGB/proprio 完全相同；与固定布局相比，铃铛初始位置和机器人
 proprio 也逐数组相等。实际初始化满足采样间距，oracle 轨迹中 distractor 未发生位移。详细检查见
 `press-lift-bell-random-context-oracle-001/layout-validation.json`。
+
+### Instruction：保留相同对象，调整动作短语
+
+用户选择保留 verb-something 对照后，当前固定指令改为：
+
+| 内部 mode | 模型实际收到的 instruction |
+|---|---|
+| `press` | `Press down on the bell.` |
+| `lift` | `Pick up the bell.` |
+
+共同对象短语均为 `the bell`，只替换动作短语 `Press down on` / `Pick up`。这是动作短语对照，
+不再称为只替换一个单词；不增加颜色、左右手、放置目标或操作数值。
+
+参考依据来自原生可进入指令生成的模板：
+
+- [`click_bell`](../third_party/robotwin/description/task_instruction/click_bell.json) 中有
+  `Press down {A}'s top center gently.` 和 `Press {A}'s top center on the table.`。
+  当前句借鉴向下按压的表达，并将对象统一为整只铃铛；没有只为 Press 增加 `top center` 这一部位提示。
+- [`place_object_stand`](../third_party/robotwin/description/task_instruction/place_object_stand.json) 中有
+  `Pick up {A} and set it on {B}.`；[`place_object_scale`](../third_party/robotwin/description/task_instruction/place_object_scale.json)
+  中也有 `Pick up {B} and set it on {A}`。两任务的动态物体池都包含 `050_bell`，当前只提取抓起子动作，去掉搬运目标。
+- 原生 `lift_pot` 同时使用 `Lift`、`Grab … and lift …`、`Pick up` 等表达，但属于双臂操作锅，不能直接复制其手臂要求。
+
+这些是从原生模板改写/截取的固定指令，不是声称原生数据集中存在完全相同的独立句子，也不能证明模型见过这些具体文本。
+实际运行的 [`filter_instructions`](../third_party/robotwin/description/utils/generate_episode_instructions.py)
+要求物体占位符与 episode metadata 匹配：`click_bell` 的 50 条 seen 中只有 31 条、10 条 unseen 中只有 7 条符合当前
+`{A}`/`{a}` metadata；部分纯字面 bell 句子不会进入该生成链路。因此引用时核对了过滤后的模板。
+
+实际模型文本由 `INSTRUCTIONS → env.policy_instruction → setup_episode → policy adapter` 传递，
+已同步修改运行时常量与任务 JSON；只改 JSON 不会改变本实验实际下发的固定文本。15 项本任务测试通过，包含 instruction 接线验证。
+本次只调整语言，不改变随机布局、物理参数或动作分类器；完整 Press 的额外撤离要求仍存在。
+此前所有模型结果及 `press-lift-bell-random-context-oracle-001` 均使用旧句 `Press the bell.` / `Lift the bell.`。
+模型 eval 仍暂停，尚未用新句进行推理，不能据此宣称性能提升。

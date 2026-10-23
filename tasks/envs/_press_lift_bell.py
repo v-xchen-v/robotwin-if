@@ -4,7 +4,7 @@ import math
 import random
 
 MODES = ("press", "lift")
-INSTRUCTIONS = {"press": "Press the bell.", "lift": "Lift the bell."}
+INSTRUCTIONS = {"press": "Press down on the bell.", "lift": "Pick up the bell."}
 CONTEXT_LAYOUT_VERSION = "random-back-region-v1"
 
 

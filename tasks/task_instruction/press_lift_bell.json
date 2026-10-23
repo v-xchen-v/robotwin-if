@@ -1,6 +1,6 @@
 {
-  "full_description": "Press the bell, or lift the same bell off the table.",
-  "schema": "{I} is the fixed mode-selected instruction: 'Press the bell.' or 'Lift the bell.'. Preserve it exactly. Seen/unseen are interface aliases, not distinct language pools.",
+  "full_description": "Press down on the bell, or pick up the same bell.",
+  "schema": "{I} is the fixed mode-selected instruction: 'Press down on the bell.' or 'Pick up the bell.'. Preserve it exactly. Both share the object phrase 'the bell'; only the action phrase changes. Seen/unseen are interface aliases, not distinct language pools.",
   "seen": ["{I}"],
   "unseen": ["{I}"]
 }
