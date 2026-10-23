@@ -1,12 +1,15 @@
 """Counterexample trajectories for the press/lift experiment's action classifier."""
 import json
+import math
+import random
 from pathlib import Path
 import tempfile
 from types import SimpleNamespace
 import unittest
 from unittest.mock import patch
 
-from tasks.envs._press_lift_bell import BellMonitor, BellRules, INSTRUCTIONS, bell_contacts, mode_for_seed
+from tasks.envs._press_lift_bell import (BellMonitor, BellRules, INSTRUCTIONS, bell_contacts,
+                                        mode_for_seed, sample_context_positions)
 from tools.press_lift_bell import selected_seeds, summarize_pairs
 from policies.evaluation import setup_episode
 
@@ -137,6 +140,35 @@ class ClassifierTests(unittest.TestCase):
             self.assertFalse(m.success('lift'))
         t.step(6, rise=.04, supported=False, touching=True)
         self.assertTrue(m.success('lift'))
+
+
+class ContextSceneTests(unittest.TestCase):
+    def test_paired_distractors_are_reproducible_without_global_rng_changes(self):
+        state = random.getstate()
+        for seed in range(16):
+            bell = [-.16, -.12]
+            press = sample_context_positions((2 * seed) // 2, bell)
+            lift = sample_context_positions((2 * seed + 1) // 2, bell)
+            self.assertEqual(press, lift)
+        self.assertEqual(random.getstate(), state)
+
+    def test_random_positions_keep_clearances_and_allow_both_left_right_orders(self):
+        orders = set()
+        layouts = set()
+        for seed in range(256):
+            bell = [(-1 if seed % 2 == 0 else 1) * (.14 if seed % 4 < 2 else .19),
+                    -.15 if seed % 3 else -.10]
+            poses = sample_context_positions(seed, bell)
+            self.assertEqual([name for name, _ in poses], ['047_mouse', '057_toycar'])
+            for _, position in poses:
+                self.assertTrue(-.30 <= position[0] <= .30)
+                self.assertTrue(.04 <= position[1] <= .22)
+                self.assertGreaterEqual(math.dist(position[:2], bell), .22)
+            self.assertGreaterEqual(math.dist(poses[0][1][:2], poses[1][1][:2]), .18)
+            orders.add(poses[0][1][0] < poses[1][1][0])
+            layouts.add(tuple(v for _, p in poses for v in p))
+        self.assertEqual(orders, {False, True})
+        self.assertEqual(len(layouts), 256)
 
 
 class RunnerTests(unittest.TestCase):

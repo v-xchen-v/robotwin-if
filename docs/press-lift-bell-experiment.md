@@ -11,8 +11,12 @@
 - Episode `2k` 为 press，`2k+1` 为 lift。完整初始化（包括相机、背景、机器人）均使用 scene seed `k`。
 - 同一对共享动态 `050_bell`、0.05 kg 质量、碰撞网格和所有物理参数；mode 不参与场景生成。
 - 铃铛置于桌面近处，左右交替；scene 0/1 使用 model 0，scene 2/3 使用 model 1。
-- 默认 `--scene-layout context`：后侧固定摆放 `047_mouse/base0` 和 `057_toycar/base0`，均为动态 0.05 kg 原生资产，
-  与铃铛间距约 30 cm 以上，避开近处的操作路径；没有秤、展台或目标垫。`--scene-layout bare` 保留单铃铛基线。
+- 默认 `--scene-layout context`：后侧随机摆放 `047_mouse/base0` 和 `057_toycar/base0`，均为动态 0.05 kg 原生资产。
+  两者各自在 X ∈ [-0.30, 0.30] m、Y ∈ [0.04, 0.22] m 内采样，均可出现在左侧或右侧；
+  水平中心距铃铛至少 22 cm，彼此至少 18 cm，避免重叠并避开近处的操作路径。
+  使用由 scene seed 初始化的独立随机数发生器，拒绝不满足间距的候选，不消耗铃铛、相机等初始化的全局随机序列。
+  `context_sampling_version=random-back-region-v1` 与每个 distractor 的稳定初始位置一同写入信号。
+  没有秤、展台或目标垫。`--scene-layout bare` 保留单铃铛基线。
   布置区别于原生单铃铛 click 和“物体+展台”place 场景，目的是减少整场景模板识别；尚未做 bare/context 模型对照，不能声称已降低捷径，也不能保证消除铃铛的按压先验。
   陪衬物体带来少量目标识别要求，但只有一个铃铛，指令无需增加颜色、位置或手臂描述。
   主指标是同一画面下两条指令都成功，不能仅凭总成功率声称模型理解动词。
@@ -22,7 +26,12 @@
 
 ![单铃铛基线与三物体布置](assets/press-lift-bell-scene-comparison.png)
 
-图中左右为相同 scene 0 的 bare / context 初始头部相机画面；机器人 proprio 完全相同。
+图中左右为历史上相同 scene 0 的 bare / 固定位置 context 初始头部相机画面；机器人 proprio 完全相同。
+`004` 和 `005` 的模型结果使用该固定布局；当前默认已改为上面的随机布局，不与历史模型结果合并。
+
+![四个种子的随机 distractor 初始场景](assets/press-lift-bell-random-context-scenes.png)
+
+当前随机布局的 scene 0–3；同一 scene 内的 Press/Lift 使用完全相同的初始画面。
 
 ## 判据
 
@@ -140,6 +149,8 @@ v2 单铃铛验证（`003/preflight`）8/8 成功，4 对初始 RGB/proprio 全�
 
 `004` 在用户要求对齐原生接触检测后停止，完成 **12/24** 回合，三模型结果保留如下；后三个模型未完成评测。
 其 `frozen-source/` 保存全部受哈希约束的旧源码，`stopped-for-criterion-revision.json` 记录停止原因和当时状态。
+停止后，12 个已完成回合的原始轨迹均使用冻结的 v2 分类器重放一致，12 段视频均完整解码且帧数等于动作数加一；
+验证记录为 `004/validation-stopped.json`。
 
 | 模型 | v2 Press | v2 Lift | 两边均成功 |
 |---|---:|---:|---:|
@@ -170,3 +181,18 @@ LingBot-VA 的两个 Press 回合在原始 50 Hz 日志中均无通过冲量过�
 新评测目录为 `outputs/policy-eval/press-lift-bell-six-models-2blocks-005`，先做八回合 oracle 资格检查，再重新运行模型。
 v3 的 `005/preflight` 已 **8/8 通过**，Press 4/4、Lift 4/4，四对初始观测完全相同；八个回合的初始 RGB/proprio
 也逐数组等于 v2 的对应场景，确认这次只改变接触判据和检查频率，没有改变初始场景。
+
+### 暂停评测后：先随机化 distractor
+
+用户要求暂停模型 eval 后，`005` 在 **6/24** 个完整回合处停止：LingBot-VA Press 2/2、Lift 1/2、双成功 1/2；
+X-VLA 首个场景两回合未通过完整动作判据，第二个场景的 Press 回合中途停止，不计行为失败。
+任务与模型进程已停止，`005/paused.json` 记录恢复边界，`005/frozen-source/` 保存固定布局源码。
+X-VLA seed 0 已满足原生 click，但相对首次接触的最大撤离为 1.36 cm，未满足完整 Press 的 2 cm 条件。
+
+接下来按用户指定顺序先处理位置随机化：保留两个 distractor 的身份、质量和姿态，改变其采样位置；
+每个 Press/Lift 对仍使用同一个 scene seed。15 项本任务测试通过，覆盖 256 个种子的区域、间距、左右次序变化、
+可复现性和全局随机状态不变。场景可执行性使用独立的 `press-lift-bell-random-context-oracle-001` 检查。
+此阶段模型 eval 保持暂停，instruction 留待下一步处理。
+随机布局的 oracle 已 **8/8 成功**，四对初始三路 RGB/proprio 完全相同；与固定布局相比，铃铛初始位置和机器人
+proprio 也逐数组相等。实际初始化满足采样间距，oracle 轨迹中 distractor 未发生位移。详细检查见
+`press-lift-bell-random-context-oracle-001/layout-validation.json`。

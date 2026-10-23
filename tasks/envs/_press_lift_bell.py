@@ -1,9 +1,29 @@
-"""Physics-time first-completed-action classifier; independent of commanded mode."""
+"""Paired bell scene sampling and a mode-independent first-action classifier."""
 from dataclasses import asdict, dataclass
 import math
+import random
 
 MODES = ("press", "lift")
 INSTRUCTIONS = {"press": "Press the bell.", "lift": "Lift the bell."}
+CONTEXT_LAYOUT_VERSION = "random-back-region-v1"
+
+
+def sample_context_positions(scene_seed, bell_xy):
+    """Sample distractors without consuming the task's global random streams."""
+    rng = random.Random(f"press-lift-bell/context/{scene_seed}")
+    positions = []
+    for asset in ("047_mouse", "057_toycar"):
+        for _ in range(256):
+            xy = (rng.uniform(-0.30, 0.30), rng.uniform(0.04, 0.22))
+            if math.dist(xy, bell_xy) < 0.22:
+                continue
+            if any(math.dist(xy, p[:2]) < 0.18 for _, p in positions):
+                continue
+            positions.append((asset, [*xy, 0.741]))
+            break
+        else:
+            raise RuntimeError("Could not sample separated bell distractors")
+    return positions
 
 
 def mode_for_seed(seed):
