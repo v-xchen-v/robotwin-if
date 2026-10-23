@@ -40,6 +40,8 @@ class SeedDescription:
     scene_offset: int
 
 
+# Runnable contracts, including bottle_verb for reproducing earlier releases.
+# A release's suite.yml, not this registry, selects its six-task inventory.
 IF_SEED_CONTRACTS = {
     "bottle_verb": SeedContract(
         task="bottle_verb",
@@ -89,7 +91,13 @@ IF_SEED_CONTRACTS = {
         seed_offsets=(0, 1, 4),
         seed_stride=5,
     ),
+    "press_lift_bell": SeedContract(
+        task="press_lift_bell", modes=("press", "lift"), scene_span=2,
+    ),
 }
+
+LEGACY_SUITE_TASKS = tuple(t for t in IF_SEED_CONTRACTS if t != "press_lift_bell")
+CURRENT_SUITE_TASKS = ("press_lift_bell", *LEGACY_SUITE_TASKS[1:])
 
 # Read-only metadata for validating archived manifests/results. Not an active task.
 ARCHIVED_SEED_CONTRACTS = {
@@ -125,7 +133,7 @@ def observed_mode(task_name, task):
     """Read the actual scene mode using the same labels as the seed contract."""
     if task_name not in IF_SEED_CONTRACTS:
         raise ValueError(f"Task is not active: {task_name}")
-    if task_name in ("bottle_verb", "arm_select"):
+    if task_name in ("bottle_verb", "arm_select", "press_lift_bell"):
         return str(task.mode)
     if task_name == "pick_diverse_object":
         return str(task.target_familiarity)

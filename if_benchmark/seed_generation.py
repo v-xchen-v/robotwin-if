@@ -216,6 +216,8 @@ def _normalize_episode(task, seed, probe):
         "accepted": False,
         "failure": raw.get("failure"),
     }
+    if "diagnostics" in raw:
+        episode["diagnostics"] = deepcopy(raw["diagnostics"])
     if not episode["setup_ok"]:
         category = "setup"
     elif not episode["plan_success"]:

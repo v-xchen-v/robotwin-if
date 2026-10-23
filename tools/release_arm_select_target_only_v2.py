@@ -13,7 +13,7 @@ import yaml
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
-from if_benchmark.seed_contracts import IF_SEED_CONTRACTS
+from if_benchmark.seed_contracts import LEGACY_SUITE_TASKS
 from if_benchmark.seed_manifest import load_manifest, manifest_sha256, validate_manifest
 from if_benchmark.seed_modes import check_seed_modes
 from tools.release_history import historical_evidence
@@ -87,7 +87,7 @@ def verify(base=RELEASE):
 def _verify(base, history):
     suite = yaml.safe_load((base / 'suite.yml').read_text())
     assert suite['policies'] == POLICIES
-    assert [s['task'] for s in suite['tasks']] == list(IF_SEED_CONTRACTS)
+    assert tuple(s['task'] for s in suite['tasks']) == LEGACY_SUITE_TASKS
     assert suite['blocks_per_task'] == 20
     check_seed_modes(base)
     for filename, expected in read(base / 'qualification-files.json').items():

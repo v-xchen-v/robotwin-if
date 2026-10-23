@@ -369,8 +369,8 @@ def check_scene(base, policy, spec, seed, instruction, obs, env, path):
 
 
 def check_active_tasks(specs):
-    from if_benchmark.seed_contracts import IF_SEED_CONTRACTS
-    assert [s['task'] for s in specs] == list(IF_SEED_CONTRACTS), 'Formal runs require the current six-task inventory'
+    from if_benchmark.seed_contracts import IF_SEED_CONTRACTS, CURRENT_SUITE_TASKS, LEGACY_SUITE_TASKS
+    assert tuple(s['task'] for s in specs) in (CURRENT_SUITE_TASKS, LEGACY_SUITE_TASKS), 'Formal runs require a complete six-task release inventory'
     from if_benchmark.seed_contracts import validate_active_seeds
     for spec in specs:
         if 'modes' in spec:

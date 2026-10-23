@@ -15,7 +15,7 @@ import time
 REPO_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO_ROOT))
 
-from if_benchmark.seed_contracts import IF_SEED_CONTRACTS  # noqa: E402
+from if_benchmark.seed_contracts import CURRENT_SUITE_TASKS, IF_SEED_CONTRACTS, observed_mode  # noqa: E402
 from if_benchmark.seed_generation import (  # noqa: E402
     GENERATION_SCHEMA_VERSION,
     GenerationError,
@@ -38,7 +38,7 @@ from if_benchmark.seed_manifest import (  # noqa: E402
 from scripts import _task_bridge as bridge  # noqa: E402
 
 
-GENERATOR_VERSION = 1
+GENERATOR_VERSION = 2
 
 
 def _utc_now():
@@ -46,27 +46,14 @@ def _utc_now():
 
 
 def _observed_mode(task_name, task):
-    if task_name in ("bottle_verb", "arm_select"):
-        return str(task.mode)
-    if task_name == "pick_diverse_object":
-        return str(task.target_familiarity)
-    if task_name == "attribute_select":
-        axis = str(task.axis)
-        value = int(task.value)
-        values = task.AXIS_VALUES[axis]
-        return f"{axis}:{values[value]}"
-    if task_name == "stack_sequence":
-        return ">".join(task.COLOR_NAMES[int(index)] for index in task.perm)
-    if task_name == "place_relative":
-        return str(task.direction)
-    raise GenerationError(f"no observed-mode adapter for {task_name}")
+    return observed_mode(task_name, task)
 
 
 def _failure(category, exc):
     return {"category": category, "message": f"{type(exc).__name__}: {exc}"}
 
 
-def _probe_seed(task_name, task, task_args, seed):
+def _probe_seed(task_name, task, task_args, seed, bell_audit=None):
     result = {
         "setup_ok": False,
         "plan_success": False,
@@ -79,6 +66,10 @@ def _probe_seed(task_name, task, task_args, seed):
         task.setup_demo(now_ep_num=0, seed=seed, is_test=True, **task_args)
         result["setup_ok"] = True
         result["observed_mode"] = _observed_mode(task_name, task)
+
+        if bell_audit is not None:
+            stage = "paired_initial_observation"
+            result["diagnostics"] = bell_audit.initial(task, seed)
 
         stage = "play_once"
         task.play_once()
@@ -96,6 +87,8 @@ def _probe_seed(task_name, task, task_args, seed):
                     "category": "check_success",
                     "message": "task.check_success() is false",
                 }
+        if bell_audit is not None:
+            result["diagnostics"]["signals"] = task.eval_signals()
     except Exception as exc:
         result["failure"] = _failure(stage, exc)
     finally:
@@ -146,6 +139,8 @@ def _load_task(collect_data, task_name, task_config):
     task_args["render_freq"] = 0
     task_args["need_plan"] = True
     task_args["eval_mode"] = True
+    task_args.update(save_data=False, collect_data=False, eval_video_log=False,
+                     eval_video_save_dir=None, save_freq=None)
     return captured["task"], task_args
 
 
@@ -282,9 +277,13 @@ def _generate_task(collect_data, task_name, args, provenance):
     if state["status"] != "complete":
         checkpoint(state)
         task, task_args = _load_task(collect_data, task_name, args.task_config)
+        bell_audit = None
+        if task_name == "press_lift_bell":
+            from tools.bell_seed_audit import BellSeedAudit
+            bell_audit = BellSeedAudit(args.output_dir / "press_lift_bell-observations")
 
         def probe(seed):
-            return _probe_seed(task_name, task, task_args, seed)
+            return _probe_seed(task_name, task, task_args, seed, bell_audit)
 
         state = run_generation(state, probe, checkpoint=checkpoint)
 
@@ -326,6 +325,7 @@ def build_parser():
     parser.add_argument("--candidate-floor", type=int, default=100000)
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--robotwin-dir")
+    parser.add_argument("--sim-gpu", default="0", help="physical simulator GPU index")
     parser.add_argument(
         "--allow-compatible-commit",
         action="store_true",
@@ -340,7 +340,7 @@ def build_parser():
 def main(argv=None):
     args = build_parser().parse_args(argv)
     args.output_dir = args.output_dir.expanduser().resolve()
-    task_names = tuple(IF_SEED_CONTRACTS) if args.all else (args.task,)
+    task_names = CURRENT_SUITE_TASKS if args.all else (args.task,)
     try:
         target = bridge.resolve_robotwin_dir(args.robotwin_dir)
         bridge.bridge(
@@ -365,6 +365,9 @@ def main(argv=None):
 
     failures = 0
     try:
+        os.environ["CUDA_VISIBLE_DEVICES"] = args.sim_gpu
+        from tools.sim_device import pin_renderer
+        pin_renderer()
         with _robotwin_runtime(target) as collect_data:
             for task_name in task_names:
                 try:

@@ -1,4 +1,4 @@
-"""Isolated press/lift pair on one shared dynamic bell, outside the formal suite."""
+"""Press/lift instruction contrast on one shared dynamic bell scene."""
 import random
 import numpy as np
 import sapien

@@ -3,6 +3,7 @@ import csv
 import io
 import json
 from pathlib import Path
+import yaml
 
 from .seed_contracts import IF_SEED_CONTRACTS, contract_for, describe_seed
 from .seed_manifest import load_manifest, manifest_sha256, validate_manifest
@@ -13,7 +14,11 @@ CSV_FIELDS = ('task', 'task_config', 'block', 'seed', 'mode', 'block_offset', 's
 def build_seed_modes(directory):
     directory = Path(directory)
     tasks = []
-    for task in IF_SEED_CONTRACTS:
+    suite = yaml.safe_load((directory / 'suite.yml').read_text())
+    inventory = [s['task'] for s in suite['tasks']]
+    if len(inventory) != len(set(inventory)) or not set(inventory) <= IF_SEED_CONTRACTS.keys():
+        raise ValueError('Release contains duplicate or unsupported tasks')
+    for task in inventory:
         manifest = load_manifest(directory / f'{task}.json')
         checked = validate_manifest(manifest)
         if manifest['task'] != task or len(checked['block_ids']) != 20:

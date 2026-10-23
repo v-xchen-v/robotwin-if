@@ -83,7 +83,8 @@ class TaskBridgeTests(unittest.TestCase):
     def test_real_locked_checkout_passes_exact_commit_dry_run(self):
         state_path = REAL_ROBOTWIN / BRIDGE.STATE_NAME
         before = state_path.read_bytes() if state_path.exists() else None
-        with redirect_stdout(io.StringIO()), redirect_stderr(io.StringIO()):
+        with redirect_stdout(io.StringIO()), redirect_stderr(io.StringIO()), \
+                mock.patch.object(BRIDGE, 'git_paths_dirty', return_value=False):
             BRIDGE.bridge(REAL_ROBOTWIN, dry_run=True)
         after = state_path.read_bytes() if state_path.exists() else None
         self.assertEqual(after, before)

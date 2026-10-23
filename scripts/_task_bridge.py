@@ -15,7 +15,7 @@ import tempfile
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-LOCKED_ROBOTWIN_COMMIT = "0aeea2d669c0f8516f4d5785f0aa33ba812c14b4"
+LOCKED_ROBOTWIN_COMMIT = "b82ffb81d291d14c24be444bb7b6f81719481e0f"
 STATE_NAME = ".robotwin-if-bridge.json"
 STATE_SCHEMA_VERSION = 1
 MAX_STATE_BYTES = 1024 * 1024
@@ -28,6 +28,7 @@ MAINTAINED_TASKS = (
     "arm_select",
     "stack_sequence",
     "place_relative",
+    "press_lift_bell",
 )
 ENV_HELPERS = (
     "_if_grounding.py",
@@ -35,6 +36,7 @@ ENV_HELPERS = (
     "_if_bottle_verb.py",
     "_pick_diverse_object_pool.py",
     "_if_eval.py",
+    "_press_lift_bell.py",
 )
 
 BASE_TASK_METHODS = {

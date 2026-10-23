@@ -5,7 +5,7 @@ import sys
 import unittest
 from unittest.mock import patch
 
-from if_benchmark.seed_contracts import IF_SEED_CONTRACTS
+from if_benchmark.seed_contracts import CURRENT_SUITE_TASKS, LEGACY_SUITE_TASKS, IF_SEED_CONTRACTS
 from if_benchmark.seed_manifest import validate_manifest
 from policies.xvla.eval import load_task
 from tools.run_formal_policy_suite import check_active_tasks
@@ -37,8 +37,9 @@ class RetirementTest(unittest.TestCase):
         self.assertFalse((ROOT / 'tasks/envs/grasp_cube_approach.py').exists())
 
     def test_formal_runs_require_full_current_inventory(self):
-        specs = [dict(task=t) for t in IF_SEED_CONTRACTS]
+        specs = [dict(task=t) for t in CURRENT_SUITE_TASKS]
         check_active_tasks(specs)
+        check_active_tasks([dict(task=t) for t in LEGACY_SUITE_TASKS])
         for invalid in (specs[:-1], specs + [dict(task='grasp_cube_approach')]):
             with self.assertRaises(AssertionError):
                 check_active_tasks(invalid)
