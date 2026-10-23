@@ -1,9 +1,10 @@
 # RoboTwin-IF · canonical maintained IF task suite
 #
-# This is the sole machine-readable inventory of maintained IF tasks. The order follows
+# This is the default six-task inventory; versioned seed releases retain their own suite.yml. The order follows
 # the six remaining diagnostic axes; Grasp-Approach is retired; bak/ retains its retirement notice.
 # Other task envs may remain in tasks/envs/ for provenance or experimentation; an env is
-# active only when it appears in this list.
+# included in the default suite only when it appears in this list.
+# bottle_verb remains loadable for earlier releases.
 #
 # Format: a plain `tasks:` list. Each name must resolve to envs/<name>.py after
 # `scripts/bridge_tasks.sh` symlinks tasks/envs/*.py into the RoboTwin runtime.
@@ -23,7 +24,7 @@
 # See eval_cfg/README.md for axis mapping, readiness semantics, and eval caveats.
 
 tasks:
-  - bottle_verb
+  - press_lift_bell
   - pick_diverse_object
   - attribute_select
   - arm_select

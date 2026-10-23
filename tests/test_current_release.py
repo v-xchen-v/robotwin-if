@@ -16,11 +16,12 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 class CurrentReleaseTest(unittest.TestCase):
-    def test_only_latest_packages_are_exposed(self):
+    def test_named_manifest_versions_and_current_results_are_exposed(self):
         for parent, name in [('seed-manifests', 'robotwin-if-arm-only-v2-20-per-mode'),
                              ('result', 'robotwin-if-arm-only-v2-20blocks')]:
             entries = list((ROOT / parent).iterdir())
-            self.assertEqual([p.name for p in entries if p.is_dir()], [name])
+            expected = [name, 'robotwin-if-press-lift-bell-v1-20-per-mode'] if parent == 'seed-manifests' else [name]
+            self.assertEqual(sorted(p.name for p in entries if p.is_dir()), sorted(expected))
             self.assertFalse(any(p.is_symlink() for p in entries))
             self.assertFalse((ROOT / (parent + '-archive')).exists())
         check_seed_modes(release.RELEASE)

@@ -11,7 +11,7 @@ import sys
 import tempfile
 import unittest
 
-from if_benchmark.seed_contracts import IF_SEED_CONTRACTS
+from if_benchmark.seed_contracts import IF_SEED_CONTRACTS, CURRENT_SUITE_TASKS, LEGACY_SUITE_TASKS
 from if_benchmark.seed_modes import build_seed_modes, check_seed_modes, export_texts
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -24,7 +24,7 @@ class SeedModeDeliveryTest(unittest.TestCase):
         check_seed_modes(RELEASE)
         data = build_seed_modes(RELEASE)
         self.assertEqual(data['episodes_per_policy'], 460)
-        self.assertEqual([t['task'] for t in data['tasks']], list(IF_SEED_CONTRACTS))
+        self.assertEqual([t['task'] for t in data['tasks']], list(LEGACY_SUITE_TASKS))
         for task in data['tasks']:
             source = ROOT / 'result/robotwin-if-arm-only-v2-20blocks/manifests'
             frozen = json.loads((source / task['manifest']).read_text())
@@ -44,7 +44,8 @@ class SeedModeDeliveryTest(unittest.TestCase):
     def test_stale_mode_export_is_rejected(self):
         with tempfile.TemporaryDirectory() as tmp:
             directory = Path(tmp)
-            for task in IF_SEED_CONTRACTS:
+            shutil.copyfile(RELEASE / "suite.yml", directory / "suite.yml")
+            for task in LEGACY_SUITE_TASKS:
                 shutil.copyfile(RELEASE / f'{task}.json', directory / f'{task}.json')
             for name, contents in export_texts(directory).items():
                 (directory / name).write_text(contents)
@@ -147,7 +148,7 @@ print('1, 10000, 40000, 40, 20')
                 run = self.run_launcher('--policy', policy, '--dry-run')
                 self.assertEqual(run.returncode, 0, run.stderr)
                 self.assertEqual(run.stdout.count('20 blocks,'), 6)
-                self.assertIn(str(RELEASE / 'arm_select.json'), run.stdout)
+                self.assertIn(str(ROOT / 'seed-manifests' / 'robotwin-if-press-lift-bell-v1-20-per-mode' / 'arm_select.json'), run.stdout)
                 protocol = 'http' if policy in ('xvla', 'dm05') else 'ws'
                 self.assertIn(f'{protocol}://127.0.0.1:{8010 + index}', run.stdout)
                 self.assertNotIn('grasp_cube_approach', run.stdout)
@@ -174,7 +175,7 @@ print('1, 10000, 40000, 40, 20')
         self.assertEqual(run.returncode, 0, run.stdout + run.stderr)
         self.assertEqual(run.stdout.count('COMPLETE:'), 6)
         calls = self.launched()
-        self.assertEqual([r['options']['--task'] for r in calls], list(IF_SEED_CONTRACTS))
+        self.assertEqual([r['options']['--task'] for r in calls], list(CURRENT_SUITE_TASKS))
         self.assertTrue(all(r['gpu'] == '0' for r in calls))
         self.assertEqual(calls[3]['options']['--task-config'], 'demo_clean_arm_select_v3')
 
@@ -193,7 +194,7 @@ print('1, 10000, 40000, 40, 20')
 
     def test_hot_gpu_rejected_before_simulator_launch(self):
         self.env['FAKE_GPU_TEMP'] = '87'
-        run = self.run_launcher('--task', 'bottle_verb')
+        run = self.run_launcher('--task', 'press_lift_bell')
         self.assertEqual(run.returncode, 2, run.stderr)
         self.assertIn('GPU safety check failed', run.stderr)
         self.assertEqual(self.launched(), [])
@@ -201,7 +202,7 @@ print('1, 10000, 40000, 40, 20')
     def test_running_gpu_pressure_terminates_owned_simulator_process_group(self):
         pids = self.base / 'pids.json'
         self.env['FAKE_HANG'] = str(pids)
-        run = self.run_launcher('--task', 'bottle_verb')
+        run = self.run_launcher('--task', 'press_lift_bell')
         self.assertEqual(run.returncode, 2, run.stdout + run.stderr)
         self.assertIn('GPU safety check failed', run.stderr)
         self.assertEqual(len(self.launched()), 1)

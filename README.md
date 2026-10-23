@@ -4,34 +4,36 @@
 
 | 诊断轴 | Task name | 对比值 |
 |---|---|---|
-| Verb-Select | [`bottle_verb`](#bottle-verb) | pick / shake |
+| Verb-Select | [`press_lift_bell`](docs/press-lift-bell-experiment.md) | press / lift |
 | Noun-Grounding | [`pick_diverse_object`](#pick-diverse-object) | 仅按名词从同 familiarity group 中选择目标 |
 | Attribute-Select | [`attribute_select`](#attribute-select) | color / decal / shape / size |
 | Arm-Select | [`arm_select`](#arm-select) | left / right |
 | Sequence | [`stack_sequence`](#stack-sequence) | 六种 bottom-to-top 顺序 |
 | Spatial-Direction | [`place_relative`](#place-relative) | left / right / on top |
 
-Grasp-Approach 已于 2026-09-15 暂时下线；旧实现仅保留在 Git 历史中，见[下线说明](bak/grasp_cube_approach/README.md)。当前默认生成、安装与评测均只包含以上六项。
+Grasp-Approach 已于 2026-09-15 暂时下线；旧实现仅保留在 Git 历史中，见[下线说明](bak/grasp_cube_approach/README.md)。当前默认生成与评测包含以上六项；bridge 额外保留 `bottle_verb` 以加载旧清单。
 
-唯一正式维护的 IF inventory 是 [`eval_cfg/if_tasks.yml`](eval_cfg/if_tasks.yml)。其他 env/JSON 可以为历史或实验目的留在仓库中，但只要没有列入该文件，就不属于 active suite。Manifest membership 与 production readiness 分开管理：例如 `pick_diverse_object` 属于上述六项，其已锁定的四类 Unseen production pool 仍由独立测试 gate 持续约束。
+默认 IF inventory 是 [`eval_cfg/if_tasks.yml`](eval_cfg/if_tasks.yml)。其他 env/JSON 可以为历史或实验目的留在仓库中，但只要没有列入该文件，就不属于默认 suite；版本化清单由各自 `suite.yml` 指定任务。Manifest membership 与 production readiness 分开管理：例如 `pick_diverse_object` 属于上述六项，其已锁定的四类 Unseen production pool 仍由独立测试 gate 持续约束。
 
 本仓库维护 benchmark task（场景、干扰物、指令模板、成功判定与评测语义），并在 [`policies/`](policies/README.md) 中维护 X-VLA、LingBot-VA 等开源策略的独立推理环境与适配代码，**不在本仓库训练模型**。模型服务与 RoboTwin 仿真使用不同的 Conda 环境；也可由外部 CogACT/X-VLA 集成提供推理。
 
-**当前结果包：[`result/robotwin-if-arm-only-v2-20blocks/`](result/robotwin-if-arm-only-v2-20blocks/README.md)** ·
+**当前清单：[Press/Lift Bell v1](seed-manifests/robotwin-if-press-lift-bell-v1-20-per-mode/README.md)**，用铃铛替换 Bottle，其余五份 seeds 不变。20 个配对 blocks 已通过 expert 和初始观测一致性检查；模型 eval 暂停，尚无本版正式模型成绩。
+
+**旧版结果包：[`result/robotwin-if-arm-only-v2-20blocks/`](result/robotwin-if-arm-only-v2-20blocks/README.md)** ·
 [HTML 报表](result/robotwin-if-arm-only-v2-20blocks/results.html) ·
 [逐回合 CSV](result/robotwin-if-arm-only-v2-20blocks/episodes.csv)。
 
-当前 [RoboTwin-IF Arm-only-v2 taskset](seed-manifests/robotwin-if-arm-only-v2-20-per-mode/README.md)
+旧版 [RoboTwin-IF Arm-only-v2 taskset](seed-manifests/robotwin-if-arm-only-v2-20-per-mode/README.md)
 已完成六个 policies × 六任务 × 每任务 20 blocks：460 回合/policy，共 2760 回合、720 blocks。
 本轮按 `target-arm-only-lift-v2` 重跑 Arm-Select 240 回合；其余五任务逐字节复用 Attribute-v2 的 2520 回合。
 保留 cube-v3 场景、Attribute target-only-lift-v2、Bottle v6 terminal 和 Spatial 三模式。
 详见[Arm 成功判据](docs/arm-select-target-arm-only.md)和[完整结果](result/robotwin-if-arm-only-v2-20blocks/README.md)。
-Seed 清单的唯一正式入口与使用方法见 [seed-manifests](seed-manifests/README.md)。
-当前分支只提供最新版结果和清单；发布来源及完整审计见[溯源说明](docs/release-provenance.md)。
+新旧 seed 清单与使用方法见 [seed-manifests](seed-manifests/README.md)。
+当前分支保留新旧两套清单与旧版结果；发布来源及完整审计见[溯源说明](docs/release-provenance.md)。
 
 <a id="policy-results"></a>
 
-## 六个 Policies 的评测结果
+## 旧版 Arm-only-v2：六个 Policies 的评测结果
 
 2026-09-18 05:26 UTC 完成并校验：**2760/2760 回合、720/720 blocks**。
 Arm-Select 重新运行 **240 回合**；其余五任务的 **2520 回合**及其统计与上一版 Attribute-v2（[复用来源](result/robotwin-if-arm-only-v2-20blocks/provenance.json)）一致。
@@ -151,7 +153,7 @@ Spatial 从五模式收缩为 **left/right/on_top**；这是视频复核后的�
 [Checkpoint 版本](result/robotwin-if-arm-only-v2-20blocks/checkpoints.json) ·
 [校验证据](result/robotwin-if-arm-only-v2-20blocks/validation.json)。
 
-## 六个任务与视频
+## 旧版六个任务与视频
 
 每项任务聚焦一种指令差异：做什么动作、抓哪个物体、按什么属性选择、用哪只手、按什么顺序、放在哪个方向。
 下方动态预览可点击打开 MP4；素材随仓库提供。视频选自正式评测中的成功回合，用于展示任务行为，

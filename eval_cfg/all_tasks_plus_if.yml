@@ -1,7 +1,7 @@
-# RoboTwin-IF · merged compatibility list = native 50 + maintained IF 7
+# RoboTwin-IF · merged compatibility list = native 50 + current IF 6
 #
 # The first 50 entries are the native RoboTwin 2.0 tasks, verbatim from the locked
-# submodule commit 0aeea2d. The final six entries must exactly match if_tasks.yml.
+# submodule commit b82ffb81. The final six entries must exactly match if_tasks.yml.
 # Do not curate a second IF inventory here; tests/test_task_manifests.py enforces the
 # relationship between both files.
 #
@@ -74,7 +74,7 @@ tasks:
   - stamp_seal
   - turn_switch
   # ---- maintained RoboTwin-IF (6; exact if_tasks.yml order) ----
-  - bottle_verb
+  - press_lift_bell
   - pick_diverse_object
   - attribute_select
   - arm_select

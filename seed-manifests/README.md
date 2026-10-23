@@ -1,32 +1,30 @@
 # Seed manifests
 
-当前正式入口为 [RoboTwin-IF Arm-only-v2](robotwin-if-arm-only-v2-20-per-mode/README.md)：
-**六任务 × 每任务 20 blocks，460 回合/policy**。它包含完整六任务，不是仅有 Arm。
-Arm 使用 cube-v3 场景及 target-arm-only-lift-v2 判据；Attribute 使用 target-only-lift-v2；
-Bottle 保留 v6 terminal；Spatial 为 left/right/on_top。
+两套清单分别保存在独立目录，均为**六任务 × 每任务 20 blocks，共 460 回合/model**：
 
-[`scripts/eval.sh`](../scripts/eval.sh)、[`tools/export_seed_modes.py`](../tools/export_seed_modes.py)
-和正式 runner 的 `--release` 默认值均指向该版本。新机器运行不需要旧评测产物：
+| 版本 | Verb 任务 | 状态 |
+|---|---|---|
+| [robotwin-if-press-lift-bell-v1-20-per-mode](robotwin-if-press-lift-bell-v1-20-per-mode/README.md) | `press_lift_bell`：press / lift | 当前默认；expert 40/40，模型 eval 暂停 |
+| [robotwin-if-arm-only-v2-20-per-mode](robotwin-if-arm-only-v2-20-per-mode/README.md) | `bottle_verb`：pick / shake | 旧版，原清单和结果保留 |
+
+新版仅替换 Verb，其余五个任务的 flat manifest 与旧版逐字节相同，并保留原资格证据。
+铃铛 episode seeds 为 `100000–100039`，每两回合共享一个初始场景；本次 expert 筛选 20 组全部通过。
+配对初始三路 RGB、proprio 完全相同，两个铃铛模型 × 左右两侧各 5 组。
+固定指令为 `Press down on the bell.` / `Pick up the bell.`，均为 250 actions。
+不会根据模型失败删换 seeds；新版尚无正式模型成绩。
+
+`scripts/eval.sh` 和 `tools/export_seed_modes.py` 默认使用新版；每套 `suite.yml` 决定自己的六任务列表。
+旧版可通过 `--manifest-dir seed-manifests/robotwin-if-arm-only-v2-20-per-mode` 显式选择。
 
 ```bash
 python tools/export_seed_modes.py --check
-bash scripts/eval.sh --policy hy_vla --output-dir outputs/policy-eval/hy-vla-new --dry-run
+python seed-manifests/robotwin-if-press-lift-bell-v1-20-per-mode/verify.py
+bash scripts/eval.sh --policy lingbot_va --output-dir outputs/policy-eval/bell-v1-lva --dry-run
 ```
 
-[当前结果](../result/robotwin-if-arm-only-v2-20blocks/README.md)已完成并校验 2760 回合；
-Arm 新跑 240 回合，其他五任务复用 Attribute-v2 的 2520 回合。
-最近 cube-v3、Attribute-v2 和 Arm-only-v2 的六份 flat seed JSON 逐字节相同，
-版本差异主要记录成功判据、重跑范围和结果来源；实际判据由配套任务代码执行。
+新包包含本次完整筛选日志 JSON、源码快照、runtime patch、旧资格原件及校验和，校验不需要启动模拟器或模型。
+原始 NPZ 初始观测留在生成运行目录，数组哈希随清单发布。模拟器版本、资产、配置与源码需一并固定才能复现。
 
-## 发布与校验
-
-本目录只包含上面的当前正式清单，旧版本和兼容软链接已移除。
-新评测无需旧结果或 Git 历史；接入其他 repo 时请固定当前 commit 和上述路径。
-
-```bash
-(cd seed-manifests/robotwin-if-arm-only-v2-20-per-mode && sha256sum -c SHA256SUMS)
-```
-
-`verify.py` 用于完整历史溯源：从固定 Git commit 在临时目录读取原始资格证据，
-并检查原机运行数据，不会将旧版本写回当前目录。
-清单中保留的旧路径是来源记录；完整要求见[发布溯源说明](../docs/release-provenance.md)。
+旧 [Arm-only-v2 结果](../result/robotwin-if-arm-only-v2-20blocks/README.md)的 2760 回合不代表新版成绩。
+`tools/run_formal_policy_suite.py` 保留为旧成绩复用工作流，依赖旧任务的模型元数据；新任务评测使用 `scripts/eval.sh`。
+旧包的 `verify.py` 仍用于其历史来源及原机产物审计；新版验证使用上面的新版入口。

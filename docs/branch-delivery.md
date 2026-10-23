@@ -1,6 +1,6 @@
 # 分支交付说明
 
-本分支交付三部分：六个模型的推理适配与 bash 评测入口、六任务 20-block 的 seed/mode 清单、已完成的结果包。
+本分支交付三部分：六个模型的推理适配与 bash 评测入口、六任务 20-block 的 seed/mode 清单、旧版已完成的结果包。新版 Press/Lift Bell 清单只完成 expert 筛选，模型 eval 保持暂停。
 Grasp-Approach 已下线，旧实现仅保留在 Git 历史中，不进入当前默认评测。
 
 ## 1. Policy inference code 与 eval
@@ -76,11 +76,11 @@ GPU 查询超过 8 秒、温度达到 87°C 或显存超限会停止本次 sim�
 
 ## 2. 六任务 × 20 blocks 的 seed + mode manifest
 
-目录：[`seed-manifests/robotwin-if-arm-only-v2-20-per-mode/`](../seed-manifests/robotwin-if-arm-only-v2-20-per-mode/README.md)。
+目录：[`seed-manifests/robotwin-if-press-lift-bell-v1-20-per-mode/`](../seed-manifests/robotwin-if-press-lift-bell-v1-20-per-mode/README.md)。
 
 | Task | Modes/block | 20 blocks 的回合数 | Task config |
 |---|---:|---:|---|
-| bottle_verb | 2 | 40 | demo_clean |
+| press_lift_bell | 2 | 40 | demo_clean |
 | pick_diverse_object | 2 | 40 | demo_clean |
 | attribute_select | 8 | 160 | demo_clean |
 | arm_select | 2 | 40 | demo_clean_arm_select_v3 |
@@ -90,20 +90,21 @@ GPU 查询超过 8 秒、温度达到 87°C 或显存超限会停止本次 sim�
 
 - `<task>.json` 是 flat manifest，evaluator 直接读取原始 `seeds`。Spatial 使用 schema 2，
   每组 seeds 为 `[5k, 5k+1, 5k+4]`；Arm-Select 使用新 seeds `500000–500039`。旧 Spatial schema 1 仅供五模式历史校验。
-- [`seed-modes.json`](../seed-manifests/robotwin-if-arm-only-v2-20-per-mode/seed-modes.json) 给出每个任务的
+- [`seed-modes.json`](../seed-manifests/robotwin-if-press-lift-bell-v1-20-per-mode/seed-modes.json) 给出每个任务的
   config、manifest SHA-256、mode 分母及逐 episode 的 `seed`、`mode`、`block`、`block_offset`、scene 信息。
-- [`seed-modes.csv`](../seed-manifests/robotwin-if-arm-only-v2-20-per-mode/seed-modes.csv) 为相同信息的 460 行平表。
+- [`seed-modes.csv`](../seed-manifests/robotwin-if-press-lift-bell-v1-20-per-mode/seed-modes.csv) 为相同信息的 460 行平表。
 - `block` 是清单内从 **0 到 19** 的顺序编号；候选 seed 可能有间隔，不等于 `seed // block_size`。
-- `suite.yml`、`qualification-files.json`、`reusable-results.yml` 保留正式发布及历史复用证据。
+- `suite.yml`、`press_lift_bell.generation.json`、`qualification/` 保留本次 expert 筛选、源码快照和旧资格原件。
   接收方启动新评测只需 flat manifests 与 seed/mode 导出，不需要访问复用索引中的原机器路径。
 
 `python tools/export_seed_modes.py --check` 检查 JSON/CSV 与 flat seeds/modes 一致；
-完整发布检查使用 `python seed-manifests/robotwin-if-arm-only-v2-20-per-mode/verify.py`，需要原机历史运行目录与产物，
-并从固定 Git commit 临时读取原资格证据。当前分支仅保留最新清单，没有旧版软链接；见[溯源说明](release-provenance.md)。
+完整发布检查使用 `python seed-manifests/robotwin-if-press-lift-bell-v1-20-per-mode/verify.py`，无需模型、GPU 或旧运行目录。
+旧清单 `robotwin-if-arm-only-v2-20-per-mode` 保留；可用 `--manifest-dir` 显式选择。两套其余五份 flat manifests 完全一致。
+新版铃铛 seeds 为 `100000–100039`，Press/Lift 各 20 回合，expert 全通过；没有模型评测成绩。
 
 ## 3. Result
 
-当前结果：[`result/robotwin-if-arm-only-v2-20blocks/`](../result/robotwin-if-arm-only-v2-20blocks/README.md)。
+以下是旧版结果，包含 Bottle，尚未替换为 Bell：[`result/robotwin-if-arm-only-v2-20blocks/`](../result/robotwin-if-arm-only-v2-20blocks/README.md)。
 六个 policies 已完成 **2760/2760 episodes、720/720 blocks**，每个 policy 为 460 episodes；2026-09-18 05:26 UTC 正式校验通过。
 Arm 按 target-arm-only-lift-v2 全新运行 240 回合，其余五任务复用 Attribute-v2 的 2520 回合，包含成功和失败。
 初始观测、记录哈希、统计及 checkpoint 身份核对通过，见 [Arm 重评说明](arm-select-target-only-v2-evaluation.md)。
@@ -137,5 +138,5 @@ python -m unittest discover -s tests -p test_branch_delivery.py
 # 以下使用安装好客户端依赖的 RoboTwin 环境。
 python -m unittest discover -s tests -p 'test_formal*.py'
 python tools/export_seed_modes.py --check
-python seed-manifests/robotwin-if-arm-only-v2-20-per-mode/verify.py
+python seed-manifests/robotwin-if-press-lift-bell-v1-20-per-mode/verify.py
 ```

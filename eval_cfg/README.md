@@ -1,15 +1,15 @@
 # Task manifests
 
-`eval_cfg/if_tasks.yml` is the canonical machine-readable inventory of RoboTwin-IF tasks maintained by this repository. It contains exactly six single-axis diagnostics:
+`eval_cfg/if_tasks.yml` is the default six-task inventory; each versioned seed release has its own suite.yml. It contains exactly six single-axis diagnostics:
 
 | Axis | Task name | Values / contrast |
 |---|---|---|
-| Verb-Select | `bottle_verb` | pick / shake |
+| Verb-Select | `press_lift_bell` | press / lift |
 | Noun-Grounding | `pick_diverse_object` | noun-only target grounding |
 | Attribute-Select | `attribute_select` | color / decal / shape / size |
 | Arm-Select | `arm_select` | left / right |
 | Sequence | `stack_sequence` | six bottom-to-top orders |
-| Spatial-Direction | `place_relative` | left / right / front / back / on top |
+| Spatial-Direction | `place_relative` | left / right / on top |
 
 `eval_cfg/all_tasks_plus_if.yml` is a compatibility list for callers that want one loop over the locked RoboTwin native 50 followed by the maintained IF six. Its final six entries must exactly equal `if_tasks.yml`; `tests/test_task_manifests.py` enforces this relationship.
 
@@ -23,7 +23,7 @@ Conversely, manifest membership describes the suite this repository maintains; i
 
 ## Runtime installation
 
-The bridge inventory is contract-tested against this exact six-task list; inactive source files are not installed. The locked nested runtime is the default:
+The bridge installs the current six tasks plus `bottle_verb` for earlier releases; unrelated experimental source files are not installed. The locked nested runtime is the default:
 
 ```bash
 bash scripts/bridge_tasks.sh --dry-run
@@ -31,7 +31,7 @@ bash scripts/bridge_tasks.sh
 bash scripts/bridge_tasks.sh --check
 ```
 
-For an external runtime, pass `--robotwin-dir PATH` or set `ROBOTWIN_DIR`. A non-locked/unknown target commit or locally modified compatibility-contract file is rejected by default and requires explicit `--allow-compatible-commit`; static RoboTwin API checks always remain mandatory. The target-side `.robotwin-if-bridge.json` owns the 16 env/helper/instruction links, records source/target dirty provenance plus an exact linked-source digest, and makes stale cleanup and unbridge independent of the current source inventory. A target-scoped operation lock serializes bridge/check/unbridge transactions.
+For an external runtime, pass `--robotwin-dir PATH` or set `ROBOTWIN_DIR`. A non-locked/unknown target commit or locally modified compatibility-contract file is rejected by default and requires explicit `--allow-compatible-commit`; static RoboTwin API checks always remain mandatory. The target-side `.robotwin-if-bridge.json` owns the 20 env/helper/instruction links, records source/target dirty provenance plus an exact linked-source digest, and makes stale cleanup and unbridge independent of the current source inventory. A target-scoped operation lock serializes bridge/check/unbridge transactions.
 
 ## Using the task inventory
 
@@ -50,11 +50,12 @@ For evaluation, pass each task name to the chosen policy's own `policy/<PolicyNa
 
 ## Fixed eval budgets
 
-The task-local `_if_eval.py` helper applies these limits only after RoboTwin initializes an eval-mode task; upstream `_eval_step_limit.yml` is not modified.
+Task-local setup (including `_if_eval.py` for the existing tasks) applies these limits only after RoboTwin initializes an eval-mode task; upstream `_eval_step_limit.yml` is not modified.
 
 | Task | Policy action limit |
 |---|---:|
-| `bottle_verb` | 700 |
+| `press_lift_bell` | 250 |
+| `bottle_verb` (legacy release) | 700 |
 | `pick_diverse_object` | 400 |
 | `attribute_select` | 400 |
 | `arm_select` | 400 |
@@ -84,12 +85,13 @@ Formal IF results instead replay one precomputed list shared by every policy. `t
 
 | Task | Balance block | Same-scene structure |
 |---|---:|---|
-| `bottle_verb` | 2 | one pick/shake pair |
+| `press_lift_bell` | 2 | one press/lift pair; all initial RGB/state arrays identical |
+| `bottle_verb` (legacy release) | 2 | one pick/shake pair |
 | `pick_diverse_object` | 2 | seen/unseen are independent scenes |
 | `attribute_select` | 8 | four independent two-seed axis pairs |
 | `arm_select` | 2 | one left/right pair |
 | `stack_sequence` | 6 | one six-order scene |
-| `place_relative` | 5 | one five-direction scene |
+| `place_relative` | 3 | offsets 0, 1, 4 in one five-slot scene seed |
 
 Example pilot generation and independent validation:
 

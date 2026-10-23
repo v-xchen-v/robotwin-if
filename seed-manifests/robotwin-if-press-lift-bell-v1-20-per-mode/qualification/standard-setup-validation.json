@@ -1,0 +1,101 @@
+{
+  "complete": true,
+  "purpose": "standard evaluator oracle/reset/instruction/observation wiring",
+  "model_requests": 0,
+  "records": [
+    {
+      "mode": "press",
+      "seed": 100000,
+      "oracle_success": true,
+      "oracle_seconds": 33.572080296929926,
+      "instruction": "Press down on the bell.",
+      "step_limit": 250,
+      "policy_setup_seconds": 9.829629936721176,
+      "initial_arrays_match": true,
+      "initial_arrays": {
+        "head_camera": {
+          "sha256": "a284b2b5fb23e4d3772967a1204298b5251888507c3428fb052b7d3d0d6b21c0",
+          "shape": [
+            240,
+            320,
+            3
+          ],
+          "dtype": "uint8"
+        },
+        "left_camera": {
+          "sha256": "e4cad793a8624aaaedd4f6072e7ed746d213f9072719b2f35547dfc4adcadd7a",
+          "shape": [
+            240,
+            320,
+            3
+          ],
+          "dtype": "uint8"
+        },
+        "right_camera": {
+          "sha256": "e1ea8663c524fbda54b248ac7f9166260407bd966aa687a93de5d189d44a35f6",
+          "shape": [
+            240,
+            320,
+            3
+          ],
+          "dtype": "uint8"
+        },
+        "proprio": {
+          "sha256": "13711ee05176d4ae24d8cbf43122dd29270760eb81ca8415cb260090997437a5",
+          "shape": [
+            20
+          ],
+          "dtype": "float32"
+        }
+      },
+      "model_requests": 0
+    },
+    {
+      "mode": "lift",
+      "seed": 100001,
+      "oracle_success": true,
+      "oracle_seconds": 2.3320519006811082,
+      "instruction": "Pick up the bell.",
+      "step_limit": 250,
+      "policy_setup_seconds": 0.6400924581103027,
+      "initial_arrays_match": true,
+      "initial_arrays": {
+        "head_camera": {
+          "sha256": "a284b2b5fb23e4d3772967a1204298b5251888507c3428fb052b7d3d0d6b21c0",
+          "shape": [
+            240,
+            320,
+            3
+          ],
+          "dtype": "uint8"
+        },
+        "left_camera": {
+          "sha256": "e4cad793a8624aaaedd4f6072e7ed746d213f9072719b2f35547dfc4adcadd7a",
+          "shape": [
+            240,
+            320,
+            3
+          ],
+          "dtype": "uint8"
+        },
+        "right_camera": {
+          "sha256": "e1ea8663c524fbda54b248ac7f9166260407bd966aa687a93de5d189d44a35f6",
+          "shape": [
+            240,
+            320,
+            3
+          ],
+          "dtype": "uint8"
+        },
+        "proprio": {
+          "sha256": "13711ee05176d4ae24d8cbf43122dd29270760eb81ca8415cb260090997437a5",
+          "shape": [
+            20
+          ],
+          "dtype": "float32"
+        }
+      },
+      "model_requests": 0
+    }
+  ]
+}
