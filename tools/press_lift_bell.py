@@ -53,15 +53,16 @@ def make_policy_client(policy, server_url, timeout):
     return getattr(module, POLICIES[policy][0])(server_url, timeout)
 
 
-def check_policy_observation(oracle_dir, seed, instruction, obs, env):
+def check_policy_observation(oracle_dir, seed, instruction, obs, env, task_name=TASK):
     """Compare canonical RGB/state before the first policy request or action."""
     import numpy as np
     from policies.xvla.client import CAMERAS, encode_proprio
-    from tasks.envs._press_lift_bell import INSTRUCTIONS, mode_for_seed
+    from tasks.envs._press_lift_bell import mode_for_seed
+    instructions = importlib.import_module(f"tasks.envs._{task_name}").INSTRUCTIONS
 
-    if instruction != INSTRUCTIONS[mode_for_seed(seed)] or env.step_lim != env.ACTION_LIMIT:
+    if instruction != instructions[mode_for_seed(seed)] or env.step_lim != env.ACTION_LIMIT:
         raise RuntimeError("Policy instruction or action budget differs from the experiment")
-    with np.load(oracle_dir / f"{TASK}_ep{seed}_initial.npz") as expected:
+    with np.load(oracle_dir / f"{task_name}_ep{seed}_initial.npz") as expected:
         for camera in CAMERAS:
             np.testing.assert_array_equal(obs["observation"][camera]["rgb"], expected[camera])
         np.testing.assert_array_equal(encode_proprio(obs), expected["proprio"])
@@ -85,7 +86,7 @@ def summarize_pairs(records):
     }
 
 
-def qualify(env, config, seeds, directory, video):
+def qualify(env, config, seeds, directory, video, task_name=TASK):
     import imageio.v2 as imageio
     import numpy as np
     from policies.xvla.client import CAMERAS, encode_proprio
@@ -96,7 +97,7 @@ def qualify(env, config, seeds, directory, video):
     records, observations, pairs = [], {}, []
     for seed in seeds:
         record = dict(seed=seed, mode=mode_for_seed(seed), success=False, status="error")
-        prefix = directory / f"{TASK}_ep{seed}"
+        prefix = directory / f"{task_name}_ep{seed}"
         writer = None
         stage = "setup"
         with prefix.with_suffix(".log").open("w") as log, redirect_stdout(log), redirect_stderr(log):
@@ -162,7 +163,9 @@ def qualify(env, config, seeds, directory, video):
     return report
 
 
-def main(argv=None):
+def main(argv=None, *, task_name=TASK, canonical_output=False):
+    if task_name not in (TASK, "press_lift_stapler"):
+        raise ValueError(f"Unsupported press/lift pilot: {task_name}")
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--robotwin-dir", type=Path, default=ROOT / "third_party/robotwin")
     parser.add_argument("--task-config", default="demo_clean")
@@ -173,7 +176,7 @@ def main(argv=None):
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--sim-gpu", default="0")
     parser.add_argument("--scene-layout", choices=("context", "bare"), default="context",
-                        help="Bell with mouse/toycar context, or the single-bell baseline")
+                        help="Target with mouse/toycar context, or the single-object baseline")
     parser.add_argument("--no-video", action="store_true", help="Skip oracle video; keep images and traces")
     parser.add_argument("--policy", choices=("oracle", *POLICIES), default="oracle")
     parser.add_argument("--server-url", help="Defaults to the selected policy's local endpoint")
@@ -203,31 +206,38 @@ def main(argv=None):
     pin_renderer()
     from policies.xvla.eval import git_identity, load_task
 
-    source_files = ("tasks/envs/press_lift_bell.py", "tasks/envs/_press_lift_bell.py",
-                    "tasks/task_instruction/press_lift_bell.json", "tools/press_lift_bell.py",
+    source_files = (f"tasks/envs/{task_name}.py", f"tasks/envs/_{task_name}.py",
+                    f"tasks/task_instruction/{task_name}.json", "tools/press_lift_bell.py",
                     "policies/evaluation.py", "policies/xvla/eval.py")
-    source_files = set(source_files) | {"tools/sim_device.py", "policies/xvla/client.py", "policies/xvla/outputs.py"}
+    source_files = set(source_files) | {"tools/sim_device.py", "policies/xvla/client.py", "policies/xvla/outputs.py",
+                                       "tasks/envs/_press_lift_bell.py"}
+    if task_name != TASK:
+        source_files.add(f"tools/{task_name}.py")
     if args.policy != "oracle":
         source_files.update(str(p.relative_to(ROOT)) for p in (ROOT / "policies" / args.policy).glob("*.py"))
     metadata = dict(
-        created_at=datetime.now(timezone.utc).isoformat(), purpose="experimental-press-lift-bell",
-        task=TASK, policy=args.policy, seeds=seeds, checkpoint=args.checkpoint if args.policy != "oracle" else None,
+        created_at=datetime.now(timezone.utc).isoformat(), purpose=f"experimental-{task_name.replace('_', '-')}",
+        task=task_name, policy=args.policy, seeds=seeds, checkpoint=args.checkpoint if args.policy != "oracle" else None,
         server_url=args.server_url if args.policy != "oracle" else None,
         robotwin=git_identity(target), robotwin_if=git_identity(ROOT),
         arguments={k: str(v) if isinstance(v, Path) else v for k, v in vars(args).items()},
         source_sha256={p: hashlib.sha256((ROOT / p).read_bytes()).hexdigest() for p in sorted(source_files)},
         task_config_sha256=hashlib.sha256((target / "task_config" / f"{args.task_config}.yml").read_bytes()).hexdigest())
     write_json(output / "run.json", metadata)
-    env, config = load_task(target, TASK, args.task_config)
+    for name in source_files:
+        snapshot = output / "source-snapshot" / name
+        snapshot.parent.mkdir(parents=True, exist_ok=True)
+        snapshot.write_bytes((ROOT / name).read_bytes())
+    env, config = load_task(target, task_name, args.task_config)
     # The pilot deliberately fixes clean conditions; record the effective config.
     config["domain_randomization"] = dict(config["domain_randomization"], random_background=False,
         cluttered_table=False, random_head_camera_dis=0, random_table_height=0,
         random_light=False, crazy_random_light_rate=0)
     config["save_freq"] = None
     config["policy_name"] = args.policy
-    config["bell_scene_layout"] = args.scene_layout
+    config[f"{task_name.removeprefix('press_lift_')}_scene_layout"] = args.scene_layout
     write_json(output / "resolved_config.json", config)
-    qualification = qualify(env, config, seeds, output / "oracle", not args.no_video)
+    qualification = qualify(env, config, seeds, output / "oracle", not args.no_video, task_name)
     if not qualification["qualified"] or args.policy == "oracle":
         summary = {key: qualification[key] for key in ("qualified", "episodes", "per_mode", "pairs", "both_success")}
         write_json(output / "summary.json", summary)
@@ -236,14 +246,14 @@ def main(argv=None):
 
     module = importlib.import_module(f"policies.{args.policy}.eval")
     records = []
-    args.task = TASK
+    args.task = task_name
     client, error = None, None
     original_setup = module.setup_episode
     policy_trace = None
 
     def checked_setup(env, config, args, seed, split, record, path):
         instruction, obs = original_setup(env, config, args, seed, split, record, path)
-        check_policy_observation(output / "oracle", seed, instruction, obs, env)
+        check_policy_observation(output / "oracle", seed, instruction, obs, env, task_name)
         write_json(path("_scene_check.json"), dict(seed=seed, exact_rgb=True, exact_proprio=True,
                    instruction=instruction, action_limit=env.step_lim))
         def observe(task):
@@ -258,9 +268,11 @@ def main(argv=None):
         module.setup_episode = checked_setup
         for index, seed in enumerate(seeds):
             run_dir = output / args.policy
+            if canonical_output:
+                run_dir = run_dir / task_name
             trace_dir = run_dir / "physics"
             trace_dir.mkdir(parents=True, exist_ok=True)
-            with (trace_dir / f"{TASK}_ep{seed}.jsonl").open("x") as policy_trace:
+            with (trace_dir / f"{task_name}_ep{seed}.jsonl").open("x") as policy_trace:
                 record = module.run_episode(env, config, client, args, seed, "unseen", run_dir, block=index // 2)
             records.append(record)
             with (output / "results.jsonl").open("a") as stream:
