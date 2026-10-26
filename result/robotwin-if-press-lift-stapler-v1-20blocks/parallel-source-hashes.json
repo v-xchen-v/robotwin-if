@@ -1,0 +1,7 @@
+{
+  "tools/run_parallel_stapler_suite.py": "6ccb3e225ae8e8f1cb678041b87a56439c918cfca64082cdb7c0b46e7d5a7a80",
+  "tools/remote_eval_support.py": "d8ccf18116bf7d2c258b1943d2e763e1b1b1e812738659ec4d60619489f072a4",
+  "tools/run_remote_attribute_suite.py": "70effde17792cd0d35e1291a05fbcdd125da2f2d29f8f5ef049fac203ba4dbcc",
+  "/Data/robotwin-if/evaluations/robotwin-if-press-lift-stapler-v1-20blocks-001-control/run_parallel.py": "535f56884a782802d9cceeca70595282f38a2303af019818add6f3762639040e",
+  "/Data/robotwin-if/evaluations/robotwin-if-press-lift-stapler-v1-20blocks-001/plan.json": "c2f00b5eb58690bacf76603c203ad2572d877eacafb33ed17c60a783eb9b1346"
+}

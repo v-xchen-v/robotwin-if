@@ -1,0 +1,38 @@
+{
+  "checked_at": "2026-10-26T10:31:52.918274+00:00",
+  "execution_revision": "parallel2-stapler-v3-admission-log",
+  "workers": [
+    {
+      "sim_gpu": 0,
+      "model_gpu": 1,
+      "server_port": 8011,
+      "policy": "lingbot_va",
+      "task": "press_lift_stapler",
+      "phase": "evaluating",
+      "server_pid": 344140,
+      "sim_pid": 344433,
+      "output": "/Data/robotwin-if/evaluations/robotwin-if-press-lift-stapler-v1-20blocks-001/batches/20261026T095924-parallel2-001/lingbot_va/press_lift_stapler",
+      "adopted": false
+    },
+    {
+      "sim_gpu": 0,
+      "model_gpu": 1,
+      "server_port": 8013,
+      "policy": "vlact",
+      "task": "press_lift_stapler",
+      "phase": "evaluating",
+      "server_pid": 349632,
+      "sim_pid": 351093,
+      "output": "/Data/robotwin-if/evaluations/robotwin-if-press-lift-stapler-v1-20blocks-001/batches/20261026T095924-parallel2-003/vlact/press_lift_stapler",
+      "adopted": false
+    }
+  ],
+  "two_live_simulators": true,
+  "two_live_model_servers": true,
+  "retained_provenance_hashes_unchanged": 2604,
+  "frozen_evaluator_sources_unchanged": true,
+  "controller_regression_tests": 8,
+  "admission_cooling_logs_outside_episode_namespace": 3,
+  "new_completed_episodes_since_recovery": 37,
+  "full_run_complete": false
+}

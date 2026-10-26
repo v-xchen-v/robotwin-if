@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Publish the completed bell replacement evaluation and prove five-task reuse."""
+"""Publish a completed press/lift replacement and prove five-task result reuse."""
 import argparse
 from collections import Counter
 import csv
@@ -20,7 +20,9 @@ FIELDS = ['policy', 'task', 'block_index', 'seed', 'mode', 'status', 'success',
           'record_path', 'record_sha256']
 
 
-def publish(base=RUN, output=OUTPUT):
+def publish(base=RUN, output=OUTPUT, *, task_name='press_lift_bell', task_label='Press/Lift Bell'):
+    assert task_name in ('press_lift_bell', 'press_lift_stapler')
+    asset = task_name.removeprefix('press_lift_')
     status = formal.read(base / 'status.json')
     validation = formal.read(base / 'validation.json')
     assert status['status'] == 'complete' and validation['complete']
@@ -32,6 +34,7 @@ def publish(base=RUN, output=OUTPUT):
     with (PACKAGE / 'episodes.csv').open(newline='') as f:
         parent_rows = {(r['policy'], r['task'], int(r['seed'])): r for r in csv.DictReader(f)}
     plan = formal.read(base / 'plan.json')
+    assert plan['tasks'][0]['task'] == task_name
     episodes, bells, bell_summary = [], [], {}
     for policy in plan['policies']:
         for spec in plan['tasks']:
@@ -48,7 +51,7 @@ def publish(base=RUN, output=OUTPUT):
                     termination=record['termination'], instruction=record['instruction'],
                     origin=marker['origin'], record_path=str(record_path.relative_to(base)),
                     record_sha256=formal.digest(record_path))
-                if task != 'press_lift_bell':
+                if task != task_name:
                     original = parent_rows[policy, task, seed]
                     assert all(str(row[k]) == original[k] for k in FIELDS if k != 'origin'), (policy, task, seed)
                     assert row['origin'] == 'reused'
@@ -72,18 +75,25 @@ def publish(base=RUN, output=OUTPUT):
         writer = csv.DictWriter(f, fieldnames=FIELDS)
         writer.writeheader()
         writer.writerows(episodes)
-    formal.write(output / 'bell-episodes.json', bells)
-    formal.write(output / 'bell-summary.json', bell_summary)
+    formal.write(output / f'{asset}-episodes.json', bells)
+    formal.write(output / f'{asset}-summary.json', bell_summary)
     for name in ('plan.json', 'validation.json'):
         shutil.copyfile(base / name, output / name)
+    execution_evidence = {}
+    for name in ('execution-transition.json', 'parallel-source-hashes.json',
+                 'execution-recoveries.json', 'parallel-startup-validation.json'):
+        source = base / 'support' / name
+        if source.exists():
+            shutil.copyfile(source, output / name)
+            execution_evidence[name] = formal.digest(source)
     shutil.copyfile(base / 'support/reuse-audit.json', output / 'reuse-audit.json')
     shutil.copytree(base / 'manifests', output / 'manifests')
     checkpoints = formal.read(base / 'support/checkpoint-reference.json')
     for policy in plan['policies']:
-        runs = sorted((base / 'batches').glob(f'*/{policy}/press_lift_bell/run.json'))
+        runs = sorted((base / 'batches').glob(f'*/{policy}/{task_name}/run.json'))
         assert runs, policy
         metadata = formal.read(runs[-1])
-        reference = formal.read(formal.inference_reference(base, policy, 'press_lift_bell') / 'run.json')
+        reference = formal.read(formal.inference_reference(base, policy, task_name) / 'run.json')
         if policy == 'xvla':
             for key in ('checkpoint', 'checkpoint_revision', 'feedback', 'gripper_threshold', 'denoising_steps'):
                 assert metadata['arguments'][key] == reference['arguments'][key]
@@ -99,17 +109,19 @@ def publish(base=RUN, output=OUTPUT):
     formal.write(output / 'oracle-setup-retries.json', retry_records)
     formal.write(output / 'provenance.json', dict(source_run=str(base), taskset=plan['release'],
         parent_result=str(PACKAGE.relative_to(ROOT)), parent_episode_csv_sha256=formal.digest(PACKAGE / 'episodes.csv'),
-        new_episodes=240, reused_episodes=2520, replaced_task='bottle_verb', new_task='press_lift_bell',
+        new_episodes=240, reused_episodes=2520, replaced_task='bottle_verb', new_task=task_name,
         unchanged_five_task_rows_except_origin=True, unchanged_five_task_record_hashes=True,
         checkpoints_and_inference_options_retained=True,
         completed_policy_failures_are_final=True, oracle_setup_retry_records=len(retry_records),
+        execution_topology=plan.get('execution_topology'), execution_evidence_sha256=execution_evidence,
         publication_source_sha256={name: formal.digest(ROOT / name) for name in
-            ('tools/publish_bell_policy_results.py', 'tools/summarize_formal_policy_results.py')},
+            ('tools/publish_bell_policy_results.py', 'tools/summarize_formal_policy_results.py')
+            + (('tools/publish_stapler_policy_results.py',) if task_name == 'press_lift_stapler' else ())},
         source_snapshot=str(base / 'support/source-snapshot'), source_hashes_sha256=formal.digest(base / 'support/source-hashes.json')))
-    lines = ['# Press/Lift Bell v1：六模型 × 六任务 × 20 blocks', '',
+    lines = [f'# {task_label} v1：六模型 × 六任务 × 20 blocks', '',
         '**2760/2760 回合、720/720 blocks 已完成并校验。**', '',
         '其余五个任务的 2520 回合全部复用 Arm-only-v2，包含成功和失败，逐回合记录哈希与已发布结果一致。',
-        '仅 Press/Lift Bell 的 240 回合是本次新跑；使用 manifest 中固定的 40 个 seeds、随机 distractors、固定指令与 250-action 预算。',
+        f'仅 {task_label} 的 240 回合是本次新跑；使用 manifest 中固定的 40 个 seeds、随机 distractors、固定指令与 250-action 预算。',
         '六个模型沿用各自原 checkpoint 和推理参数。小规模 pilot 未混入本结果。', '',
         '| 模型 | Press | Lift | 两种指令都成功 | Overall |', '|---|---:|---:|---:|---:|']
     for policy, row in bell_summary.items():
@@ -119,7 +131,7 @@ def publish(base=RUN, output=OUTPUT):
         'X-VLA 使用公开 clean checkpoint，其余模型沿用旧报告对应的 clean + randomized checkpoints。', '',
         '旧报告中 Hy-VLA noun seed 100052 的视频复核疑问仍保留；本次按要求复用原自动标签，未重新判定该回合。', '',
         '- [六任务 HTML](results.html) · [Markdown](results.md) · [分模式 CSV](results.csv) · [逐回合 CSV](episodes.csv)',
-        '- [铃铛统计](bell-summary.json) · [铃铛逐回合诊断](bell-episodes.json)',
+        f'- [Verb 统计]({asset}-summary.json) · [Verb 逐回合诊断]({asset}-episodes.json)',
         '- [来源](provenance.json) · [复用审计](reuse-audit.json) · [校验](validation.json) · [checkpoints](checkpoints.json)', '',
         f'原始视频、动作及观测：`{base}/<policy>/<task>/`。',
         '原始数组、动作、逐回合哈希、新视频帧数及各模型初始观测已检查。',
@@ -127,7 +139,7 @@ def publish(base=RUN, output=OUTPUT):
     (output / 'README.md').write_text('\n'.join(lines))
     (output / 'SHA256SUMS').write_text(''.join(f'{formal.digest(p)}  {p.relative_to(output)}\n'
         for p in sorted(output.rglob('*')) if p.is_file() and p != output / 'SHA256SUMS'))
-    print(json.dumps(dict(output=str(output), bell=bell_summary), indent=2), flush=True)
+    print(json.dumps(dict(output=str(output), task=task_name, task_summary=bell_summary), indent=2), flush=True)
 
 
 if __name__ == '__main__':

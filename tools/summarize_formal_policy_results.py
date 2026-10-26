@@ -229,7 +229,7 @@ def generate(data, output):
         'Sequence 缩写为从下往上的颜色顺序；Spatial Top 指 on_top。',
     ]
     if reuse := data.get('result_reuse'):
-        legend.insert(0, f"本版复用其余五任务的 {reuse['reused_episodes']} 回合；仅 Verb Bell 的 {reuse['new_episodes']} 回合新跑。成功与失败均保留，旧 Bottle 分数不纳入本版。")
+        legend.insert(0, f"本版复用其余五任务的 {reuse['reused_episodes']} 回合；仅 {labels[data['tasks'][0]]} 的 {reuse['new_episodes']} 回合新跑。成功与失败均保留，旧 Bottle 分数不纳入本版。")
     if data.get('excluded_modes'):
         legend.insert(0, 'Spatial 当前仅统计 left/right/on_top；front/back 的历史回合保留但排除计分。这是评测后的范围调整，不代表模型性能提升。')
     if attribute_v2:

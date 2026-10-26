@@ -1,0 +1,33 @@
+{
+  "pid": 295816,
+  "pgid": 295816,
+  "start_ticks": "417674523",
+  "argv": [
+    "/home/xichen6/miniconda3/envs/RoboTwin/bin/python",
+    "-u",
+    "/home/xichen6/Documents/repos/robotwin-if/tools/generate_if_seed_manifest.py",
+    "--task",
+    "press_lift_stapler",
+    "--task-config",
+    "demo_clean",
+    "--accepted-blocks",
+    "20",
+    "--max-candidate-blocks",
+    "100",
+    "--candidate-floor",
+    "110000",
+    "--output-dir",
+    "/Data/robotwin-if/evaluations/press-lift-stapler-manifest-20blocks-001/generated",
+    "--robotwin-dir",
+    "/home/xichen6/Documents/repos/robotwin-if/third_party/robotwin",
+    "--allow-compatible-commit",
+    "--sim-gpu",
+    "0"
+  ],
+  "started_at": "2026-10-26T07:36:04.995736+00:00",
+  "candidate_floor": 110000,
+  "accepted_blocks": 20,
+  "max_candidate_blocks": 100,
+  "rotation_version": "random-yaw-v1",
+  "selection": "Sequential expert qualification; both modes and exact paired initial observations and poses; pilot seeds excluded; no model outcomes used"
+}

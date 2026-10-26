@@ -17,7 +17,13 @@ Grasp-Approach 已于 2026-09-15 暂时下线；旧实现仅保留在 Git 历史
 
 本仓库维护 benchmark task（场景、干扰物、指令模板、成功判定与评测语义），并在 [`policies/`](policies/README.md) 中维护 X-VLA、LingBot-VA 等开源策略的独立推理环境与适配代码，**不在本仓库训练模型**。模型服务与 RoboTwin 仿真使用不同的 Conda 环境；也可由外部 CogACT/X-VLA 集成提供推理。
 
-**当前清单：[Press/Lift Stapler v1](seed-manifests/robotwin-if-press-lift-stapler-v1-20-per-mode/README.md)**，Verb 改为订书器 Press/Lift，其余五份 seeds 不变。订书器及 distractor 使用随机 yaw；20 个配对 blocks 经过 expert 和初始观测/位姿一致性检查。本版尚无正式模型成绩。
+**当前清单：[Press/Lift Stapler v1](seed-manifests/robotwin-if-press-lift-stapler-v1-20-per-mode/README.md)**，Verb 改为订书器 Press/Lift，其余五份 seeds 不变。订书器及 distractor 使用随机 yaw；20 个配对 blocks 经过 expert 和初始观测/位姿一致性检查。六模型评测已完成：新增 Stapler 240 回合，复用其余五任务 2520 回合，共 2760 回合、720 blocks。
+
+**当前结果包：[`result/robotwin-if-press-lift-stapler-v1-20blocks/`](result/robotwin-if-press-lift-stapler-v1-20blocks/README.md)** ·
+[HTML 报表](result/robotwin-if-press-lift-stapler-v1-20blocks/results.html) ·
+[逐回合 CSV](result/robotwin-if-press-lift-stapler-v1-20blocks/episodes.csv)。
+
+本次 README 版本快照：[README.ver20261026-stapler-v1.md](README.ver20261026-stapler-v1.md)。
 
 **旧版结果包：[`result/robotwin-if-arm-only-v2-20blocks/`](result/robotwin-if-arm-only-v2-20blocks/README.md)** ·
 [HTML 报表](result/robotwin-if-arm-only-v2-20blocks/results.html) ·
@@ -25,13 +31,50 @@ Grasp-Approach 已于 2026-09-15 暂时下线；旧实现仅保留在 Git 历史
 
 旧版 [RoboTwin-IF Arm-only-v2 taskset](seed-manifests/robotwin-if-arm-only-v2-20-per-mode/README.md)
 已完成六个 policies × 六任务 × 每任务 20 blocks：460 回合/policy，共 2760 回合、720 blocks。
-本轮按 `target-arm-only-lift-v2` 重跑 Arm-Select 240 回合；其余五任务逐字节复用 Attribute-v2 的 2520 回合。
+该版按 `target-arm-only-lift-v2` 重跑 Arm-Select 240 回合；其余五任务逐字节复用 Attribute-v2 的 2520 回合。
 保留 cube-v3 场景、Attribute target-only-lift-v2、Bottle v6 terminal 和 Spatial 三模式。
 详见[Arm 成功判据](docs/arm-select-target-arm-only.md)和[完整结果](result/robotwin-if-arm-only-v2-20blocks/README.md)。
 新旧 seed 清单与使用方法见 [seed-manifests](seed-manifests/README.md)。
 当前分支保留新旧两套清单与旧版结果；发布来源及完整审计见[溯源说明](docs/release-provenance.md)。
 
 <a id="policy-results"></a>
+
+## Press/Lift Stapler v1：当前评测结果
+
+2026-10-26 11:53 UTC 完成校验：六个 policies × 六任务 × 每任务 20 blocks，
+**2760/2760 回合、720/720 blocks**。其中 Stapler 新跑 240 回合，其余五任务的 2520 回合全部复用 Arm-only-v2，包含成功和失败。
+
+任务列为 **成功数 / 已评测回合数**。每个模型均完成 460 回合、120 blocks。
+
+| Policy | Verb Stapler | Noun | Attribute v2 | Arm cube-v3 / only-v2 | Sequence | Spatial | Overall (%) |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| X-VLA | 24/40 | 15/40 | 73/160 | 5/40 | 0/120 | 6/60 | 27.6 |
+| LingBot-VA | 18/40 | 30/40 | 108/160 | 37/40 | 17/120 | 26/60 | 56.2 |
+| LingBot-VLA | 19/40 | 13/40 | 77/160 | 18/40 | 14/120 | 3/60 | 31.6 |
+| VLAct All | 36/40 | 28/40 | 108/160 | 29/40 | 15/120 | 19/60 | 57.4 |
+| DM05 | 32/40 | 25/40 | 88/160 | 25/40 | 9/120 | 20/60 | 50.1 |
+| Hy-VLA | 35/40 | 11/40 | 83/160 | 17/40 | 15/120 | 7/60 | 38.9 |
+
+**Overall 为六个任务成功率的等权平均，每任务内部各 mode 等权**，不是 460 回合的合并成功率。
+X-VLA 使用公开 clean checkpoint，其余五个模型沿用原 clean + randomized checkpoints；
+具体模型版本和推理参数见 [checkpoints.json](result/robotwin-if-press-lift-stapler-v1-20blocks/checkpoints.json)。
+
+### Press/Lift Stapler 配对结果
+
+每个模型评测 20 个配对场景。两条指令为 `Press down on the stapler.` 和 `Lift the stapler.`，
+共享初始场景，只改变动作短语。**同场景双成功**表示该场景的 Press 回合和 Lift 回合分别成功。
+
+| Policy | Press | Lift | 同场景双成功 |
+|---|---:|---:|---:|
+| X-VLA | 9/20 | 15/20 | 7/20 |
+| LingBot-VA | 18/20 | 0/20 | 0/20 |
+| LingBot-VLA | 18/20 | 1/20 | 1/20 |
+| VLAct All | 20/20 | 16/20 | 16/20 |
+| DM05 | 20/20 | 12/20 | 12/20 |
+| Hy-VLA | 17/20 | 18/20 | 17/20 |
+
+完整六任务分模式成绩、checkpoint、复用和执行恢复证据见[结果包](result/robotwin-if-press-lift-stapler-v1-20blocks/README.md)。
+本版替换了 Verb 任务，Overall 与旧版的变化不能解读为同一任务上的能力提升。
 
 ## 旧版 Arm-only-v2：六个 Policies 的评测结果
 
@@ -244,8 +287,8 @@ pick 跑满 700 个动作后判定：允许拿起后平移，末尾保持抬升�
 | 六个 policy 的 inference code / setup / eval adapter | [`policies/`](policies/README.md) |
 | 统一 bash 评测入口（单个模型服务 + 串行 sim） | [`scripts/eval.sh`](scripts/eval.sh) |
 | 视频人工复核、Success/Fail 标注与判定分歧导出 | [`tools/policy-video-review/`](tools/policy-video-review/README.md) |
-| 六任务 × 20 blocks：flat seeds 与显式 seed/mode JSON、CSV | [`seed-manifests/robotwin-if-arm-only-v2-20-per-mode/`](seed-manifests/robotwin-if-arm-only-v2-20-per-mode/README.md) |
-| 已完成结果、逐回合 CSV、checkpoint 与校验证据 | [`result/robotwin-if-arm-only-v2-20blocks/`](result/robotwin-if-arm-only-v2-20blocks/README.md) |
+| 六任务 × 20 blocks：flat seeds 与显式 seed/mode JSON、CSV | [`seed-manifests/robotwin-if-press-lift-stapler-v1-20-per-mode/`](seed-manifests/robotwin-if-press-lift-stapler-v1-20-per-mode/README.md) |
+| 已完成结果、逐回合 CSV、checkpoint 与校验证据 | [`result/robotwin-if-press-lift-stapler-v1-20blocks/`](result/robotwin-if-press-lift-stapler-v1-20blocks/README.md) |
 
 接收方从 [分支交付说明](docs/branch-delivery.md) 开始；运行新评测不依赖本机 `/Data` 下的旧运行目录。
 
@@ -253,10 +296,11 @@ pick 跑满 700 个动作后判定：允许拿起后平移，末尾保持抬升�
 
 ```bash
 python tools/policy-video-review/server.py \
-  --run-dir outputs/policy-eval/robotwin-if-arm-only-v2-20blocks-001
+  --run-dir outputs/policy-eval/robotwin-if-press-lift-stapler-v1-20blocks-001 \
+  --port 8897
 ```
 
-打开 `http://127.0.0.1:8893/`，按 policy/task 筛选、逐帧查看和标注，导出自动判定与人工判定的分歧。
+打开 `http://127.0.0.1:8897/`，按 policy/task 筛选、逐帧查看和标注，导出自动判定与人工判定的分歧。
 人工标签独立保存，原始结果保持不变；远程机器需转发该端口，详见 [使用说明](tools/policy-video-review/README.md)。
 
 ## 设计原则：零改上游
@@ -350,7 +394,7 @@ done
 ### 4. Policy 评测
 
 六个开源策略的安装、权重与服务入口见 [`policies/`](policies/README.md)。
-当前 Arm-only-v2 六任务正式成绩见[评测结果](#policy-results)。
+当前 Press/Lift Stapler v1 六任务正式成绩见[评测结果](#policy-results)。
 先在独立终端启动所选模型，再在 RoboTwin 环境执行统一入口：
 
 ```bash

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Reuse the five frozen task results; schedule only the new bell task."""
+"""Reuse five frozen task results and schedule a replacement press/lift task."""
 import argparse
 import csv
 import datetime
@@ -19,7 +19,7 @@ PACKAGE = ROOT / 'result/robotwin-if-arm-only-v2-20blocks'
 RUN = Path('/Data/robotwin-if/evaluations/robotwin-if-press-lift-bell-v1-20blocks-001')
 
 
-def reuse_inputs(old, suite, package=PACKAGE):
+def reuse_inputs(old, suite, package=PACKAGE, release=RELEASE):
     """Validate seed/config/source/record identity before accepting any reused row."""
     assert formal.read(old / 'status.json')['status'] == 'complete'
     with (package / 'episodes.csv').open(newline='') as stream:
@@ -36,8 +36,8 @@ def reuse_inputs(old, suite, package=PACKAGE):
     rows = []
     for spec in suite['tasks'][1:]:
         task = spec['task']
-        assert (RELEASE / spec['manifest']).read_bytes() == (old / 'manifests' / spec['manifest']).read_bytes()
-        seeds = formal.read(RELEASE / spec['manifest'])['seeds']
+        assert (release / spec['manifest']).read_bytes() == (old / 'manifests' / spec['manifest']).read_bytes()
+        seeds = formal.read(release / spec['manifest'])['seeds']
         for policy in formal.POLICIES:
             for seed in seeds:
                 source = old / policy / task
@@ -56,22 +56,23 @@ def reuse_inputs(old, suite, package=PACKAGE):
     return rows, source_audit
 
 
-def prepare(base=RUN, old=OLD):
-    suite = verify_release()
-    rows, source_audit = reuse_inputs(old, suite)
-    specs = [dict(s, seeds=formal.read(RELEASE / s['manifest'])['seeds']) for s in suite['tasks']]
+def prepare(base=RUN, old=OLD, *, release=RELEASE, task_name='press_lift_bell', verify_release_fn=verify_release):
+    suite = verify_release_fn(release)
+    assert task_name in ('press_lift_bell', 'press_lift_stapler') and suite['tasks'][0]['task'] == task_name
+    rows, source_audit = reuse_inputs(old, suite, release=release)
+    specs = [dict(s, seeds=formal.read(release / s['manifest'])['seeds']) for s in suite['tasks']]
     for spec in specs:
         for key, value in formal.current_success_checker(spec['task']).items():
             assert spec[key] == value
-        spec['reusable_seeds_per_policy'] = [] if spec['task'] == 'press_lift_bell' else spec['seeds']
-        spec['pending_seeds_per_policy'] = spec['seeds'] if spec['task'] == 'press_lift_bell' else []
+        spec['reusable_seeds_per_policy'] = [] if spec['task'] == task_name else spec['seeds']
+        spec['pending_seeds_per_policy'] = spec['seeds'] if spec['task'] == task_name else []
     references = {p: formal.prior_metadata_directory(old, p, 'bottle_verb') for p in formal.POLICIES}
     base.mkdir(parents=True, exist_ok=False)
-    shutil.copytree(RELEASE, base / 'manifests')
-    plan = dict(repo_root=str(ROOT), release=RELEASE.name, policies=formal.POLICIES, tasks=specs,
+    shutil.copytree(release, base / 'manifests')
+    plan = dict(repo_root=str(ROOT), release=release.name, policies=formal.POLICIES, tasks=specs,
         expected_episodes=2760, expected_reused_episodes=2520, expected_new_episodes=240,
         blocks_per_task=20, instruction_type='unseen', old_run=str(old),
-        inference_reference_task='press_lift_bell', sim_gpu=0, model_gpu=1,
+        inference_reference_task=task_name, sim_gpu=0, model_gpu=1,
         execution_topology='one local simulator and one local model server, serial policies',
         parallel_simulators=1, parallel_model_servers=1,
         created_at=datetime.datetime.now(datetime.timezone.utc).isoformat())
@@ -80,11 +81,11 @@ def prepare(base=RUN, old=OLD):
     formal.write(base / 'support/reuse-audit.json', dict(parent_result=str(PACKAGE),
         parent_episode_csv_sha256=formal.digest(PACKAGE / 'episodes.csv'),
         unchanged_five_task_sources=source_audit, unchanged_five_manifests=True,
-        reused_episodes=2520, new_bell_episodes=240, reuse_all_successes_and_failures=True))
+        reused_episodes=2520, new_task=task_name, new_task_episodes=240, reuse_all_successes_and_failures=True))
     shutil.copyfile(PACKAGE / 'checkpoints.json', base / 'support/checkpoint-reference.json')
     shutil.copyfile(old / 'support/services-before-recovery.json', base / 'support/services-before-recovery.json')
     for policy, source in references.items():
-        dest = base / 'provenance/inference-reference' / policy / 'press_lift_bell'
+        dest = base / 'provenance/inference-reference' / policy / task_name
         dest.mkdir(parents=True)
         for name in ('run.json', 'resolved_config.json', 'summary.json'):
             shutil.copyfile(source / name, dest / name)
@@ -120,7 +121,7 @@ def prepare(base=RUN, old=OLD):
     alias.symlink_to(base, target_is_directory=True)
     status = formal.report(base, state='prepared')
     assert status['reused_episodes'] == 2520 and status['new_episodes'] == 0 and status['pending_episodes'] == 240
-    print(f'Prepared {base}: 2520 reused; 240 bell episodes pending', flush=True)
+    print(f'Prepared {base}: 2520 reused; 240 {task_name} episodes pending', flush=True)
 
 
 if __name__ == '__main__':

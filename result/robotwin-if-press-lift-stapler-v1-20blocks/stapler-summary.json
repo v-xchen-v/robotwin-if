@@ -1,0 +1,79 @@
+{
+  "xvla": {
+    "episodes": 40,
+    "press_successes": 9,
+    "lift_successes": 15,
+    "both_success_blocks": 7,
+    "blocks": 20,
+    "successes": 24,
+    "first_action_counts": {
+      "press": 9,
+      "lift": 17,
+      "None": 14
+    }
+  },
+  "lingbot_va": {
+    "episodes": 40,
+    "press_successes": 18,
+    "lift_successes": 0,
+    "both_success_blocks": 0,
+    "blocks": 20,
+    "successes": 18,
+    "first_action_counts": {
+      "press": 36,
+      "None": 4
+    }
+  },
+  "lingbot_vla": {
+    "episodes": 40,
+    "press_successes": 18,
+    "lift_successes": 1,
+    "both_success_blocks": 1,
+    "blocks": 20,
+    "successes": 19,
+    "first_action_counts": {
+      "press": 36,
+      "None": 3,
+      "lift": 1
+    }
+  },
+  "vlact": {
+    "episodes": 40,
+    "press_successes": 20,
+    "lift_successes": 16,
+    "both_success_blocks": 16,
+    "blocks": 20,
+    "successes": 36,
+    "first_action_counts": {
+      "press": 22,
+      "lift": 16,
+      "None": 2
+    }
+  },
+  "dm05": {
+    "episodes": 40,
+    "press_successes": 20,
+    "lift_successes": 12,
+    "both_success_blocks": 12,
+    "blocks": 20,
+    "successes": 32,
+    "first_action_counts": {
+      "press": 20,
+      "None": 8,
+      "lift": 12
+    }
+  },
+  "hy_vla": {
+    "episodes": 40,
+    "press_successes": 17,
+    "lift_successes": 18,
+    "both_success_blocks": 17,
+    "blocks": 20,
+    "successes": 35,
+    "first_action_counts": {
+      "press": 17,
+      "lift": 18,
+      "None": 5
+    }
+  }
+}

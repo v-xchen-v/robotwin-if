@@ -1,0 +1,29 @@
+{
+  "source_run": "/Data/robotwin-if/evaluations/robotwin-if-press-lift-stapler-v1-20blocks-001",
+  "taskset": "robotwin-if-press-lift-stapler-v1-20-per-mode",
+  "parent_result": "result/robotwin-if-arm-only-v2-20blocks",
+  "parent_episode_csv_sha256": "d1eac999c987896f52c931543d8d446202fa82cb70979742207a2e66a597bd5d",
+  "new_episodes": 240,
+  "reused_episodes": 2520,
+  "replaced_task": "bottle_verb",
+  "new_task": "press_lift_stapler",
+  "unchanged_five_task_rows_except_origin": true,
+  "unchanged_five_task_record_hashes": true,
+  "checkpoints_and_inference_options_retained": true,
+  "completed_policy_failures_are_final": true,
+  "oracle_setup_retry_records": 0,
+  "execution_topology": "two isolated simulator/server pairs; simulators on GPU 0, models on GPU 1",
+  "execution_evidence_sha256": {
+    "execution-transition.json": "ca71fb1f7051a5b88d710aa058c6dd44d0200129e869bef94b62151cf2c00faf",
+    "parallel-source-hashes.json": "8352e8fb8aa2374563aecb99900bd17f23121447e99ae339b11e729511056598",
+    "execution-recoveries.json": "3f876d37aad29da1bd9be45a0c5f3bf3109883a495b05dc8f3e165072f9f87f2",
+    "parallel-startup-validation.json": "c1db81bdbc792b23070108b73a871f22b2daad14bd63068ce617a907742f7f43"
+  },
+  "publication_source_sha256": {
+    "tools/publish_bell_policy_results.py": "fd3a4b711593393a370ea63f7d6d7236572b98806e8b494412e609d06b243169",
+    "tools/summarize_formal_policy_results.py": "c5c6e5aeb1fd6c3a5acbaf044f578eba0a4235c1893aad925b0106cb6cee6d35",
+    "tools/publish_stapler_policy_results.py": "2322620c6801fb3ff5026ad222af0300c88dca11e0cba9b74b2dc458eaa44368"
+  },
+  "source_snapshot": "/Data/robotwin-if/evaluations/robotwin-if-press-lift-stapler-v1-20blocks-001/support/source-snapshot",
+  "source_hashes_sha256": "2905af042301e1123118a5302ae633f24a1b0c6e2c0b6dcecdb5338484d5de1f"
+}

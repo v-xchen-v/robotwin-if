@@ -1,14 +1,17 @@
 # 六任务正式评测
 
-当前任务为 bottle_verb、pick_diverse_object、attribute_select、arm_select、stack_sequence、place_relative。
+当前任务为 press_lift_stapler、pick_diverse_object、attribute_select、arm_select、stack_sequence、place_relative。
 Grasp-Approach 已暂时下线，见 [归档说明](../bak/grasp_cube_approach/README.md)。
-当前使用 [RoboTwin-IF Arm-only-v2 taskset](../seed-manifests/robotwin-if-arm-only-v2-20-per-mode/README.md)，
-各 policy 460 回合，全套 **2760/2760 回合、720/720 blocks** 已于 2026-09-18 05:26 UTC 完成校验。
-Arm 按 target-arm-only-lift-v2 重跑 240 回合，其他五任务复用 Attribute-v2 的 2520 回合。
-[最新结果](../result/robotwin-if-arm-only-v2-20blocks/README.md)及 [远端推理/并发调度记录](arm-select-target-only-v2-evaluation.md)已归档。
-正式 runner 的 `--release` 默认值指向该版本；当前分支只保留这份清单和结果，见[发布溯源说明](release-provenance.md)。
-[新的 pick 稳定保持判定](bottle-verb-pick-hold.md)下，prepare 会排除旧 Bottle-Verb 结果并保留原 seed 重测；该轮重测现已完成。
-当前 v6 的 pick 允许平移，在完整执行 700 个动作后判断末尾姿态保持和全程旋转摇晃；不再提前成功。shake 及其他任务保留原终止方式。
+当前使用 [Press/Lift Stapler v1 taskset](../seed-manifests/robotwin-if-press-lift-stapler-v1-20-per-mode/README.md)：
+六个 policies 各任务 20 blocks；复用 Arm-only-v2 的其余五任务共 2520 回合，新增 Stapler 240 回合。
+本轮已于 **2026-10-26 11:53 UTC** 完成：2760 回合、720 blocks 全部通过校验。
+见[六任务结果包](../result/robotwin-if-press-lift-stapler-v1-20blocks/README.md)，执行使用下述双路入口。
+
+历史 [Arm-only-v2 结果](../result/robotwin-if-arm-only-v2-20blocks/README.md)的
+**2760 回合、720 blocks** 已于 2026-09-18 05:26 UTC 完成校验；其 Verb 为 Bottle。
+历史 [远端推理/并发调度记录](arm-select-target-only-v2-evaluation.md)、
+[Bottle v6 判据](bottle-verb-pick-hold.md)和[发布溯源说明](release-provenance.md)继续保留。
+基础 runner 的 `--release` 默认值仍是 Arm-only-v2；当前 Stapler 清单由专用准备入口指定。
 
 ## 基础入口：单机串行
 
@@ -25,6 +28,24 @@ X-VLA 首先建立参考场景。随后五个 policy 在调用模型前逐回合
 三路 RGB 逐像素相等、机器人状态绝对误差不超过 `1e-6`、指令及步数上限相同。
 任何不一致都停止该回合；不会跳过检查或替换 seed。
 SAPIEN 的显式设备绑定由仓库内 `tools/sim_device.py` 提供，无需加载旧运行目录中的 Python 适配器。
+
+## Stapler：单机双路
+
+[`run_parallel_stapler_suite.py`](../tools/run_parallel_stapler_suite.py) 最多同时运行两个
+独立模型服务和两个 simulator：仿真均在 GPU 0，推理均在 GPU 1。每个 policy 使用独立端口、
+客户端历史及输出目录；单一调度器持有原 scheduler lock 并写入归档结果。
+根据历史显存峰值和实时占用选择可并行的模型组合，例如 LingBot-VA 与 DM05 不同时加载。
+
+原 evaluator、任务、指令、manifest 和推理参数保持冻结。新增调度代码另存源码哈希；
+`support/execution-transition.json` 记录拓扑变更，`support/execution-revisions/` 保留切换前证据。
+切换时按 PID 和启动时间接管正在运行的 X-VLA，不中断当前回合。完成的成功和失败均不重跑。
+新 worker 仍逐回合检查 manifest 和 X-VLA 参考场景，未完成的参考场景会在调用模型前等待。
+任一路检测到 GPU 0 达到 80°C 时，两路通过共享 gate 一起在动作之间等待降到 74°C，
+随后一起恢复；等待不推进物理、不修改动作。这样避免一路等待降温时另一路继续加热 GPU。
+
+运行目录为 `outputs/policy-eval/robotwin-if-press-lift-stapler-v1-20blocks-001`。
+其 `status.json` 的 `current.workers` 列出两路进程与队列，视频见 <http://127.0.0.1:8897/>。
+自动工作流在全部回合完成后执行原全量校验与 `publish_stapler_policy_results.py`，生成六任务结果包。
 
 ## 准备、续跑与验证
 

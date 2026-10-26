@@ -1,0 +1,144 @@
+{
+  "created_at": "2026-10-26T10:17:29.082914+00:00",
+  "purpose": "integration_smoke",
+  "policy": "vlact",
+  "output_format": "cogact_episode_v1",
+  "arguments": {
+    "task": "press_lift_stapler",
+    "task_config": "demo_clean",
+    "robotwin_dir": "/home/xichen6/Documents/repos/robotwin-if/third_party/robotwin",
+    "server_url": "ws://127.0.0.1:8013",
+    "request_timeout": 600.0,
+    "output_dir": "/Data/robotwin-if/evaluations/robotwin-if-press-lift-stapler-v1-20blocks-001/batches/20261026T095924-parallel2-003/vlact/press_lift_stapler",
+    "seeds": null,
+    "seed_manifest": "/Data/robotwin-if/evaluations/robotwin-if-press-lift-stapler-v1-20blocks-001/manifests/press_lift_stapler.json",
+    "blocks": 20,
+    "instruction_type": "unseen",
+    "sim_gpu": "0"
+  },
+  "seeds": [
+    110000,
+    110001,
+    110002,
+    110003,
+    110004,
+    110005,
+    110006,
+    110007,
+    110008,
+    110009,
+    110010,
+    110011,
+    110012,
+    110013,
+    110014,
+    110015,
+    110016,
+    110017,
+    110018,
+    110019,
+    110020,
+    110021,
+    110022,
+    110023,
+    110024,
+    110025,
+    110026,
+    110027,
+    110028,
+    110029,
+    110030,
+    110031,
+    110032,
+    110033,
+    110034,
+    110035,
+    110036,
+    110037,
+    110038,
+    110039
+  ],
+  "instruction_type": "unseen",
+  "robotwin": {
+    "path": "/home/xichen6/Documents/repos/robotwin-if/third_party/robotwin",
+    "commit": "b82ffb81d291d14c24be444bb7b6f81719481e0f",
+    "status": "M description/utils/clear_task_seen_unseen.py\n M description/utils/generate_episode_instructions.py\n M description/utils/generate_task_description.py\n M task_config/demo_clean.yml"
+  },
+  "robotwin_if": {
+    "path": "/home/xichen6/Documents/repos/robotwin-if",
+    "commit": "a9565f36d253f461211f8839a325f429daf35973",
+    "status": "M docs/formal-policy-evaluation.md\n m third_party/robotwin\n M tools/prepare_bell_policy_suite.py\n M tools/publish_bell_policy_results.py\n M tools/run_formal_policy_suite.py\n M tools/summarize_formal_policy_results.py"
+  },
+  "vlact": {
+    "path": "/home/xichen6/Documents/repos/robotwin-if/third_party/vlact",
+    "commit": "621b01bb830e1a400f12f4c05262add55ae3003a",
+    "status": "M starVLA/model/framework/QwenOFT.py\n M starVLA/model/framework/__init__.py\n M starVLA/model/modules/vlm/QWen3.py"
+  },
+  "source_sha256": {
+    "policies/vlact/eval.py": "a237881eb40e0bafd44bec6c378feb0d7779b4bd6fba29f6cdfc2c59bac0204d",
+    "policies/vlact/client.py": "ade6d44335154f60588c1a1ce5d8cf26ad2563d0467e15775e55e9a059a124e5",
+    "policies/vlact/patch_source.py": "8a8baf01c8530ae7d5fadc5b4d8c94526256a4c5f447e33909a0b2a1e81b059a",
+    "policies/vlact/check_env.py": "f63446f50c87dfd30cf53c4d24a4960ad5dd0192bc08b3b3f7c6b6daa023c675",
+    "policies/vlact/outputs.py": "cd89a85faabc1f15fd46ca9cfbb3aa94225d7ad2f1ad2cb1f70e7636d99daf4a",
+    "policies/vlact/download_checkpoint.py": "a32062cbc2d17a872f98fc91aa2c8fcbd67a7483b032bdda619266fd95a39045",
+    "policies/vlact/codec.py": "26d03d6255bd296ee6b5b781ddbbe1054bd7ea956674788eeff5eda6c54e5e3e",
+    "policies/vlact/serve.py": "4e9b440397c8df70e54e18f5aa4f71407ff999ff3b380d77be143491838a12d2",
+    "policies/xvla/eval.py": "b3e7fd80902dcd9b0a66af5a5577df429e3525fbb83621b9ed20666a30447f31",
+    "policies/xvla/outputs.py": "2f322ef36d1d7994b23936d8df6da59c7d39e1a69b45a8ed2c6a038c0ae9b2a0",
+    "policies/lingbot_va/client.py": "4049c4dba3dbd5fd7b3cb7726d369da30c48ac6afac94d2a516999e68bcb264e"
+  },
+  "task_config_sha256": "ae893a209ed2425d1a4d2cd7046187d60a566fc715aa88447901335ea2900f82",
+  "task_source_sha256": "233d082bdf33f0519c12572a727a0a0b78ac163b6b6410a5ac1a71d9fad53174",
+  "evaluation_source_sha256": "48b66710830719b046b024ca7ce124ecb38aae0f2ef35a8d19e8a8812442c89f",
+  "manifest_sha256": "a73f8c23d0d79802a0e36493b889a409451620fe660964a471b3010b1c13a996",
+  "server_metadata": {
+    "ok": true,
+    "policy": "vlact",
+    "protocol": "vlact_robotwin_v1",
+    "checkpoint": {
+      "repo_id": "StarVLA/VLAct_Qwen3OFT_Robotwin_all_Finetune",
+      "revision": "999b37d4d7c1bd0f5588f78d72a185f6f052bf83",
+      "base_model": {
+        "repo_id": "StarVLA/Qwen3-VL-4B-Instruct-Action",
+        "revision": "c41500cf1d287cd79e9f6602f419937b05048bd8",
+        "directory": "Qwen3-VL-4B-Instruct-Action"
+      },
+      "weights_sha256": "beb2c0ec39c3bc7173a5bd90eb59ef99854b73ca1aa3bf50fb6ffc353f477c2a",
+      "downloaded_at": "2026-09-12T15:04:37.454426+00:00"
+    },
+    "source_revision": "621b01bb830e1a400f12f4c05262add55ae3003a",
+    "source_diff": "diff --git a/starVLA/model/framework/QwenOFT.py b/starVLA/model/framework/QwenOFT.py\nindex a3a2977..c03735a 100755\n--- a/starVLA/model/framework/QwenOFT.py\n+++ b/starVLA/model/framework/QwenOFT.py\n@@ -291,7 +291,7 @@ class Qwenvl_OFT(baseframework):\n             action_queries = self._gather_action_token_embeddings(last_hidden, input_ids, action_token_id=self.action_token_id)  # [B, chunk_len, H]\n             pred_actions = self.action_model.predict_action(action_queries)  # (B, chunk_len, action_dim)\n \n-        normalized_actions = pred_actions.detach().cpu().numpy()\n+        normalized_actions = pred_actions.detach().float().cpu().numpy()\n         return {\"normalized_actions\": normalized_actions}\n \n     def _compute_action_loss(\ndiff --git a/starVLA/model/framework/__init__.py b/starVLA/model/framework/__init__.py\nindex c06d7f6..935aaf5 100755\n--- a/starVLA/model/framework/__init__.py\n+++ b/starVLA/model/framework/__init__.py\n@@ -24,14 +24,7 @@ try:\n except NameError:\n     pkg_path = None\n \n-# Auto-import all framework submodules to trigger registration\n-if pkg_path is not None:\n-    try:\n-        for _, module_name, _ in pkgutil.iter_modules(pkg_path):\n-            importlib.import_module(f\"{__name__}.{module_name}\")\n-    except Exception as e:\n-        logger.log(f\"Warning: Failed to auto-import framework submodules: {e}\")\n-        \n+# Inference: the factory explicitly imports QwenOFT on demand.\n def build_framework(cfg):\n     \"\"\"\n     Build a framework model from config.\ndiff --git a/starVLA/model/modules/vlm/QWen3.py b/starVLA/model/modules/vlm/QWen3.py\nindex 1c9a5d1..2b491e7 100755\n--- a/starVLA/model/modules/vlm/QWen3.py\n+++ b/starVLA/model/modules/vlm/QWen3.py\n@@ -79,7 +79,7 @@ class _QWen3_VL_Interface(nn.Module):\n \n         model = Qwen3VLForConditionalGeneration.from_pretrained(\n             model_id,\n-            attn_implementation=\"flash_attention_2\",\n+            attn_implementation=\"sdpa\",\n             dtype=torch.bfloat16,\n         )\n         processor = AutoProcessor.from_pretrained(model_id)\n",
+    "asset_sha256": {
+      "config.yaml": "518ce0e95a53e51ed0fb639045208fd4490dc9bb4b5b8427ba5a72f1d4f0ca66",
+      "dataset_statistics.json": "4f562b0dc86fd2c68df1a6eb8830c658c53c87ad60d6a8075e4c6dc38e046395"
+    },
+    "attention": "sdpa",
+    "dtype": "BF16 VLM and OFT head; FP32 NumPy output",
+    "torch": "2.6.0+cu124",
+    "transformers": "4.57.0",
+    "gpu": "1",
+    "gpu_name": "NVIDIA RTX A6000",
+    "cpu_threads": 8,
+    "use_length": 32,
+    "action_type": "qpos",
+    "action_dim": 14,
+    "joint_action_mode": "wrap",
+    "unnorm_key": "new_embodiment",
+    "image_size_buckets": [
+      [
+        320,
+        180
+      ],
+      [
+        280,
+        210
+      ]
+    ],
+    "state_input": false,
+    "single_client": true,
+    "action_ensemble": false,
+    "normalization": "Explicit wrap from robotwin_all_wrap_32; no checkpoint-path heuristic or percentile scaling",
+    "gripper": "Official wrap decoder clips to [-1, 1]; no binarization",
+    "seed_control": "Reset seeds Python/NumPy/Torch; full kernel determinism not enforced"
+  }
+}

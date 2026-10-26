@@ -1,0 +1,51 @@
+{
+  "xvla": {
+    "repo_id": "2toINF/X-VLA-RoboTwin2",
+    "revision": "a157c580cfe6f9f445614490f3bec1b2f9ef9f18",
+    "evidence": "checkpoint-evidence/xvla.json",
+    "evidence_sha256": "0d4da307bdf6523b3e2833e3d671c63571087044cdd2067bac26337dea989185"
+  },
+  "lingbot_va": {
+    "repo_id": "robbyant/lingbot-va-posttrain-robotwin",
+    "revision": "8c9dea8abbc5c91cc9e18bc3264b8915083bbe70",
+    "evidence": "checkpoint-evidence/lingbot_va.json",
+    "evidence_sha256": "76ae42bc1b196b722f86cc6a55057242dc13a3d71b662f1336302b31476740b0"
+  },
+  "lingbot_vla": {
+    "repo_id": "robbyant/lingbot-vla-4b-posttrain-robotwin",
+    "revision": "fb71a2c9749ccfedbb7290c2c3f0e5e7c7305c9e",
+    "processor": {
+      "repo_id": "Qwen/Qwen2.5-VL-3B-Instruct",
+      "revision": "66285546d2b821cf421d4f5eb2576359d3770cd3",
+      "directory": "qwen_processor"
+    },
+    "evidence": "checkpoint-evidence/lingbot_vla.json",
+    "evidence_sha256": "693cad39c167febd514432c8584ae6c9640b2c8e5a6db553c2876090350cce6a"
+  },
+  "vlact": {
+    "repo_id": "StarVLA/VLAct_Qwen3OFT_Robotwin_all_Finetune",
+    "revision": "999b37d4d7c1bd0f5588f78d72a185f6f052bf83",
+    "weights_sha256": "beb2c0ec39c3bc7173a5bd90eb59ef99854b73ca1aa3bf50fb6ffc353f477c2a",
+    "base_model": {
+      "repo_id": "StarVLA/Qwen3-VL-4B-Instruct-Action",
+      "revision": "c41500cf1d287cd79e9f6602f419937b05048bd8",
+      "directory": "Qwen3-VL-4B-Instruct-Action"
+    },
+    "evidence": "checkpoint-evidence/vlact.json",
+    "evidence_sha256": "a81a304ac27ab222a5fb420d38275ebcf6f0b96b7fd1904ddf5d86234343c3f3"
+  },
+  "dm05": {
+    "repo_id": "Dexmal/DM05-robotwin2",
+    "revision": "bef09062f8d9744b7691d0a5db4e23834e46071e",
+    "weights_sha256": "74e8dbb475148080e35ede3f6823322eb6a0b061c8f843a932a4c4ce879bd282",
+    "evidence": "checkpoint-evidence/dm05.json",
+    "evidence_sha256": "d4a9007c2bdfead2d995f23ea93bfd0d65c474ab75f5528a46d106678592d478"
+  },
+  "hy_vla": {
+    "repo_id": "tencent/Hy-Embodied-0.5-VLA-RoboTwin",
+    "revision": "bd7bba6f5934ad62293a2a34f74760c6a3ef2ff8",
+    "weights_sha256": "3bd6c16225f905a298340489d519498d4e5ecf5bcdd28a5c1df63e29894fef60",
+    "evidence": "checkpoint-evidence/hy_vla.json",
+    "evidence_sha256": "d7a381d774a134f77e573770272f22cadb9c9ad1a965fdd26a133f034c09b43b"
+  }
+}
