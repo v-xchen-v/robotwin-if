@@ -3,7 +3,7 @@
 分支 `press_lift_bell`，从 master `8035546` 新建。旧瓶子实验已保存在
 [`experiment/bottle-hold-place` 的 e7a7f7c](https://github.com/v-xchen-v/robotwin-if/commit/e7a7f7c)。
 
-本任务在铃铛、鼠标、玩具车的共享场景中，用一个可移动铃铛比较 `Press down on the bell.` 和 `Pick up the bell.`。去掉第二个目标、搬运和长时间悬停，
+本任务在铃铛、鼠标、玩具车的共享场景中，用一个可移动铃铛比较 `Press down on the bell.` 和 `Lift the bell.`。去掉第二个目标、搬运和长时间悬停，
 测试第一项完成的动作是否符合指令；历史实验结果不加入正式六任务成绩。
 
 2026-10-23 已生成 [Press/Lift Bell v1 六任务清单](../seed-manifests/robotwin-if-press-lift-bell-v1-20-per-mode/README.md)，
@@ -26,7 +26,7 @@ bridge、seed contract 与六个 policy evaluator 的 `--seed-manifest` 入口�
   布置区别于原生单铃铛 click 和“物体+展台”place 场景，目的是减少整场景模板识别；尚未做 bare/context 模型对照，不能声称已降低捷径，也不能保证消除铃铛的按压先验。
   陪衬物体带来少量目标识别要求，但只有一个铃铛，指令无需增加颜色、位置或手臂描述。
   主指标是同一画面下两条指令都成功，不能仅凭总成功率声称模型理解动词。
-- 两句共享对象短语 `the bell`，只改变动作短语 `Press down on` / `Pick up`，不指定手臂。
+- 两句共享对象短语 `the bell`，只改变动作短语 `Press down on` / `Lift`，不指定手臂。
   `seen/unseen` 仅为 runner 兼容值，实际都返回当前 mode 对应的同一句固定指令。
 - 原生 `click_bell` 支持按压，但使用静态铃铛；原生 `place_object_scale` / `place_object_stand` 的动态资产池
   包含铃铛，oracle 会先抓起它。它们的 instruction 是完整搬运任务，不能证明模型见过独立的 `Lift the bell.`。
@@ -206,7 +206,7 @@ proprio 也逐数组相等。实际初始化满足采样间距，oracle 轨迹�
 
 ### Instruction：保留相同对象，调整动作短语
 
-用户选择保留 verb-something 对照后，当前固定指令改为：
+用户选择保留 verb-something 对照后，当时固定指令改为以下两句（Lift 已在后续对照后改回，见下节）：
 
 | 内部 mode | 模型实际收到的 instruction |
 |---|---|
@@ -236,3 +236,23 @@ proprio 也逐数组相等。实际初始化满足采样间距，oracle 轨迹�
 本次只调整语言，不改变随机布局、物理参数或动作分类器；完整 Press 的额外撤离要求仍存在。
 此前所有模型结果及 `press-lift-bell-random-context-oracle-001` 均使用旧句 `Press the bell.` / `Lift the bell.`。
 模型 eval 仍暂停，尚未用新句进行推理，不能据此宣称性能提升。
+
+### 2026-10-26：Lift 改回旧 instruction
+
+当前运行时指令为 `Press down on the bell.` / `Lift the bell.`；`seen` 和 `unseen` 均使用这组固定文本。
+只修改 Lift 动作短语，对象仍为 `the bell`。场景随机化、seed、250-action 上限与成功判据均保持不变。
+
+依据是 2026-10-23 的 LingBot-VA 指令对照：预先选定当前 manifest 的四个 Lift seeds
+`100001, 100003, 100005, 100007`，覆盖两种铃铛模型 × 左右侧。
+相同 checkpoint、推理参数、判据和逐数组一致的初始 RGB/机器人状态下，
+`Lift the bell.` 为 **1/4** 成功，已有的 `Pick up the bell.` 为 **0/4**。
+成功 seed `100007` 在第 78 步抬高约 3.42 cm，通过原有 Lift 判据。
+这是小样本诊断，尚不能说明表现稳定；推理设置固定随机种子，但未强制使用确定性 kernels。
+完整记录位于 `outputs/policy-eval/lingbot-va-bell-lift-old-instruction-4seeds-001/README.md`。
+
+按用户要求，原 `robotwin-if-press-lift-bell-v1-20-per-mode` 包已直接覆盖 Lift 配置，名称与 seeds 不变。
+`suite.yml` 的 `instruction_override` 记录原指令及覆盖后的源码哈希；`qualification/instruction-override/`
+保存更新后的两个语言源文件。原始 expert 日志、生成源码快照和已完成的正式评测仍保留实测文本。
+包校验同时验证当前指令、原始资格证据与只修改语言的源码差异；本次未重新筛选 seeds 或恢复评测。
+源码已改变，暂停运行不能直接续跑并混合两种 instruction 的成绩。
+新评测通过当前任务实现接收 `Lift the bell.`，需使用独立输出目录并记录实际 instruction 与源码。

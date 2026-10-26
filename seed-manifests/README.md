@@ -10,7 +10,11 @@
 新版仅替换 Verb，其余五个任务的 flat manifest 与旧版逐字节相同，并保留原资格证据。
 铃铛 episode seeds 为 `100000–100039`，每两回合共享一个初始场景；本次 expert 筛选 20 组全部通过。
 配对初始三路 RGB、proprio 完全相同，两个铃铛模型 × 左右两侧各 5 组。
-固定指令为 `Press down on the bell.` / `Pick up the bell.`，均为 250 actions。
+当前固定指令为 `Press down on the bell.` / `Lift the bell.`，均为 250 actions。
+2026-10-26 已按用户要求直接覆盖原 v1 包的 Lift 配置，目录名称与所有 seeds 不变。
+原始资格日志保留实测的 `Pick up the bell.`，`instruction_override` 记录文本覆盖及当前源码。
+新指令的评测需使用独立输出目录，不能直接续跑并混入此前暂停运行的成绩。
+具体对照及当前指令见[任务实验记录](../docs/press-lift-bell-experiment.md#2026-10-26lift-改回旧-instruction)。
 不会根据模型失败删换 seeds；新版尚无正式模型成绩。
 
 `scripts/eval.sh` 和 `tools/export_seed_modes.py` 默认使用新版；每套 `suite.yml` 决定自己的六任务列表。

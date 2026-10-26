@@ -41,14 +41,19 @@ class BellResultDeliveryTest(unittest.TestCase):
             expected = {k: dict(sha256=hashlib.sha256(v.tobytes()).hexdigest(),
                                 dtype=str(v.dtype), shape=list(v.shape)) for k, v in arrays.items()}
             formal.write(base / 'manifests/press_lift_bell.generation.json', dict(blocks=[dict(
-                accepted=True, episodes=[dict(seed=100000, diagnostics=dict(initial_arrays=expected,
-                    instruction='Press down on the bell.', action_limit=250))])]))
+                accepted=True, episodes=[dict(seed=seed, diagnostics=dict(initial_arrays=expected,
+                    instruction=instruction, action_limit=250)) for seed, instruction in
+                    ((100000, 'Press down on the bell.'), (100001, 'Pick up the bell.'))])]))
             obs = {'observation': {c: dict(rgb=arrays[c]) for c in cameras}}
-            def check(instruction='Press down on the bell.'):
-                formal.check_scene(base, 'xvla', dict(task='press_lift_bell'), 100000, instruction,
+            spec = dict(task='press_lift_bell', instructions=dict(press='Press down on the bell.', lift='Lift the bell.'))
+            def check(instruction='Press down on the bell.', seed=100000):
+                formal.check_scene(base, 'xvla', spec, seed, instruction,
                                    obs, SimpleNamespace(step_lim=250), lambda suffix: base / suffix)
             with patch('policies.xvla.client.encode_proprio', return_value=arrays['proprio']):
                 check()
+                check('Lift the bell.', 100001)
+                with self.assertRaises(AssertionError):
+                    check('Pick up the bell.', 100001)
                 with self.assertRaises(AssertionError):
                     check('Pick up the bell.')
                 arrays['head_camera'][0, 0, 0] = 1

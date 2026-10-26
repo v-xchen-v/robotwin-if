@@ -8,12 +8,16 @@ import unittest
 from if_benchmark.seed_contracts import CURRENT_SUITE_TASKS
 from tools.release_press_lift_bell_v1 import PARENT, RELEASE, verify
 from policies.xvla.eval import select_seeds
+from tasks.envs._press_lift_bell import INSTRUCTIONS
 
 
 class BellManifestReleaseTest(unittest.TestCase):
     def test_release_qualification_checksums_and_unchanged_five_manifests(self):
         suite = verify()
         self.assertEqual(suite['episodes_per_policy'], 460)
+        bell = suite['tasks'][0]
+        self.assertEqual(bell['instructions'], INSTRUCTIONS)
+        self.assertEqual(bell['instruction_override']['previous_instructions']['lift'], 'Pick up the bell.')
         for task in CURRENT_SUITE_TASKS[1:]:
             self.assertEqual((RELEASE / f'{task}.json').read_bytes(), (PARENT / f'{task}.json').read_bytes())
         self.assertTrue((PARENT / 'bottle_verb.json').exists())

@@ -40,6 +40,31 @@ def write(path, value):
     path.write_text(json.dumps(value, indent=2, ensure_ascii=False, allow_nan=False) + '\n')
 
 
+def qualification_instructions(base, spec):
+    """Check an in-place text override while retaining the original expert evidence."""
+    override = spec.get('instruction_override')
+    if override is None:
+        return spec['instructions']
+    previous = override['previous_instructions']
+    assert previous['press'] == spec['instructions']['press']
+    assert previous['lift'] == 'Pick up the bell.' and spec['instructions']['lift'] == 'Lift the bell.'
+    helper = 'tasks/envs/_press_lift_bell.py'
+    description = 'tasks/task_instruction/press_lift_bell.json'
+    assert set(override['source_sha256']) == {helper, description}
+    original = base / 'qualification/source-snapshot'
+    updated = base / 'qualification/instruction-override'
+    for name, sha in override['source_sha256'].items():
+        assert digest(updated / name) == sha
+    # The physical scene, RNG and success checker must remain byte-identical.
+    assert (updated / helper).read_text() == (original / helper).read_text().replace(
+        previous['lift'], spec['instructions']['lift'])
+    expected = read(original / description)
+    expected['schema'] = expected['schema'].replace(previous['lift'], spec['instructions']['lift'])
+    expected['full_description'] = expected['full_description'].replace('pick up', 'lift')
+    assert read(updated / description) == expected
+    return previous
+
+
 def build(run, base=RELEASE):
     from dataclasses import asdict
     run = run.resolve()
@@ -127,7 +152,7 @@ print("OK: six tasks, 20 blocks/task, 460 episodes; qualification and checksums 
 每个任务 20 个完整 blocks，共 460 回合/model；六个模型合计 2760 回合。
 
 铃铛为 20 个场景，每场景 Press/Lift 各一次：`2k` 是 Press，`2k+1` 是 Lift。
-指令为 **Press down on the bell.** / **Pick up the bell.**，均为 250 actions。
+指令为 **{INSTRUCTIONS['press']}** / **{INSTRUCTIONS['lift']}**，均为 250 actions。
 `seen`/`unseen` 返回这同一组固定指令，并非两个不同语言池。
 使用 `random-back-region-v1` distractors 和 `{BellMonitor.VERSION}` 判据。
 物理步长为 4 ms，每步采样，保留零冲量 contact；完整 Press 仍要求回撤和释放。
@@ -178,6 +203,7 @@ def verify(base=RELEASE):
         assert len(manifest['seeds']) == spec['episodes_per_policy']
         total += len(manifest['seeds'])
         if spec['task'] == 'press_lift_bell':
+            original_instructions = qualification_instructions(base, spec)
             evidence = read(base / 'press_lift_bell.generation.json')
             validate_generation_evidence(manifest, evidence)
             for block in evidence['blocks']:
@@ -189,7 +215,7 @@ def verify(base=RELEASE):
                 assert a['context_initial_positions'] == b['context_initial_positions']
                 for episode in block['episodes']:
                     d = episode['diagnostics']
-                    assert d['instruction'] == INSTRUCTIONS[episode['expected_mode']]
+                    assert d['instruction'] == original_instructions[episode['expected_mode']]
                     assert d['action_limit'] == 250 and d['scene_seed'] == block['block_index']
                     assert d['context_sampling_version'] == CONTEXT_LAYOUT_VERSION
                     assert d['signals']['checker_version'] == BellMonitor.VERSION

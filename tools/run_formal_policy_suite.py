@@ -353,6 +353,7 @@ def completed_record(base, policy, spec, seed):
 def check_scene(base, policy, spec, seed, instruction, obs, env, path):
     """X-VLA establishes each scene; subsequent policies must match it exactly."""
     if spec['task'] == 'press_lift_bell':
+        from if_benchmark.seed_contracts import describe_seed
         from policies.xvla.client import encode_proprio
         evidence = read(base / 'manifests/press_lift_bell.generation.json')
         expected = next(e['diagnostics'] for b in evidence['blocks'] if b['accepted']
@@ -362,9 +363,11 @@ def check_scene(base, policy, spec, seed, instruction, obs, env, path):
         hashes = {k: dict(sha256=hashlib.sha256(v.tobytes()).hexdigest(),
                           dtype=str(v.dtype), shape=list(v.shape)) for k, v in arrays.items()}
         assert hashes == expected['initial_arrays'], ('Bell qualification scene differs', policy, seed)
-        assert instruction == expected['instruction'] and env.step_lim == expected['action_limit'] == 250
+        # A text-only manifest override retains the original scene qualification.
+        planned_instruction = spec['instructions'][describe_seed(spec['task'], seed).mode]
+        assert instruction == planned_instruction and env.step_lim == expected['action_limit'] == 250
         write(path('_manifest_scene.json'), dict(seed=seed, exact_rgb=True, exact_proprio=True,
-              instruction=instruction, action_limit=env.step_lim))
+              instruction=instruction, qualification_instruction=expected['instruction'], action_limit=env.step_lim))
     if policy == 'xvla':
         return
     import numpy as np

@@ -48,7 +48,7 @@ tasks:
     rejected_blocks: 0
   instructions:
     press: Press down on the bell.
-    lift: Pick up the bell.
+    lift: Lift the bell.
   action_limit: 250
   context_sampling_version: random-back-region-v1
   success_checker_version: press-lift-bell-v3-native-contacts-every-step
@@ -64,6 +64,17 @@ tasks:
     press_max_xy_m: 0.03
     top_xy_m: 0.025
     top_z_m: 0.03
+  instruction_override:
+    applied_at: '2026-10-26T02:47:48.796187+00:00'
+    reason: User requested overwriting this existing manifest release with the old
+      Lift instruction.
+    previous_instructions:
+      press: Press down on the bell.
+      lift: Pick up the bell.
+    previous_suite_sha256: adfa4a7bc69d7c8c6d7f29cb6da14d15bfb81bcda1de3d6065473e185402dd96
+    source_sha256:
+      tasks/envs/_press_lift_bell.py: abb8161ea42da08fa484065f68976599c1e23bb0aa885d522f441804d96e25cc
+      tasks/task_instruction/press_lift_bell.json: 72765f689ea09c49dbf6daf5dd5759ce9f3acc6bb2cfb3822f28083b8ee02848
 - task: pick_diverse_object
   task_config: demo_clean
   manifest: pick_diverse_object.json
