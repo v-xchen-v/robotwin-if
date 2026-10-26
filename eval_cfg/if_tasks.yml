@@ -24,7 +24,7 @@
 # See eval_cfg/README.md for axis mapping, readiness semantics, and eval caveats.
 
 tasks:
-  - press_lift_bell
+  - press_lift_stapler
   - pick_diverse_object
   - attribute_select
   - arm_select

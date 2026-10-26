@@ -29,6 +29,7 @@ MAINTAINED_TASKS = (
     "stack_sequence",
     "place_relative",
     "press_lift_bell",
+    "press_lift_stapler",
 )
 ENV_HELPERS = (
     "_if_grounding.py",
@@ -37,6 +38,7 @@ ENV_HELPERS = (
     "_pick_diverse_object_pool.py",
     "_if_eval.py",
     "_press_lift_bell.py",
+    "_press_lift_stapler.py",
 )
 
 BASE_TASK_METHODS = {

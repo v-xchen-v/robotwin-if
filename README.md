@@ -4,20 +4,20 @@
 
 | 诊断轴 | Task name | 对比值 |
 |---|---|---|
-| Verb-Select | [`press_lift_bell`](docs/press-lift-bell-experiment.md) | press / lift |
+| Verb-Select | [`press_lift_stapler`](docs/press-lift-stapler-experiment.md) | press / lift |
 | Noun-Grounding | [`pick_diverse_object`](#pick-diverse-object) | 仅按名词从同 familiarity group 中选择目标 |
 | Attribute-Select | [`attribute_select`](#attribute-select) | color / decal / shape / size |
 | Arm-Select | [`arm_select`](#arm-select) | left / right |
 | Sequence | [`stack_sequence`](#stack-sequence) | 六种 bottom-to-top 顺序 |
 | Spatial-Direction | [`place_relative`](#place-relative) | left / right / on top |
 
-Grasp-Approach 已于 2026-09-15 暂时下线；旧实现仅保留在 Git 历史中，见[下线说明](bak/grasp_cube_approach/README.md)。当前默认生成与评测包含以上六项；bridge 额外保留 `bottle_verb` 以加载旧清单。
+Grasp-Approach 已于 2026-09-15 暂时下线；旧实现仅保留在 Git 历史中，见[下线说明](bak/grasp_cube_approach/README.md)。当前默认生成与评测包含以上六项；bridge 额外保留 `bottle_verb` 和 `press_lift_bell` 以加载旧清单。
 
 默认 IF inventory 是 [`eval_cfg/if_tasks.yml`](eval_cfg/if_tasks.yml)。其他 env/JSON 可以为历史或实验目的留在仓库中，但只要没有列入该文件，就不属于默认 suite；版本化清单由各自 `suite.yml` 指定任务。Manifest membership 与 production readiness 分开管理：例如 `pick_diverse_object` 属于上述六项，其已锁定的四类 Unseen production pool 仍由独立测试 gate 持续约束。
 
 本仓库维护 benchmark task（场景、干扰物、指令模板、成功判定与评测语义），并在 [`policies/`](policies/README.md) 中维护 X-VLA、LingBot-VA 等开源策略的独立推理环境与适配代码，**不在本仓库训练模型**。模型服务与 RoboTwin 仿真使用不同的 Conda 环境；也可由外部 CogACT/X-VLA 集成提供推理。
 
-**当前清单：[Press/Lift Bell v1](seed-manifests/robotwin-if-press-lift-bell-v1-20-per-mode/README.md)**，用铃铛替换 Bottle，其余五份 seeds 不变。20 个配对 blocks 已通过 expert 和初始观测一致性检查；模型 eval 暂停，尚无本版正式模型成绩。
+**当前清单：[Press/Lift Stapler v1](seed-manifests/robotwin-if-press-lift-stapler-v1-20-per-mode/README.md)**，Verb 改为订书器 Press/Lift，其余五份 seeds 不变。订书器及 distractor 使用随机 yaw；20 个配对 blocks 经过 expert 和初始观测/位姿一致性检查。本版尚无正式模型成绩。
 
 **旧版结果包：[`result/robotwin-if-arm-only-v2-20blocks/`](result/robotwin-if-arm-only-v2-20blocks/README.md)** ·
 [HTML 报表](result/robotwin-if-arm-only-v2-20blocks/results.html) ·
@@ -366,7 +366,7 @@ bash scripts/eval.sh --policy hy_vla --sim-gpu 0 --model-gpu 1 \
 
 | Task | `step_lim` | Native structural analog |
 |---|---:|---|
-| `bottle_verb` | 700 | `shake_bottle`（取最长 shake branch） |
+| `press_lift_stapler` | 250 | `press_stapler` / `move_stapler_pad` 的抓起阶段 |
 | `pick_diverse_object` | 400 | single grasp/lift |
 | `attribute_select` | 400 | single grasp/lift |
 | `arm_select` | 400 | single grasp/lift |

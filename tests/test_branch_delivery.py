@@ -148,7 +148,7 @@ print('1, 10000, 40000, 40, 20')
                 run = self.run_launcher('--policy', policy, '--dry-run')
                 self.assertEqual(run.returncode, 0, run.stderr)
                 self.assertEqual(run.stdout.count('20 blocks,'), 6)
-                self.assertIn(str(ROOT / 'seed-manifests' / 'robotwin-if-press-lift-bell-v1-20-per-mode' / 'arm_select.json'), run.stdout)
+                self.assertIn(str(ROOT / 'seed-manifests' / 'robotwin-if-press-lift-stapler-v1-20-per-mode' / 'arm_select.json'), run.stdout)
                 protocol = 'http' if policy in ('xvla', 'dm05') else 'ws'
                 self.assertIn(f'{protocol}://127.0.0.1:{8010 + index}', run.stdout)
                 self.assertNotIn('grasp_cube_approach', run.stdout)
@@ -194,7 +194,7 @@ print('1, 10000, 40000, 40, 20')
 
     def test_hot_gpu_rejected_before_simulator_launch(self):
         self.env['FAKE_GPU_TEMP'] = '87'
-        run = self.run_launcher('--task', 'press_lift_bell')
+        run = self.run_launcher('--task', 'press_lift_stapler')
         self.assertEqual(run.returncode, 2, run.stderr)
         self.assertIn('GPU safety check failed', run.stderr)
         self.assertEqual(self.launched(), [])
@@ -202,7 +202,7 @@ print('1, 10000, 40000, 40, 20')
     def test_running_gpu_pressure_terminates_owned_simulator_process_group(self):
         pids = self.base / 'pids.json'
         self.env['FAKE_HANG'] = str(pids)
-        run = self.run_launcher('--task', 'press_lift_bell')
+        run = self.run_launcher('--task', 'press_lift_stapler')
         self.assertEqual(run.returncode, 2, run.stdout + run.stderr)
         self.assertIn('GPU safety check failed', run.stderr)
         self.assertEqual(len(self.launched()), 1)

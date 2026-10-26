@@ -27,8 +27,9 @@ TASKS = (
     "stack_sequence",
     "place_relative",
     "press_lift_bell",
+    "press_lift_stapler",
 )
-SIZES = (2, 2, 8, 2, 6, 3, 2)
+SIZES = (2, 2, 8, 2, 6, 3, 2, 2)
 
 
 class SeedContractTests(unittest.TestCase):
@@ -42,6 +43,7 @@ class SeedContractTests(unittest.TestCase):
     def test_pair_modes_and_shared_scenes(self):
         cases = {
             "press_lift_bell": ("press", "lift"),
+            "press_lift_stapler": ("press", "lift"),
             "bottle_verb": ("pick", "shake"),
             "arm_select": ("left", "right"),
             "grasp_cube_approach": ("top", "side"),

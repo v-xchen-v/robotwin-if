@@ -1,0 +1,64 @@
+{
+  "accepted_block_ids": [
+    55000,
+    55001,
+    55002,
+    55003,
+    55004,
+    55005,
+    55006,
+    55007,
+    55008,
+    55009,
+    55010,
+    55011,
+    55012,
+    55013,
+    55014,
+    55015,
+    55016,
+    55017,
+    55018,
+    55019
+  ],
+  "accepted_blocks": 20,
+  "candidate_blocks": 20,
+  "failure_categories": {},
+  "rejected_block_ids": [],
+  "rejected_blocks": 0,
+  "press_episodes": 20,
+  "lift_episodes": 20,
+  "paired_initial_arrays_and_poses_equal": 20,
+  "rotation_sampling_version": "random-yaw-v1",
+  "coverage": [
+    {
+      "stapler_id": 0,
+      "side": "left",
+      "blocks": 5
+    },
+    {
+      "stapler_id": 0,
+      "side": "right",
+      "blocks": 5
+    },
+    {
+      "stapler_id": 4,
+      "side": "left",
+      "blocks": 5
+    },
+    {
+      "stapler_id": 4,
+      "side": "right",
+      "blocks": 5
+    }
+  ],
+  "inherited_tasks": [
+    "pick_diverse_object",
+    "attribute_select",
+    "arm_select",
+    "stack_sequence",
+    "place_relative"
+  ],
+  "inherited_episodes_per_policy": 420,
+  "fresh_model_episodes": 0
+}

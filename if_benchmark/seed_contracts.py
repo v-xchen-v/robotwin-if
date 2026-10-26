@@ -94,10 +94,14 @@ IF_SEED_CONTRACTS = {
     "press_lift_bell": SeedContract(
         task="press_lift_bell", modes=("press", "lift"), scene_span=2,
     ),
+    "press_lift_stapler": SeedContract(
+        task="press_lift_stapler", modes=("press", "lift"), scene_span=2,
+    ),
 }
 
-LEGACY_SUITE_TASKS = tuple(t for t in IF_SEED_CONTRACTS if t != "press_lift_bell")
-CURRENT_SUITE_TASKS = ("press_lift_bell", *LEGACY_SUITE_TASKS[1:])
+LEGACY_SUITE_TASKS = tuple(t for t in IF_SEED_CONTRACTS if t not in ("press_lift_bell", "press_lift_stapler"))
+BELL_SUITE_TASKS = ("press_lift_bell", *LEGACY_SUITE_TASKS[1:])
+CURRENT_SUITE_TASKS = ("press_lift_stapler", *LEGACY_SUITE_TASKS[1:])
 
 # Read-only metadata for validating archived manifests/results. Not an active task.
 ARCHIVED_SEED_CONTRACTS = {
@@ -133,7 +137,7 @@ def observed_mode(task_name, task):
     """Read the actual scene mode using the same labels as the seed contract."""
     if task_name not in IF_SEED_CONTRACTS:
         raise ValueError(f"Task is not active: {task_name}")
-    if task_name in ("bottle_verb", "arm_select", "press_lift_bell"):
+    if task_name in ("bottle_verb", "arm_select", "press_lift_bell", "press_lift_stapler"):
         return str(task.mode)
     if task_name == "pick_diverse_object":
         return str(task.target_familiarity)

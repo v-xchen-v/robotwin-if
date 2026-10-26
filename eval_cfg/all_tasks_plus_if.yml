@@ -74,7 +74,7 @@ tasks:
   - stamp_seal
   - turn_switch
   # ---- maintained RoboTwin-IF (6; exact if_tasks.yml order) ----
-  - press_lift_bell
+  - press_lift_stapler
   - pick_diverse_object
   - attribute_select
   - arm_select

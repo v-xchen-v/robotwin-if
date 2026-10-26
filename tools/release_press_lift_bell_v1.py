@@ -15,7 +15,7 @@ import yaml
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
-from if_benchmark.seed_contracts import CURRENT_SUITE_TASKS
+from if_benchmark.seed_contracts import BELL_SUITE_TASKS
 from if_benchmark.seed_generation import validate_generation_evidence
 from if_benchmark.seed_manifest import load_manifest, manifest_sha256, validate_manifest
 from if_benchmark.seed_modes import check_seed_modes, export_texts
@@ -23,7 +23,7 @@ from tasks.envs._press_lift_bell import BellMonitor, BellRules, CONTEXT_LAYOUT_V
 from tools.release_history import REVISION
 
 NAME = 'robotwin-if-press-lift-bell-v1-20-per-mode'
-RELEASE = ROOT / 'seed-manifests' / NAME
+RELEASE = ROOT / 'bak' / NAME
 PARENT = ROOT / 'seed-manifests/robotwin-if-arm-only-v2-20-per-mode'
 
 
@@ -134,7 +134,7 @@ def build(run, base=RELEASE):
     write(base / 'qualification-summary.json', dict(
         **evidence['summary'], press_episodes=20, lift_episodes=20, paired_initial_arrays_equal=20,
         coverage=[dict(bell_id=model, side=side, blocks=count) for (model, side), count in sorted(coverage.items())],
-        inherited_tasks=list(CURRENT_SUITE_TASKS[1:]), inherited_episodes_per_policy=420,
+        inherited_tasks=list(BELL_SUITE_TASKS[1:]), inherited_episodes_per_policy=420,
         fresh_model_episodes=0))
     (base / 'verify.py').write_text('''#!/usr/bin/env python3
 from pathlib import Path
@@ -189,7 +189,7 @@ def verify(base=RELEASE):
         assert path.resolve().is_relative_to(base.resolve()) and digest(path) == sha, name
     suite = yaml.safe_load((base / 'suite.yml').read_text())
     parent = yaml.safe_load((base / 'qualification/parent-suite.yml').read_text())
-    assert tuple(t['task'] for t in suite['tasks']) == CURRENT_SUITE_TASKS
+    assert tuple(t['task'] for t in suite['tasks']) == BELL_SUITE_TASKS
     assert not (base / 'bottle_verb.json').exists()
     check_seed_modes(base)
     total = 0

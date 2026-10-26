@@ -1,6 +1,8 @@
 # Balanced Seed Manifest 使用指南
 
-当前维护六项任务；Grasp-Approach 已归档到 [bak/](../bak/grasp_cube_approach/README.md)。旧七任务发布目录仅作历史证据，当前正式清单见 [六任务 20-block release](../seed-manifests/robotwin-if-arm-only-v2-20-per-mode/README.md)。
+当前维护六项任务；Grasp-Approach 已归档到 [bak/](../bak/grasp_cube_approach/README.md)。旧七任务发布目录仅作历史证据，当前正式清单见 [六任务 20-block release](../seed-manifests/robotwin-if-press-lift-stapler-v1-20-per-mode/README.md)。
+
+当前 Verb 为 `press_lift_stapler`（press / lift），每个 block 两回合。下文 Bottle 示例仍展示兼容旧任务的通用 API；默认 `--all` 使用当前六任务清单。
 
 本文面向两类使用者：
 
@@ -85,7 +87,7 @@ bash scripts/bridge_tasks.sh --check
 `--check` 应显示：
 
 ```text
-check passed: 17 owned links
+check passed: 23 owned links
 ```
 
 生成期间不要修改以下输入：

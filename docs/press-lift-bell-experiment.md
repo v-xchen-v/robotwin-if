@@ -6,7 +6,7 @@
 本任务在铃铛、鼠标、玩具车的共享场景中，用一个可移动铃铛比较 `Press down on the bell.` 和 `Lift the bell.`。去掉第二个目标、搬运和长时间悬停，
 测试第一项完成的动作是否符合指令；历史实验结果不加入正式六任务成绩。
 
-2026-10-23 已生成 [Press/Lift Bell v1 六任务清单](../seed-manifests/robotwin-if-press-lift-bell-v1-20-per-mode/README.md)，
+2026-10-23 已生成 [Press/Lift Bell v1 六任务清单](../bak/robotwin-if-press-lift-bell-v1-20-per-mode/README.md)（现已归档，默认清单改为 Stapler），
 用本任务替换旧 `bottle_verb`，其余五份 seeds 不变。铃铛固定为 20 blocks、40 回合（episode seeds `100000–100039`），
 本次 expert 全通过，20 组初始 RGB/proprio 全部相同；两种铃铛模型 × 左右侧各 5 组。
 bridge、seed contract 与六个 policy evaluator 的 `--seed-manifest` 入口已经接通；bash 入口 `scripts/eval.sh` 使用 `--manifest-dir`。

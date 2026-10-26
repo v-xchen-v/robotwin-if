@@ -278,9 +278,9 @@ def _generate_task(collect_data, task_name, args, provenance):
         checkpoint(state)
         task, task_args = _load_task(collect_data, task_name, args.task_config)
         bell_audit = None
-        if task_name == "press_lift_bell":
+        if task_name in ("press_lift_bell", "press_lift_stapler"):
             from tools.bell_seed_audit import BellSeedAudit
-            bell_audit = BellSeedAudit(args.output_dir / "press_lift_bell-observations")
+            bell_audit = BellSeedAudit(args.output_dir / f"{task_name}-observations", task_name)
 
         def probe(seed):
             return _probe_seed(task_name, task, task_args, seed, bell_audit)

@@ -1,0 +1,6 @@
+{
+  "full_description": "Press down on the stapler, or lift the same stapler.",
+  "schema": "{I} is the fixed mode-selected instruction: 'Press down on the stapler.' or 'Lift the stapler.'. Preserve it exactly. Both share the object phrase 'the stapler'; only the action phrase changes. Seen/unseen are interface aliases, not distinct language pools.",
+  "seen": ["{I}"],
+  "unseen": ["{I}"]
+}

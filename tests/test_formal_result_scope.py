@@ -14,10 +14,12 @@ class ResultScopeTest(unittest.TestCase):
         self.addCleanup(tmp.cleanup)
         self.base = Path(tmp.name)
 
-    def fixture(self, historical=True, incomplete_grasp=False, bell=False):
+    def fixture(self, historical=True, incomplete_grasp=False, bell=False, stapler=False):
         tasks = list(report.TASKS) + (list(report.ARCHIVED_TASKS) if historical else [])
         if bell:
             tasks[0] = 'press_lift_bell'
+        if stapler:
+            tasks[0] = 'press_lift_stapler'
         specs = [dict(task=t, seeds=list(expand_block(t, 0, legacy=historical))) for t in tasks]
         rows = []
         for policy in report.POLICIES:
@@ -27,7 +29,7 @@ class ResultScopeTest(unittest.TestCase):
                 modes = {}
                 for seed in spec['seeds']:
                     mode = describe_seed(task, seed).mode
-                    success = task not in ('bottle_verb', 'press_lift_bell')
+                    success = task not in ('bottle_verb', 'press_lift_bell', 'press_lift_stapler')
                     modes[mode] = dict(recorded=int(seed not in pending), successes=int(success and seed not in pending))
                     if seed in pending:
                         continue
@@ -102,6 +104,16 @@ class ResultScopeTest(unittest.TestCase):
             self.assertIn(label, (self.base / 'report.md').read_text())
             self.assertIn(label, (self.base / 'report.html').read_text())
             self.assertAlmostEqual(data['policies']['xvla']['overall_pct'], 500/6)
+
+    def test_stapler_replaces_bell_and_bottle_without_changing_denominators(self):
+        self.fixture(historical=False, stapler=True)
+        data = report.snapshot(self.base)
+        self.assertEqual(data['tasks'][0], 'press_lift_stapler')
+        self.assertFalse({'bottle_verb', 'press_lift_bell'} & set(data['tasks']))
+        self.assertEqual(data['summary']['expected_episodes'], 138)
+        self.assertAlmostEqual(data['policies']['xvla']['overall_pct'], 500/6)
+        report.generate(data, self.base / 'stapler.md')
+        self.assertIn('Verb Stapler', (self.base / 'stapler.md').read_text())
 
 
 if __name__ == '__main__':

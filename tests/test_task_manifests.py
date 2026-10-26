@@ -75,7 +75,7 @@ NATIVE_TASKS = (
 )
 
 IF_TASKS = (
-    "press_lift_bell",
+    "press_lift_stapler",
     "pick_diverse_object",
     "attribute_select",
     "arm_select",
@@ -83,7 +83,7 @@ IF_TASKS = (
     "place_relative",
 )
 
-BRIDGE_TASKS = ("bottle_verb", *IF_TASKS[1:], "press_lift_bell")
+BRIDGE_TASKS = ("bottle_verb", *IF_TASKS[1:], "press_lift_bell", "press_lift_stapler")
 
 INACTIVE_TASKS = {
     "grasp_cube_approach",
@@ -101,6 +101,7 @@ BRIDGE_HELPERS = (
     "_pick_diverse_object_pool.py",
     "_if_eval.py",
     "_press_lift_bell.py",
+    "_press_lift_stapler.py",
 )
 
 _results = []
@@ -145,7 +146,7 @@ def main():
     check(
         "seed-contract balance block sizes are exact",
         tuple(contract.block_size for contract in IF_SEED_CONTRACTS.values())
-        == (2, 2, 8, 2, 6, 3, 2),
+        == (2, 2, 8, 2, 6, 3, 2, 2),
     )
     check(
         "all_tasks_plus_if.yml is exact native-50 + IF-six",
@@ -197,7 +198,7 @@ def main():
     )
     check("bridge env task order is canonical", desired_env_tasks == BRIDGE_TASKS)
     check("bridge instruction order is canonical", desired_instructions == BRIDGE_TASKS)
-    check("bridge owns exactly 20 task plugin links", len(desired) == 20)
+    check("bridge owns exactly 23 task plugin links", len(desired) == 23)
 
     for helper in BRIDGE_HELPERS:
         check(f"bridge helper exists: {helper}", (REPO / "tasks/envs" / helper).is_file())

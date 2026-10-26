@@ -105,6 +105,10 @@ def current_success_checker(task):
         from tasks.envs._press_lift_bell import BellMonitor, BellRules
         return dict(success_checker_version=BellMonitor.VERSION,
                     success_checker_parameters=asdict(BellRules()))
+    if task == 'press_lift_stapler':
+        from tasks.envs._press_lift_stapler import StaplerMonitor, stapler_rules
+        return dict(success_checker_version=StaplerMonitor.VERSION,
+                    success_checker_parameters=StaplerMonitor(stapler_rules()).signals()['thresholds'])
     if task == 'bottle_verb':
         return dict(success_checker_version=PickHoldMonitor.VERSION,
                     success_checker_parameters=asdict(PickHoldRules()))
@@ -352,17 +356,17 @@ def completed_record(base, policy, spec, seed):
 
 def check_scene(base, policy, spec, seed, instruction, obs, env, path):
     """X-VLA establishes each scene; subsequent policies must match it exactly."""
-    if spec['task'] == 'press_lift_bell':
+    if spec['task'] in ('press_lift_bell', 'press_lift_stapler'):
         from if_benchmark.seed_contracts import describe_seed
         from policies.xvla.client import encode_proprio
-        evidence = read(base / 'manifests/press_lift_bell.generation.json')
+        evidence = read(base / 'manifests' / f"{spec['task']}.generation.json")
         expected = next(e['diagnostics'] for b in evidence['blocks'] if b['accepted']
                         for e in b['episodes'] if e['seed'] == seed)
         arrays = {c: obs['observation'][c]['rgb'] for c in ('head_camera', 'left_camera', 'right_camera')}
         arrays['proprio'] = encode_proprio(obs)
         hashes = {k: dict(sha256=hashlib.sha256(v.tobytes()).hexdigest(),
                           dtype=str(v.dtype), shape=list(v.shape)) for k, v in arrays.items()}
-        assert hashes == expected['initial_arrays'], ('Bell qualification scene differs', policy, seed)
+        assert hashes == expected['initial_arrays'], ('Press/Lift qualification scene differs', policy, seed)
         # A text-only manifest override retains the original scene qualification.
         planned_instruction = spec['instructions'][describe_seed(spec['task'], seed).mode]
         assert instruction == planned_instruction and env.step_lim == expected['action_limit'] == 250
@@ -390,8 +394,8 @@ def check_scene(base, policy, spec, seed, instruction, obs, env, path):
 
 
 def check_active_tasks(specs):
-    from if_benchmark.seed_contracts import IF_SEED_CONTRACTS, CURRENT_SUITE_TASKS, LEGACY_SUITE_TASKS
-    assert tuple(s['task'] for s in specs) in (CURRENT_SUITE_TASKS, LEGACY_SUITE_TASKS), 'Formal runs require a complete six-task release inventory'
+    from if_benchmark.seed_contracts import IF_SEED_CONTRACTS, CURRENT_SUITE_TASKS, LEGACY_SUITE_TASKS, BELL_SUITE_TASKS
+    assert tuple(s['task'] for s in specs) in (CURRENT_SUITE_TASKS, LEGACY_SUITE_TASKS, BELL_SUITE_TASKS), 'Formal runs require a complete six-task release inventory'
     from if_benchmark.seed_contracts import validate_active_seeds
     for spec in specs:
         if 'modes' in spec:

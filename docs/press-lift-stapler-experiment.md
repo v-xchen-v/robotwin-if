@@ -1,8 +1,9 @@
 # Press / Lift Stapler feasibility
 
-Experimental candidate for the verb task. The maintained six-task suite and its
-20-block bell manifest remain unchanged. This pilot first qualifies four paired
-scenes, then evaluates LingBot-VA and X-VLA on all eight episodes each.
+Current Verb-Select task in the [six-task, 20-block release](../seed-manifests/robotwin-if-press-lift-stapler-v1-20-per-mode/README.md).
+The randomized scene is qualified on 20 pairs (40/40 expert successes), with the
+other five task manifests inherited unchanged. The model results below are from
+the earlier four-pair pilot with fixed rotations; formal model eval has not run.
 
 ## Scene and instructions
 
@@ -96,8 +97,9 @@ python tools/press_lift_stapler.py --policy lingbot_va \
   --scene-seeds 50000 50001 50002 50003 --output-dir <new-policy-run>
 ```
 
-No bridge installation or formal seed-contract registration is required. The
-runner extends RoboTwin's environment search path only in its own process. Model
+The isolated pilot runner extends RoboTwin's environment search path only in its
+own process. Formal manifest generation and evaluation use the registered seed
+contract and `scripts/bridge_tasks.sh` installation. Model
 failures are retained; infrastructure or oracle errors stop the pilot. Source
 hashes, server launch arguments, source snapshots, per-episode videos and physics
 traces are recorded.

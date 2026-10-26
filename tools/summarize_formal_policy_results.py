@@ -33,7 +33,10 @@ TASKS = {
 ARCHIVED_TASKS = {
     'grasp_cube_approach': ('Grasp v2 wide-r1', [('Top', ['top']), ('Side', ['side'])]),
 }
-TASK_COLUMNS = TASKS | {'press_lift_bell': ('Verb Bell', [('Press', ['press']), ('Lift', ['lift'])])} | ARCHIVED_TASKS
+TASK_COLUMNS = TASKS | {
+    task: (label, [('Press', ['press']), ('Lift', ['lift'])])
+    for task, label in (('press_lift_bell', 'Verb Bell'), ('press_lift_stapler', 'Verb Stapler'))
+} | ARCHIVED_TASKS
 LEGACY_SPATIAL_COLUMNS = [(x.title(), [x]) for x in ("left", "right", "front", "back")] + [("Top", ["on_top"])]
 
 def columns_for(task, modes):
@@ -92,8 +95,9 @@ def snapshot(base, include_archived_tasks=False, include_archived_modes=False):
     plan = read(base/'plan.json')
     assert plan['policies'] == list(POLICIES)
     planned = {r['task'] for r in plan['tasks']}
-    from if_benchmark.seed_contracts import CURRENT_SUITE_TASKS, LEGACY_SUITE_TASKS
-    inventory = CURRENT_SUITE_TASKS if 'press_lift_bell' in planned else LEGACY_SUITE_TASKS
+    from if_benchmark.seed_contracts import CURRENT_SUITE_TASKS, LEGACY_SUITE_TASKS, BELL_SUITE_TASKS
+    inventory = (CURRENT_SUITE_TASKS if 'press_lift_stapler' in planned else
+                 BELL_SUITE_TASKS if 'press_lift_bell' in planned else LEGACY_SUITE_TASKS)
     assert set(inventory) <= planned <= set(inventory) | set(ARCHIVED_TASKS)
     task_names = list(inventory) + [t for t in ARCHIVED_TASKS if t in planned and include_archived_tasks]
     assert len(planned) == len(plan['tasks'])

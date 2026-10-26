@@ -20,7 +20,7 @@ class CurrentReleaseTest(unittest.TestCase):
         for parent, name in [('seed-manifests', 'robotwin-if-arm-only-v2-20-per-mode'),
                              ('result', 'robotwin-if-arm-only-v2-20blocks')]:
             entries = list((ROOT / parent).iterdir())
-            expected = [name, 'robotwin-if-press-lift-bell-v1-20-per-mode'] if parent == 'seed-manifests' else [name]
+            expected = [name, 'robotwin-if-press-lift-stapler-v1-20-per-mode'] if parent == 'seed-manifests' else [name]
             self.assertEqual(sorted(p.name for p in entries if p.is_dir()), sorted(expected))
             self.assertFalse(any(p.is_symlink() for p in entries))
             self.assertFalse((ROOT / (parent + '-archive')).exists())

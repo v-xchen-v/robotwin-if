@@ -4,7 +4,7 @@
 
 | Axis | Task name | Values / contrast |
 |---|---|---|
-| Verb-Select | `press_lift_bell` | press / lift |
+| Verb-Select | `press_lift_stapler` | press / lift |
 | Noun-Grounding | `pick_diverse_object` | noun-only target grounding |
 | Attribute-Select | `attribute_select` | color / decal / shape / size |
 | Arm-Select | `arm_select` | left / right |
@@ -54,7 +54,7 @@ Task-local setup (including `_if_eval.py` for the existing tasks) applies these 
 
 | Task | Policy action limit |
 |---|---:|
-| `press_lift_bell` | 250 |
+| `press_lift_stapler` | 250 |
 | `bottle_verb` (legacy release) | 700 |
 | `pick_diverse_object` | 400 |
 | `attribute_select` | 400 |
@@ -85,7 +85,7 @@ Formal IF results instead replay one precomputed list shared by every policy. `t
 
 | Task | Balance block | Same-scene structure |
 |---|---:|---|
-| `press_lift_bell` | 2 | one press/lift pair; all initial RGB/state arrays identical |
+| `press_lift_stapler` | 2 | one press/lift pair; all initial RGB/state arrays identical |
 | `bottle_verb` (legacy release) | 2 | one pick/shake pair |
 | `pick_diverse_object` | 2 | seen/unseen are independent scenes |
 | `attribute_select` | 8 | four independent two-seed axis pairs |
