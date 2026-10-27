@@ -1,144 +1,57 @@
-# Press / Lift Stapler feasibility
+# Press / Lift Stapler v1：当前场景、指令与判据
 
-Current Verb-Select task in the [six-task, 20-block release](../seed-manifests/robotwin-if-press-lift-stapler-v1-20-per-mode/README.md).
-The randomized scene is qualified on 20 pairs (40/40 expert successes), with the
-other five task manifests inherited unchanged. The model results below are from
-the earlier four-pair pilot with fixed rotations; formal model eval has not run.
+当前 Verb-Select 任务为 `press_lift_stapler`，属于[六任务、每任务 20 blocks 的正式清单](../seed-manifests/robotwin-if-press-lift-stapler-v1-20-per-mode/README.md)。
+随机朝向场景完成 20 组资格筛选，expert Press 20/20、Lift 20/20；六个开源 checkpoint 的正式评测也已完成，见[结果包](../result/robotwin-if-press-lift-stapler-v1-20blocks/README.md)。
+固定朝向的四场景试验已整理为[历史 pilot](archive/press-lift-stapler-pilot.md)。
 
-## Scene and instructions
+## 指令与场景
 
 | Mode | Instruction |
 |---|---|
 | press | `Press down on the stapler.` |
 | lift | `Lift the stapler.` |
 
-Both `seen` and `unseen` return the same mode-specific sentence. Episode `2k` is
-Press and `2k+1` is Lift; the entire initial setup uses scene seed `k`. The first
-pilot fixes scenes `50000–50003` / episodes `100000–100007` before qualification
-or inference. Native stapler models 0 and 4 each appear on the left and right.
+对象短语均为 `the stapler`，只改变动作短语。`seen` / `unseen` 返回相同的 mode 指令，是接口别名。
+Episode seed `2k` 为 Press，`2k+1` 为 Lift；初始场景使用 scene seed `k`。
+正式 seeds 为 `110000–110039`，包含 20 个配对场景。
 
-Native `move_stapler_pad` has eligible seen templates `Lift {A} to the {B} mat
-using {a}`, `Lift {A} and drop it onto {B} mat`, and `Pick up {A} and place it on
-{B} mat`. With the native `{A}/{B}/{a}` episode parameters, 49 seen templates
-survive filtering, including both Lift templates. `{A}` expands to an asset
-description such as `the red stapler`. Thus `Lift the stapler.` uses a native
-verb but removes the destination, placement action, and detailed noun phrase;
-it is not an exact native full-task sentence. Template counts do not establish
-the actual training frequency of a checkpoint.
+目标使用原生 `048_stapler` 的 model 0 / 4，两个 modes 都是质量 0.05 kg 的动态物体。
+目标左右位置和干扰物位置由 scene seed 决定；干扰物为鼠标、玩具车，场景没有目标垫。
+订书器绕世界 Z 轴随机旋转 ±15°；两个干扰物分别在 ±180° 内随机旋转。
+各物体使用独立的随机流，Press/Lift 配对共享位置、朝向、三路初始 RGB 与机器人状态。
 
-The target is dynamic, 0.05 kg, in both modes. It uses the native resting pose,
-with x magnitude 0.14–0.19 m and y between -0.15 and -0.10 m. The mouse and toycar
-use the bell experiment's deterministic `random-back-region-v1` sampler. There
-is no destination mat. The completed model pilot below used the fixed quaternion
-`[0.5, 0.5, 0.5, 0.5]` for all three actors. The current implementation adds
-world-Z yaw (`random-yaw-v1`): stapler uniformly within +/-15 degrees, mouse and
-toycar independently within +/-180 degrees. Each actor uses a separate scene-seed
-stream, leaving position sampling unchanged. Press/Lift pairs share the same
-rotations. The earlier model scores apply to the fixed-rotation scenes only.
-Three initial RGB arrays and robot proprioception must
-match exactly within each pair and between expert and policy setup.
+原生 `move_stapler_pad` 包含 Lift / Pick up 动作以及后续放到垫上的步骤。
+当前 Lift 保留抓持和抬升动作，去掉目的地、放置动作和详细对象描述；它不是原生完整任务句子的逐字复制。
+原生模板中存在某个动作，不等于某个 checkpoint 见过这条独立指令。
 
-Rotation validation (2026-10-26): expert Press 4/4, Lift 4/4. All four pairs have
-identical initial RGB, proprioception, positions and quaternions. Model evaluation
-has not been rerun with randomized rotations.
+## 成功判据
 
-## Native action and checker alignment
+版本：`press-lift-stapler-v1-native-press-contact`。两个 modes 的预算都是 **250 次 policy action**。
 
-Native `press_stapler` uses `048_stapler` contact point 2, with a +/- 3 cm contact
-window. It uses a static target and ends upon contact; it does not require a
-retreat. Native `move_stapler_pad` grasps the same asset, lifts it 10 cm, then
-places it on a mat. The pilot uses its grasp/lift prefix.
+- **Press**：夹爪已闭合至少 0.08 秒，向下接近至少 5 mm，在原生 contact point 2 附近的 ±3 cm 窗口内接触；目标仍由桌面支撑，抬升不超过 1.5 cm、横向位移不超过 3 cm。接触满足条件即完成，不要求撤离。
+- **Lift**：目标相对初始高度抬升至少 3 cm，与闭合夹爪接触，并连续至少 0.1 秒离开桌面。
+- **动作顺序**：第一个完成的动作锁定分类。完成另一个动作后，再执行指令要求的动作不能修正本回合结果。
+- **采样**：每个实际物理步读取接触与状态，当前 timestep 为 4 ms，保留零冲量接触点。
 
-`StaplerMonitor` reuses the bell first-action classifier with two changes: the
-native stapler contact window is 3 cm, and Press completes on qualifying contact
-without waiting for a retreat. Its version is
-`press-lift-stapler-v1-native-press-contact`.
+原生 `press_stapler` 使用静态目标和接触即成功条件；当前任务使用动态目标，并增加动作区分条件。
+`native_press_success` 仅作为原生接触条件的诊断，最终成绩使用上述任务判据。
+实现见 [`press_lift_stapler.py`](../tasks/envs/press_lift_stapler.py) 和 [`StaplerMonitor`](../tasks/envs/_press_lift_stapler.py)。
 
-- Press: gripper already closed for at least 0.08 s, downward approach at least
-  5 mm, first contact near point 2, table support, target rise no more than 1.5 cm
-  and lateral displacement no more than 3 cm.
-- Lift: target rises at least 3 cm, has closed-gripper contact and no table
-  contact for at least 0.1 s.
-- First completed action locks the verdict; doing the other action later cannot
-  repair an incorrect first action. Closing an open gripper onto the target does
-  not satisfy the preclosed Press approach gate.
-- Native contact reports include zero-impulse points and are sampled at every
-  actual physics step (4 ms). `native_press_success` separately reports the weaker
-  native contact-only condition; it is not the scored verdict.
-- Both modes have a 250-policy-action budget. The expert additionally retreats
-  after pressing for observation, but the policy is not required to retreat.
+## 正式模型结果
 
-The native static Press result is not directly comparable to this dynamic target
-and stronger action-discrimination condition. Existing model success on a
-multi-step placement task also does not establish success on the isolated Lift
-sentence.
-
-## Qualification and execution
-
-The expert uses absolute 2 mm downward waypoints over the native 8 cm approach,
-stopping on contact. Relative waypoints from the measured EE pose accumulated
-tracking shortfall on model 4; the first qualification attempt retained those
-two Press failures. This was corrected without changing seeds, scenes or success
-thresholds. The final checker also removes the native-absent retreat requirement.
-
-Final qualification: **Press 4/4, Lift 4/4, both actions 4/4 pairs**. All paired
-initial arrays are exact; they also match across the retained oracle revisions.
-The pilot is stored at
-`outputs/policy-eval/press-lift-stapler-feasibility-4pairs-001/` (an alias to `/Data`).
-`preflight-validation.json` records these checks; `preflight-v3/` contains the
-qualified source snapshots and observations. Earlier attempts remain available.
-
-```bash
-python tools/press_lift_stapler.py --policy oracle \
-  --scene-seeds 50000 50001 50002 50003 --output-dir <new-run>
-
-# Start the chosen policy server separately, then:
-python tools/press_lift_stapler.py --policy lingbot_va \
-  --scene-seeds 50000 50001 50002 50003 --output-dir <new-policy-run>
-```
-
-The isolated pilot runner extends RoboTwin's environment search path only in its
-own process. Formal manifest generation and evaluation use the registered seed
-contract and `scripts/bridge_tasks.sh` installation. Model
-failures are retained; infrastructure or oracle errors stop the pilot. Source
-hashes, server launch arguments, source snapshots, per-episode videos and physics
-traces are recorded.
-
-## Completed model pilot (2026-10-26)
-
-| Policy | Press | Lift | Both actions in the same scene |
+| Policy | Press | Lift | 同场景双成功 |
 |---|---:|---:|---:|
-| Expert | 4/4 | 4/4 | 4/4 |
-| LingBot-VA | 4/4 | 0/4 | 0/4 |
-| X-VLA | 0/4 | 3/4 | 0/4 |
+| X-VLA | 9/20 | 15/20 | 7/20 |
+| LingBot-VA | 18/20 | 0/20 | 0/20 |
+| LingBot-VLA | 18/20 | 1/20 | 1/20 |
+| VLAct All | 20/20 | 16/20 | 16/20 |
+| DM05 | 20/20 | 12/20 | 12/20 |
+| Hy-VLA | 17/20 | 18/20 | 17/20 |
 
-All eight LingBot-VA episodes classify Press as their first completed action.
-X-VLA lifts successfully under three of four Lift instructions. Under Press,
-it lifts in the two model-0 scenes and completes neither action in the two
-model-4 scenes. The remaining Lift failure is model 4 on the right; its maximum
-rise is 8.18 mm, below the 30 mm threshold.
+这些成绩来自随机朝向、固定 seeds 的正式清单。Stapler 新跑 240 回合，其余五任务复用 2520 回合；早期 pilot 不混入统计。
+模型成功、policy failure 和初始场景校验均按正式流程保留。
 
-For X-VLA Press seed 100004, the physics trace has one initial contact at
-19.176 s with the gripper still open. It satisfies the native contact diagnostic,
-but not the pilot's already-closed downward Press approach. This distinction is
-preserved in the result, without changing the checker after inference.
-
-This establishes that X-VLA can lift the stapler with the current short sentence
-on these scenes. Neither tested model succeeds on both verbs within a scene.
-The pilot therefore supports further investigation, but does not yet establish
-reliable verb following or justify a formal manifest replacement. It also does
-not isolate wording, object geometry, or scene appearance as the cause of a
-model's behavior. Native training-template availability is not evidence that a
-checkpoint was trained on the exact isolated Lift instruction.
-
-Both policy validations pass with exact initial scenes, unchanged qualified
-sources, and all 16 planned episodes retained. All 16 videos decode with
-`action_calls + 1` frames. Correct-action episodes stop on success; failures run
-to 250 actions, so maximum heights have different observation windows. These
-findings use the checker and physics traces; no manual visual review is claimed.
-The pilot servers and simulators have stopped. The formal bell evaluation remains
-paused.
-
-- [Per-episode results and video index](../outputs/policy-eval/press-lift-stapler-feasibility-4pairs-001/README.md)
-- [Machine-readable results and artifact hashes](../outputs/policy-eval/press-lift-stapler-feasibility-4pairs-001/pilot-summary.json)
-- [Video viewer](http://127.0.0.1:8896/)
+[当前视频示例](assets/stapler-v1-demos/press_lift_stapler.mp4) ·
+[逐回合诊断](../result/robotwin-if-press-lift-stapler-v1-20blocks/stapler-episodes.json) ·
+[完整六任务结果](../result/robotwin-if-press-lift-stapler-v1-20blocks/README.md) ·
+[新评测入口](branch-delivery.md)

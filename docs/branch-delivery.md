@@ -41,7 +41,7 @@ ln -s "$PWD/tasks/task_config/demo_clean_arm_select_v3.yml" \
 python tools/export_seed_modes.py --check
 ```
 
-配置已正确安装时无需重复 `ln -s`。外部/不同 commit 的 runtime 按根 README 使用
+配置已正确安装时无需重复 `ln -s`。外部/不同 commit 的 runtime 按 [bridge 使用说明](task-bridge.md)使用
 `--robotwin-dir` 和经审阅的 `--allow-compatible-commit`；不应跳过 bridge 的静态 API 检查。
 不同机器的 renderer 可能产生不同初始像素，本脚本记录新运行，不宣称逐像素重现历史结果。
 

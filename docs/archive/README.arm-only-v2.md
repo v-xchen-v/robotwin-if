@@ -1,85 +1,42 @@
-# robotwin-if — Press/Lift Stapler v1（2026-10-26）
+# robotwin-if — Arm-only-v2 / Bottle（归档）
+
+> 本文归档替换 Stapler 之前的 README，来源提交 [`93d7271`](https://github.com/v-xchen-v/robotwin-if/commit/93d7271fc1ddda18822c30a2ee043cf946c3624f)。正文的“当前”指当时的 Bottle / Arm-only-v2；旧指令、成绩、视频及运行方式保留作历史参考。最新版本见[项目 README](../../README.md)。
 
 在 [RoboTwin 2.0](https://github.com/RoboTwin-Platform/RoboTwin) 上维护六个单轴 instruction-following diagnostic tasks。RoboTwin 以 git submodule 锁定；任务通过软链注入，**不 fork、不修改上游源码**。
 
 | 诊断轴 | Task name | 对比值 |
 |---|---|---|
-| Verb-Select | [`press_lift_stapler`](docs/press-lift-stapler-experiment.md) | press / lift |
+| Verb-Select | [`bottle_verb`](#bottle-verb) | pick / shake |
 | Noun-Grounding | [`pick_diverse_object`](#pick-diverse-object) | 仅按名词从同 familiarity group 中选择目标 |
 | Attribute-Select | [`attribute_select`](#attribute-select) | color / decal / shape / size |
 | Arm-Select | [`arm_select`](#arm-select) | left / right |
 | Sequence | [`stack_sequence`](#stack-sequence) | 六种 bottom-to-top 顺序 |
 | Spatial-Direction | [`place_relative`](#place-relative) | left / right / on top |
 
-Grasp-Approach 已于 2026-09-15 暂时下线；旧实现仅保留在 Git 历史中，见[下线说明](bak/grasp_cube_approach/README.md)。当前默认生成与评测包含以上六项；bridge 额外保留 `bottle_verb` 和 `press_lift_bell` 以加载旧清单。
+Grasp-Approach 已于 2026-09-15 暂时下线；旧实现仅保留在 Git 历史中，见[下线说明](../../bak/grasp_cube_approach/README.md)。当前默认生成、安装与评测均只包含以上六项。
 
-默认 IF inventory 是 [`eval_cfg/if_tasks.yml`](eval_cfg/if_tasks.yml)。其他 env/JSON 可以为历史或实验目的留在仓库中，但只要没有列入该文件，就不属于默认 suite；版本化清单由各自 `suite.yml` 指定任务。Manifest membership 与 production readiness 分开管理：例如 `pick_diverse_object` 属于上述六项，其已锁定的四类 Unseen production pool 仍由独立测试 gate 持续约束。
+唯一正式维护的 IF inventory 是 [`eval_cfg/if_tasks.yml`](../../eval_cfg/if_tasks.yml)。其他 env/JSON 可以为历史或实验目的留在仓库中，但只要没有列入该文件，就不属于 active suite。Manifest membership 与 production readiness 分开管理：例如 `pick_diverse_object` 属于上述六项，其已锁定的四类 Unseen production pool 仍由独立测试 gate 持续约束。
 
-本仓库维护 benchmark task（场景、干扰物、指令模板、成功判定与评测语义），并在 [`policies/`](policies/README.md) 中维护 X-VLA、LingBot-VA 等开源策略的独立推理环境与适配代码，**不在本仓库训练模型**。模型服务与 RoboTwin 仿真使用不同的 Conda 环境；也可由外部 CogACT/X-VLA 集成提供推理。
+本仓库维护 benchmark task（场景、干扰物、指令模板、成功判定与评测语义），并在 [`policies/`](../../policies/README.md) 中维护 X-VLA、LingBot-VA 等开源策略的独立推理环境与适配代码，**不在本仓库训练模型**。模型服务与 RoboTwin 仿真使用不同的 Conda 环境；也可由外部 CogACT/X-VLA 集成提供推理。
 
-**当前清单：[Press/Lift Stapler v1](seed-manifests/robotwin-if-press-lift-stapler-v1-20-per-mode/README.md)**，Verb 改为订书器 Press/Lift，其余五份 seeds 不变。订书器及 distractor 使用随机 yaw；20 个配对 blocks 经过 expert 和初始观测/位姿一致性检查。六模型评测已完成：新增 Stapler 240 回合，复用其余五任务 2520 回合，共 2760 回合、720 blocks。
+**当前结果包：[`result/robotwin-if-arm-only-v2-20blocks/`](https://github.com/v-xchen-v/robotwin-if/blob/93d7271fc1ddda18822c30a2ee043cf946c3624f/result/robotwin-if-arm-only-v2-20blocks/README.md)** ·
+[HTML 报表](https://github.com/v-xchen-v/robotwin-if/blob/93d7271fc1ddda18822c30a2ee043cf946c3624f/result/robotwin-if-arm-only-v2-20blocks/results.html) ·
+[逐回合 CSV](https://github.com/v-xchen-v/robotwin-if/blob/93d7271fc1ddda18822c30a2ee043cf946c3624f/result/robotwin-if-arm-only-v2-20blocks/episodes.csv)。
 
-**当前结果包：[`result/robotwin-if-press-lift-stapler-v1-20blocks/`](result/robotwin-if-press-lift-stapler-v1-20blocks/README.md)** ·
-[HTML 报表](result/robotwin-if-press-lift-stapler-v1-20blocks/results.html) ·
-[逐回合 CSV](result/robotwin-if-press-lift-stapler-v1-20blocks/episodes.csv)。
-
-本文件是 `README.ver20261026-stapler-v1.md` 版本快照，记录 2026-10-26 完成的 Stapler v1 评测；[项目最新 README](README.md)。
-
-**旧版结果包：[`result/robotwin-if-arm-only-v2-20blocks/`](https://github.com/v-xchen-v/robotwin-if/blob/ac582a75267126c7a8fe17c220475d517b73882b/result/robotwin-if-arm-only-v2-20blocks/README.md)** ·
-[HTML 报表](https://github.com/v-xchen-v/robotwin-if/blob/ac582a75267126c7a8fe17c220475d517b73882b/result/robotwin-if-arm-only-v2-20blocks/results.html) ·
-[逐回合 CSV](https://github.com/v-xchen-v/robotwin-if/blob/ac582a75267126c7a8fe17c220475d517b73882b/result/robotwin-if-arm-only-v2-20blocks/episodes.csv)。
-
-旧版 [RoboTwin-IF Arm-only-v2 taskset](seed-manifests/robotwin-if-arm-only-v2-20-per-mode/README.md)
+当前 [RoboTwin-IF Arm-only-v2 taskset](https://github.com/v-xchen-v/robotwin-if/blob/93d7271fc1ddda18822c30a2ee043cf946c3624f/seed-manifests/robotwin-if-arm-only-v2-20-per-mode/README.md)
 已完成六个 policies × 六任务 × 每任务 20 blocks：460 回合/policy，共 2760 回合、720 blocks。
-该版按 `target-arm-only-lift-v2` 重跑 Arm-Select 240 回合；其余五任务逐字节复用 Attribute-v2 的 2520 回合。
+本轮按 `target-arm-only-lift-v2` 重跑 Arm-Select 240 回合；其余五任务逐字节复用 Attribute-v2 的 2520 回合。
 保留 cube-v3 场景、Attribute target-only-lift-v2、Bottle v6 terminal 和 Spatial 三模式。
-详见[Arm 成功判据](docs/arm-select-target-arm-only.md)和[完整结果](https://github.com/v-xchen-v/robotwin-if/blob/ac582a75267126c7a8fe17c220475d517b73882b/result/robotwin-if-arm-only-v2-20blocks/README.md)。
-新旧 seed 清单与使用方法见 [seed-manifests](seed-manifests/README.md)。
-当前分支保留新旧两套清单与旧版结果；发布来源及完整审计见[溯源说明](docs/release-provenance.md)。
+详见[Arm 成功判据](../../docs/arm-select-target-arm-only.md)和[完整结果](https://github.com/v-xchen-v/robotwin-if/blob/93d7271fc1ddda18822c30a2ee043cf946c3624f/result/robotwin-if-arm-only-v2-20blocks/README.md)。
+Seed 清单的唯一正式入口与使用方法见 [seed-manifests](../../seed-manifests/README.md)。
+当前分支只提供最新版结果和清单；发布来源及完整审计见[溯源说明](../../docs/release-provenance.md)。
 
 <a id="policy-results"></a>
 
-## Press/Lift Stapler v1：当前评测结果
-
-2026-10-26 11:53 UTC 完成校验：六个 policies × 六任务 × 每任务 20 blocks，
-**2760/2760 回合、720/720 blocks**。其中 Stapler 新跑 240 回合，其余五任务的 2520 回合全部复用 Arm-only-v2，包含成功和失败。
-
-任务列为 **成功数 / 已评测回合数**。每个模型均完成 460 回合、120 blocks。
-
-| Policy | Verb Stapler | Noun | Attribute v2 | Arm cube-v3 / only-v2 | Sequence | Spatial | Overall (%) |
-|---|---:|---:|---:|---:|---:|---:|---:|
-| X-VLA | 24/40 | 15/40 | 73/160 | 5/40 | 0/120 | 6/60 | 27.6 |
-| LingBot-VA | 18/40 | 30/40 | 108/160 | 37/40 | 17/120 | 26/60 | 56.2 |
-| LingBot-VLA | 19/40 | 13/40 | 77/160 | 18/40 | 14/120 | 3/60 | 31.6 |
-| VLAct All | 36/40 | 28/40 | 108/160 | 29/40 | 15/120 | 19/60 | 57.4 |
-| DM05 | 32/40 | 25/40 | 88/160 | 25/40 | 9/120 | 20/60 | 50.1 |
-| Hy-VLA | 35/40 | 11/40 | 83/160 | 17/40 | 15/120 | 7/60 | 38.9 |
-
-**Overall 为六个任务成功率的等权平均，每任务内部各 mode 等权**，不是 460 回合的合并成功率。
-X-VLA 使用公开 clean checkpoint，其余五个模型沿用原 clean + randomized checkpoints；
-具体模型版本和推理参数见 [checkpoints.json](result/robotwin-if-press-lift-stapler-v1-20blocks/checkpoints.json)。
-
-### Press/Lift Stapler 配对结果
-
-每个模型评测 20 个配对场景。两条指令为 `Press down on the stapler.` 和 `Lift the stapler.`，
-共享初始场景，只改变动作短语。**同场景双成功**表示该场景的 Press 回合和 Lift 回合分别成功。
-
-| Policy | Press | Lift | 同场景双成功 |
-|---|---:|---:|---:|
-| X-VLA | 9/20 | 15/20 | 7/20 |
-| LingBot-VA | 18/20 | 0/20 | 0/20 |
-| LingBot-VLA | 18/20 | 1/20 | 1/20 |
-| VLAct All | 20/20 | 16/20 | 16/20 |
-| DM05 | 20/20 | 12/20 | 12/20 |
-| Hy-VLA | 17/20 | 18/20 | 17/20 |
-
-完整六任务分模式成绩、checkpoint、复用和执行恢复证据见[结果包](result/robotwin-if-press-lift-stapler-v1-20blocks/README.md)。
-本版替换了 Verb 任务，Overall 与旧版的变化不能解读为同一任务上的能力提升。
-
-## 旧版 Arm-only-v2：六个 Policies 的评测结果
+## 六个 Policies 的评测结果
 
 2026-09-18 05:26 UTC 完成并校验：**2760/2760 回合、720/720 blocks**。
-Arm-Select 重新运行 **240 回合**；其余五任务的 **2520 回合**及其统计与上一版 Attribute-v2（[复用来源](https://github.com/v-xchen-v/robotwin-if/blob/ac582a75267126c7a8fe17c220475d517b73882b/result/robotwin-if-arm-only-v2-20blocks/provenance.json)）一致。
+Arm-Select 重新运行 **240 回合**；其余五任务的 **2520 回合**及其统计与上一版 Attribute-v2（[复用来源](https://github.com/v-xchen-v/robotwin-if/blob/93d7271fc1ddda18822c30a2ee043cf946c3624f/result/robotwin-if-arm-only-v2-20blocks/provenance.json)）一致。
 六份 seed manifest、checkpoint 和推理参数沿用上一版，全部新回合初始观测逐数组匹配。
 4 次推理前 oracle 初始化失败用原 seed 恢复；完成的 policy 成功和失败没有重跑。
 VLAct 使用 `StarVLA/VLAct_Qwen3OFT_Robotwin_all_Finetune`（All 100K）。
@@ -93,20 +50,20 @@ VLAct 使用 `StarVLA/VLAct_Qwen3OFT_Robotwin_all_Finetune`（All 100K）。
 
 | Policy | Verb | Noun | Attribute v2 | Arm cube-v3 / only-v2 | Sequence | Spatial | Overall (%) | 完成回合 | 完成 blocks |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| [X-VLA](policies/xvla/README.md) | 20/40 | 15/40 | 73/160 | 5/40 | 0/120 | 6/60 | 25.9 | 460/460 | 120/120 |
-| [LingBot-VA](policies/lingbot_va/README.md) | 20/40 | 30/40 | 108/160 | 37/40 | 17/120 | 26/60 | 57.1 | 460/460 | 120/120 |
-| [LingBot-VLA](policies/lingbot_vla/README.md) | 20/40 | 13/40 | 77/160 | 18/40 | 14/120 | 3/60 | 32.0 | 460/460 | 120/120 |
-| [VLAct All](policies/vlact/README.md) | 36/40 | 28/40 | 108/160 | 29/40 | 15/120 | 19/60 | 57.4 | 460/460 | 120/120 |
-| [DM05](policies/dm05/README.md) | 40/40 | 25/40 | 88/160 | 25/40 | 9/120 | 20/60 | 53.5 | 460/460 | 120/120 |
-| [Hy-VLA](policies/hy_vla/README.md) | 20/40 | 11/40 | 83/160 | 17/40 | 15/120 | 7/60 | 32.7 | 460/460 | 120/120 |
+| [X-VLA](../../policies/xvla/README.md) | 20/40 | 15/40 | 73/160 | 5/40 | 0/120 | 6/60 | 25.9 | 460/460 | 120/120 |
+| [LingBot-VA](../../policies/lingbot_va/README.md) | 20/40 | 30/40 | 108/160 | 37/40 | 17/120 | 26/60 | 57.1 | 460/460 | 120/120 |
+| [LingBot-VLA](../../policies/lingbot_vla/README.md) | 20/40 | 13/40 | 77/160 | 18/40 | 14/120 | 3/60 | 32.0 | 460/460 | 120/120 |
+| [VLAct All](../../policies/vlact/README.md) | 36/40 | 28/40 | 108/160 | 29/40 | 15/120 | 19/60 | 57.4 | 460/460 | 120/120 |
+| [DM05](../../policies/dm05/README.md) | 40/40 | 25/40 | 88/160 | 25/40 | 9/120 | 20/60 | 53.5 | 460/460 | 120/120 |
+| [Hy-VLA](../../policies/hy_vla/README.md) | 20/40 | 11/40 | 83/160 | 17/40 | 15/120 | 7/60 | 32.7 | 460/460 | 120/120 |
 
 **Attribute-Select 判定修正（2026-09-17）：** 新规则要求目标当前抬升超过 5 cm，且干扰物在整回合中从未越过该阈值。
 先抓错再抓对仍失败。上表 Attribute/Overall 已使用新判据重新评测；旧结果仅保留在 Git 历史中。
-新旧差异包含判据变化及重新推理的影响。见[修正与回放证据](docs/attribute-select-target-only.md)。
+新旧差异包含判据变化及重新推理的影响。见[修正与回放证据](../../docs/attribute-select-target-only.md)。
 
 **待复核记录：** Hy-VLA 的 `pick_diverse_object` seed `100052`（coffee box）被用户指出视频表现失败，
 其归档自动判定仍为成功；该片段已从 README 演示中撤下。上表保持归档计数，尚未据此人工修订分数，
-详见 [例子替换记录](docs/assets/task-demos/README.md)。
+详见 [例子替换记录](../../docs/assets/task-demos/README.md)。
 
 <details>
 <summary>展开各任务、各模式的成功个数</summary>
@@ -150,7 +107,7 @@ Spatial 的 Top 表示 on_top。每个 policy 的每项任务均已完成 20/20 
 
 ### Arm cube-v3 — `arm_select`
 
-本表使用 5 cm cube；场景平移、旋转与配对验证见 [cube-v3 环境说明](docs/recon/arm-select-cube-v3.md)。旧长柱材料只保留在 Git 历史中。
+本表使用 5 cm cube；场景平移、旋转与配对验证见 [cube-v3 环境说明](../../docs/recon/arm-select-cube-v3.md)。旧长柱材料只保留在 Git 历史中。
 
 | Policy | Left | Right | Avg. (%) |
 |---|---:|---:|---:|
@@ -174,7 +131,7 @@ Spatial 的 Top 表示 on_top。每个 policy 的每项任务均已完成 20/20 
 
 ### Spatial — `place_relative`
 
-Spatial 从五模式收缩为 **left/right/on_top**；这是视频复核后的评测范围调整，分数变化不表示模型性能提升。front/back 原始自动结果与视频索引见 [决策与证据](docs/place-relative-spatial3.md)，旧五模式结果完整保留。
+Spatial 从五模式收缩为 **left/right/on_top**；这是视频复核后的评测范围调整，分数变化不表示模型性能提升。front/back 原始自动结果与视频索引见 [决策与证据](../../docs/place-relative-spatial3.md)，旧五模式结果完整保留。
 
 
 | Policy | Left | Right | Top | Avg. (%) |
@@ -188,19 +145,19 @@ Spatial 从五模式收缩为 **left/right/on_top**；这是视频复核后的�
 
 </details>
 
-数据来源：[HTML 报表](https://github.com/v-xchen-v/robotwin-if/blob/ac582a75267126c7a8fe17c220475d517b73882b/result/robotwin-if-arm-only-v2-20blocks/results.html) ·
-[完整结果表](https://github.com/v-xchen-v/robotwin-if/blob/ac582a75267126c7a8fe17c220475d517b73882b/result/robotwin-if-arm-only-v2-20blocks/results.md) ·
-[分模式 CSV](https://github.com/v-xchen-v/robotwin-if/blob/ac582a75267126c7a8fe17c220475d517b73882b/result/robotwin-if-arm-only-v2-20blocks/results.csv) ·
-[逐回合 CSV](https://github.com/v-xchen-v/robotwin-if/blob/ac582a75267126c7a8fe17c220475d517b73882b/result/robotwin-if-arm-only-v2-20blocks/episodes.csv) ·
-[结果 JSON](https://github.com/v-xchen-v/robotwin-if/blob/ac582a75267126c7a8fe17c220475d517b73882b/result/robotwin-if-arm-only-v2-20blocks/results.json) ·
-[Checkpoint 版本](https://github.com/v-xchen-v/robotwin-if/blob/ac582a75267126c7a8fe17c220475d517b73882b/result/robotwin-if-arm-only-v2-20blocks/checkpoints.json) ·
-[校验证据](https://github.com/v-xchen-v/robotwin-if/blob/ac582a75267126c7a8fe17c220475d517b73882b/result/robotwin-if-arm-only-v2-20blocks/validation.json)。
+数据来源：[HTML 报表](https://github.com/v-xchen-v/robotwin-if/blob/93d7271fc1ddda18822c30a2ee043cf946c3624f/result/robotwin-if-arm-only-v2-20blocks/results.html) ·
+[完整结果表](https://github.com/v-xchen-v/robotwin-if/blob/93d7271fc1ddda18822c30a2ee043cf946c3624f/result/robotwin-if-arm-only-v2-20blocks/results.md) ·
+[分模式 CSV](https://github.com/v-xchen-v/robotwin-if/blob/93d7271fc1ddda18822c30a2ee043cf946c3624f/result/robotwin-if-arm-only-v2-20blocks/results.csv) ·
+[逐回合 CSV](https://github.com/v-xchen-v/robotwin-if/blob/93d7271fc1ddda18822c30a2ee043cf946c3624f/result/robotwin-if-arm-only-v2-20blocks/episodes.csv) ·
+[结果 JSON](https://github.com/v-xchen-v/robotwin-if/blob/93d7271fc1ddda18822c30a2ee043cf946c3624f/result/robotwin-if-arm-only-v2-20blocks/results.json) ·
+[Checkpoint 版本](https://github.com/v-xchen-v/robotwin-if/blob/93d7271fc1ddda18822c30a2ee043cf946c3624f/result/robotwin-if-arm-only-v2-20blocks/checkpoints.json) ·
+[校验证据](https://github.com/v-xchen-v/robotwin-if/blob/93d7271fc1ddda18822c30a2ee043cf946c3624f/result/robotwin-if-arm-only-v2-20blocks/validation.json)。
 
-## 旧版六个任务与视频
+## 六个任务与视频
 
 每项任务聚焦一种指令差异：做什么动作、抓哪个物体、按什么属性选择、用哪只手、按什么顺序、放在哪个方向。
 下方动态预览可点击打开 MP4；素材随仓库提供。视频选自正式评测中的成功回合，用于展示任务行为，
-整体表现见 [完整结果](https://github.com/v-xchen-v/robotwin-if/blob/ac582a75267126c7a8fe17c220475d517b73882b/result/robotwin-if-arm-only-v2-20blocks/README.md)。原始指令、seed、policy 和视频处理说明见 [素材来源](docs/assets/task-demos/README.md)。
+整体表现见 [完整结果](https://github.com/v-xchen-v/robotwin-if/blob/93d7271fc1ddda18822c30a2ee043cf946c3624f/result/robotwin-if-arm-only-v2-20blocks/README.md)。原始指令、seed、policy 和视频处理说明见 [素材来源](../../docs/assets/task-demos/README.md)。
 
 <a id="bottle-verb"></a>
 
@@ -208,12 +165,12 @@ Spatial 从五模式收缩为 **left/right/on_top**；这是视频复核后的�
 
 面对同一瓶子和初始场景，执行 **pick（拿起）** 或 **shake（摇动）**。
 pick 跑满 700 个动作后判定：允许拿起后平移，末尾保持抬升至少 3 cm、连续 3 秒姿态稳定；回合中明显旋转摇晃不能算 pick。
-详见 [成功判定与历史结果说明](docs/bottle-verb-pick-hold.md)。
+详见 [成功判定与历史结果说明](../../docs/bottle-verb-pick-hold.md)。
 下例左右分别为 pick / shake；一个 block 包含两个回合。
 
-[![Bottle-Verb：同一场景中的拿起与摇动](docs/assets/task-demos/bottle_verb.gif)](docs/assets/task-demos/bottle_verb.mp4)
+[![Bottle-Verb：同一场景中的拿起与摇动](../../docs/assets/task-demos/bottle_verb.gif)](../../docs/assets/task-demos/bottle_verb.mp4)
 
-[观看 MP4](docs/assets/task-demos/bottle_verb.mp4) · 示例 policy：Hy-VLA（旧判定版本的演示，不作为 v6 成功证据）。
+[观看 MP4](../../docs/assets/task-demos/bottle_verb.mp4) · 示例 policy：Hy-VLA（旧判定版本的演示，不作为 v6 成功证据）。
 
 <a id="pick-diverse-object"></a>
 
@@ -223,9 +180,9 @@ pick 跑满 700 个动作后判定：允许拿起后平移，末尾保持抬升�
 **Seen / Unseen** 分别使用熟悉与未见物体池；一个 block 包含两个独立场景，每个场景内的四个物体属于同一 familiarity group。
 下例分别抓取 mug 与 wooden mallet。
 
-[![Pick-Diverse-Object：Seen 场景抓取 mug，Unseen 场景抓取 wooden mallet](docs/assets/task-demos/pick_diverse_object.gif)](docs/assets/task-demos/pick_diverse_object.mp4)
+[![Pick-Diverse-Object：Seen 场景抓取 mug，Unseen 场景抓取 wooden mallet](../../docs/assets/task-demos/pick_diverse_object.gif)](../../docs/assets/task-demos/pick_diverse_object.mp4)
 
-[观看 MP4](docs/assets/task-demos/pick_diverse_object.mp4) · 左：DM05（Seen mug）；右：Hy-VLA（Unseen wooden mallet）。
+[观看 MP4](../../docs/assets/task-demos/pick_diverse_object.mp4) · 左：DM05（Seen mug）；右：Hy-VLA（Unseen wooden mallet）。
 
 <a id="attribute-select"></a>
 
@@ -234,27 +191,27 @@ pick 跑满 700 个动作后判定：允许拿起后平移，末尾保持抬升�
 在两个物体中按指定属性选择并抓起目标：**颜色**（red / blue）、**图案**（cat / dog）、
 **形状**（block / bar）或**大小**（big / small）。同一属性的两个指令共享场景、切换目标；
 一个 block 包含四组对比、共八个回合。下例依次展示 red、cat、long bar、small 四类属性指令。
-当前[成功判据](docs/attribute-select-target-only.md)要求目标抬升超过 5 cm，且干扰物在本回合从未越过该阈值；
+当前[成功判据](../../docs/attribute-select-target-only.md)要求目标抬升超过 5 cm，且干扰物在本回合从未越过该阈值；
 先抓错再抓对、或同时抓起两个物体，均判失败。下方演示来自旧判据归档。
 
-[![Attribute-Select：颜色、图案、形状和大小四种属性的抓取示例](docs/assets/task-demos/attribute_select.gif)](docs/assets/task-demos/attribute_select.mp4)
+[![Attribute-Select：颜色、图案、形状和大小四种属性的抓取示例](../../docs/assets/task-demos/attribute_select.gif)](../../docs/assets/task-demos/attribute_select.mp4)
 
-[观看 MP4](docs/assets/task-demos/attribute_select.mp4) · 示例 policy：Hy-VLA。
+[观看 MP4](../../docs/assets/task-demos/attribute_select.mp4) · 示例 policy：Hy-VLA。
 
 <a id="arm-select"></a>
 
 ### 4. Arm-Select：使用指定的机械臂
 
 对同一目标方块，分别要求用**左臂 / 右臂**抓起；用错机械臂即使抬起方块也不算成功。
-2026-09-18 已加入[错误手臂历史判据](docs/arm-select-target-arm-only.md)：先用错误臂拿起、再换指定臂仍失败。
+2026-09-18 已加入[错误手臂历史判据](../../docs/arm-select-target-arm-only.md)：先用错误臂拿起、再换指定臂仍失败。
 当前报表中的 Arm/Overall 已按该新规则重跑；历史判据和计数保留在 Git 历史中。
-当前 taskset 的 [cube-v3 配置](docs/recon/arm-select-cube-v3.md) 使用 5 cm cube，在双臂共用区域内随机平移和绕竖直轴旋转。
+当前 taskset 的 [cube-v3 配置](../../docs/recon/arm-select-cube-v3.md) 使用 5 cm cube，在双臂共用区域内随机平移和绕竖直轴旋转。
 不同 blocks 改变物体的位置和朝向，同一 block 的两个回合共享布局。
 下例左右分别为 left arm / right arm。
 
-[![Arm-Select cube-v3：同一方块分别由指定的左臂和右臂抓起](docs/assets/task-demos/arm_select_cube_v3.gif)](docs/assets/task-demos/arm_select_cube_v3.mp4)
+[![Arm-Select cube-v3：同一方块分别由指定的左臂和右臂抓起](../../docs/assets/task-demos/arm_select_cube_v3.gif)](../../docs/assets/task-demos/arm_select_cube_v3.mp4)
 
-[观看 MP4](docs/assets/task-demos/arm_select_cube_v3.mp4) · 示例 policy：LingBot-VA · seeds 500000/500001。
+[观看 MP4](../../docs/assets/task-demos/arm_select_cube_v3.mp4) · 示例 policy：LingBot-VA · seeds 500000/500001。
 
 <a id="stack-sequence"></a>
 
@@ -264,9 +221,9 @@ pick 跑满 700 个动作后判定：允许拿起后平移，末尾保持抬升�
 同一场景对应六种排列，一个 block 包含六个回合；仅堆成塔、颜色顺序错误不算成功。
 下例分别为 red → green → blue 和 green → blue → red（箭头均表示从底层到顶层）。
 
-[![Stack-Sequence：红绿蓝与绿蓝红两种自下而上的堆叠顺序](docs/assets/task-demos/stack_sequence.gif)](docs/assets/task-demos/stack_sequence.mp4)
+[![Stack-Sequence：红绿蓝与绿蓝红两种自下而上的堆叠顺序](../../docs/assets/task-demos/stack_sequence.gif)](../../docs/assets/task-demos/stack_sequence.mp4)
 
-[观看 MP4](docs/assets/task-demos/stack_sequence.mp4) · 示例 policy：VLAct All · 存档视频 3× 播放。
+[观看 MP4](../../docs/assets/task-demos/stack_sequence.mp4) · 示例 policy：VLAct All · 存档视频 3× 播放。
 
 <a id="place-relative"></a>
 
@@ -276,32 +233,31 @@ pick 跑满 700 个动作后判定：允许拿起后平移，末尾保持抬升�
 同一布局对应三种方向，一个 block 包含三个回合，检验目标放置关系是否符合指令。
 下例将绿色 toycar 分别放到红色 tea-box 的左侧和顶部。
 
-[![Place-Relative：将同一绿色 toycar 放到红色 tea-box 左侧或顶部](docs/assets/task-demos/place_relative.gif)](docs/assets/task-demos/place_relative.mp4)
+[![Place-Relative：将同一绿色 toycar 放到红色 tea-box 左侧或顶部](../../docs/assets/task-demos/place_relative.gif)](../../docs/assets/task-demos/place_relative.mp4)
 
-[观看 MP4](docs/assets/task-demos/place_relative.mp4) · 示例 policy：VLAct All · 存档视频 1.5× 播放。
+[观看 MP4](../../docs/assets/task-demos/place_relative.mp4) · 示例 policy：VLAct All · 存档视频 1.5× 播放。
 
 ## 分支交付内容
 
 | 交付项 | 入口 |
 |---|---|
-| 六个 policy 的 inference code / setup / eval adapter | [`policies/`](policies/README.md) |
-| 统一 bash 评测入口（单个模型服务 + 串行 sim） | [`scripts/eval.sh`](scripts/eval.sh) |
-| 视频人工复核、Success/Fail 标注与判定分歧导出 | [`tools/policy-video-review/`](tools/policy-video-review/README.md) |
-| 六任务 × 20 blocks：flat seeds 与显式 seed/mode JSON、CSV | [`seed-manifests/robotwin-if-press-lift-stapler-v1-20-per-mode/`](seed-manifests/robotwin-if-press-lift-stapler-v1-20-per-mode/README.md) |
-| 已完成结果、逐回合 CSV、checkpoint 与校验证据 | [`result/robotwin-if-press-lift-stapler-v1-20blocks/`](result/robotwin-if-press-lift-stapler-v1-20blocks/README.md) |
+| 六个 policy 的 inference code / setup / eval adapter | [`policies/`](../../policies/README.md) |
+| 统一 bash 评测入口（单个模型服务 + 串行 sim） | [`scripts/eval.sh`](../../scripts/eval.sh) |
+| 视频人工复核、Success/Fail 标注与判定分歧导出 | [`tools/policy-video-review/`](../../tools/policy-video-review/README.md) |
+| 六任务 × 20 blocks：flat seeds 与显式 seed/mode JSON、CSV | [`seed-manifests/robotwin-if-arm-only-v2-20-per-mode/`](https://github.com/v-xchen-v/robotwin-if/blob/93d7271fc1ddda18822c30a2ee043cf946c3624f/seed-manifests/robotwin-if-arm-only-v2-20-per-mode/README.md) |
+| 已完成结果、逐回合 CSV、checkpoint 与校验证据 | [`result/robotwin-if-arm-only-v2-20blocks/`](https://github.com/v-xchen-v/robotwin-if/blob/93d7271fc1ddda18822c30a2ee043cf946c3624f/result/robotwin-if-arm-only-v2-20blocks/README.md) |
 
-接收方从 [分支交付说明](docs/branch-delivery.md) 开始；运行新评测不依赖本机 `/Data` 下的旧运行目录。
+接收方从 [分支交付说明](../../docs/branch-delivery.md) 开始；运行新评测不依赖本机 `/Data` 下的旧运行目录。
 
 人工复核原始评测视频：
 
 ```bash
 python tools/policy-video-review/server.py \
-  --run-dir outputs/policy-eval/robotwin-if-press-lift-stapler-v1-20blocks-001 \
-  --port 8897
+  --run-dir outputs/policy-eval/robotwin-if-arm-only-v2-20blocks-001
 ```
 
-打开 `http://127.0.0.1:8897/`，按 policy/task 筛选、逐帧查看和标注，导出自动判定与人工判定的分歧。
-人工标签独立保存，原始结果保持不变；远程机器需转发该端口，详见 [使用说明](tools/policy-video-review/README.md)。
+打开 `http://127.0.0.1:8893/`，按 policy/task 筛选、逐帧查看和标注，导出自动判定与人工判定的分歧。
+人工标签独立保存，原始结果保持不变；远程机器需转发该端口，详见 [使用说明](../../tools/policy-video-review/README.md)。
 
 ## 设计原则：零改上游
 
@@ -323,7 +279,7 @@ Bridge 之后，RoboTwin 的 collect/eval harness 可像发现 raw task 一样�
 bash setup_robotwin.sh [--assets_cache <本地资产缓存目录>]
 ```
 
-安装 RoboTwin 2.0 仿真环境（SAPIEN/CUDA/curobo 等）。详见 [`docs/features/01-环境搭建.md`](docs/features/01-环境搭建.md)。
+安装 RoboTwin 2.0 仿真环境（SAPIEN/CUDA/curobo 等）。详见 [`docs/features/01-环境搭建.md`](../../docs/features/01-环境搭建.md)。
 
 ### 2. 桥接 / 解绑任务
 
@@ -368,7 +324,7 @@ Bridge 在写入前对所有 destination 做完整 preflight：正确旧链接�
 
 ### 3. 采集 oracle 专家演示
 
-锁定版本的 RoboTwin collect 是单任务入口。先按[分支交付说明](docs/branch-delivery.md)
+锁定版本的 RoboTwin collect 是单任务入口。先按[分支交付说明](../../docs/branch-delivery.md)
 安装 `demo_clean_arm_select_v3.yml`，再遍历六项 IF manifest；Arm-Select 使用 cube-v3 配置：
 
 ```bash
@@ -386,15 +342,15 @@ done
 
 可执行清单：
 
-- [`eval_cfg/if_tasks.yml`](eval_cfg/if_tasks.yml)：维护中的 IF 六项；
-- [`eval_cfg/all_tasks_plus_if.yml`](eval_cfg/all_tasks_plus_if.yml)：锁定的 native 50 + 同一 IF 六项，共 56 项。
+- [`eval_cfg/if_tasks.yml`](../../eval_cfg/if_tasks.yml)：维护中的 IF 六项；
+- [`eval_cfg/all_tasks_plus_if.yml`](../../eval_cfg/all_tasks_plus_if.yml)：锁定的 native 50 + 同一 IF 六项，共 56 项。
 
 每个任务 collect 结束时会调用 RoboTwin 原生指令生成管线，无需单独执行 instruction generator。
 
 ### 4. Policy 评测
 
-六个开源策略的安装、权重与服务入口见 [`policies/`](policies/README.md)。
-当前 Press/Lift Stapler v1 六任务正式成绩见[评测结果](#policy-results)。
+六个开源策略的安装、权重与服务入口见 [`policies/`](../../policies/README.md)。
+当前 Arm-only-v2 六任务正式成绩见[评测结果](#policy-results)。
 先在独立终端启动所选模型，再在 RoboTwin 环境执行统一入口：
 
 ```bash
@@ -404,13 +360,13 @@ bash scripts/eval.sh --policy hy_vla --sim-gpu 0 --model-gpu 1 \
 
 默认按正式清单完成每任务 20 blocks；使用 `--dry-run` 查看命令，
 或用 `--task arm_select --blocks 2` 先验证完整配对场景。
-外部 evaluator 的接入、seed/mode 格式和输出契约见[交付说明](docs/branch-delivery.md)。
+外部 evaluator 的接入、seed/mode 格式和输出契约见[交付说明](../../docs/branch-delivery.md)。
 
 六项 task 在 eval mode 使用集中维护的 policy-action budget（collect 不受影响）：
 
 | Task | `step_lim` | Native structural analog |
 |---|---:|---|
-| `press_lift_stapler` | 250 | `press_stapler` / `move_stapler_pad` 的抓起阶段 |
+| `bottle_verb` | 700 | `shake_bottle`（取最长 shake branch） |
 | `pick_diverse_object` | 400 | single grasp/lift |
 | `attribute_select` | 400 | single grasp/lift |
 | `arm_select` | 400 | single grasp/lift |
@@ -419,11 +375,11 @@ bash scripts/eval.sh --policy hy_vla --sim-gpu 0 --model-gpu 1 \
 
 Mapping 位于 `tasks/envs/_if_eval.py`，task 在 `_init_task_env_` 返回后覆盖 eval limit，因此不修改 upstream config。Locked Base_Task 对未知 task 可能先打印 fallback-to-1000 提示，但 policy rollout 实际读取的是随后覆盖的固定值。`step_lim` 统计 policy action calls；Bottle pick 在完整预算执行结束后判定，其他任务保留各自的终止协议。
 
-正式 IF 结果不能任意跳过单个 seed。应先按 task 的完整 balance block 验证并固化 seed manifest，再让所有 policy 重放同一批 episodes。这里的 block 不一定是同一物理场景：`attribute_select` 的 8-seed block 包含四个 same-scene pair，`pick_diverse_object` 的 seen/unseen block 则是两个独立 familiarity scenes。具体 contract 见 [`eval_cfg/README.md`](eval_cfg/README.md)。
+正式 IF 结果不能任意跳过单个 seed。应先按 task 的完整 balance block 验证并固化 seed manifest，再让所有 policy 重放同一批 episodes。这里的 block 不一定是同一物理场景：`attribute_select` 的 8-seed block 包含四个 same-scene pair，`pick_diverse_object` 的 seen/unseen block 则是两个独立 familiarity scenes。具体 contract 见 [`eval_cfg/README.md`](../../eval_cfg/README.md)。
 
 ### 5. 生成与消费 balanced seed manifest
 
-完整的生成、验证、resume 与外部 evaluator 消费流程见 [`docs/seed-manifest-usage.md`](docs/seed-manifest-usage.md)。
+完整的生成、验证、resume 与外部 evaluator 消费流程见 [`docs/seed-manifest-usage.md`](../../docs/seed-manifest-usage.md)。
 
 `eval_cfg/if_tasks.yml` 回答“运行哪些 task”；seed manifest 回答“每个 task 运行哪些 exact episode seeds”。面向外部 evaluator 的 JSON 故意保持扁平：
 
@@ -494,8 +450,8 @@ third_party/xvla/        setup 获取的固定版本 X-VLA 源码（Git 忽略�
 当前维护六项任务；inventory、bridge 与 seed contracts 由静态检查保持一致。
 Grasp-Approach 已归档，不参与默认安装、生成、评测或当前 Overall。
 当前 Arm-only-v2 taskset 已完成 2760 回合、720 blocks；Arm 重跑 240 回合，其他五任务复用 Attribute-v2 的 2520 回合。
-当前入口见 [正式评测说明](docs/formal-policy-evaluation.md) 和 [结果目录](result/README.md)。
+当前入口见 [正式评测说明](../../docs/formal-policy-evaluation.md) 和 [结果目录](../../result/README.md)。
 
 任务执行使用固定 manifest，成功和 policy failure 都保留，基础设施错误不替换 seed。
-正式 runner 保留场景/结果校验和 GPU 安全停止；当前 Arm 重评由 03 推理、04 最多三路仿真，见[运行说明](docs/arm-select-target-only-v2-evaluation.md)。
+正式 runner 保留场景/结果校验和 GPU 安全停止；当前 Arm 重评由 03 推理、04 最多三路仿真，见[运行说明](../../docs/arm-select-target-only-v2-evaluation.md)。
 历史七任务 release、原始输出与源码快照继续保留，供追溯原评测范围。

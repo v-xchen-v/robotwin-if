@@ -1,4 +1,6 @@
-# README 任务视频素材
+# 历史 README 任务视频素材
+
+本文及本目录视频用于[旧版 archive](../../archive/README.md)。当前主 README 的六任务素材见 [stapler-v1-demos](../stapler-v1-demos/README.md)。
 
 这六组视频用于介绍任务行为。Arm-Select 已换为 cube-v3 新评测中完成的左右臂回合；
 其余五组保留历史运行中的示例。
