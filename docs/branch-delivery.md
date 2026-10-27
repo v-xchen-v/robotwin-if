@@ -99,16 +99,15 @@ GPU 查询超过 8 秒、温度达到 87°C 或显存超限会停止本次 sim�
 
 `python tools/export_seed_modes.py --check` 检查 JSON/CSV 与 flat seeds/modes 一致；
 完整发布检查使用 `python seed-manifests/robotwin-if-press-lift-stapler-v1-20-per-mode/verify.py`，无需模型、GPU 或旧运行目录。
-旧清单 `robotwin-if-arm-only-v2-20-per-mode` 保留；可用 `--manifest-dir` 显式选择。两套其余五份 flat manifests 完全一致。
-新版订书器 seeds 为 `110000–110039`，Press/Lift 各 20 回合，expert 全通过，包含随机 yaw；没有本清单的模型评测成绩。
+master 只保留最新 Stapler v1 清单。旧 Arm-only-v2 和 Bell 清单见[备份分支](https://github.com/v-xchen-v/robotwin-if/tree/master-261027-staper-v1)；其余五份 seeds 与原资格证据已包含在当前清单中。
+订书器 seeds 为 `110000–110039`，Press/Lift 各 20 回合，expert 全通过，包含随机 yaw；六个模型的完整评测成绩见下方当前结果。
 
 ## 3. Result
 
-以下是旧版结果，包含 Bottle，尚未替换为 Stapler：[`result/robotwin-if-arm-only-v2-20blocks/`](../result/robotwin-if-arm-only-v2-20blocks/README.md)。
-六个 policies 已完成 **2760/2760 episodes、720/720 blocks**，每个 policy 为 460 episodes；2026-09-18 05:26 UTC 正式校验通过。
-Arm 按 target-arm-only-lift-v2 全新运行 240 回合，其余五任务复用 Attribute-v2 的 2520 回合，包含成功和失败。
-初始观测、记录哈希、统计及 checkpoint 身份核对通过，见 [Arm 重评说明](arm-select-target-only-v2-evaluation.md)。
-当前分支只保留这份结果；[Arm/Attribute 判据证据](../result/robotwin-if-arm-only-v2-20blocks/evidence/README.md)随包保留。
+当前结果为 [`result/robotwin-if-press-lift-stapler-v1-20blocks/`](../result/robotwin-if-press-lift-stapler-v1-20blocks/README.md)。
+六个 policies 已完成 **2760/2760 episodes、720/720 blocks**，每个 policy 为 460 episodes；2026-10-26 完成校验。
+Stapler 全新运行 240 回合，其余五任务复用 Arm-only-v2 的 2520 回合，包含成功和失败。
+初始观测、记录哈希、统计及 checkpoint 身份已核对。旧 Arm/Attribute 判据的证据仍随历史结果包保留。
 
 提供 `results.html/md/json/csv`、`episodes.csv`、六份 frozen manifests、checkpoint 身份、
 provenance 与 `SHA256SUMS`。可离线查看汇总表和逐回合计数，不依赖原机器。

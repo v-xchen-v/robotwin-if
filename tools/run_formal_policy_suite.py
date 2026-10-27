@@ -32,7 +32,7 @@ ENVS = {p: Path('/home/xichen6/miniconda3/envs') / ('robotwin-if-' + p.replace('
         for p in POLICIES}
 ENVS.update({p: Path('/Data/robotwin-if/envs') / ('robotwin-if-' + p.replace('_', '-'))
              for p in ('dm05', 'hy_vla')})
-DEFAULT_RUN = Path('/Data/robotwin-if/evaluations/robotwin-if-attribute-v2-20blocks-001')
+DEFAULT_RUN = Path('/Data/robotwin-if/evaluations/robotwin-if-press-lift-stapler-v1-20blocks-001')
 MAX_ORACLE_ATTEMPTS = 3  # Initial attempt plus at most two retries; never policy retries.
 
 
@@ -218,8 +218,13 @@ def prior_metadata_directory(old, policy, task):
 
 def prepare(base, release, old):
     import yaml
-    subprocess.run([PYTHON, str(release / 'verify.py')], cwd=ROOT, check=True)
     suite = yaml.safe_load((release / 'suite.yml').read_text())
+    if suite.get('replacement_task') == 'press_lift_stapler':
+        from tools.prepare_bell_policy_suite import prepare as prepare_replacement
+        from tools.release_press_lift_stapler_v1 import verify as verify_release
+        return prepare_replacement(base, old, release=release,
+                                   task_name='press_lift_stapler', verify_release_fn=verify_release)
+    subprocess.run([PYTHON, str(release / 'verify.py')], cwd=ROOT, check=True)
     reuse = yaml.safe_load((release / 'reusable-results.yml').read_text())
     assert suite['policies'] == POLICIES
     check_active_tasks(suite['tasks'])
@@ -776,7 +781,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('command', choices=('prepare', 'run', 'status', 'verify', 'worker'))
     parser.add_argument('--run-dir', type=Path, default=DEFAULT_RUN)
-    parser.add_argument('--release', type=Path, default=ROOT / 'seed-manifests/robotwin-if-arm-only-v2-20-per-mode')
+    parser.add_argument('--release', type=Path, default=ROOT / 'seed-manifests/robotwin-if-press-lift-stapler-v1-20-per-mode')
     parser.add_argument('--old-run', type=Path,
                         help='Prepare: prior run with matching checkpoint and inference metadata')
     parser.add_argument('--policy', choices=POLICIES)

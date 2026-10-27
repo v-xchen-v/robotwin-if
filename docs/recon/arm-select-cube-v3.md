@@ -35,7 +35,7 @@
 
 `fixed-v1` 仍是未传版本时的默认值；旧 `demo_clean_arm_select_v2` 仍生成长柱。
 v3 必须显式选择新配置，旧 manifest 与新配置不匹配时 evaluator 会拒绝。
-Cube-v3 已纳入[新的六任务 taskset](../../seed-manifests/robotwin-if-arm-only-v2-20-per-mode/README.md)，
+Cube-v3 已纳入[新的六任务 taskset](../../seed-manifests/robotwin-if-press-lift-stapler-v1-20-per-mode/README.md)，
 六个 policies 的独立重跑与五任务复用见[合并评测说明](../arm-select-target-only-v2-evaluation.md)。
 
 ## 资格验证与边界
@@ -77,7 +77,7 @@ python tools/probe_arm_select_variation.py \
 ```text
 --task arm_select
 --task-config demo_clean_arm_select_v3
---seed-manifest seed-manifests/robotwin-if-arm-only-v2-20-per-mode/arm_select.json
+--seed-manifest seed-manifests/robotwin-if-press-lift-stapler-v1-20-per-mode/arm_select.json
 --blocks 20
 --output-dir <新的独立结果目录>
 ```

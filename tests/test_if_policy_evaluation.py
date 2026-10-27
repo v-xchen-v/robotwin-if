@@ -12,7 +12,7 @@ import numpy as np
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
-from if_benchmark.seed_contracts import IF_SEED_CONTRACTS, observed_mode
+from if_benchmark.seed_contracts import CURRENT_SUITE_TASKS, IF_SEED_CONTRACTS, observed_mode
 from if_benchmark.seed_manifest import load_manifest
 from tools.generate_if_seed_manifest import _observed_mode
 from tasks.envs._if_grounding import AttributePickMonitor
@@ -72,8 +72,9 @@ class PolicyEvaluationTests(unittest.TestCase):
     def test_all_six_clis_accept_all_six_tasks_and_two_blocks(self):
         for policy in ('xvla','lingbot_va','lingbot_vla','vlact','dm05','hy_vla'):
             module = importlib.import_module(f'policies.{policy}.eval')
-            for task, contract in IF_SEED_CONTRACTS.items():
-                manifest_path = ROOT/'seed-manifests/robotwin-if-arm-only-v2-20-per-mode'/f'{task}.json'
+            for task in CURRENT_SUITE_TASKS:
+                contract = IF_SEED_CONTRACTS[task]
+                manifest_path = ROOT/'seed-manifests/robotwin-if-press-lift-stapler-v1-20-per-mode'/f'{task}.json'
                 with self.subTest(policy=policy, task=task), patch.object(sys, 'argv', [
                     'eval.py','--task',task,'--seed-manifest',
                     str(manifest_path), '--task-config', load_manifest(manifest_path)['task_config'],

@@ -17,7 +17,7 @@ import test_formal_result_scope as scope
 from tools import summarize_formal_policy_results as report
 
 ROOT = Path(__file__).resolve().parents[1]
-RELEASE = ROOT / 'seed-manifests/robotwin-if-arm-only-v2-20-per-mode'
+RELEASE = ROOT / 'seed-manifests/robotwin-if-press-lift-stapler-v1-20-per-mode'
 RESULT = ROOT / 'result/robotwin-if-arm-only-v2-20blocks'
 
 

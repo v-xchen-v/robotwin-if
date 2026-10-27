@@ -29,13 +29,13 @@ Grasp-Approach 已于 2026-09-15 暂时下线；旧实现仅保留在 Git 历史
 [HTML 报表](result/robotwin-if-arm-only-v2-20blocks/results.html) ·
 [逐回合 CSV](result/robotwin-if-arm-only-v2-20blocks/episodes.csv)。
 
-旧版 [RoboTwin-IF Arm-only-v2 taskset](seed-manifests/robotwin-if-arm-only-v2-20-per-mode/README.md)
+旧版 [RoboTwin-IF Arm-only-v2 taskset](https://github.com/v-xchen-v/robotwin-if/blob/ac582a75267126c7a8fe17c220475d517b73882b/seed-manifests/robotwin-if-arm-only-v2-20-per-mode/README.md)
 已完成六个 policies × 六任务 × 每任务 20 blocks：460 回合/policy，共 2760 回合、720 blocks。
 该版按 `target-arm-only-lift-v2` 重跑 Arm-Select 240 回合；其余五任务逐字节复用 Attribute-v2 的 2520 回合。
 保留 cube-v3 场景、Attribute target-only-lift-v2、Bottle v6 terminal 和 Spatial 三模式。
 详见[Arm 成功判据](docs/arm-select-target-arm-only.md)和[完整结果](result/robotwin-if-arm-only-v2-20blocks/README.md)。
-新旧 seed 清单与使用方法见 [seed-manifests](seed-manifests/README.md)。
-当前分支保留新旧两套清单与旧版结果；发布来源及完整审计见[溯源说明](docs/release-provenance.md)。
+当前 seed 清单与使用方法见 [seed-manifests](seed-manifests/README.md)。
+master 仅保留最新 Stapler v1 seed 清单；旧清单见[备份分支](https://github.com/v-xchen-v/robotwin-if/tree/master-261027-staper-v1)。发布来源及校验见[溯源说明](docs/release-provenance.md)。
 
 <a id="policy-results"></a>
 

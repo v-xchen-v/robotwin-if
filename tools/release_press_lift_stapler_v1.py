@@ -25,12 +25,15 @@ from tools.release_press_lift_bell_v1 import digest, read, write
 TASK = 'press_lift_stapler'
 NAME = 'robotwin-if-press-lift-stapler-v1-20-per-mode'
 RELEASE = ROOT / 'seed-manifests' / NAME
-PARENT = ROOT / 'seed-manifests/robotwin-if-arm-only-v2-20-per-mode'
 BELL_NAME = 'robotwin-if-press-lift-bell-v1-20-per-mode'
 
 
-def build(run, base=RELEASE):
-    run, base = Path(run).resolve(), Path(base)
+def build(run, base=RELEASE, reference=RELEASE):
+    run, base, reference = Path(run).resolve(), Path(base), Path(reference)
+    # The current qualified release contains the five inherited manifests and
+    # their original evidence; rebuilding does not require retired releases.
+    verify(reference)
+    parent = yaml.safe_load((reference / 'qualification/parent-suite.yml').read_text())
     manifest = load_manifest(run / 'generated' / f'{TASK}.json')
     evidence = read(run / 'generated' / f'{TASK}.generation.json')
     validate_generation_evidence(manifest, evidence)
@@ -46,14 +49,9 @@ def build(run, base=RELEASE):
     setup_check = run / 'standard-setup/validation.json'
     assert setup_check.is_file(), 'Standard evaluator setup must be checked before publishing'
     shutil.copyfile(setup_check, base / 'qualification/standard-setup-validation.json')
-    parent = yaml.safe_load((PARENT / 'suite.yml').read_text())
-    shutil.copyfile(PARENT / 'suite.yml', base / 'qualification/parent-suite.yml')
-    bell = ROOT / 'bak' / BELL_NAME
-    if not bell.is_dir():
-        bell = ROOT / 'seed-manifests' / BELL_NAME
-    # Original qualification for the unchanged five tasks, already preserved by Bell v1.
-    shutil.copytree(bell / 'qualification/inherited', base / 'qualification/inherited')
-    shutil.copyfile(bell / 'qualification/inherited-files.json', base / 'qualification/inherited-files.json')
+    shutil.copyfile(reference / 'qualification/parent-suite.yml', base / 'qualification/parent-suite.yml')
+    shutil.copytree(reference / 'qualification/inherited', base / 'qualification/inherited')
+    shutil.copyfile(reference / 'qualification/inherited-files.json', base / 'qualification/inherited-files.json')
     specs = [dict(task=TASK, task_config=manifest['task_config'], manifest=f'{TASK}.json',
         manifest_sha256=manifest_sha256(manifest), blocks=20, episodes_per_policy=40,
         modes={'press': 20, 'lift': 20}, instructions=INSTRUCTIONS, action_limit=250,
@@ -64,13 +62,13 @@ def build(run, base=RELEASE):
     for original in parent['tasks'][1:]:
         spec = {k: deepcopy(v) for k, v in original.items()
                 if k not in ('reusable_seeds_per_policy', 'pending_seeds_per_policy')}
-        spec['qualification'] = dict(type='unchanged_parent_manifest', parent_release=PARENT.name,
+        spec['qualification'] = dict(type='unchanged_parent_manifest', parent_release=parent['release'],
             parent_manifest_sha256=spec['manifest_sha256'],
             original_qualification=original['qualification'], requalified=False)
         specs.append(spec)
-        shutil.copyfile(PARENT / spec['manifest'], base / spec['manifest'])
+        shutil.copyfile(reference / spec['manifest'], base / spec['manifest'])
     suite = dict(schema_version=1, release=base.name, purpose='fixed_seed_evaluation',
-        created_at=datetime.now(timezone.utc).isoformat(), parent_release=PARENT.name,
+        created_at=datetime.now(timezone.utc).isoformat(), parent_release=parent['release'],
         supersedes_release=BELL_NAME, replaced_task='bottle_verb', replacement_task=TASK,
         instruction_type='unseen', blocks_per_task=20, tasks=specs, policies=parent['policies'],
         episodes_per_policy=460, episodes_all_six_policies=2760,

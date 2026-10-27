@@ -10,25 +10,23 @@ from unittest.mock import patch
 
 from tools import release_arm_select_target_only_v2 as release
 from tools.release_history import historical_evidence
+from tools.release_press_lift_stapler_v1 import RELEASE
 from if_benchmark.seed_modes import check_seed_modes
 
 ROOT = Path(__file__).resolve().parents[1]
 
 
 class CurrentReleaseTest(unittest.TestCase):
-    def test_named_manifest_versions_and_current_results_are_exposed(self):
-        for parent, name in [('seed-manifests', 'robotwin-if-arm-only-v2-20-per-mode'),
-                             ('result', 'robotwin-if-arm-only-v2-20blocks')]:
-            entries = list((ROOT / parent).iterdir())
-            expected = [name, 'robotwin-if-press-lift-stapler-v1-20-per-mode'] if parent == 'seed-manifests' else [name]
-            self.assertEqual(sorted(p.name for p in entries if p.is_dir()), sorted(expected))
-            self.assertFalse(any(p.is_symlink() for p in entries))
-            self.assertFalse((ROOT / (parent + '-archive')).exists())
-        check_seed_modes(release.RELEASE)
+    def test_only_latest_manifest_is_exposed(self):
+        entries = list((ROOT / 'seed-manifests').iterdir())
+        self.assertEqual([p.name for p in entries if p.is_dir()], [RELEASE.name])
+        self.assertFalse(any(p.is_symlink() for p in entries))
+        self.assertFalse((ROOT / 'seed-manifests-archive').exists())
+        self.assertFalse((ROOT / 'bak/robotwin-if-press-lift-bell-v1-20-per-mode').exists())
+        check_seed_modes(RELEASE)
 
     def test_current_files_and_checker_evidence_match_checksums(self):
-        directories = [release.RELEASE, ROOT / 'result/robotwin-if-arm-only-v2-20blocks']
-        directories += list((directories[1] / 'evidence').iterdir())
+        directories = [RELEASE, ROOT / 'result/robotwin-if-press-lift-stapler-v1-20blocks']
         for directory in directories:
             if not directory.is_dir():
                 continue

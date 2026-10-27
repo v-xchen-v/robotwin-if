@@ -1,11 +1,13 @@
 # Arm-Select target-arm-only-v2：六个 policies 重评
 
+> 本文记录 Arm-only-v2（Bottle）的历史评测。旧清单链接固定到备份提交；文中的旧版命令请在[备份分支](https://github.com/v-xchen-v/robotwin-if/tree/master-261027-staper-v1)执行。当前清单见 [Stapler v1](../seed-manifests/robotwin-if-press-lift-stapler-v1-20-per-mode/README.md)。
+
 本轮重跑 X-VLA、LingBot-VA、LingBot-VLA、VLAct、DM05、Hy-VLA 的全部 Arm-Select 回合。
 每个 policy 左右臂各 20 回合，共 **240 个新回合**。其余五任务的 **2520 回合**逐字节复用
 已完成的 Attribute-v2 包，包含成功和失败，最终汇总 2760 回合、720 blocks。
 
-- [独立 taskset](../seed-manifests/robotwin-if-arm-only-v2-20-per-mode/README.md)
-- [复用源码审计](../seed-manifests/robotwin-if-arm-only-v2-20-per-mode/reuse-audit.json)
+- [独立 taskset](https://github.com/v-xchen-v/robotwin-if/blob/ac582a75267126c7a8fe17c220475d517b73882b/seed-manifests/robotwin-if-arm-only-v2-20-per-mode/README.md)
+- [复用源码审计](https://github.com/v-xchen-v/robotwin-if/blob/ac582a75267126c7a8fe17c220475d517b73882b/seed-manifests/robotwin-if-arm-only-v2-20-per-mode/reuse-audit.json)
 - [新 Arm 判据与真实仿真验证](arm-select-target-arm-only.md)
 - [发布来源与完整溯源校验](release-provenance.md)
 

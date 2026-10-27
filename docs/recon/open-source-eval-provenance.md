@@ -1,5 +1,7 @@
 # 开源模型正式评测：代码、任务、seed 与结果溯源
 
+> 本文记录 Arm-only-v2（Bottle）的历史评测。旧清单链接固定到备份提交；文中的旧版命令请在[备份分支](https://github.com/v-xchen-v/robotwin-if/tree/master-261027-staper-v1)执行。当前清单见 [Stapler v1](../../seed-manifests/robotwin-if-press-lift-stapler-v1-20-per-mode/README.md)。
+
 核对日期：2026-10-22。范围：当前 `master` 发布的六模型 **Arm-only-v2 / 20 blocks** 结果。
 核对时仓库 HEAD 为 `93d7271fc1ddda18822c30a2ee043cf946c3624f`。
 本文是已有评测的来源整理；本次没有启动模型评测。
@@ -16,7 +18,7 @@
 | --- | --- |
 | 六模型成绩 | [results.md](../../result/robotwin-if-arm-only-v2-20blocks/results.md)、[results.html](../../result/robotwin-if-arm-only-v2-20blocks/results.html) |
 | 逐回合成绩与原文件哈希 | [episodes.csv](../../result/robotwin-if-arm-only-v2-20blocks/episodes.csv) |
-| 精确 seeds 与任务配置 | [seed release](../../seed-manifests/robotwin-if-arm-only-v2-20-per-mode/README.md)、[suite.yml](../../seed-manifests/robotwin-if-arm-only-v2-20-per-mode/suite.yml) |
+| 精确 seeds 与任务配置 | [seed release](https://github.com/v-xchen-v/robotwin-if/blob/ac582a75267126c7a8fe17c220475d517b73882b/seed-manifests/robotwin-if-arm-only-v2-20-per-mode/README.md)、[suite.yml](https://github.com/v-xchen-v/robotwin-if/blob/ac582a75267126c7a8fe17c220475d517b73882b/seed-manifests/robotwin-if-arm-only-v2-20-per-mode/suite.yml) |
 | 模型权重身份 | [checkpoints.json](../../result/robotwin-if-arm-only-v2-20blocks/checkpoints.json) |
 | 运行计划、来源、完成校验 | [plan.json](../../result/robotwin-if-arm-only-v2-20blocks/plan.json)、[provenance.json](../../result/robotwin-if-arm-only-v2-20blocks/provenance.json)、[validation.json](../../result/robotwin-if-arm-only-v2-20blocks/validation.json) |
 
@@ -86,17 +88,17 @@ RoboTwin 的历史 tracked 修改涉及三个 description 工具的 UTF-8 读写
 
 | 任务 / 代码 | 场景或 checker 版本 | modes | 回合/模型 | action 上限 | 精确 seed 文件；最小–最大 seed |
 | --- | --- | --- | ---: | ---: | --- |
-| [Bottle / bottle_verb](../../tasks/envs/bottle_verb.py) | `relative-lift-hold-v6-terminal` | pick、shake | 40 | 700 | [bottle_verb.json](../../seed-manifests/robotwin-if-arm-only-v2-20-per-mode/bottle_verb.json)；100002–100057 |
-| [Noun / pick_diverse_object](../../tasks/envs/pick_diverse_object.py) | 无独立 checker 版本名，固定 task SHA256 | seen、unseen | 40 | 400 | [pick_diverse_object.json](../../seed-manifests/robotwin-if-arm-only-v2-20-per-mode/pick_diverse_object.json)；100002–100067 |
-| [Attribute / attribute_select](../../tasks/envs/attribute_select.py) | `target-only-lift-v2` | color、decal、shape、size 各两种 | 160 | 400 | [attribute_select.json](../../seed-manifests/robotwin-if-arm-only-v2-20-per-mode/attribute_select.json)；100000–100175 |
-| [Arm / arm_select](../../tasks/envs/arm_select.py) | 5 cm cube-v3 + `target-arm-only-lift-v2` | left、right | 40 | 400 | [arm_select.json](../../seed-manifests/robotwin-if-arm-only-v2-20-per-mode/arm_select.json)；500000–500039 |
-| [Sequence / stack_sequence](../../tasks/envs/stack_sequence.py) | 无独立 checker 版本名，固定 task SHA256 | RGB 六种排列 | 120 | 1200 | [stack_sequence.json](../../seed-manifests/robotwin-if-arm-only-v2-20-per-mode/stack_sequence.json)；100008–100175 |
-| [Spatial / place_relative](../../tasks/envs/place_relative.py) | spatial3 子集；无独立 checker 版本名 | left、right、on_top | 60 | 400 | [place_relative.json](../../seed-manifests/robotwin-if-arm-only-v2-20-per-mode/place_relative.json)；100005–100114 |
+| [Bottle / bottle_verb](../../tasks/envs/bottle_verb.py) | `relative-lift-hold-v6-terminal` | pick、shake | 40 | 700 | [bottle_verb.json](https://github.com/v-xchen-v/robotwin-if/blob/ac582a75267126c7a8fe17c220475d517b73882b/seed-manifests/robotwin-if-arm-only-v2-20-per-mode/bottle_verb.json)；100002–100057 |
+| [Noun / pick_diverse_object](../../tasks/envs/pick_diverse_object.py) | 无独立 checker 版本名，固定 task SHA256 | seen、unseen | 40 | 400 | [pick_diverse_object.json](https://github.com/v-xchen-v/robotwin-if/blob/ac582a75267126c7a8fe17c220475d517b73882b/seed-manifests/robotwin-if-arm-only-v2-20-per-mode/pick_diverse_object.json)；100002–100067 |
+| [Attribute / attribute_select](../../tasks/envs/attribute_select.py) | `target-only-lift-v2` | color、decal、shape、size 各两种 | 160 | 400 | [attribute_select.json](https://github.com/v-xchen-v/robotwin-if/blob/ac582a75267126c7a8fe17c220475d517b73882b/seed-manifests/robotwin-if-arm-only-v2-20-per-mode/attribute_select.json)；100000–100175 |
+| [Arm / arm_select](../../tasks/envs/arm_select.py) | 5 cm cube-v3 + `target-arm-only-lift-v2` | left、right | 40 | 400 | [arm_select.json](https://github.com/v-xchen-v/robotwin-if/blob/ac582a75267126c7a8fe17c220475d517b73882b/seed-manifests/robotwin-if-arm-only-v2-20-per-mode/arm_select.json)；500000–500039 |
+| [Sequence / stack_sequence](../../tasks/envs/stack_sequence.py) | 无独立 checker 版本名，固定 task SHA256 | RGB 六种排列 | 120 | 1200 | [stack_sequence.json](https://github.com/v-xchen-v/robotwin-if/blob/ac582a75267126c7a8fe17c220475d517b73882b/seed-manifests/robotwin-if-arm-only-v2-20-per-mode/stack_sequence.json)；100008–100175 |
+| [Spatial / place_relative](../../tasks/envs/place_relative.py) | spatial3 子集；无独立 checker 版本名 | left、right、on_top | 60 | 400 | [place_relative.json](https://github.com/v-xchen-v/robotwin-if/blob/ac582a75267126c7a8fe17c220475d517b73882b/seed-manifests/robotwin-if-arm-only-v2-20-per-mode/place_relative.json)；100005–100114 |
 
 表中的最小–最大值仅用于辨识，**只有 Arm 的 500000–500039 是连续 seeds**。
 运行必须读取 JSON 中的精确有序列表，不能按范围补全、另抽随机数或替换失败 seed。
-[seed-modes.csv](../../seed-manifests/robotwin-if-arm-only-v2-20-per-mode/seed-modes.csv) 和
-[seed-modes.json](../../seed-manifests/robotwin-if-arm-only-v2-20-per-mode/seed-modes.json)
+[seed-modes.csv](https://github.com/v-xchen-v/robotwin-if/blob/ac582a75267126c7a8fe17c220475d517b73882b/seed-manifests/robotwin-if-arm-only-v2-20-per-mode/seed-modes.csv) 和
+[seed-modes.json](https://github.com/v-xchen-v/robotwin-if/blob/ac582a75267126c7a8fe17c220475d517b73882b/seed-manifests/robotwin-if-arm-only-v2-20-per-mode/seed-modes.json)
 给出 `task → seed → mode → block_index`（正式 block 为 0–19）的显式对应。
 Spatial flat manifest 的 `schema_version=2`，其余五份为 1；不要把文件 schema 当成 task/checker 版本。
 六份 manifest 的完整 SHA256、当前任务源码 SHA256 和原始执行任务/config SHA256 都在[来源摘要](open-source-eval-source-lineage.json)中。

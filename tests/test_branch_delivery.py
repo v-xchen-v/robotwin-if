@@ -11,11 +11,11 @@ import sys
 import tempfile
 import unittest
 
-from if_benchmark.seed_contracts import IF_SEED_CONTRACTS, CURRENT_SUITE_TASKS, LEGACY_SUITE_TASKS
+from if_benchmark.seed_contracts import IF_SEED_CONTRACTS, CURRENT_SUITE_TASKS
 from if_benchmark.seed_modes import build_seed_modes, check_seed_modes, export_texts
 
 ROOT = Path(__file__).resolve().parents[1]
-RELEASE = ROOT / 'seed-manifests/robotwin-if-arm-only-v2-20-per-mode'
+RELEASE = ROOT / 'seed-manifests/robotwin-if-press-lift-stapler-v1-20-per-mode'
 POLICIES = ('xvla', 'lingbot_va', 'lingbot_vla', 'vlact', 'dm05', 'hy_vla')
 
 
@@ -24,9 +24,9 @@ class SeedModeDeliveryTest(unittest.TestCase):
         check_seed_modes(RELEASE)
         data = build_seed_modes(RELEASE)
         self.assertEqual(data['episodes_per_policy'], 460)
-        self.assertEqual([t['task'] for t in data['tasks']], list(LEGACY_SUITE_TASKS))
+        self.assertEqual([t['task'] for t in data['tasks']], list(CURRENT_SUITE_TASKS))
         for task in data['tasks']:
-            source = ROOT / 'result/robotwin-if-arm-only-v2-20blocks/manifests'
+            source = ROOT / 'result/robotwin-if-press-lift-stapler-v1-20blocks/manifests'
             frozen = json.loads((source / task['manifest']).read_text())
             self.assertEqual([r['seed'] for r in task['episodes']], frozen['seeds'])
             self.assertEqual(task['mode_counts'], dict.fromkeys(IF_SEED_CONTRACTS[task['task']].modes, 20))
@@ -45,13 +45,13 @@ class SeedModeDeliveryTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             directory = Path(tmp)
             shutil.copyfile(RELEASE / "suite.yml", directory / "suite.yml")
-            for task in LEGACY_SUITE_TASKS:
+            for task in CURRENT_SUITE_TASKS:
                 shutil.copyfile(RELEASE / f'{task}.json', directory / f'{task}.json')
             for name, contents in export_texts(directory).items():
                 (directory / name).write_text(contents)
             check_seed_modes(directory)
             path = directory / 'seed-modes.csv'
-            path.write_text(path.read_text().replace(',pick,', ',shake,', 1))
+            path.write_text(path.read_text().replace(',press,', ',lift,', 1))
             with self.assertRaisesRegex(ValueError, 'differs from flat manifests'):
                 check_seed_modes(directory)
 
