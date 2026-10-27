@@ -29,8 +29,8 @@
 
 ## 历史结果与后续评测
 
-当前 [Arm-only-v2 完整成绩](../result/robotwin-if-arm-only-v2-20blocks/README.md)中的
-Attribute 使用本判据，包含六个 policies 已重跑的 960 回合。旧判据成绩仅保留在 Git 历史中，
+当前 [Stapler v1 完整成绩](../result/robotwin-if-press-lift-stapler-v1-20blocks/README.md)中的
+Attribute 使用本判据，原样复用六个 policies 已重跑的 960 回合。旧判据成绩仅保留在 Git 历史中，
 不能当作当前判据的结果；复用来源见[发布溯源说明](release-provenance.md)。
 
 [`run_formal_policy_suite.py`](../tools/run_formal_policy_suite.py) 为新计划固定
@@ -40,7 +40,7 @@ Attribute 使用本判据，包含六个 policies 已重跑的 960 回合。旧�
 ## 验证入口
 
 两个用户指出的案例和一个正确抓取对照均完成原始动作回放，轻量证据保存在
-[`result/robotwin-if-arm-only-v2-20blocks/evidence/attribute-target-only/`](../result/robotwin-if-arm-only-v2-20blocks/evidence/attribute-target-only/README.md)。
+[`result/robotwin-if-arm-only-v2-20blocks/evidence/attribute-target-only/`](https://github.com/v-xchen-v/robotwin-if/blob/ac582a75267126c7a8fe17c220475d517b73882b/result/robotwin-if-arm-only-v2-20blocks/evidence/attribute-target-only/README.md)。
 
 | Policy / seed | 错误物体首次越过 5 cm 的 action | 干扰物最高抬升 | 原始动作数 | 新判据 |
 |---|---:|---:|---:|---|

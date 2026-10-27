@@ -75,7 +75,7 @@ front/back = 5k + 2, 5k + 3             # 已下线，运行前拒绝
 `Spatial Avg. = (SR_left + SR_right + SR_on_top) / 3`。
 `Overall = 六个 Task Avg. 的等权平均`，使用完整精度计算后显示一位小数。
 
-当前成绩只在[最新结果包](../result/robotwin-if-arm-only-v2-20blocks/README.md)展示；
+当前成绩只在[最新结果包](../result/robotwin-if-press-lift-stapler-v1-20blocks/README.md)展示；
 旧范围的汇总表保留在 Git 历史中。当前 seed 清单见[正式 manifest](../seed-manifests/robotwin-if-press-lift-stapler-v1-20-per-mode/README.md)。
 
 ## 复现与验证

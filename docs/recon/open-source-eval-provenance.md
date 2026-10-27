@@ -1,6 +1,6 @@
 # 开源模型正式评测：代码、任务、seed 与结果溯源
 
-> 本文记录 Arm-only-v2（Bottle）的历史评测。旧清单链接固定到备份提交；文中的旧版命令请在[备份分支](https://github.com/v-xchen-v/robotwin-if/tree/master-261027-staper-v1)执行。当前清单见 [Stapler v1](../../seed-manifests/robotwin-if-press-lift-stapler-v1-20-per-mode/README.md)。
+> 本文记录 Arm-only-v2（Bottle）的历史评测。旧清单与结果链接固定到备份提交；文中的旧版命令请在[备份分支](https://github.com/v-xchen-v/robotwin-if/tree/master-261027-staper-v1)执行。当前清单见 [Stapler v1](../../seed-manifests/robotwin-if-press-lift-stapler-v1-20-per-mode/README.md)。
 
 核对日期：2026-10-22。范围：当前 `master` 发布的六模型 **Arm-only-v2 / 20 blocks** 结果。
 核对时仓库 HEAD 为 `93d7271fc1ddda18822c30a2ee043cf946c3624f`。
@@ -16,11 +16,11 @@
 
 | 查什么 | 当前入口 |
 | --- | --- |
-| 六模型成绩 | [results.md](../../result/robotwin-if-arm-only-v2-20blocks/results.md)、[results.html](../../result/robotwin-if-arm-only-v2-20blocks/results.html) |
-| 逐回合成绩与原文件哈希 | [episodes.csv](../../result/robotwin-if-arm-only-v2-20blocks/episodes.csv) |
+| 六模型成绩 | [results.md](https://github.com/v-xchen-v/robotwin-if/blob/ac582a75267126c7a8fe17c220475d517b73882b/result/robotwin-if-arm-only-v2-20blocks/results.md)、[results.html](https://github.com/v-xchen-v/robotwin-if/blob/ac582a75267126c7a8fe17c220475d517b73882b/result/robotwin-if-arm-only-v2-20blocks/results.html) |
+| 逐回合成绩与原文件哈希 | [episodes.csv](https://github.com/v-xchen-v/robotwin-if/blob/ac582a75267126c7a8fe17c220475d517b73882b/result/robotwin-if-arm-only-v2-20blocks/episodes.csv) |
 | 精确 seeds 与任务配置 | [seed release](https://github.com/v-xchen-v/robotwin-if/blob/ac582a75267126c7a8fe17c220475d517b73882b/seed-manifests/robotwin-if-arm-only-v2-20-per-mode/README.md)、[suite.yml](https://github.com/v-xchen-v/robotwin-if/blob/ac582a75267126c7a8fe17c220475d517b73882b/seed-manifests/robotwin-if-arm-only-v2-20-per-mode/suite.yml) |
-| 模型权重身份 | [checkpoints.json](../../result/robotwin-if-arm-only-v2-20blocks/checkpoints.json) |
-| 运行计划、来源、完成校验 | [plan.json](../../result/robotwin-if-arm-only-v2-20blocks/plan.json)、[provenance.json](../../result/robotwin-if-arm-only-v2-20blocks/provenance.json)、[validation.json](../../result/robotwin-if-arm-only-v2-20blocks/validation.json) |
+| 模型权重身份 | [checkpoints.json](https://github.com/v-xchen-v/robotwin-if/blob/ac582a75267126c7a8fe17c220475d517b73882b/result/robotwin-if-arm-only-v2-20blocks/checkpoints.json) |
+| 运行计划、来源、完成校验 | [plan.json](https://github.com/v-xchen-v/robotwin-if/blob/ac582a75267126c7a8fe17c220475d517b73882b/result/robotwin-if-arm-only-v2-20blocks/plan.json)、[provenance.json](https://github.com/v-xchen-v/robotwin-if/blob/ac582a75267126c7a8fe17c220475d517b73882b/result/robotwin-if-arm-only-v2-20blocks/provenance.json)、[validation.json](https://github.com/v-xchen-v/robotwin-if/blob/ac582a75267126c7a8fe17c220475d517b73882b/result/robotwin-if-arm-only-v2-20blocks/validation.json) |
 
 当前 `vlact` 成绩使用 **VLAct All（Clean+Random，100K）**。
 另一个 Clean 50K checkpoint 的评测停在 308/460，未纳入这里的六模型成绩。
@@ -102,7 +102,7 @@ RoboTwin 的历史 tracked 修改涉及三个 description 工具的 UTF-8 读写
 给出 `task → seed → mode → block_index`（正式 block 为 0–19）的显式对应。
 Spatial flat manifest 的 `schema_version=2`，其余五份为 1；不要把文件 schema 当成 task/checker 版本。
 六份 manifest 的完整 SHA256、当前任务源码 SHA256 和原始执行任务/config SHA256 都在[来源摘要](open-source-eval-source-lineage.json)中。
-它们与发布的 [plan.json](../../result/robotwin-if-arm-only-v2-20blocks/plan.json) 及原始运行中的 manifest 副本一致。
+它们与发布的 [plan.json](https://github.com/v-xchen-v/robotwin-if/blob/ac582a75267126c7a8fe17c220475d517b73882b/result/robotwin-if-arm-only-v2-20blocks/plan.json) 及原始运行中的 manifest 副本一致。
 
 关键判据与 seed 语义：
 
@@ -123,13 +123,13 @@ Spatial flat manifest 的 `schema_version=2`，其余五份为 1；不要把文�
 | `hy_vla` | `tencent/Hy-Embodied-0.5-VLA-RoboTwin` | `bd7bba6f` | `af57e750` + 修改 |
 
 完整 checkpoint revisions、已记录的权重哈希、VLAct base model 和 LingBot-VLA processor 版本见
-[checkpoints.json](../../result/robotwin-if-arm-only-v2-20blocks/checkpoints.json)。模型代码的完整 commit/dirty 状态见[来源摘要](open-source-eval-source-lineage.json)的 `checkpoints`。
+[checkpoints.json](https://github.com/v-xchen-v/robotwin-if/blob/ac582a75267126c7a8fe17c220475d517b73882b/result/robotwin-if-arm-only-v2-20blocks/checkpoints.json)。模型代码的完整 commit/dirty 状态见[来源摘要](open-source-eval-source-lineage.json)的 `checkpoints`。
 该表的模型代码来自 checkpoint 证据 `run.json`；逐批次的实际运行参数和源码仍以各回合的原始执行元数据为准。
 本次已核对六份 checkpoint 证据文件的 SHA256。
 
 ## 结果存在哪里、如何串起来
 
-公开结果包位于仓库内：`result/robotwin-if-arm-only-v2-20blocks/`。
+历史公开结果包在备份提交中的路径为：`result/robotwin-if-arm-only-v2-20blocks/`；当前 master 已移除该目录。
 原始运行根目录位于本机：`/Data/robotwin-if/evaluations/robotwin-if-arm-only-v2-20blocks-001/`。
 下表中的 `RUN` 指该绝对路径；视频、动作和源码快照不包含在 Git 公开结果包中。
 
@@ -143,7 +143,7 @@ Spatial flat manifest 的 `schema_version=2`，其余五份为 1；不要把文�
 | 新 Arm 原始批次 | `RUN/batches/<attempt>/<policy>/arm_select/run.json` | 实际执行版本、seeds、参数、checkpoint/server 元数据 |
 | 继承的服务/输入契约 | `RUN/provenance/reused/<policy>/<task>/run.json` | 复用的 checkpoint/配置证据；可能保留更早的 commit、manifest 或 seed 子集 |
 | 冻结源码与远程部署 | `RUN/support/` | 源码快照、补丁、哈希、msrait-03 推理及分片配置 |
-| 判据诊断控制 | 结果包的 [evidence/](../../result/robotwin-if-arm-only-v2-20blocks/evidence/README.md) | Arm/Attribute 判据验证材料；不属于新增模型成绩 |
+| 判据诊断控制 | 结果包的 [evidence/](https://github.com/v-xchen-v/robotwin-if/blob/ac582a75267126c7a8fe17c220475d517b73882b/result/robotwin-if-arm-only-v2-20blocks/evidence/README.md) | Arm/Attribute 判据验证材料；不属于新增模型成绩 |
 
 例如 `episodes.csv` 的 `record_path=xvla/bottle_verb/bottle_verb_ep100002_result.json`，
 应拼接到 `RUN`，不是拼接到 Git 结果包目录。

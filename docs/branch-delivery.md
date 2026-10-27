@@ -1,6 +1,6 @@
 # 分支交付说明
 
-本分支交付三部分：六个模型的推理适配与 bash 评测入口、六任务 20-block 的 seed/mode 清单、旧版已完成的结果包。新版 Press/Lift Stapler 清单已完成 expert 筛选，尚未进行正式模型 eval。
+本分支交付三部分：六个模型的推理适配与 bash 评测入口、六任务 20-block 的 seed/mode 清单、完整的 Press/Lift Stapler v1 结果包。Expert 筛选与六模型正式评测均已完成。
 Grasp-Approach 已下线，旧实现仅保留在 Git 历史中，不进入当前默认评测。
 
 ## 1. Policy inference code 与 eval
@@ -16,7 +16,7 @@ Grasp-Approach 已下线，旧实现仅保留在 Git 历史中，不进入当前
 
 各目录提供 `setup_env.sh`、依赖声明、`client.py`、`eval.py` 和输出适配；五个模型还有本仓库的
 `serve.py` 包装，X-VLA 使用 setup 获取的固定上游 server。模型权重由各 README 的下载流程获取。
-实际用于已交付结果的 checkpoint revisions 记录在 [checkpoints.json](../result/robotwin-if-arm-only-v2-20blocks/checkpoints.json)。
+实际用于已交付结果的 checkpoint revisions 记录在 [checkpoints.json](../result/robotwin-if-press-lift-stapler-v1-20blocks/checkpoints.json)。
 VLAct 使用 All 100K，不能用旧 Clean 50K 代替。
 
 运行需要 Linux、NVIDIA GPU、Bash、`setsid`、`flock`、`timeout`、`nvidia-smi`，以及已安装的
@@ -107,14 +107,14 @@ master 只保留最新 Stapler v1 清单。旧 Arm-only-v2 和 Bell 清单见[�
 当前结果为 [`result/robotwin-if-press-lift-stapler-v1-20blocks/`](../result/robotwin-if-press-lift-stapler-v1-20blocks/README.md)。
 六个 policies 已完成 **2760/2760 episodes、720/720 blocks**，每个 policy 为 460 episodes；2026-10-26 完成校验。
 Stapler 全新运行 240 回合，其余五任务复用 Arm-only-v2 的 2520 回合，包含成功和失败。
-初始观测、记录哈希、统计及 checkpoint 身份已核对。旧 Arm/Attribute 判据的证据仍随历史结果包保留。
+初始观测、记录哈希、统计及 checkpoint 身份已核对。Arm/Attribute 判据的验证证据可从[备份结果包](https://github.com/v-xchen-v/robotwin-if/blob/ac582a75267126c7a8fe17c220475d517b73882b/result/robotwin-if-arm-only-v2-20blocks/evidence/README.md)查阅。
 
 提供 `results.html/md/json/csv`、`episodes.csv`、六份 frozen manifests、checkpoint 身份、
 provenance 与 `SHA256SUMS`。可离线查看汇总表和逐回合计数，不依赖原机器。
 `Overall` 对六个任务的 `Task Avg.` 等权，成功与已完成的 policy failure 都保留。
 
 ```bash
-(cd result/robotwin-if-arm-only-v2-20blocks && sha256sum -c SHA256SUMS)
+(cd result/robotwin-if-press-lift-stapler-v1-20blocks && sha256sum -c SHA256SUMS)
 ```
 
 完整视频和动作轨迹体积较大，仍保存在结果 README 指定的原始评测目录，不包含在此轻量结果包中。

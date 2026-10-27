@@ -4,7 +4,7 @@
 其余五组保留历史运行中的示例。
 每个画面选用一个在对应规则下标记成功的回合；视频选例不参与结果计算，导出过程没有重跑仿真或模型。
 Bottle-Verb 已完成 v6 重测；此处 Hy-VLA pick / shake 视频仍为旧判定演示，不作为 v6 成功证据。
-当前成绩见 [Arm-only-v2 六任务结果包](../../../result/robotwin-if-arm-only-v2-20blocks/README.md)。
+当前成绩见 [Stapler v1 六任务结果包](../../../result/robotwin-if-press-lift-stapler-v1-20blocks/README.md)。
 这里的 cube-v3 示例来源及评测复用证据见[发布溯源说明](../../release-provenance.md)。
 
 | Task | Policy | Seeds（按画面从左到右、从上到下） | 展示内容 | 存档播放倍速 |

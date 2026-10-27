@@ -197,7 +197,8 @@ def source_paths():
         paths.update(p for p in (ROOT / folder).rglob('*')
                      if p.is_file() and p.suffix in ('.py', '.json', '.yml', '.yaml'))
     paths.update((Path(__file__).resolve(), ROOT / 'tools/sim_device.py',
-                  ROOT / 'tools/prepare_bell_policy_suite.py', ROOT / 'tools/prepare_stapler_policy_suite.py'))
+                  ROOT / 'tools/prepare_bell_policy_suite.py', ROOT / 'tools/prepare_stapler_policy_suite.py',
+                  ROOT / 'tools/release_history.py'))
     return sorted(paths)
 
 

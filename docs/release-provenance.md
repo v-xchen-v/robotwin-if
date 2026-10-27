@@ -6,7 +6,7 @@
 - [完整评测结果](../result/robotwin-if-press-lift-stapler-v1-20blocks/README.md)：6 个开源 checkpoint，共 2760 回合、720 blocks。
 - [Checkpoint 版本](../result/robotwin-if-press-lift-stapler-v1-20blocks/checkpoints.json)与[复用来源](../result/robotwin-if-press-lift-stapler-v1-20blocks/provenance.json)：Stapler 新跑 240 回合，其余五任务复用 2520 回合。
 
-`seed-manifests/` 只保留这一套清单。旧 Arm-only-v2 和 Bell 清单已从 master 移除，
+`seed-manifests/` 与 `result/` 分别只保留这一套清单和结果包。旧 Arm-only-v2 结果及旧清单已从 master 移除，
 可在[备份分支 master-261027-staper-v1](https://github.com/v-xchen-v/robotwin-if/tree/master-261027-staper-v1)查阅。
 
 ## 当前版本校验
@@ -25,3 +25,18 @@ bash scripts/eval.sh --policy hy_vla --output-dir outputs/policy-eval/hy-vla-new
 清单、seed/mode 导出、资格记录及已发布结果保持原始字节。资格记录中的旧路径是来源标识；
 校验使用当前包内保留的证据。旧结果包的路径和哈希也保留为发布时的历史记录。
 [历史 Arm-only-v2 来源分析](recon/open-source-eval-provenance.md)及旧发布工具应在备份分支的对应版本下使用。
+
+## 清理后的五任务结果复用
+
+`prepare_stapler_policy_suite.py`、formal prepare 和 `publish_stapler_policy_results.py`
+通过 `tools/release_history.py` 从固定提交 `ac582a75267126c7a8fe17c220475d517b73882b` 读取旧包的
+`episodes.csv` 和 `checkpoints.json`。读取不 checkout、不恢复旧目录、不修改当前已发布结果。
+原有逐回合哈希、seed/config、成功判据及 checkpoint 核对继续生效；原始运行产物仍由 `--old-run` 提供。
+
+浅克隆执行这类历史复用/重新发布前，可取回对应提交：
+
+```bash
+git fetch origin ac582a75267126c7a8fe17c220475d517b73882b
+```
+
+查看当前结果、校验当前包或从当前 manifest 全新评测，不需要历史 Git 提交。

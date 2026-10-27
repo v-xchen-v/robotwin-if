@@ -23,6 +23,7 @@ Verb 改为订书器 Press/Lift，新增 240 回合；其余五任务的 2520 �
 
 ## 复用来源与判据证据
 
-[Arm-only-v2 结果包](robotwin-if-arm-only-v2-20blocks/README.md)保留其原有 Bottle Verb 成绩，
-也是本版其余五任务的复用来源。其 [Arm/Attribute 验证证据](robotwin-if-arm-only-v2-20blocks/evidence/README.md)
-继续用于解释当前成功判据。更早版本的来源与历史哈希见[发布溯源说明](../docs/release-provenance.md)。
+`result/` 只保留上述 Stapler v1 包。旧 [Arm-only-v2 结果](https://github.com/v-xchen-v/robotwin-if/blob/ac582a75267126c7a8fe17c220475d517b73882b/result/robotwin-if-arm-only-v2-20blocks/README.md)及
+[Arm/Attribute 判据验证证据](https://github.com/v-xchen-v/robotwin-if/blob/ac582a75267126c7a8fe17c220475d517b73882b/result/robotwin-if-arm-only-v2-20blocks/evidence/README.md)已移至 Git 历史，
+可从备份分支 `master-261027-staper-v1` 查阅。当前包的 2520 条复用记录、checkpoint、来源哈希与完整成绩保持原样。
+复用和发布脚本从固定提交读取旧证据，方法见[发布溯源说明](../docs/release-provenance.md)。

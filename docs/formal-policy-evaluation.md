@@ -7,11 +7,11 @@ Grasp-Approach 已暂时下线，见 [归档说明](../bak/grasp_cube_approach/R
 本轮已于 **2026-10-26 11:53 UTC** 完成：2760 回合、720 blocks 全部通过校验。
 见[六任务结果包](../result/robotwin-if-press-lift-stapler-v1-20blocks/README.md)，执行使用下述双路入口。
 
-历史 [Arm-only-v2 结果](../result/robotwin-if-arm-only-v2-20blocks/README.md)的
+历史 [Arm-only-v2 结果](https://github.com/v-xchen-v/robotwin-if/blob/ac582a75267126c7a8fe17c220475d517b73882b/result/robotwin-if-arm-only-v2-20blocks/README.md)的
 **2760 回合、720 blocks** 已于 2026-09-18 05:26 UTC 完成校验；其 Verb 为 Bottle。
 历史 [远端推理/并发调度记录](arm-select-target-only-v2-evaluation.md)、
 [Bottle v6 判据](bottle-verb-pick-hold.md)和[发布溯源说明](release-provenance.md)继续保留。
-基础 runner 的 `--release` 默认值仍是 Arm-only-v2；当前 Stapler 清单由专用准备入口指定。
+基础 runner 的默认清单与运行目录均为 Stapler v1。准备和发布时，旧包的复用证据从固定 Git 提交读取，见[溯源说明](release-provenance.md)。
 
 ## 基础入口：单机串行
 
@@ -97,8 +97,8 @@ GPU、网络、场景不一致及执行异常不走这个重试。
 全套 **3,240 回合、840 个完整 blocks**。从 12 扩到 20 时保留全部 1,944 条旧成功/失败结果，
 新增 1,296 回合；seed 选择不参考 policy 成败。
 
-结果入口在 [`result/`](../result/README.md)。当前 Arm-only-v2 六任务完整数据目录为
-`/Data/robotwin-if/evaluations/robotwin-if-arm-only-v2-20blocks-001`，
+结果入口在 [`result/`](../result/README.md)。当前 Stapler v1 六任务完整数据目录为
+`/Data/robotwin-if/evaluations/robotwin-if-press-lift-stapler-v1-20blocks-001`，
 repo 入口为同名的 `outputs/policy-eval/` 子目录。历史七任务目录
 `/Data/robotwin-if/evaluations/if-seven-tasks-v2-wide-20blocks-001` 保留原判定和原始产物。
 
@@ -107,7 +107,7 @@ provenance、mode 和计数，生成 Markdown、HTML、JSON 与分模式 CSV：
 
 ```bash
 python tools/summarize_formal_policy_results.py \
-  --run-dir /Data/robotwin-if/evaluations/robotwin-if-arm-only-v2-20blocks-001 \
+  --run-dir /Data/robotwin-if/evaluations/robotwin-if-press-lift-stapler-v1-20blocks-001 \
   --output outputs/policy-eval/reports/results-current.md
 ```
 

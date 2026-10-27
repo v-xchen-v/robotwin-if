@@ -1,7 +1,7 @@
 # Arm-Select cube-v3：场景与资格验证
 
 当前正式场景采用 5 cm cube，成功规则为 [target-arm-only-v2](../arm-select-target-arm-only.md)。
-六个 policies 的 240 个 Arm 回合已完成重跑，见[当前结果](../../result/robotwin-if-arm-only-v2-20blocks/README.md)。
+六个 policies 的 240 个 Arm 回合已完成重跑，见[当前结果](../../result/robotwin-if-press-lift-stapler-v1-20blocks/README.md)。
 
 ## 目的与实现
 

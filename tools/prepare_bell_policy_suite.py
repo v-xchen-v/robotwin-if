@@ -3,6 +3,8 @@
 import argparse
 import csv
 import datetime
+import hashlib
+import io
 from pathlib import Path
 import shutil
 import subprocess
@@ -13,17 +15,20 @@ sys.path.insert(0, str(ROOT))
 from if_benchmark.seed_contracts import CURRENT_SUITE_TASKS
 from tools import run_formal_policy_suite as formal
 from tools.release_press_lift_bell_v1 import RELEASE, verify as verify_release
+from tools.release_history import PARENT_RESULT, read_parent_result
 
 OLD = Path('/Data/robotwin-if/evaluations/robotwin-if-arm-only-v2-20blocks-001')
-PACKAGE = ROOT / 'result/robotwin-if-arm-only-v2-20blocks'
+PACKAGE = ROOT / PARENT_RESULT  # Historical identity; bytes are read from Git.
 RUN = Path('/Data/robotwin-if/evaluations/robotwin-if-press-lift-bell-v1-20blocks-001')
 
 
-def reuse_inputs(old, suite, package=PACKAGE, release=RELEASE):
+def reuse_inputs(old, suite, package=None, release=RELEASE):
     """Validate seed/config/source/record identity before accepting any reused row."""
     assert formal.read(old / 'status.json')['status'] == 'complete'
-    with (package / 'episodes.csv').open(newline='') as stream:
-        published = {(r['policy'], r['task'], int(r['seed'])): r for r in csv.DictReader(stream)}
+    parent_csv = (read_parent_result('episodes.csv') if package is None
+                  else (package / 'episodes.csv').read_bytes())
+    published = {(r['policy'], r['task'], int(r['seed'])): r
+                 for r in csv.DictReader(io.StringIO(parent_csv.decode(), newline=''))}
     old_sources = formal.read(old / 'support/source-hashes.json')
     source_audit = {}
     names = [f'tasks/envs/{t}.py' for t in CURRENT_SUITE_TASKS[1:]]
@@ -79,10 +84,10 @@ def prepare(base=RUN, old=OLD, *, release=RELEASE, task_name='press_lift_bell', 
     formal.write(base / 'plan.json', plan)
     formal.write(base / 'support/reuse-index.json', rows)
     formal.write(base / 'support/reuse-audit.json', dict(parent_result=str(PACKAGE),
-        parent_episode_csv_sha256=formal.digest(PACKAGE / 'episodes.csv'),
+        parent_episode_csv_sha256=hashlib.sha256(read_parent_result('episodes.csv')).hexdigest(),
         unchanged_five_task_sources=source_audit, unchanged_five_manifests=True,
         reused_episodes=2520, new_task=task_name, new_task_episodes=240, reuse_all_successes_and_failures=True))
-    shutil.copyfile(PACKAGE / 'checkpoints.json', base / 'support/checkpoint-reference.json')
+    (base / 'support/checkpoint-reference.json').write_bytes(read_parent_result('checkpoints.json'))
     shutil.copyfile(old / 'support/services-before-recovery.json', base / 'support/services-before-recovery.json')
     for policy, source in references.items():
         dest = base / 'provenance/inference-reference' / policy / task_name

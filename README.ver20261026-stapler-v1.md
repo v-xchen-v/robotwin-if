@@ -25,15 +25,15 @@ Grasp-Approach 已于 2026-09-15 暂时下线；旧实现仅保留在 Git 历史
 
 本文件是 `README.ver20261026-stapler-v1.md` 版本快照，记录 2026-10-26 完成的 Stapler v1 评测；[项目最新 README](README.md)。
 
-**旧版结果包：[`result/robotwin-if-arm-only-v2-20blocks/`](result/robotwin-if-arm-only-v2-20blocks/README.md)** ·
-[HTML 报表](result/robotwin-if-arm-only-v2-20blocks/results.html) ·
-[逐回合 CSV](result/robotwin-if-arm-only-v2-20blocks/episodes.csv)。
+**旧版结果包：[`result/robotwin-if-arm-only-v2-20blocks/`](https://github.com/v-xchen-v/robotwin-if/blob/ac582a75267126c7a8fe17c220475d517b73882b/result/robotwin-if-arm-only-v2-20blocks/README.md)** ·
+[HTML 报表](https://github.com/v-xchen-v/robotwin-if/blob/ac582a75267126c7a8fe17c220475d517b73882b/result/robotwin-if-arm-only-v2-20blocks/results.html) ·
+[逐回合 CSV](https://github.com/v-xchen-v/robotwin-if/blob/ac582a75267126c7a8fe17c220475d517b73882b/result/robotwin-if-arm-only-v2-20blocks/episodes.csv)。
 
 旧版 [RoboTwin-IF Arm-only-v2 taskset](seed-manifests/robotwin-if-arm-only-v2-20-per-mode/README.md)
 已完成六个 policies × 六任务 × 每任务 20 blocks：460 回合/policy，共 2760 回合、720 blocks。
 该版按 `target-arm-only-lift-v2` 重跑 Arm-Select 240 回合；其余五任务逐字节复用 Attribute-v2 的 2520 回合。
 保留 cube-v3 场景、Attribute target-only-lift-v2、Bottle v6 terminal 和 Spatial 三模式。
-详见[Arm 成功判据](docs/arm-select-target-arm-only.md)和[完整结果](result/robotwin-if-arm-only-v2-20blocks/README.md)。
+详见[Arm 成功判据](docs/arm-select-target-arm-only.md)和[完整结果](https://github.com/v-xchen-v/robotwin-if/blob/ac582a75267126c7a8fe17c220475d517b73882b/result/robotwin-if-arm-only-v2-20blocks/README.md)。
 新旧 seed 清单与使用方法见 [seed-manifests](seed-manifests/README.md)。
 当前分支保留新旧两套清单与旧版结果；发布来源及完整审计见[溯源说明](docs/release-provenance.md)。
 
@@ -79,7 +79,7 @@ X-VLA 使用公开 clean checkpoint，其余五个模型沿用原 clean + random
 ## 旧版 Arm-only-v2：六个 Policies 的评测结果
 
 2026-09-18 05:26 UTC 完成并校验：**2760/2760 回合、720/720 blocks**。
-Arm-Select 重新运行 **240 回合**；其余五任务的 **2520 回合**及其统计与上一版 Attribute-v2（[复用来源](result/robotwin-if-arm-only-v2-20blocks/provenance.json)）一致。
+Arm-Select 重新运行 **240 回合**；其余五任务的 **2520 回合**及其统计与上一版 Attribute-v2（[复用来源](https://github.com/v-xchen-v/robotwin-if/blob/ac582a75267126c7a8fe17c220475d517b73882b/result/robotwin-if-arm-only-v2-20blocks/provenance.json)）一致。
 六份 seed manifest、checkpoint 和推理参数沿用上一版，全部新回合初始观测逐数组匹配。
 4 次推理前 oracle 初始化失败用原 seed 恢复；完成的 policy 成功和失败没有重跑。
 VLAct 使用 `StarVLA/VLAct_Qwen3OFT_Robotwin_all_Finetune`（All 100K）。
@@ -188,19 +188,19 @@ Spatial 从五模式收缩为 **left/right/on_top**；这是视频复核后的�
 
 </details>
 
-数据来源：[HTML 报表](result/robotwin-if-arm-only-v2-20blocks/results.html) ·
-[完整结果表](result/robotwin-if-arm-only-v2-20blocks/results.md) ·
-[分模式 CSV](result/robotwin-if-arm-only-v2-20blocks/results.csv) ·
-[逐回合 CSV](result/robotwin-if-arm-only-v2-20blocks/episodes.csv) ·
-[结果 JSON](result/robotwin-if-arm-only-v2-20blocks/results.json) ·
-[Checkpoint 版本](result/robotwin-if-arm-only-v2-20blocks/checkpoints.json) ·
-[校验证据](result/robotwin-if-arm-only-v2-20blocks/validation.json)。
+数据来源：[HTML 报表](https://github.com/v-xchen-v/robotwin-if/blob/ac582a75267126c7a8fe17c220475d517b73882b/result/robotwin-if-arm-only-v2-20blocks/results.html) ·
+[完整结果表](https://github.com/v-xchen-v/robotwin-if/blob/ac582a75267126c7a8fe17c220475d517b73882b/result/robotwin-if-arm-only-v2-20blocks/results.md) ·
+[分模式 CSV](https://github.com/v-xchen-v/robotwin-if/blob/ac582a75267126c7a8fe17c220475d517b73882b/result/robotwin-if-arm-only-v2-20blocks/results.csv) ·
+[逐回合 CSV](https://github.com/v-xchen-v/robotwin-if/blob/ac582a75267126c7a8fe17c220475d517b73882b/result/robotwin-if-arm-only-v2-20blocks/episodes.csv) ·
+[结果 JSON](https://github.com/v-xchen-v/robotwin-if/blob/ac582a75267126c7a8fe17c220475d517b73882b/result/robotwin-if-arm-only-v2-20blocks/results.json) ·
+[Checkpoint 版本](https://github.com/v-xchen-v/robotwin-if/blob/ac582a75267126c7a8fe17c220475d517b73882b/result/robotwin-if-arm-only-v2-20blocks/checkpoints.json) ·
+[校验证据](https://github.com/v-xchen-v/robotwin-if/blob/ac582a75267126c7a8fe17c220475d517b73882b/result/robotwin-if-arm-only-v2-20blocks/validation.json)。
 
 ## 旧版六个任务与视频
 
 每项任务聚焦一种指令差异：做什么动作、抓哪个物体、按什么属性选择、用哪只手、按什么顺序、放在哪个方向。
 下方动态预览可点击打开 MP4；素材随仓库提供。视频选自正式评测中的成功回合，用于展示任务行为，
-整体表现见 [完整结果](result/robotwin-if-arm-only-v2-20blocks/README.md)。原始指令、seed、policy 和视频处理说明见 [素材来源](docs/assets/task-demos/README.md)。
+整体表现见 [完整结果](https://github.com/v-xchen-v/robotwin-if/blob/ac582a75267126c7a8fe17c220475d517b73882b/result/robotwin-if-arm-only-v2-20blocks/README.md)。原始指令、seed、policy 和视频处理说明见 [素材来源](docs/assets/task-demos/README.md)。
 
 <a id="bottle-verb"></a>
 

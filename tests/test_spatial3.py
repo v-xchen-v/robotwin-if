@@ -18,7 +18,7 @@ from tools import summarize_formal_policy_results as report
 
 ROOT = Path(__file__).resolve().parents[1]
 RELEASE = ROOT / 'seed-manifests/robotwin-if-press-lift-stapler-v1-20-per-mode'
-RESULT = ROOT / 'result/robotwin-if-arm-only-v2-20blocks'
+RESULT = ROOT / 'result/robotwin-if-press-lift-stapler-v1-20blocks'
 
 
 class SparseSpatialTest(unittest.TestCase):
@@ -98,7 +98,7 @@ class SparseSpatialTest(unittest.TestCase):
         self.assertEqual({r['mode'] for r in spatial}, {'left','right','on_top'})
         self.assertEqual(len(spatial),360)
         self.assertEqual(len(kept),2760)
-        self.assertEqual(sum(int(r['success']) for r in kept),1097)
+        self.assertEqual(sum(int(r['success']) for r in kept),1105)
         data=json.loads((RESULT/'results.json').read_text())
         for policy,p in data['policies'].items():
             scores=[]

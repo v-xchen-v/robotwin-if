@@ -25,17 +25,8 @@ Grasp-Approach 已于 2026-09-15 暂时下线；旧实现仅保留在 Git 历史
 
 本次 README 版本快照：[README.ver20261026-stapler-v1.md](README.ver20261026-stapler-v1.md)。
 
-**旧版结果包：[`result/robotwin-if-arm-only-v2-20blocks/`](result/robotwin-if-arm-only-v2-20blocks/README.md)** ·
-[HTML 报表](result/robotwin-if-arm-only-v2-20blocks/results.html) ·
-[逐回合 CSV](result/robotwin-if-arm-only-v2-20blocks/episodes.csv)。
-
-旧版 [RoboTwin-IF Arm-only-v2 taskset](https://github.com/v-xchen-v/robotwin-if/blob/ac582a75267126c7a8fe17c220475d517b73882b/seed-manifests/robotwin-if-arm-only-v2-20-per-mode/README.md)
-已完成六个 policies × 六任务 × 每任务 20 blocks：460 回合/policy，共 2760 回合、720 blocks。
-该版按 `target-arm-only-lift-v2` 重跑 Arm-Select 240 回合；其余五任务逐字节复用 Attribute-v2 的 2520 回合。
-保留 cube-v3 场景、Attribute target-only-lift-v2、Bottle v6 terminal 和 Spatial 三模式。
-详见[Arm 成功判据](docs/arm-select-target-arm-only.md)和[完整结果](result/robotwin-if-arm-only-v2-20blocks/README.md)。
 当前 seed 清单与使用方法见 [seed-manifests](seed-manifests/README.md)。
-master 仅保留最新 Stapler v1 seed 清单；旧清单见[备份分支](https://github.com/v-xchen-v/robotwin-if/tree/master-261027-staper-v1)。发布来源及校验见[溯源说明](docs/release-provenance.md)。
+master 仅保留最新 Stapler v1 清单与结果包；旧版本见[备份分支](https://github.com/v-xchen-v/robotwin-if/tree/master-261027-staper-v1)。发布来源及校验见[溯源说明](docs/release-provenance.md)。
 
 <a id="policy-results"></a>
 
@@ -76,131 +67,17 @@ X-VLA 使用公开 clean checkpoint，其余五个模型沿用原 clean + random
 完整六任务分模式成绩、checkpoint、复用和执行恢复证据见[结果包](result/robotwin-if-press-lift-stapler-v1-20blocks/README.md)。
 本版替换了 Verb 任务，Overall 与旧版的变化不能解读为同一任务上的能力提升。
 
-## 旧版 Arm-only-v2：六个 Policies 的评测结果
-
-2026-09-18 05:26 UTC 完成并校验：**2760/2760 回合、720/720 blocks**。
-Arm-Select 重新运行 **240 回合**；其余五任务的 **2520 回合**及其统计与上一版 Attribute-v2（[复用来源](result/robotwin-if-arm-only-v2-20blocks/provenance.json)）一致。
-六份 seed manifest、checkpoint 和推理参数沿用上一版，全部新回合初始观测逐数组匹配。
-4 次推理前 oracle 初始化失败用原 seed 恢复；完成的 policy 成功和失败没有重跑。
-VLAct 使用 `StarVLA/VLAct_Qwen3OFT_Robotwin_all_Finetune`（All 100K）。
-
-**微调数据差异：** X-VLA 使用在 RoboTwin **clean** 数据上微调的 checkpoint，其余五个 policies 使用在
-**clean + randomized** 数据上微调的 checkpoint。由于 X-VLA 目前没有开源的 clean + randomized checkpoint，
-本次比较采用其公开的 clean checkpoint。因此，各模型的微调数据设置并不完全一致，解读结果时需考虑这一差异。
-
-任务列为**成功数 / 已评测回合数**，成功与已完成的 policy failure 均计入分母。
-**Overall (%) = 六个任务成功率的等权平均**，每个任务内部对 modes 等权；它不等于把 460 个回合合并后的成功率。
-
-| Policy | Verb | Noun | Attribute v2 | Arm cube-v3 / only-v2 | Sequence | Spatial | Overall (%) | 完成回合 | 完成 blocks |
-|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| [X-VLA](policies/xvla/README.md) | 20/40 | 15/40 | 73/160 | 5/40 | 0/120 | 6/60 | 25.9 | 460/460 | 120/120 |
-| [LingBot-VA](policies/lingbot_va/README.md) | 20/40 | 30/40 | 108/160 | 37/40 | 17/120 | 26/60 | 57.1 | 460/460 | 120/120 |
-| [LingBot-VLA](policies/lingbot_vla/README.md) | 20/40 | 13/40 | 77/160 | 18/40 | 14/120 | 3/60 | 32.0 | 460/460 | 120/120 |
-| [VLAct All](policies/vlact/README.md) | 36/40 | 28/40 | 108/160 | 29/40 | 15/120 | 19/60 | 57.4 | 460/460 | 120/120 |
-| [DM05](policies/dm05/README.md) | 40/40 | 25/40 | 88/160 | 25/40 | 9/120 | 20/60 | 53.5 | 460/460 | 120/120 |
-| [Hy-VLA](policies/hy_vla/README.md) | 20/40 | 11/40 | 83/160 | 17/40 | 15/120 | 7/60 | 32.7 | 460/460 | 120/120 |
-
-**Attribute-Select 判定修正（2026-09-17）：** 新规则要求目标当前抬升超过 5 cm，且干扰物在整回合中从未越过该阈值。
-先抓错再抓对仍失败。上表 Attribute/Overall 已使用新判据重新评测；旧结果仅保留在 Git 历史中。
-新旧差异包含判据变化及重新推理的影响。见[修正与回放证据](docs/attribute-select-target-only.md)。
-
 **待复核记录：** Hy-VLA 的 `pick_diverse_object` seed `100052`（coffee box）被用户指出视频表现失败，
-其归档自动判定仍为成功；该片段已从 README 演示中撤下。上表保持归档计数，尚未据此人工修订分数，
+其归档自动判定仍为成功；该片段已从 README 演示中撤下。当前成绩保持归档计数，尚未据此人工修订分数，
 详见 [例子替换记录](docs/assets/task-demos/README.md)。
 
-<details>
-<summary>展开各任务、各模式的成功个数</summary>
-
-下表仍为成功数 / 已评测回合数，Avg. 为任务成功率（%）。Attribute 按子轴合并两个 target values，
-每个子轴共 40 回合；其余每个 mode 共 20 回合。Sequence 的 R/G/B 表示从底层到顶层的颜色顺序，
-Spatial 的 Top 表示 on_top。每个 policy 的每项任务均已完成 20/20 blocks。
-
-### Verb — `bottle_verb`
-
-| Policy | Pick | Shake | Avg. (%) |
-|---|---:|---:|---:|
-| X-VLA | 0/20 | 20/20 | 50.0 |
-| LingBot-VA | 0/20 | 20/20 | 50.0 |
-| LingBot-VLA | 0/20 | 20/20 | 50.0 |
-| VLAct All | 16/20 | 20/20 | 90.0 |
-| DM05 | 20/20 | 20/20 | 100.0 |
-| Hy-VLA | 0/20 | 20/20 | 50.0 |
-
-### Noun — `pick_diverse_object`
-
-| Policy | Seen | Unseen | Avg. (%) |
-|---|---:|---:|---:|
-| X-VLA | 7/20 | 8/20 | 37.5 |
-| LingBot-VA | 14/20 | 16/20 | 75.0 |
-| LingBot-VLA | 10/20 | 3/20 | 32.5 |
-| VLAct All | 16/20 | 12/20 | 70.0 |
-| DM05 | 18/20 | 7/20 | 62.5 |
-| Hy-VLA | 7/20 | 4/20 | 27.5 |
-
-### Attribute v2 — `attribute_select`
-
-| Policy | Color | Decal | Shape | Size | Avg. (%) |
-|---|---:|---:|---:|---:|---:|
-| X-VLA | 16/40 | 20/40 | 17/40 | 20/40 | 45.6 |
-| LingBot-VA | 39/40 | 21/40 | 28/40 | 20/40 | 67.5 |
-| LingBot-VLA | 20/40 | 21/40 | 16/40 | 20/40 | 48.1 |
-| VLAct All | 34/40 | 25/40 | 29/40 | 20/40 | 67.5 |
-| DM05 | 20/40 | 20/40 | 28/40 | 20/40 | 55.0 |
-| Hy-VLA | 20/40 | 21/40 | 22/40 | 20/40 | 51.9 |
-
-### Arm cube-v3 — `arm_select`
-
-本表使用 5 cm cube；场景平移、旋转与配对验证见 [cube-v3 环境说明](docs/recon/arm-select-cube-v3.md)。旧长柱材料只保留在 Git 历史中。
-
-| Policy | Left | Right | Avg. (%) |
-|---|---:|---:|---:|
-| X-VLA | 2/20 | 3/20 | 12.5 |
-| LingBot-VA | 18/20 | 19/20 | 92.5 |
-| LingBot-VLA | 7/20 | 11/20 | 45.0 |
-| VLAct All | 16/20 | 13/20 | 72.5 |
-| DM05 | 9/20 | 16/20 | 62.5 |
-| Hy-VLA | 6/20 | 11/20 | 42.5 |
-
-### Sequence — `stack_sequence`
-
-| Policy | RGB | RBG | GRB | GBR | BRG | BGR | Avg. (%) |
-|---|---:|---:|---:|---:|---:|---:|---:|
-| X-VLA | 0/20 | 0/20 | 0/20 | 0/20 | 0/20 | 0/20 | 0.0 |
-| LingBot-VA | 17/20 | 0/20 | 0/20 | 0/20 | 0/20 | 0/20 | 14.2 |
-| LingBot-VLA | 14/20 | 0/20 | 0/20 | 0/20 | 0/20 | 0/20 | 11.7 |
-| VLAct All | 10/20 | 0/20 | 1/20 | 2/20 | 0/20 | 2/20 | 12.5 |
-| DM05 | 9/20 | 0/20 | 0/20 | 0/20 | 0/20 | 0/20 | 7.5 |
-| Hy-VLA | 15/20 | 0/20 | 0/20 | 0/20 | 0/20 | 0/20 | 12.5 |
-
-### Spatial — `place_relative`
-
-Spatial 从五模式收缩为 **left/right/on_top**；这是视频复核后的评测范围调整，分数变化不表示模型性能提升。front/back 原始自动结果与视频索引见 [决策与证据](docs/place-relative-spatial3.md)，旧五模式结果完整保留。
-
-
-| Policy | Left | Right | Top | Avg. (%) |
-|---|---:|---:|---:|---:|
-| X-VLA | 4/20 | 2/20 | 0/20 | 10.0 |
-| LingBot-VA | 12/20 | 7/20 | 7/20 | 43.3 |
-| LingBot-VLA | 1/20 | 2/20 | 0/20 | 5.0 |
-| VLAct All | 11/20 | 7/20 | 1/20 | 31.7 |
-| DM05 | 12/20 | 8/20 | 0/20 | 33.3 |
-| Hy-VLA | 2/20 | 5/20 | 0/20 | 11.7 |
-
-</details>
-
-数据来源：[HTML 报表](result/robotwin-if-arm-only-v2-20blocks/results.html) ·
-[完整结果表](result/robotwin-if-arm-only-v2-20blocks/results.md) ·
-[分模式 CSV](result/robotwin-if-arm-only-v2-20blocks/results.csv) ·
-[逐回合 CSV](result/robotwin-if-arm-only-v2-20blocks/episodes.csv) ·
-[结果 JSON](result/robotwin-if-arm-only-v2-20blocks/results.json) ·
-[Checkpoint 版本](result/robotwin-if-arm-only-v2-20blocks/checkpoints.json) ·
-[校验证据](result/robotwin-if-arm-only-v2-20blocks/validation.json)。
+历史 Bottle/Arm-only-v2 成绩见[备份版本](https://github.com/v-xchen-v/robotwin-if/blob/ac582a75267126c7a8fe17c220475d517b73882b/result/robotwin-if-arm-only-v2-20blocks/README.md)。
 
 ## 旧版六个任务与视频
 
 每项任务聚焦一种指令差异：做什么动作、抓哪个物体、按什么属性选择、用哪只手、按什么顺序、放在哪个方向。
 下方动态预览可点击打开 MP4；素材随仓库提供。视频选自正式评测中的成功回合，用于展示任务行为，
-整体表现见 [完整结果](result/robotwin-if-arm-only-v2-20blocks/README.md)。原始指令、seed、policy 和视频处理说明见 [素材来源](docs/assets/task-demos/README.md)。
+整体表现见 [完整结果](https://github.com/v-xchen-v/robotwin-if/blob/ac582a75267126c7a8fe17c220475d517b73882b/result/robotwin-if-arm-only-v2-20blocks/README.md)。原始指令、seed、policy 和视频处理说明见 [素材来源](docs/assets/task-demos/README.md)。
 
 <a id="bottle-verb"></a>
 

@@ -10,6 +10,22 @@ ROOT = Path(__file__).resolve().parents[1]
 # Last published tree containing the original, byte-identical release evidence.
 REVISION = '2670a13f53f6e3f1cc2e6f0fdae558782cb88d7d'
 ARCHIVES = {'seed-manifests-archive': 'seed-manifests', 'result-archive': 'result'}
+PARENT_RESULT = Path('result/robotwin-if-arm-only-v2-20blocks')
+PARENT_RESULT_REVISION = 'ac582a75267126c7a8fe17c220475d517b73882b'
+
+
+def read_parent_result(name, root=ROOT, revision=PARENT_RESULT_REVISION):
+    """Read original reuse evidence from a pinned commit, without restoring old packages."""
+    path = PARENT_RESULT / name
+    run = subprocess.run(['git', '-C', str(root), 'show', f'{revision}:{path.as_posix()}'],
+                         capture_output=True)
+    if run.returncode:
+        raise RuntimeError(
+            f'Reusing or republishing frozen results requires Git commit {revision}. '
+            f'Obtain it with `git fetch origin {revision}`. '
+            'Fresh evaluation and current package checksum verification do not need history. '
+            + run.stderr.decode(errors='replace').strip())
+    return run.stdout
 
 
 @contextmanager

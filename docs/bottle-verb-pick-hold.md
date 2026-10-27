@@ -58,7 +58,7 @@ oracle / collection 不受 policy 的末尾裁决限制；pick oracle 提起轨�
 
 ## 发布与回归验证
 
-[当前结果包](../result/robotwin-if-arm-only-v2-20blocks/README.md)包含按 v6 重新完成的
+[历史 Bottle 结果包](https://github.com/v-xchen-v/robotwin-if/blob/ac582a75267126c7a8fe17c220475d517b73882b/result/robotwin-if-arm-only-v2-20blocks/README.md)包含按 v6 重新完成的
 240 个 Bottle 回合；既有 seeds、成功和 policy failure 均保留。
 正式计划固定 checker 版本与参数，旧判据、不同阈值及未完成 700-action 终态裁决的
 pick 记录都不能复用为当前成绩。来源与原始产物校验见[发布溯源](release-provenance.md)。

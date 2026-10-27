@@ -3,6 +3,8 @@
 import argparse
 from collections import Counter
 import csv
+import hashlib
+import io
 import json
 from pathlib import Path
 import shutil
@@ -13,6 +15,7 @@ sys.path.insert(0, str(ROOT))
 from tools import run_formal_policy_suite as formal
 from tools import summarize_formal_policy_results as tables
 from tools.prepare_bell_policy_suite import RUN, PACKAGE
+from tools.release_history import read_parent_result
 
 OUTPUT = ROOT / 'result/robotwin-if-press-lift-bell-v1-20blocks'
 FIELDS = ['policy', 'task', 'block_index', 'seed', 'mode', 'status', 'success',
@@ -31,8 +34,9 @@ def publish(base=RUN, output=OUTPUT, *, task_name='press_lift_bell', task_label=
     assert status['new_episodes'] == validation['counts']['new'] == 240
     formal.check_sources(base)
     data = tables.snapshot(base)
-    with (PACKAGE / 'episodes.csv').open(newline='') as f:
-        parent_rows = {(r['policy'], r['task'], int(r['seed'])): r for r in csv.DictReader(f)}
+    parent_csv = read_parent_result('episodes.csv')
+    parent_rows = {(r['policy'], r['task'], int(r['seed'])): r
+                   for r in csv.DictReader(io.StringIO(parent_csv.decode(), newline=''))}
     plan = formal.read(base / 'plan.json')
     assert plan['tasks'][0]['task'] == task_name
     episodes, bells, bell_summary = [], [], {}
@@ -108,7 +112,7 @@ def publish(base=RUN, output=OUTPUT, *, task_name='press_lift_bell', task_label=
     retry_records = [formal.read(p) for p in sorted((base / 'batches').glob('*/*/*-oracle-retry.json'))]
     formal.write(output / 'oracle-setup-retries.json', retry_records)
     formal.write(output / 'provenance.json', dict(source_run=str(base), taskset=plan['release'],
-        parent_result=str(PACKAGE.relative_to(ROOT)), parent_episode_csv_sha256=formal.digest(PACKAGE / 'episodes.csv'),
+        parent_result=str(PACKAGE.relative_to(ROOT)), parent_episode_csv_sha256=hashlib.sha256(parent_csv).hexdigest(),
         new_episodes=240, reused_episodes=2520, replaced_task='bottle_verb', new_task=task_name,
         unchanged_five_task_rows_except_origin=True, unchanged_five_task_record_hashes=True,
         checkpoints_and_inference_options_retained=True,
