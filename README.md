@@ -251,15 +251,15 @@ bash scripts/eval.sh --policy vlact --task press_lift_stapler --blocks 2 \
 
 ## 完整视频与文档
 
-本轮完整视频及动作位于原始运行目录：
-`/Data/robotwin-if/evaluations/robotwin-if-press-lift-stapler-v1-20blocks-001/`。
-本机已有视频复核页：<http://127.0.0.1:8897/>；远程访问需转发端口。
-使用其他副本时可按[视频复核工具](tools/policy-video-review/README.md)启动服务。
-README 中的示例 GIF/MP4 随仓库保存，可独立查看。
+完整备份包含 **2760 个正式回合的视频、动作、观测和结果证据，约 8.19 GiB**，已保存到 Azure。
+目前需要容器读取权限；[下载与 SHA-256 校验说明](docs/download-results.md)提供浏览器登录、AzCopy 下载和本地视频浏览步骤。
+下载后运行随包提供的 `view_videos.sh`，可按模型、任务、mode 和成败查看全部视频。
+README 中的示例 GIF/MP4 随仓库保存，可直接查看。
 
 | 内容 | 入口 |
 |---|---|
 | 六模型安装、权重、服务与 eval adapter | [policies](policies/README.md) |
+| 完整结果、全部视频的授权下载与校验 | [下载说明](docs/download-results.md) |
 | 任务 inventory、mode 与 block 定义 | [eval_cfg](eval_cfg/README.md) |
 | 生成和消费 qualified seed manifest | [seed manifest 使用指南](docs/seed-manifest-usage.md) |
 | 当前任务场景、指令与判据 | [Press/Lift Stapler](docs/press-lift-stapler-experiment.md) |

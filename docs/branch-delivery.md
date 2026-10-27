@@ -114,7 +114,8 @@ provenance 与 `SHA256SUMS`。可离线查看汇总表和逐回合计数，不�
 (cd result/robotwin-if-press-lift-stapler-v1-20blocks && sha256sum -c SHA256SUMS)
 ```
 
-完整视频和动作轨迹体积较大，仍保存在结果 README 指定的原始评测目录，不包含在此轻量结果包中。
+完整视频、动作轨迹和观测随约 8.19 GiB 的备份存储在 Azure，见[授权下载与校验说明](download-results.md)。
+当前仓库提供轻量结果包；完整备份自带可独立运行的视频查看器。
 当前分数不与历史七任务 Overall 混用；历史发布仅保留在 Git 中。
 `bak/` 仅保留下线说明与 Spatial 范围调整证据；旧实现和发布包保留在 Git 历史。
 

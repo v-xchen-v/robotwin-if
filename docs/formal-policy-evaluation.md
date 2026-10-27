@@ -44,7 +44,7 @@ SAPIEN 的显式设备绑定由仓库内 `tools/sim_device.py` 提供，无需�
 随后一起恢复；等待不推进物理、不修改动作。这样避免一路等待降温时另一路继续加热 GPU。
 
 运行目录为 `outputs/policy-eval/robotwin-if-press-lift-stapler-v1-20blocks-001`。
-其 `status.json` 的 `current.workers` 列出两路进程与队列，视频见 <http://127.0.0.1:8897/>。
+其 `status.json` 的 `current.workers` 列出两路进程与队列；完整产物的[下载与视频浏览说明](download-results.md)提供可在自己机器使用的入口。
 自动工作流在全部回合完成后执行原全量校验与 `publish_stapler_policy_results.py`，生成六任务结果包。
 
 ## 准备、续跑与验证

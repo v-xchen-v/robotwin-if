@@ -15,7 +15,9 @@ Verb 改为订书器 Press/Lift，新增 240 回合；其余五任务的 2520 �
 
 `Overall` 对六个任务的 `Task Avg.` 等权平均；各任务内部对 modes 等权。
 本次替换了 Verb，Overall 与旧版的变化不代表同一任务上的模型能力提升。
-视频、动作轨迹等原始产物的位置见结果包 README；本机完整视频目录为 <http://127.0.0.1:8897/>。
+全部 2760 条视频、动作、观测和运行证据可从 Azure 授权下载，完整目录约 8.19 GiB。
+见[完整备份下载与校验](../docs/download-results.md)，其中也提供独立视频查看器的启动步骤。
+冻结结果包内的原机器路径保留为历史来源记录；下载后的文件使用备份内 `episode-index.csv` 的相对路径定位。
 
 ```bash
 (cd result/robotwin-if-press-lift-stapler-v1-20blocks && sha256sum --check --quiet SHA256SUMS)
