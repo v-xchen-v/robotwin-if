@@ -4,10 +4,17 @@
 import ast
 import importlib.util
 from pathlib import Path
+import sys
+from types import SimpleNamespace
 import unittest
 
 
 REPO = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(REPO))
+from if_benchmark.seed_contracts import CURRENT_SUITE_TASKS
+
+# These six implementations use the shared helper. Press/lift tasks set their
+# own budget after native initialization and are checked separately below.
 TASKS = (
     "bottle_verb",
     "pick_diverse_object",
@@ -24,6 +31,7 @@ EXPECTED = {
     "stack_sequence": 1200,
     "place_relative": 400,
 }
+PRESS_LIFT_LIMITS = {"press_lift_stapler": 250, "press_lift_bell": 250}
 
 
 def load_module(name, path):
@@ -68,9 +76,12 @@ def direct_call(statement):
 
 
 class EvalStepLimitTests(unittest.TestCase):
-    def test_task_inventory_matches_bridge(self):
-        self.assertEqual(TASKS, load_bridge().MAINTAINED_TASKS)
+    def test_current_inventory_and_compatibility_tasks_match_bridge(self):
+        self.assertEqual(set(load_bridge().MAINTAINED_TASKS),
+                         set(CURRENT_SUITE_TASKS) | {"bottle_verb", "press_lift_bell"})
         self.assertEqual(set(EXPECTED), set(TASKS))
+        self.assertEqual(set(EXPECTED) | set(PRESS_LIFT_LIMITS),
+                         set(load_bridge().MAINTAINED_TASKS))
 
     def test_fixed_eval_limit_map_is_exact(self):
         self.assertEqual(load_helper().IF_EVAL_STEP_LIMITS, EXPECTED)
@@ -98,6 +109,30 @@ class EvalStepLimitTests(unittest.TestCase):
         dummy = Dummy()
         helper.apply_if_eval_step_limit(dummy)
         self.assertEqual(dummy.step_lim, 1200)
+
+    def test_press_lift_budgets_override_native_default_only_in_eval(self):
+        for task, limit in PRESS_LIFT_LIMITS.items():
+            with self.subTest(task=task):
+                tree = task_tree(task)
+                cls = next(n for n in tree.body if isinstance(n, ast.ClassDef))
+                declared = next(n.value for n in cls.body if isinstance(n, ast.Assign)
+                                and any(isinstance(t, ast.Name) and t.id == 'ACTION_LIMIT' for t in n.targets))
+                self.assertEqual(ast.literal_eval(declared), limit)
+                setup = setup_demo_definition(tree)
+                init_index = next(i for i, n in enumerate(setup.body)
+                                  if direct_call(n) and direct_call(n)[0] == '_init_task_env_')
+                index, guard = next((i, n) for i, n in enumerate(setup.body)
+                                    if isinstance(n, ast.If) and isinstance(n.test, ast.Attribute)
+                                    and isinstance(n.test.value, ast.Name) and n.test.value.id == 'self'
+                                    and n.test.attr == 'eval_mode')
+                self.assertGreater(index, init_index)
+                # Execute the actual budget guard with the native fallback in
+                # place; collect must keep it, while eval must replace it.
+                code = compile(ast.Module(body=[guard], type_ignores=[]), '<budget>', 'exec')
+                for eval_mode in (False, True):
+                    env = SimpleNamespace(eval_mode=eval_mode, ACTION_LIMIT=limit, step_lim=1000)
+                    exec(code, {'self': env})
+                    self.assertEqual(env.step_lim, limit if eval_mode else 1000)
 
 
 def make_import_test(task):

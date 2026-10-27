@@ -59,19 +59,9 @@ python -m unittest discover -s tests -p test_attribute_select_success.py -v
 python -m unittest discover -s tests -p 'test_formal*.py' -v
 ```
 
-保存动作的回放工具为 [`replay_target_only.py`](../tests/attribute_select/replay_target_only.py)。
-它先核对三路初始 RGB 和机器人状态，再执行原始 EE actions；沿用旧判据的停止时刻，
-包括最后一个动作的部分子步，同时观察新判据。它不调用模型，也不补全原轨迹之后的动作，
-输出明确标记 `diagnostic_only=true`，不作为重新完成的正式 policy 回合。
-
-```bash
-CUDA_VISIBLE_DEVICES=0 python tests/attribute_select/replay_target_only.py \
-  --episode-prefix outputs/policy-eval/robotwin-if-cube-v3-20blocks-001/lingbot_va/attribute_select/attribute_select_ep100003 \
-  --output outputs/policy-eval/attribute-target-only-v2-review-new/lingbot_va-100003
-```
-
-输出目录必须不存在。运行需要 RoboTwin 环境，完整回放证据保存在
-`outputs/policy-eval/attribute-target-only-v2-review-001/`。
+历史动作回放工具 [`replay_target_only.py`](https://github.com/v-xchen-v/robotwin-if/blob/ac582a75267126c7a8fe17c220475d517b73882b/tests/attribute_select/replay_target_only.py)已从当前测试目录移除。
+它当时核对初始 RGB / 机器人状态，按已保存 EE actions 和旧停止条件观察新判据，输出为 `diagnostic_only=true`，不作为正式 policy 成绩。
+上述诊断证据和过往验证结果继续保留；当前测试入口见 [tests/README.md](../tests/README.md)，旧实验重放方法见[清理说明](archive/obsolete-test-scripts.md)。
 
 此次 CPU 检查中，9 项专用回归、24 项 formal 测试、9 项 setup/finalization 测试、
 16 项预算测试、1 项现有 Attribute policy reset 测试均通过；另有 8/8 指令路由检查通过。

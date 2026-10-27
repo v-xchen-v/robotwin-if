@@ -1,4 +1,7 @@
-"""Counterexample trajectories for the press/lift experiment's action classifier."""
+"""Shared press/lift classifier, distractor sampling and runner regressions.
+
+BellMonitor is the base used by StaplerMonitor; retreat behavior here tests the
+base compatibility contract. Stapler completion is tested in test_press_lift_stapler."""
 import json
 import math
 import random
@@ -8,8 +11,9 @@ from types import SimpleNamespace
 import unittest
 from unittest.mock import patch
 
-from tasks.envs._press_lift_bell import (BellMonitor, BellRules, INSTRUCTIONS, bell_contacts,
+from tasks.envs._press_lift_bell import (BellMonitor, BellRules, bell_contacts,
                                         mode_for_seed, sample_context_positions)
+from tasks.envs._press_lift_stapler import INSTRUCTIONS
 from tools.press_lift_bell import selected_seeds, summarize_pairs
 from policies.evaluation import setup_episode
 
@@ -194,9 +198,9 @@ class RunnerTests(unittest.TestCase):
             def get_obs(self): return {'ready': True}
         with tempfile.TemporaryDirectory() as directory, patch('policies.xvla.eval.instruction_for') as generator:
             env, record = Env(), dict(mode=None)
-            instruction, obs = setup_episode(env, {}, SimpleNamespace(task='press_lift_bell'), 1,
+            instruction, obs = setup_episode(env, {}, SimpleNamespace(task='press_lift_stapler'), 1,
                 'unseen', record, lambda suffix: Path(directory) / ('episode' + suffix))
-            self.assertEqual(instruction, 'Lift the bell.')
+            self.assertEqual(instruction, 'Lift the stapler.')
             self.assertEqual(record['mode'], 'lift')
             generator.assert_not_called()
 

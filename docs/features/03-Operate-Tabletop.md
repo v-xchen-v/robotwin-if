@@ -6,6 +6,8 @@ tags: [robotwin, vla, benchmark]
 
 # Operate-Tabletop
 
+> 历史设计记录：文中已停用任务的测试与早期 spike 脚本已移至 Git 历史，见[清理说明](../archive/obsolete-test-scripts.md)。当前测试入口见 [tests/README.md](../../tests/README.md)。
+
 对应主文档「时间评估」阶段2（复用型任务）。
 
 ## 场景设计

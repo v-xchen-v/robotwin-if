@@ -1,4 +1,4 @@
-"""Guard against publishing incomplete runs and evaluating a changed bell scene."""
+"""Guard against publishing incomplete runs and evaluating a changed stapler scene."""
 import hashlib
 from pathlib import Path
 import tempfile
@@ -9,10 +9,10 @@ from unittest.mock import patch
 import numpy as np
 
 from tools import run_formal_policy_suite as formal
-from tools.publish_bell_policy_results import publish
+from tools.publish_stapler_policy_results import publish
 
 
-class BellResultDeliveryTest(unittest.TestCase):
+class StaplerResultDeliveryTest(unittest.TestCase):
     def test_incomplete_run_cannot_be_published(self):
         with tempfile.TemporaryDirectory() as tmp:
             base = Path(tmp) / 'run'
@@ -23,8 +23,8 @@ class BellResultDeliveryTest(unittest.TestCase):
                 publish(base, output)
             self.assertFalse(output.exists())
 
-    def test_bell_checker_is_pinned_for_success_and_failure(self):
-        spec = formal.current_success_checker('press_lift_bell')
+    def test_stapler_checker_is_pinned_for_success_and_failure(self):
+        spec = formal.current_success_checker('press_lift_stapler')
         for success in (False, True):
             record = dict(success=success, signals=dict(checker_version=spec['success_checker_version'],
                           thresholds=spec['success_checker_parameters']))
@@ -40,22 +40,22 @@ class BellResultDeliveryTest(unittest.TestCase):
             arrays['proprio'] = np.zeros(14)
             expected = {k: dict(sha256=hashlib.sha256(v.tobytes()).hexdigest(),
                                 dtype=str(v.dtype), shape=list(v.shape)) for k, v in arrays.items()}
-            formal.write(base / 'manifests/press_lift_bell.generation.json', dict(blocks=[dict(
+            formal.write(base / 'manifests/press_lift_stapler.generation.json', dict(blocks=[dict(
                 accepted=True, episodes=[dict(seed=seed, diagnostics=dict(initial_arrays=expected,
                     instruction=instruction, action_limit=250)) for seed, instruction in
-                    ((100000, 'Press down on the bell.'), (100001, 'Pick up the bell.'))])]))
+                    ((110000, 'Press down on the stapler.'), (110001, 'Lift the stapler.'))])]))
             obs = {'observation': {c: dict(rgb=arrays[c]) for c in cameras}}
-            spec = dict(task='press_lift_bell', instructions=dict(press='Press down on the bell.', lift='Lift the bell.'))
-            def check(instruction='Press down on the bell.', seed=100000):
+            spec = dict(task='press_lift_stapler', instructions=dict(press='Press down on the stapler.', lift='Lift the stapler.'))
+            def check(instruction='Press down on the stapler.', seed=110000):
                 formal.check_scene(base, 'xvla', spec, seed, instruction,
                                    obs, SimpleNamespace(step_lim=250), lambda suffix: base / suffix)
             with patch('policies.xvla.client.encode_proprio', return_value=arrays['proprio']):
                 check()
-                check('Lift the bell.', 100001)
+                check('Lift the stapler.', 110001)
                 with self.assertRaises(AssertionError):
-                    check('Pick up the bell.', 100001)
+                    check('Pick up the stapler.', 110001)
                 with self.assertRaises(AssertionError):
-                    check('Pick up the bell.')
+                    check('Pick up the stapler.')
                 arrays['head_camera'][0, 0, 0] = 1
                 with self.assertRaisesRegex(AssertionError, 'qualification scene differs'):
                     check()

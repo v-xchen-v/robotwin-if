@@ -66,7 +66,7 @@ pick 记录都不能复用为当前成绩。来源与原始产物校验见[发�
 CPU 回归入口：
 
 ```bash
-python tests/bottle_verb/test_check_success.py
+python -m unittest discover -s tests -p test_bottle_verb_success.py -v
 python -m unittest discover -s tests -p test_policy_terminal_verdict.py
 python -m unittest discover -s tests -p 'test_formal*.py'
 ```
