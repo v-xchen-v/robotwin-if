@@ -101,52 +101,32 @@ check passed: 18 owned links
 
 ---
 
-## 4. 一条命令生成六项、每个 mode 100 episodes
+## 4. 通用生成入口与参数
 
-使用仓库提供的 wrapper：
-
-```bash
-scripts/generate_if_100_per_mode.sh outputs/if-seeds-100-per-mode
-```
-
-默认配置：
-
-```text
-Conda environment       RoboTwin
-Task config             demo_clean
-Accepted blocks/task    100
-Candidate cap/task      500
-Candidate seed floor    100000
-```
-
-脚本会按 canonical inventory 依次处理六项。某个 task 失败时，它会保留 checkpoint、继续处理后续 task，并在最后返回 nonzero。
-
-生成可能持续数小时，建议在稳定的终端/tmux 中运行。`100 blocks` 的真实耗时取决于每项 oracle rejection rate，不能只用最终 2300 个 policy episodes 估算。
-
-### 修改默认配置
-
-通过环境变量配置：
+直接使用 [`tools/generate_if_seed_manifest.py`](../tools/generate_if_seed_manifest.py)，显式指定任务、配置与 block 数量：
 
 ```bash
-IF_TASK_CONFIG=demo_clean \
-IF_MAX_CANDIDATE_BLOCKS=800 \
-IF_CANDIDATE_FLOOR=100000 \
-ROBOTWIN_CONDA_ENV=RoboTwin \
-  scripts/generate_if_100_per_mode.sh outputs/if-seeds-100-per-mode
+conda run --no-capture-output -n RoboTwin \
+  python tools/generate_if_seed_manifest.py --help
 ```
 
-可用变量：
-
-| 变量 | 默认值 | 用途 |
+| 参数 | 默认值 | 用途 |
 |---|---|---|
-| `ROBOTWIN_CONDA_ENV` | `RoboTwin` | 运行 oracle 的 Conda 环境 |
-| `IF_TASK_CONFIG` | `demo_clean` | RoboTwin task config |
-| `IF_MAX_CANDIDATE_BLOCKS` | `500` | 每个 task 最多检查多少个 candidate blocks |
-| `IF_CANDIDATE_FLOOR` | `100000` | candidate episode seed 下界 |
-| `ROBOTWIN_DIR` | nested RoboTwin | 使用外部 RoboTwin checkout |
-| `IF_ALLOW_COMPATIBLE_COMMIT` | `0` | 设为 `1` 后显式接受已人工检查的 compatible target |
+| `--task TASK` / `--all` | 必选其一 | 单任务，或为当前六任务使用同一配置生成 |
+| `--task-config` | `demo_clean` | RoboTwin task config |
+| `--accepted-blocks` | 必填 | 目标完整 blocks 数；当前正式发布为每任务 20 |
+| `--max-candidate-blocks` | 必填 | 每个 task 最多检查多少个 candidate blocks |
+| `--candidate-floor` | `100000` | candidate episode seed 下界 |
+| `--output-dir` | 必填 | 新清单及资格记录目录 |
+| `--robotwin-dir` | nested RoboTwin | 使用外部 RoboTwin checkout，也可设置 `ROBOTWIN_DIR` |
+| `--sim-gpu` | `0` | 模拟器使用的物理 GPU |
+| `--allow-compatible-commit` | 关闭 | 显式接受已人工检查的 compatible target |
 
-`IF_MAX_CANDIDATE_BLOCKS` 只是扫描上限。生成器找到 100 个 accepted blocks 后立即停止，不会为了用完 cap 继续运行。
+当前 Arm 使用 `demo_clean_arm_select_v3`，其余五任务使用 `demo_clean`，因此应逐任务指定配置。
+生成器的 `--all` 共用一个配置；需要与当前发布场景一致时，不应把六任务全部指定为 `demo_clean`。
+
+`--max-candidate-blocks` 只是扫描上限，达到 `--accepted-blocks` 后立即停止。
+真实耗时取决于各任务 oracle rejection rate；下文 100-block 示例可以按需要调整数量，不会覆盖现有正式 manifest。
 
 ---
 
@@ -307,11 +287,17 @@ python tools/validate_if_seed_manifest.py \
 
 ### 运行被中断
 
-使用原输出目录和完全相同的参数：
+使用原输出目录和完全相同的参数。以下继续第 5 节的 Stapler 示例：
 
 ```bash
-scripts/generate_if_100_per_mode.sh \
-  outputs/if-seeds-100-per-mode \
+conda run --no-capture-output -n RoboTwin \
+  python tools/generate_if_seed_manifest.py \
+  --task press_lift_stapler \
+  --task-config demo_clean \
+  --accepted-blocks 100 \
+  --max-candidate-blocks 500 \
+  --candidate-floor 100000 \
+  --output-dir outputs/if-seeds-100-per-mode \
   --resume
 ```
 
@@ -334,17 +320,27 @@ Generator 从逐 block checkpoint 继续；已经完成的 task 不重新跑 ora
 Exhausted checkpoint 不能通过提高 cap 后直接 resume，因为 candidate cap 是 generation provenance 的一部分。推荐使用新输出目录：
 
 ```bash
-IF_MAX_CANDIDATE_BLOCKS=1000 \
-  scripts/generate_if_100_per_mode.sh \
-  outputs/if-seeds-100-per-mode-cap1000
+conda run --no-capture-output -n RoboTwin \
+  python tools/generate_if_seed_manifest.py \
+  --task press_lift_stapler \
+  --task-config demo_clean \
+  --accepted-blocks 100 \
+  --max-candidate-blocks 1000 \
+  --candidate-floor 100000 \
+  --output-dir outputs/if-seeds-100-per-mode-cap1000
 ```
 
 如果明确要丢弃旧 checkpoint，也可以提高 cap 后对原目录使用 `--overwrite`，但这会从头生成：
 
 ```bash
-IF_MAX_CANDIDATE_BLOCKS=1000 \
-  scripts/generate_if_100_per_mode.sh \
-  outputs/if-seeds-100-per-mode \
+conda run --no-capture-output -n RoboTwin \
+  python tools/generate_if_seed_manifest.py \
+  --task press_lift_stapler \
+  --task-config demo_clean \
+  --accepted-blocks 100 \
+  --max-candidate-blocks 1000 \
+  --candidate-floor 100000 \
+  --output-dir outputs/if-seeds-100-per-mode \
   --overwrite
 ```
 

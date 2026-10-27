@@ -21,3 +21,8 @@ Bell 命名的共享 runner/seed audit、远端 Attribute 调度 helper 仍被�
 
 清理后根目录 CPU 回归 **253 项全部通过**，当前 manifest 校验、eval dry-run、现有工具 CLI 与
 formal 源码快照路径检查通过。当前 seeds、发布结果与原始视频保持原样；本次未运行 GPU 仿真或模型评测。
+
+后续按用户要求删除 [`scripts/generate_if_100_per_mode.sh`](https://github.com/v-xchen-v/robotwin-if/blob/a62033f/scripts/generate_if_100_per_mode.sh)。
+它固定为六任务生成每模式 100 个 episodes，并共用同一 task config；当前使用
+[`tools/generate_if_seed_manifest.py`](../../tools/generate_if_seed_manifest.py) 显式设置任务、配置和 block 数，
+生成、续跑及重启命令见[seed 使用指南](../seed-manifest-usage.md)。

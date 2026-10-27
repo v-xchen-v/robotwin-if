@@ -24,7 +24,7 @@ bash scripts/bridge_tasks.sh
 bash scripts/bridge_tasks.sh --check
 ```
 
-Arm v3 配置由 [`scripts/eval.sh`](../scripts/eval.sh) 在运行时安装。
+Arm v3 配置需先按[主 README](../README.md#run-evaluation)创建软链；[`scripts/eval.sh`](../scripts/eval.sh) 启动前校验配置存在且与交付版本一致。
 Bridge 会清理指向本仓库旧任务的链接，包括源文件已删除的旧链接；原生任务与其他来源的链接继续保留。
 
 旧任务、配套 instruction 和 Arm v2 配置的原文件见[清理记录](../docs/archive/obsolete-task-scripts.md)。

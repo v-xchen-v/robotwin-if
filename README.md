@@ -222,6 +222,16 @@ ln -s "$PWD/tasks/task_config/demo_clean_arm_select_v3.yml" \
 Bridge 安装任务、helper 和指令软链；实际评测成员由 [IF inventory](eval_cfg/if_tasks.yml) 与当前 manifest 指定。
 外部 RoboTwin 可通过 `--robotwin-dir` 接入，版本兼容检查和配置方法见[bridge 使用说明](docs/task-bridge.md)。
 
+跑 policy 前，可先采集 expert 演示查看场景：
+
+```bash
+# 默认六任务各 1 个完整 block，失败就跳过并继续采集。
+bash scripts/collect.sh
+# 可用 --blocks N 指定数量，或 --seed-manifest PATH 复用已筛选的 seeds。
+```
+
+输出含各 mode 的数据、视频与 instruction，打开输出目录的 `index.html` 查看；详见[expert review](docs/expert-review.md)。
+
 按 [policies/](policies/README.md) 中所选模型的说明启动服务后，运行：
 
 ```bash

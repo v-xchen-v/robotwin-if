@@ -5,6 +5,7 @@
 
 | 用途 | 入口 |
 |---|---|
+| 采集完整 expert blocks，人工查看各 mode 场景和动作 | [collect_if_expert.py](collect_if_expert.py)，入口 `bash scripts/collect.sh`，见 [expert review](../docs/expert-review.md) |
 | 生成 expert-qualified seeds、保留拒绝记录 | [generate_if_seed_manifest.py](generate_if_seed_manifest.py) |
 | 校验 flat manifest / generation evidence | [validate_if_seed_manifest.py](validate_if_seed_manifest.py) |
 | 导出或核对 seed/mode | [export_seed_modes.py](export_seed_modes.py) |
