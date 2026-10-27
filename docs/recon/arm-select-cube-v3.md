@@ -60,7 +60,7 @@ RGB/位姿/指令、复测和错误手臂反例检查；先错后对的当前判
 ln -s "$(pwd)/tasks/task_config/demo_clean_arm_select_v3.yml" third_party/robotwin/task_config/demo_clean_arm_select_v3.yml
 ```
 
-需要为场景修改重新做串行 oracle 预检时，使用保留的工具（输出目录必须不存在）：
+以下为当时的串行 oracle 预检命令；旧 probe 已退休，需在[清理前提交](https://github.com/v-xchen-v/robotwin-if/tree/b5e67ce66dd550a9024869f06389d1c0618557ef)及其历史参考观测下使用：
 
 ```bash
 python tools/probe_arm_select_variation.py \
@@ -69,8 +69,8 @@ python tools/probe_arm_select_variation.py \
 ```
 
 这项开发检查需要 GPU 和 fixed-v1 参考观测；参考目录通过 `--reference PATH` 指定，
-默认是 `outputs/policy-eval/if-seven-tasks-2blocks-001`。普通新评测直接使用下面的正式清单，
-不需要历史探测产物，也不应重选 seeds。
+默认是 `outputs/policy-eval/if-seven-tasks-2blocks-001`。当前固定 seed 资格流程见[seed 使用指南](../seed-manifest-usage.md)，
+Arm 回归见[测试入口](../../tests/README.md)。普通新评测直接使用下面的正式清单，不需要历史探测产物，也不应重选 seeds。
 
 六个 policy evaluator 均可使用已生成的清单，模型连接参数沿各 policy README：
 

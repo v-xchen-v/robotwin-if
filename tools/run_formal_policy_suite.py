@@ -197,8 +197,8 @@ def source_paths():
         paths.update(p for p in (ROOT / folder).rglob('*')
                      if p.is_file() and p.suffix in ('.py', '.json', '.yml', '.yaml'))
     paths.update((Path(__file__).resolve(), ROOT / 'tools/sim_device.py',
-                  ROOT / 'tools/prepare_bell_policy_suite.py', ROOT / 'tools/prepare_stapler_policy_suite.py',
-                  ROOT / 'tools/release_history.py'))
+                  ROOT / 'tools/prepare_stapler_policy_suite.py',
+                  ROOT / 'tools/release_press_lift_stapler_v1.py', ROOT / 'tools/release_history.py'))
     return sorted(paths)
 
 
@@ -221,10 +221,8 @@ def prepare(base, release, old):
     import yaml
     suite = yaml.safe_load((release / 'suite.yml').read_text())
     if suite.get('replacement_task') == 'press_lift_stapler':
-        from tools.prepare_bell_policy_suite import prepare as prepare_replacement
-        from tools.release_press_lift_stapler_v1 import verify as verify_release
-        return prepare_replacement(base, old, release=release,
-                                   task_name='press_lift_stapler', verify_release_fn=verify_release)
+        from tools.prepare_stapler_policy_suite import prepare as prepare_stapler
+        return prepare_stapler(base, old, release=release)
     subprocess.run([PYTHON, str(release / 'verify.py')], cwd=ROOT, check=True)
     reuse = yaml.safe_load((release / 'reusable-results.yml').read_text())
     assert suite['policies'] == POLICIES

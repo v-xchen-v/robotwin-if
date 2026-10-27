@@ -185,7 +185,7 @@ python seed-manifests/robotwin-if-arm-only-v2-20-per-mode/verify.py
 ```
 
 本次完整 verifier 使用 `/home/xichen6/miniconda3/envs/RoboTwin/bin/python` 执行。
-其入口经 [release_history.py](../../tools/release_history.py) 恢复固定历史证据，检查后清理临时目录；
+当时的入口经[历史 release_history.py](https://github.com/v-xchen-v/robotwin-if/blob/b5e67ce66dd550a9024869f06389d1c0618557ef/tools/release_history.py) 恢复固定历史证据，检查后清理临时目录；该旧 verifier 已退休，见[tools 清理记录](../archive/obsolete-tool-scripts.md)。
 需要相应 Git 历史和本机 `/Data` 原始产物。纯源码下载包可检查公开包哈希，但不足以执行完整历史追溯，见[发布溯源说明](../release-provenance.md)。
 
 若要查看未来新评测的输入与输出计划，可在仓库根目录运行以下 **dry-run 示例（本次未执行）**：

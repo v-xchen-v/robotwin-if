@@ -4,6 +4,8 @@ import argparse
 from collections import Counter
 from copy import deepcopy
 from datetime import datetime, timezone
+import hashlib
+import json
 from pathlib import Path
 import shutil
 import sys
@@ -20,12 +22,24 @@ from tasks.envs._press_lift_bell import CONTEXT_LAYOUT_VERSION
 from tasks.envs._press_lift_stapler import (
     INSTRUCTIONS, ROTATION_VERSION, YAW_LIMITS_DEGREES, StaplerMonitor, sample_rotations, stapler_rules,
 )
-from tools.release_press_lift_bell_v1 import digest, read, write
 
 TASK = 'press_lift_stapler'
 NAME = 'robotwin-if-press-lift-stapler-v1-20-per-mode'
 RELEASE = ROOT / 'seed-manifests' / NAME
 BELL_NAME = 'robotwin-if-press-lift-bell-v1-20-per-mode'
+
+
+def read(path):
+    return json.loads(path.read_text())
+
+
+def digest(path):
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def write(path, value):
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(value, indent=2, ensure_ascii=False, allow_nan=False) + '\n')
 
 
 def build(run, base=RELEASE, reference=RELEASE):

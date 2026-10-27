@@ -225,6 +225,7 @@ README 中的示例 GIF/MP4 随仓库保存，可独立查看。
 | 当前任务场景、指令与判据 | [Press/Lift Stapler](docs/press-lift-stapler-experiment.md) |
 | 当前发布及历史结果复用证据 | [发布溯源](docs/release-provenance.md) |
 | 当前 CPU、指令及仿真测试入口 | [tests](tests/README.md) |
+| 当前评测、seed、发布和浏览工具 | [tools](tools/README.md) |
 | 旧版 Bottle README、过渡版快照与早期 pilot | [docs/archive](docs/archive/README.md) |
 
 `seed-manifests/` 和 `result/` 各保留当前 Stapler v1 一套发布；旧版说明保存在 archive 文档中，旧发布原件可从 `master-261027-staper-v1` 备份分支恢复。

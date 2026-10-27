@@ -6,6 +6,8 @@ tags: [robotwin, vla, benchmark]
 
 # Place-Relative
 
+> 历史 beside/on_top 设计记录。当前 Spatial 为 left/right/on_top，见[当前 README](../../README.md#place-relative)。本文旧报告与候选渲染脚本已退休，原文件见[tools 清理记录](../archive/obsolete-tool-scripts.md)。
+
 对应主文档「时间评估」阶段3（新建型任务，高风险：成功判定无原文细节，需自行设计）。
 
 ## 论文原文依据（高可信度）

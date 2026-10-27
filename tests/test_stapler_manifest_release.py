@@ -40,10 +40,9 @@ class StaplerManifestReleaseTest(unittest.TestCase):
 
     def test_current_formal_prepare_uses_the_stapler_replacement_flow(self):
         base, old = Path('/unused/new-run'), Path('/unused/old-run')
-        with patch('tools.prepare_bell_policy_suite.prepare', return_value='prepared') as prepare:
+        with patch('tools.prepare_stapler_policy_suite.prepare', return_value='prepared') as prepare:
             self.assertEqual(formal.prepare(base, RELEASE, old), 'prepared')
-        prepare.assert_called_once_with(base, old, release=RELEASE,
-            task_name='press_lift_stapler', verify_release_fn=release_tool.verify)
+        prepare.assert_called_once_with(base, old, release=RELEASE)
 
     def test_qualified_release_and_unchanged_five_manifests(self):
         suite = verify()
