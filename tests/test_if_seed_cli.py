@@ -171,7 +171,7 @@ class SeedCliTests(unittest.TestCase):
     def test_resume_allows_not_yet_started_tasks_but_not_orphan_manifest(self):
         generator._preflight_outputs(
             self.root,
-            ("arm_select", "bottle_verb"),
+            ("arm_select", "press_lift_stapler"),
             resume=True,
             overwrite=False,
         )
@@ -179,7 +179,7 @@ class SeedCliTests(unittest.TestCase):
         with self.assertRaisesRegex(GenerationError, "without resume evidence"):
             generator._preflight_outputs(
                 self.root,
-                ("arm_select", "bottle_verb"),
+                ("arm_select", "press_lift_stapler"),
                 resume=True,
                 overwrite=False,
             )

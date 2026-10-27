@@ -99,7 +99,6 @@ def validate_episode(directory, task, seed, config):
 def current_success_checker(task):
     """Pin new plans to the checker actually used by the current task source."""
     from dataclasses import asdict
-    from tasks.envs._if_bottle_verb import PickHoldMonitor, PickHoldRules
     from tasks.envs._if_grounding import ArmPickMonitor, AttributePickMonitor
     if task == 'press_lift_bell':
         from tasks.envs._press_lift_bell import BellMonitor, BellRules
@@ -110,6 +109,7 @@ def current_success_checker(task):
         return dict(success_checker_version=StaplerMonitor.VERSION,
                     success_checker_parameters=StaplerMonitor(stapler_rules()).signals()['thresholds'])
     if task == 'bottle_verb':
+        from if_benchmark.legacy_bottle_checker import PickHoldMonitor, PickHoldRules
         return dict(success_checker_version=PickHoldMonitor.VERSION,
                     success_checker_parameters=asdict(PickHoldRules()))
     if task == 'attribute_select':
@@ -398,8 +398,8 @@ def check_scene(base, policy, spec, seed, instruction, obs, env, path):
 
 
 def check_active_tasks(specs):
-    from if_benchmark.seed_contracts import IF_SEED_CONTRACTS, CURRENT_SUITE_TASKS, LEGACY_SUITE_TASKS, BELL_SUITE_TASKS
-    assert tuple(s['task'] for s in specs) in (CURRENT_SUITE_TASKS, LEGACY_SUITE_TASKS, BELL_SUITE_TASKS), 'Formal runs require a complete six-task release inventory'
+    from if_benchmark.seed_contracts import IF_SEED_CONTRACTS, CURRENT_SUITE_TASKS
+    assert tuple(s['task'] for s in specs) == CURRENT_SUITE_TASKS, 'Formal runs require the current complete six-task release inventory'
     from if_benchmark.seed_contracts import validate_active_seeds
     for spec in specs:
         if 'modes' in spec:

@@ -22,7 +22,7 @@ import traceback
 REPO_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO_ROOT))
 
-from if_benchmark.seed_contracts import ARCHIVED_SEED_CONTRACTS, IF_SEED_CONTRACTS, describe_seed, validate_active_seeds  # noqa: E402
+from if_benchmark.seed_contracts import RETIRED_TASKS, IF_SEED_CONTRACTS, describe_seed, validate_active_seeds  # noqa: E402
 from policies.evaluation import finalize_episode_success, setup_episode  # noqa: E402
 from if_benchmark.seed_manifest import load_manifest, manifest_sha256  # noqa: E402
 from policies.xvla.outputs import camera_strip, episode_path, write_episode_artifacts, write_json  # noqa: E402
@@ -37,8 +37,8 @@ def git_identity(path):
 
 
 def select_seeds(args):
-    if args.task in ARCHIVED_SEED_CONTRACTS:
-        raise ValueError(f"Task {args.task} is retired; see bak/{args.task}/README.md")
+    if args.task in RETIRED_TASKS:
+        raise ValueError(f"Task {args.task} is retired; see docs/archive/obsolete-task-scripts.md")
     manifest = None
     is_if = args.task in IF_SEED_CONTRACTS
     if args.seed_manifest:
@@ -67,8 +67,8 @@ def select_seeds(args):
 
 
 def load_task(target, task_name, task_config):
-    if task_name in ARCHIVED_SEED_CONTRACTS:
-        raise ValueError(f"Task {task_name} is retired; see bak/{task_name}/README.md")
+    if task_name in RETIRED_TASKS:
+        raise ValueError(f"Task {task_name} is retired; see docs/archive/obsolete-task-scripts.md")
     # Reuse RoboTwin's config/embodiment resolution, without running collection.
     os.chdir(target)
     sys.path[:0] = [str(target / "script"), str(target), str(target / "description/utils")]

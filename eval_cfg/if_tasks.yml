@@ -2,9 +2,8 @@
 #
 # This is the default six-task inventory; versioned seed releases retain their own suite.yml. The order follows
 # the six remaining diagnostic axes; Grasp-Approach is retired; bak/ retains its retirement notice.
-# Other task envs may remain in tasks/envs/ for provenance or experimentation; an env is
-# included in the default suite only when it appears in this list.
-# bottle_verb remains loadable for earlier releases.
+# tasks/envs retains these six tasks and their shared helpers. Retired task sources
+# live in Git history; their old manifests/results remain readable as evidence.
 #
 # Format: a plain `tasks:` list. Each name must resolve to envs/<name>.py after
 # `scripts/bridge_tasks.sh` symlinks tasks/envs/*.py into the RoboTwin runtime.

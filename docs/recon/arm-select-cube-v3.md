@@ -33,7 +33,7 @@
 | policy 预算 | 400 actions，相对抬升 >5 cm，距指定 TCP <20 cm 且比另一 TCP 更近；错误臂此前从未抬起 | `_if_eval.py` / `_compute_signals` |
 | 语言 | 所有版本沿用 `the block` 及原模板；cube-v3 与 jitter-v2 按 scene seed 选模板 | `policies/xvla/eval.py:instruction_for` |
 
-`fixed-v1` 仍是未传版本时的默认值；旧 `demo_clean_arm_select_v2` 仍生成长柱。
+`fixed-v1` 仍是源码未传版本时的兼容默认值；旧长柱配置 `demo_clean_arm_select_v2` 已移至[Git 历史](../archive/obsolete-task-scripts.md)。
 v3 必须显式选择新配置，旧 manifest 与新配置不匹配时 evaluator 会拒绝。
 Cube-v3 已纳入[新的六任务 taskset](../../seed-manifests/robotwin-if-press-lift-stapler-v1-20-per-mode/README.md)，
 六个 policies 的独立重跑与五任务复用见[合并评测说明](../arm-select-target-only-v2-evaluation.md)。

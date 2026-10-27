@@ -91,7 +91,7 @@ while IFS=$'\t' read -r task config count; do
   if (( ! DRY_RUN )); then
     [[ -f "$ROBOTWIN_DIR/envs/$task.py" ]] || fail "task is not bridged: $task (see docs/branch-delivery.md)"
     [[ -f "$ROBOTWIN_DIR/task_config/$config.yml" ]] || fail "missing task config: $config (see docs/branch-delivery.md)"
-    if [[ "$config" == demo_clean_arm_select_v2 || "$config" == demo_clean_arm_select_v3 ]]; then
+    if [[ "$config" == demo_clean_arm_select_v3 ]]; then
       cmp -s "$REPO_ROOT/tasks/task_config/$config.yml" "$ROBOTWIN_DIR/task_config/$config.yml" || fail 'arm_select config differs from the delivered config'
     fi
   fi

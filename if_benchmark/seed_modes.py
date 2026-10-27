@@ -5,7 +5,7 @@ import json
 from pathlib import Path
 import yaml
 
-from .seed_contracts import IF_SEED_CONTRACTS, contract_for, describe_seed
+from .seed_contracts import ARCHIVED_SEED_CONTRACTS, IF_SEED_CONTRACTS, contract_for, describe_seed
 from .seed_manifest import load_manifest, manifest_sha256, validate_manifest
 
 CSV_FIELDS = ('task', 'task_config', 'block', 'seed', 'mode', 'block_offset', 'scene_index', 'scene_offset')
@@ -16,7 +16,7 @@ def build_seed_modes(directory):
     tasks = []
     suite = yaml.safe_load((directory / 'suite.yml').read_text())
     inventory = [s['task'] for s in suite['tasks']]
-    if len(inventory) != len(set(inventory)) or not set(inventory) <= IF_SEED_CONTRACTS.keys():
+    if len(inventory) != len(set(inventory)) or not set(inventory) <= (IF_SEED_CONTRACTS | ARCHIVED_SEED_CONTRACTS).keys():
         raise ValueError('Release contains duplicate or unsupported tasks')
     for task in inventory:
         manifest = load_manifest(directory / f'{task}.json')

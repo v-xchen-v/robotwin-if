@@ -54,14 +54,14 @@ def task_class(name):
 class PolicyEvaluationTests(unittest.TestCase):
     def test_runtime_modes_agree_with_qualification(self):
         scenes = {
-            'bottle_verb': SimpleNamespace(mode='shake'),
+            'press_lift_stapler': SimpleNamespace(mode='lift'),
             'arm_select': SimpleNamespace(mode='right'),
             'pick_diverse_object': SimpleNamespace(target_familiarity='unseen'),
             'attribute_select': SimpleNamespace(axis='decal', value=1, AXIS_VALUES={'decal': ('cat','dog')}),
             'stack_sequence': SimpleNamespace(perm=[2,0,1], COLOR_NAMES=['red','green','blue']),
             'place_relative': SimpleNamespace(direction='on_top'),
         }
-        expected = ['shake','right','unseen','decal:dog','blue>red>green','on_top']
+        expected = ['lift','right','unseen','decal:dog','blue>red>green','on_top']
         for (name, scene), mode in zip(scenes.items(), expected):
             with self.subTest(task=name):
                 self.assertEqual(observed_mode(name, scene), mode)

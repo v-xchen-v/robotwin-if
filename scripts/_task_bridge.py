@@ -22,19 +22,16 @@ MAX_STATE_BYTES = 1024 * 1024
 MAX_STATE_LINKS = 256
 
 MAINTAINED_TASKS = (
-    "bottle_verb",
+    "press_lift_stapler",
     "pick_diverse_object",
     "attribute_select",
     "arm_select",
     "stack_sequence",
     "place_relative",
-    "press_lift_bell",
-    "press_lift_stapler",
 )
 ENV_HELPERS = (
     "_if_grounding.py",
     "_if_relative.py",
-    "_if_bottle_verb.py",
     "_pick_diverse_object_pool.py",
     "_if_eval.py",
     "_press_lift_bell.py",
@@ -453,8 +450,10 @@ def _legacy_links(target, desired_destinations):
     for source_dir, destination_dir, pattern in roots:
         if not source_dir.is_dir() or not destination_dir.is_dir():
             continue
-        for source in source_dir.glob(pattern):
-            destination = destination_dir / source.name
+        # Inspect destinations too: a retired source may already be deleted.
+        # Only links resolving to this checkout's exact plugin path are owned.
+        for destination in destination_dir.glob(pattern):
+            source = source_dir / destination.name
             if destination in desired_destinations:
                 continue
             if destination.is_symlink() and _resolved_link(destination) == source.resolve():

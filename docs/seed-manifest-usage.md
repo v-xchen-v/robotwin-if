@@ -2,7 +2,7 @@
 
 当前维护六项任务；Grasp-Approach 已归档到 [bak/](../bak/grasp_cube_approach/README.md)。旧七任务发布目录仅作历史证据，当前正式清单见 [六任务 20-block release](../seed-manifests/robotwin-if-press-lift-stapler-v1-20-per-mode/README.md)。
 
-当前 Verb 为 `press_lift_stapler`（press / lift），每个 block 两回合。下文 Bottle 示例仍展示兼容旧任务的通用 API；默认 `--all` 使用当前六任务清单。
+当前 Verb 为 `press_lift_stapler`（press / lift），每个 block 两回合；默认 `--all` 使用当前六任务清单。下文 100-block 生成命令是另建清单的示例，现有正式清单仍为每任务 20 blocks。Bottle/Bell 仅支持读取历史数据，重新运行需使用历史 checkout。
 
 本文面向两类使用者：
 
@@ -22,7 +22,7 @@ Balanced seed manifest 改为提前生成一份固定列表：
 ```json
 {
   "schema_version": 2,
-  "task": "bottle_verb",
+  "task": "press_lift_stapler",
   "task_config": "demo_clean",
   "seeds": [100002, 100003, 100006, 100007]
 }
@@ -48,7 +48,7 @@ Manifest 中的 seed 是直接传给 `task.setup_demo(seed=...)` 的 **exact epi
 
 | Task | 每个 block 的 modes | Block size | 100 blocks 的总 episodes |
 |---|---|---:|---:|
-| `bottle_verb` | pick / shake | 2 | 200 |
+| `press_lift_stapler` | press / lift | 2 | 200 |
 | `pick_diverse_object` | seen / unseen | 2 | 200 |
 | `attribute_select` | color:red/blue、decal:cat/dog、shape:block/bar、size:big/small | 8 | 800 |
 | `arm_select` | left / right | 2 | 200 |
@@ -62,11 +62,11 @@ Manifest 中的 seed 是直接传给 `task.setup_demo(seed=...)` 的 **exact epi
 六项合计 = 2300 policy-evaluation episodes
 ```
 
-例如 `bottle_verb --accepted-blocks 100` 的结果是：
+例如 `press_lift_stapler --accepted-blocks 100` 的结果是：
 
 ```text
-pick  = 100 episodes
-shake = 100 episodes
+press  = 100 episodes
+lift = 100 episodes
 总计  = 200 episodes
 ```
 
@@ -87,7 +87,7 @@ bash scripts/bridge_tasks.sh --check
 `--check` 应显示：
 
 ```text
-check passed: 23 owned links
+check passed: 18 owned links
 ```
 
 生成期间不要修改以下输入：
@@ -157,7 +157,7 @@ ROBOTWIN_CONDA_ENV=RoboTwin \
 ```bash
 conda run --no-capture-output -n RoboTwin \
   python tools/generate_if_seed_manifest.py \
-  --task bottle_verb \
+  --task press_lift_stapler \
   --task-config demo_clean \
   --accepted-blocks 100 \
   --max-candidate-blocks 500 \
@@ -165,18 +165,18 @@ conda run --no-capture-output -n RoboTwin \
   --output-dir outputs/if-seeds-100-per-mode
 ```
 
-成功后会得到 100 个 pick seeds 和 100 个 shake seeds。
+成功后会得到 100 个 press seeds 和 100 个 lift seeds。
 
 ---
 
 ## 6. 生成器如何选择 seeds
 
-以 `bottle_verb` 为例，candidate blocks 为：
+以 `press_lift_stapler` 为例，candidate blocks 为：
 
 ```text
-block 50000 -> [100000, 100001] -> [pick, shake]
-block 50001 -> [100002, 100003] -> [pick, shake]
-block 50002 -> [100004, 100005] -> [pick, shake]
+block 50000 -> [100000, 100001] -> [press, lift]
+block 50001 -> [100002, 100003] -> [press, lift]
+block 50002 -> [100004, 100005] -> [press, lift]
 ```
 
 对于每个 exact seed，生成器运行：
@@ -199,8 +199,8 @@ setup_demo(seed)
 如果 block 中任一成员失败，整个 block 都被拒绝：
 
 ```text
-100000 pick  pass
-100001 shake fail
+100000 press  pass
+100001 lift fail
 
 => [100000, 100001] 整组拒绝
 ```
@@ -215,8 +215,8 @@ setup_demo(seed)
 
 ```text
 outputs/if-seeds-100-per-mode/
-├── bottle_verb.json
-├── bottle_verb.generation.json
+├── press_lift_stapler.json
+├── press_lift_stapler.generation.json
 ├── pick_diverse_object.json
 ├── pick_diverse_object.generation.json
 ├── attribute_select.json
@@ -236,7 +236,7 @@ outputs/if-seeds-100-per-mode/
 ```json
 {
   "schema_version": 2,
-  "task": "bottle_verb",
+  "task": "press_lift_stapler",
   "task_config": "demo_clean",
   "seeds": [100002, 100003, 100006, 100007]
 }
@@ -282,13 +282,13 @@ Wrapper 会在每个 task 成功后自动验证。也可以独立运行：
 ```bash
 python tools/validate_if_seed_manifest.py \
   --require-evidence \
-  outputs/if-seeds-100-per-mode/bottle_verb.json
+  outputs/if-seeds-100-per-mode/press_lift_stapler.json
 ```
 
 Bottle 100 blocks 的期望输出包含：
 
 ```text
-seeds=200 blocks=100 modes=[pick=100, shake=100] evidence=verified
+seeds=200 blocks=100 modes=[press=100, lift=100] evidence=verified
 ```
 
 验证整个目录：
@@ -359,7 +359,7 @@ IF_MAX_CANDIDATE_BLOCKS=1000 \
 ```python
 import json
 
-with open("bottle_verb.json", encoding="utf-8") as handle:
+with open("press_lift_stapler.json", encoding="utf-8") as handle:
     manifest = json.load(handle)
 
 for episode_seed in manifest["seeds"]:
@@ -394,7 +394,7 @@ RoboTwin 原生 evaluator 会把 CLI seed 转换为另一个起始 episode seed�
 
 ```bash
 # 错误示意：100002 在这里可能被解释为 run/shard seed
-policy/eval.sh bottle_verb ... 100002 ...
+policy/eval.sh press_lift_stapler ... 100002 ...
 ```
 
 Formal evaluator 必须使用能够直接接收 exact episode seed 的底层 one-episode 路径，绕过原生动态 seed-skip loop。
@@ -430,8 +430,8 @@ Manifest 中的 episode 已在对应 source/config 下通过 oracle qualificatio
 ```text
 seed-manifests/
 ├── README.md
-├── bottle_verb.json
-├── bottle_verb.generation.json
+├── press_lift_stapler.json
+├── press_lift_stapler.generation.json
 ├── ...
 ```
 

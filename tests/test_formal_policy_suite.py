@@ -114,7 +114,7 @@ class FormalReuseTest(unittest.TestCase):
 
     def test_current_three_second_contract_rejects_one_second_results(self):
         from dataclasses import asdict
-        from tasks.envs._if_bottle_verb import PickHoldMonitor, PickHoldRules
+        from if_benchmark.legacy_bottle_checker import PickHoldMonitor, PickHoldRules
         parameters = asdict(PickHoldRules())
         self.assertEqual(parameters['hold_seconds'], 3.0)
         self.assertNotIn('position_travel', parameters)
@@ -135,7 +135,7 @@ class FormalReuseTest(unittest.TestCase):
 
     def test_terminal_contract_rejects_early_stop_v5_even_with_matching_thresholds(self):
         from dataclasses import asdict
-        from tasks.envs._if_bottle_verb import PickHoldMonitor, PickHoldRules
+        from if_benchmark.legacy_bottle_checker import PickHoldMonitor, PickHoldRules
         parameters=asdict(PickHoldRules())
         self.assertNotIn('position_radius',parameters)
         self.assertNotIn('reversal_distance',parameters)
@@ -159,7 +159,7 @@ class FormalReuseTest(unittest.TestCase):
 
     def test_terminal_pick_requires_a_full_finalized_policy_rollout(self):
         from dataclasses import asdict
-        from tasks.envs._if_bottle_verb import PickHoldMonitor, PickHoldRules
+        from if_benchmark.legacy_bottle_checker import PickHoldMonitor, PickHoldRules
         parameters=asdict(PickHoldRules())
         spec=dict(self.spec,success_checker_version=PickHoldMonitor.VERSION,
                   success_checker_parameters=parameters)

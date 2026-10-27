@@ -17,13 +17,13 @@
 
 ## Membership and readiness
 
-A Python env or instruction JSON being present does not make a task active. Implementations retained for provenance or experiments—including `laptop_verb`, `operate_stapler`, `operate_tabletop`, `operate_mic_drawer`, and `smoke_click_bell`—are inactive because they are absent from `if_tasks.yml`.
+`tasks/` retains exactly the current six task implementations and their shared helpers. Bottle, Bell and earlier experimental tasks have been removed; original files and retirement details are in the [task cleanup record](../docs/archive/obsolete-task-scripts.md). Historical manifests/results remain readable, while evaluation rejects retired task names.
 
 Conversely, manifest membership describes the suite this repository maintains; it does not bypass task-specific release gates. `pick_diverse_object` is the maintained Noun-Grounding task, and its locked four-noun production Unseen pool is independently enforced by `tests/pick_diverse_object/test_pool.py` (currently 34/34).
 
 ## Runtime installation
 
-The bridge installs the current six tasks plus `bottle_verb` for earlier releases; unrelated experimental source files are not installed. The locked nested runtime is the default:
+The bridge installs the current six tasks, six shared helpers and six instruction files. The locked nested runtime is the default:
 
 ```bash
 bash scripts/bridge_tasks.sh --dry-run
@@ -31,7 +31,7 @@ bash scripts/bridge_tasks.sh
 bash scripts/bridge_tasks.sh --check
 ```
 
-For an external runtime, pass `--robotwin-dir PATH` or set `ROBOTWIN_DIR`. A non-locked/unknown target commit or locally modified compatibility-contract file is rejected by default and requires explicit `--allow-compatible-commit`; static RoboTwin API checks always remain mandatory. The target-side `.robotwin-if-bridge.json` owns the 20 env/helper/instruction links, records source/target dirty provenance plus an exact linked-source digest, and makes stale cleanup and unbridge independent of the current source inventory. A target-scoped operation lock serializes bridge/check/unbridge transactions.
+For an external runtime, pass `--robotwin-dir PATH` or set `ROBOTWIN_DIR`. A non-locked/unknown target commit or locally modified compatibility-contract file is rejected by default and requires explicit `--allow-compatible-commit`; static RoboTwin API checks always remain mandatory. The target-side `.robotwin-if-bridge.json` owns the 18 env/helper/instruction links, records source/target dirty provenance plus an exact linked-source digest, and makes stale cleanup and unbridge independent of the current source inventory. A target-scoped operation lock serializes bridge/check/unbridge transactions.
 
 ## Using the task inventory
 
@@ -55,7 +55,6 @@ Task-local setup (including `_if_eval.py` for the existing tasks) applies these 
 | Task | Policy action limit |
 |---|---:|
 | `press_lift_stapler` | 250 |
-| `bottle_verb` (legacy release) | 700 |
 | `pick_diverse_object` | 400 |
 | `attribute_select` | 400 |
 | `arm_select` | 400 |
@@ -86,7 +85,6 @@ Formal IF results instead replay one precomputed list shared by every policy. `t
 | Task | Balance block | Same-scene structure |
 |---|---:|---|
 | `press_lift_stapler` | 2 | one press/lift pair; all initial RGB/state arrays identical |
-| `bottle_verb` (legacy release) | 2 | one pick/shake pair |
 | `pick_diverse_object` | 2 | seen/unseen are independent scenes |
 | `attribute_select` | 8 | four independent two-seed axis pairs |
 | `arm_select` | 2 | one left/right pair |

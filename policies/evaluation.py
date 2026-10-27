@@ -46,7 +46,7 @@ def setup_episode(env, config, args, seed, split, record, path):
     write_json(path("_oracle.json"), info)
     if not record["oracle_success"]:
         raise RuntimeError("Exact seed failed oracle qualification; no seed substitution")
-    if args.task in ("bottle_verb", "attribute_select"):
+    if args.task == "attribute_select":
         pair_qualified = type(env)._pair_ok.get(seed // 2)
         if pair_qualified is not True:
             raise RuntimeError("Successful oracle did not qualify the paired scene")

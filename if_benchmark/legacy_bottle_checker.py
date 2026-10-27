@@ -1,4 +1,4 @@
-"""Simulator-free pick-and-hold trajectory predicate, in metres and simulation seconds."""
+"""Frozen Bottle pick/hold checker for auditing historical results; no runtime task."""
 from dataclasses import asdict, dataclass
 from collections import deque
 import math

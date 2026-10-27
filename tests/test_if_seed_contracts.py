@@ -20,16 +20,14 @@ from if_benchmark.seed_contracts import (  # noqa: E402
 
 
 TASKS = (
-    "bottle_verb",
+    "press_lift_stapler",
     "pick_diverse_object",
     "attribute_select",
     "arm_select",
     "stack_sequence",
     "place_relative",
-    "press_lift_bell",
-    "press_lift_stapler",
 )
-SIZES = (2, 2, 8, 2, 6, 3, 2, 2)
+SIZES = (2, 2, 8, 2, 6, 3)
 
 
 class SeedContractTests(unittest.TestCase):

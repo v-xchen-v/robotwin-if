@@ -11,6 +11,7 @@
 
 [过时测试与实验脚本清理](obsolete-test-scripts.md)记录测试目录清理范围及原文件位置。
 [过时 tools 脚本清理](obsolete-tool-scripts.md)记录旧工具移除范围、当前替代入口和原文件位置。
+[过时任务脚本清理](obsolete-task-scripts.md)记录旧 env、instruction 与配置的移除范围及历史兼容方式。
 
 旧结果和 seed 发布原件保留在[备份分支 master-261027-staper-v1](https://github.com/v-xchen-v/robotwin-if/tree/master-261027-staper-v1)。
 归档视频素材仍在 [task-demos](../assets/task-demos/README.md)；当前六任务示例位于 [stapler-v1-demos](../assets/stapler-v1-demos/README.md)。

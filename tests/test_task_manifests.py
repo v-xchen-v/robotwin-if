@@ -83,9 +83,11 @@ IF_TASKS = (
     "place_relative",
 )
 
-BRIDGE_TASKS = ("bottle_verb", *IF_TASKS[1:], "press_lift_bell", "press_lift_stapler")
+BRIDGE_TASKS = IF_TASKS
 
 INACTIVE_TASKS = {
+    "bottle_verb",
+    "press_lift_bell",
     "grasp_cube_approach",
     "laptop_verb",
     "operate_stapler",
@@ -97,7 +99,6 @@ INACTIVE_TASKS = {
 BRIDGE_HELPERS = (
     "_if_grounding.py",
     "_if_relative.py",
-    "_if_bottle_verb.py",
     "_pick_diverse_object_pool.py",
     "_if_eval.py",
     "_press_lift_bell.py",
@@ -139,14 +140,14 @@ def main():
         note=f"count={len(if_tasks)}, unique={len(set(if_tasks))}",
     )
     check(
-        "seed-contract registry includes current and legacy tasks",
+        "seed-contract registry includes only current tasks",
         tuple(IF_SEED_CONTRACTS) == BRIDGE_TASKS,
         note=f"got={tuple(IF_SEED_CONTRACTS)}",
     )
     check(
         "seed-contract balance block sizes are exact",
         tuple(contract.block_size for contract in IF_SEED_CONTRACTS.values())
-        == (2, 2, 8, 2, 6, 3, 2, 2),
+        == (2, 2, 8, 2, 6, 3),
     )
     check(
         "all_tasks_plus_if.yml is exact native-50 + IF-six",
@@ -176,7 +177,7 @@ def main():
     bridge = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(bridge)
     check(
-        "bridge supports current and legacy inventories",
+        "bridge supports exactly the current inventory",
         bridge.MAINTAINED_TASKS == BRIDGE_TASKS,
         note=f"got={bridge.MAINTAINED_TASKS}",
     )
@@ -198,7 +199,7 @@ def main():
     )
     check("bridge env task order is canonical", desired_env_tasks == BRIDGE_TASKS)
     check("bridge instruction order is canonical", desired_instructions == BRIDGE_TASKS)
-    check("bridge owns exactly 23 task plugin links", len(desired) == 23)
+    check("bridge owns exactly 18 task plugin links", len(desired) == 18)
 
     for helper in BRIDGE_HELPERS:
         check(f"bridge helper exists: {helper}", (REPO / "tasks/envs" / helper).is_file())

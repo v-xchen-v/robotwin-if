@@ -1,5 +1,7 @@
 # Press / Lift Bell 实验
 
+> 历史 Bell 任务记录。Bell env 与 instruction 已退休；当前使用 Stapler，共享接触判据继续保留，见[任务清理记录](archive/obsolete-task-scripts.md)。以下 Bell 运行命令需使用历史 checkout。
+
 分支 `press_lift_bell`，从 master `8035546` 新建。旧瓶子实验已保存在
 [`experiment/bottle-hold-place` 的 e7a7f7c](https://github.com/v-xchen-v/robotwin-if/commit/e7a7f7c)。
 

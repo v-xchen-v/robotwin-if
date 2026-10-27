@@ -137,7 +137,7 @@ class EpisodeSetupTest(unittest.TestCase):
         self.instruction.assert_not_called()
 
     def test_pair_qualification_must_be_proved_by_task(self):
-        for task, mode in (("bottle_verb", "pick"), ("attribute_select", "color:red")):
+        for task, mode in (("attribute_select", "color:red"),):
             for qualified in (None, False, True):
                 with self.subTest(task=task, qualified=qualified), \
                      patch.object(OracleEnv, "_pair_ok", {100000: qualified}):

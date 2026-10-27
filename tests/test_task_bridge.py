@@ -223,11 +223,15 @@ class TaskBridgeTests(unittest.TestCase):
         destination = target / rel
         destination.symlink_to(os.path.relpath(source, destination.parent))
         inactive_source = REPO / "tasks/envs/laptop_verb.py"
+        self.assertFalse(inactive_source.exists())
         inactive_destination = target / "envs/laptop_verb.py"
         inactive_destination.symlink_to(os.path.relpath(inactive_source, inactive_destination.parent))
+        foreign = target / "envs/foreign_task.py"
+        foreign.symlink_to(self.root / "another-checkout/tasks/envs/foreign_task.py")
         self.quiet_bridge(target)
         self.assertTrue(destination.is_symlink())
         self.assertFalse(os.path.lexists(inactive_destination))
+        self.assertTrue(foreign.is_symlink())
         self.quiet_bridge(target, check=True)
 
     def test_adopted_absolute_link_remains_unbridgeable(self):
@@ -259,7 +263,7 @@ class TaskBridgeTests(unittest.TestCase):
         external_envs = self.root / "external-envs"
         (target / "envs").rename(external_envs)
         (target / "envs").symlink_to(external_envs, target_is_directory=True)
-        owned_link = external_envs / "bottle_verb.py"
+        owned_link = external_envs / "press_lift_stapler.py"
         with self.assertRaisesRegex(BRIDGE.BridgeError, "injection root"):
             self.quiet_unbridge(target)
         self.assertTrue(owned_link.is_symlink())

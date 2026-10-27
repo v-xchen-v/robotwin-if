@@ -13,10 +13,9 @@ REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO))
 from if_benchmark.seed_contracts import CURRENT_SUITE_TASKS
 
-# These six implementations use the shared helper. Press/lift tasks set their
+# These five implementations use the shared helper. Press/lift tasks set their
 # own budget after native initialization and are checked separately below.
 TASKS = (
-    "bottle_verb",
     "pick_diverse_object",
     "attribute_select",
     "arm_select",
@@ -31,7 +30,7 @@ EXPECTED = {
     "stack_sequence": 1200,
     "place_relative": 400,
 }
-PRESS_LIFT_LIMITS = {"press_lift_stapler": 250, "press_lift_bell": 250}
+PRESS_LIFT_LIMITS = {"press_lift_stapler": 250}
 
 
 def load_module(name, path):
@@ -76,11 +75,11 @@ def direct_call(statement):
 
 
 class EvalStepLimitTests(unittest.TestCase):
-    def test_current_inventory_and_compatibility_tasks_match_bridge(self):
+    def test_current_inventory_matches_bridge(self):
         self.assertEqual(set(load_bridge().MAINTAINED_TASKS),
-                         set(CURRENT_SUITE_TASKS) | {"bottle_verb", "press_lift_bell"})
-        self.assertEqual(set(EXPECTED), set(TASKS))
-        self.assertEqual(set(EXPECTED) | set(PRESS_LIFT_LIMITS),
+                         set(CURRENT_SUITE_TASKS))
+        self.assertEqual(set(EXPECTED) - {"bottle_verb"}, set(TASKS))
+        self.assertEqual(set(TASKS) | set(PRESS_LIFT_LIMITS),
                          set(load_bridge().MAINTAINED_TASKS))
 
     def test_fixed_eval_limit_map_is_exact(self):
