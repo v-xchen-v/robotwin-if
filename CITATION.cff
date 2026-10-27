@@ -1,0 +1,17 @@
+# Template only: fill in the metadata before publishing a citation.
+# Remove unused optional fields after filling in the required fields.
+cff-version: 1.2.0
+message: ""
+title: ""
+type: software
+authors: []
+# Replace authors: [] with entries such as:
+# authors:
+#   - family-names: ""
+#     given-names: ""
+#     orcid: ""
+repository-code: ""
+url: ""
+version: ""
+date-released: ""
+license: MIT
