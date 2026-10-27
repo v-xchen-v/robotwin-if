@@ -9,6 +9,7 @@ robotwin-if 是基于 [RoboTwin 2.0](https://github.com/RoboTwin-Platform/RoboTw
 
 **当前版本：随机朝向 Stapler v1 · 每任务 20 blocks · 六个开源 checkpoint · 2760 回合、720 blocks 全部完成。**
 评测于 2026-10-26 11:53 UTC 完成校验。
+固定版本 tag：`stapler-v1.0.0` · [Release notes](docs/releases/stapler-v1.0.0.md)。
 
 [固定 seed 清单](seed-manifests/robotwin-if-press-lift-stapler-v1-20-per-mode/README.md) ·
 [完整结果](result/robotwin-if-press-lift-stapler-v1-20blocks/README.md) ·
