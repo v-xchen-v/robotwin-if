@@ -2,7 +2,7 @@
 set -euo pipefail
 POLICY_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)"
 REPO_ROOT="$(cd -- "$POLICY_DIR/../.." && pwd -P)"
-DM05_ENV_PREFIX="/Data/robotwin-if/envs/robotwin-if-dm05"
+DM05_ENV_PREFIX="${ROBOTWIN_IF_HOME:-$HOME/.local/share/robotwin-if}/envs/robotwin-if-dm05"
 DM05_SOURCE_DIR="$REPO_ROOT/third_party/opendm"
 DM05_REVISION="c4762fed95e430bf14e86beed73166b8dd18b094"
 while [[ $# -gt 0 ]]; do
@@ -11,7 +11,10 @@ while [[ $# -gt 0 ]]; do
             [[ $# -ge 2 && -n "$2" && "$2" != -* ]] || { echo "$1 requires a value" >&2; exit 1; }
             if [[ "$1" == --env-prefix ]]; then DM05_ENV_PREFIX="$2"; else DM05_SOURCE_DIR="$2"; fi
             shift 2 ;;
-        -h|--help) echo 'Usage: bash policies/dm05/setup_env.sh [--env-prefix PATH] [--source-dir PATH]'; exit 0 ;;
+        -h|--help)
+            echo 'Usage: bash policies/dm05/setup_env.sh [--env-prefix PATH] [--source-dir PATH]'
+            printf 'Default environment: %s\nOverride the storage root with ROBOTWIN_IF_HOME, or use --env-prefix.\n' "$DM05_ENV_PREFIX"
+            exit 0 ;;
         *) echo "Unknown argument: $1" >&2; exit 1 ;;
     esac
 done
@@ -40,3 +43,4 @@ conda run --no-capture-output -p "$DM05_ENV_PREFIX" python -m pip install --no-c
 # Source is imported directly: its full package dependencies include training/UI tools.
 conda run --no-capture-output -p "$DM05_ENV_PREFIX" python -m pip check
 conda run --no-capture-output -p "$DM05_ENV_PREFIX" python "$POLICY_DIR/check_env.py" --source-dir "$DM05_SOURCE_DIR"
+printf '\nDM05 environment ready: %s\nSource: %s\n' "$DM05_ENV_PREFIX" "$DM05_SOURCE_DIR"

@@ -7,24 +7,25 @@ Checkpoint: [`tencent/Hy-Embodied-0.5-VLA-RoboTwin`](https://huggingface.co/tenc
 Run from the repository root:
 
 ```bash
+export ROBOTWIN_IF_HOME="${ROBOTWIN_IF_HOME:-$HOME/.local/share/robotwin-if}"
 bash policies/hy_vla/setup_env.sh
 conda run --no-capture-output -n RoboTwin python -m pip install \
   -r policies/hy_vla/requirements-client.txt
 
-conda run --no-capture-output -p /Data/robotwin-if/envs/robotwin-if-hy-vla \
+conda run --no-capture-output -p "$ROBOTWIN_IF_HOME/envs/robotwin-if-hy-vla" \
   python policies/hy_vla/download_checkpoint.py \
-  --output-dir /Data/robotwin-if/checkpoints/Hy-Embodied-0.5-VLA-RoboTwin
+  --output-dir "$ROBOTWIN_IF_HOME/checkpoints/Hy-Embodied-0.5-VLA-RoboTwin"
 
-conda run --no-capture-output -p /Data/robotwin-if/envs/robotwin-if-hy-vla \
+conda run --no-capture-output -p "$ROBOTWIN_IF_HOME/envs/robotwin-if-hy-vla" \
   python policies/hy_vla/serve.py \
-  --checkpoint-dir /Data/robotwin-if/checkpoints/Hy-Embodied-0.5-VLA-RoboTwin \
+  --checkpoint-dir "$ROBOTWIN_IF_HOME/checkpoints/Hy-Embodied-0.5-VLA-RoboTwin" \
   --gpu 1 --port 8015 \
   --output-dir outputs/policy-eval/servers/hy-vla-002
 ```
 
-Setup creates a dedicated Python 3.10 environment on `/Data`. Torch 2.7.1 / torchvision 0.22.1 CUDA 12.8, Transformers 4.57.0, timm 1.0.21 and FlashAttention 2.7.4.post1 follow the official `uv.lock`. FlashAttention uses the upstream prebuilt Linux/Python 3.10/CUDA 12/Torch 2.7/CXX11-ABI wheel; the import check also runs its CUDA kernel. Transformers 4.57.0 is yanked on PyPI, but explicitly pinned to match upstream. Only inference dependencies are installed. Direct versions are pinned and `pip freeze` records the resolved environment.
+Setup creates a dedicated Python 3.10 environment under `$ROBOTWIN_IF_HOME/envs` (default storage root: `$HOME/.local/share/robotwin-if`). Torch 2.7.1 / torchvision 0.22.1 CUDA 12.8, Transformers 4.57.0, timm 1.0.21 and FlashAttention 2.7.4.post1 follow the official `uv.lock`. FlashAttention uses the upstream prebuilt Linux/Python 3.10/CUDA 12/Torch 2.7/CXX11-ABI wheel; the import check also runs its CUDA kernel. Transformers 4.57.0 is yanked on PyPI, but explicitly pinned to match upstream. Only inference dependencies are installed. Direct versions are pinned and `pip freeze` records the resolved environment.
 
-Use `--env-prefix` and `--source-dir` to override locations. The prefix must be dedicated to `robotwin-if-hy-vla`. The model environment, Conda package cache and temporary downloads default to external storage. Weights require about 8.5 GiB. The RoboTwin simulator runs in its existing separate environment.
+Use `ROBOTWIN_IF_HOME` to select a writable storage root, or `--env-prefix` and `--source-dir` to override individual locations. The prefix must be dedicated to `robotwin-if-hy-vla`; use that same prefix in every `conda run -p` command. Conda package cache and temporary downloads default to the environment's parent directory. Weights require about 8.5 GiB. The RoboTwin simulator runs in its existing separate environment. For an existing `/Data/robotwin-if` installation, set `ROBOTWIN_IF_HOME=/Data/robotwin-if` to reuse it; no automatic migration is performed. See the [Quickstart](../../docs/quickstart.md) for simulator setup and the six-task evaluation entry point.
 
 The downloader and server verify `model.safetensors` against the pinned LFS SHA-256 `3bd6c16225f905a298340489d519498d4e5ecf5bcdd28a5c1df63e29894fef60`, and verify `norm_stats.pkl` against `ce81158fb16dfcb16caa80ba33dd277d07b81e40de96d959616447d614feae41` **before reading the pickle**. Config/tokenizer assets are hashed as well. All runtime assets are local; Hub offline mode is enabled.
 
@@ -70,7 +71,7 @@ Every step has a request and a latency, even when it serves a cached action. `ne
 ```bash
 conda run --no-capture-output -n RoboTwin \
   python -m unittest discover -s tests/hy_vla -p 'test_client.py'
-conda run --no-capture-output -p /Data/robotwin-if/envs/robotwin-if-hy-vla \
+conda run --no-capture-output -p "${ROBOTWIN_IF_HOME:-$HOME/.local/share/robotwin-if}/envs/robotwin-if-hy-vla" \
   python -m unittest discover -s tests/hy_vla -p 'test_runtime.py'
 ruff check policies/hy_vla tests/hy_vla
 ```

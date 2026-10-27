@@ -1,8 +1,8 @@
 # 将 IF 任务安装到 RoboTwin
 
-Bridge 将本仓库的任务、共享 helper 和指令 JSON 软链到 RoboTwin，检查已有目标的归属和兼容性。
+Bridge 将本仓库的任务、共享 helper、指令 JSON 和专用 task config 软链到 RoboTwin，检查已有目标的归属和兼容性。
 它负责让 runtime 找到任务；当前执行哪六项任务由 [IF inventory](../eval_cfg/if_tasks.yml) 和 [Stapler manifest](../seed-manifests/robotwin-if-press-lift-stapler-v1-20-per-mode/README.md)决定。
-安装列表包含当前六任务、六个共享 helper 和六份 instruction，共 18 个软链。
+安装列表包含当前六任务、六个共享 helper、六份 instruction 和 Arm cube-v3 配置，共 19 个软链。
 
 ## 仓库内的 runtime
 
@@ -19,7 +19,9 @@ bash scripts/bridge_tasks.sh --check
 ```
 
 软链与 `.robotwin-if-bridge.json` 是本机安装状态。新 clone 或 worktree 需要重新 bridge。
-Arm 的 `demo_clean_arm_select_v3.yml` 按[交付说明](branch-delivery.md)另行安装。
+Arm 的 `task_config/demo_clean_arm_select_v3.yml` 随 bridge 安装、校验和解绑，无需手工 `ln -s`。
+升级旧安装时，已正确指向本仓库配置的软链会被接管；同名真实文件（即使内容一致）或其他来源的软链会保留并报告冲突。
+其他原生配置不由 bridge 管理。首次安装完整流程见 [Quickstart](quickstart.md)。
 
 ## 外部 runtime
 

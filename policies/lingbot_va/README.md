@@ -21,13 +21,14 @@ Upstream unconditionally imports FlashAttention even when selecting its supporte
 The checkpoint is approximately **22.7 GiB**. Use a filesystem with at least 25 GiB available:
 
 ```bash
+export ROBOTWIN_IF_HOME="${ROBOTWIN_IF_HOME:-$HOME/.local/share/robotwin-if}"
 conda run --no-capture-output -n robotwin-if-lingbot-va \
   python policies/lingbot_va/download_checkpoint.py \
-  --output-dir /Data/robotwin-if/checkpoints/lingbot-va-posttrain-robotwin
+  --output-dir "$ROBOTWIN_IF_HOME/checkpoints/lingbot-va-posttrain-robotwin"
 
 conda run --no-capture-output -n robotwin-if-lingbot-va \
   python policies/lingbot_va/serve.py \
-  --checkpoint-dir /Data/robotwin-if/checkpoints/lingbot-va-posttrain-robotwin \
+  --checkpoint-dir "$ROBOTWIN_IF_HOME/checkpoints/lingbot-va-posttrain-robotwin" \
   --gpu 1 --port 8011 --no-offload \
   --output-dir outputs/policy-eval/servers/lingbot-va-001
 ```

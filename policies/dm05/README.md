@@ -7,22 +7,23 @@ Checkpoint: [`Dexmal/DM05-robotwin2`](https://huggingface.co/Dexmal/DM05-robotwi
 Run from the repository root:
 
 ```bash
+export ROBOTWIN_IF_HOME="${ROBOTWIN_IF_HOME:-$HOME/.local/share/robotwin-if}"
 bash policies/dm05/setup_env.sh
 conda run --no-capture-output -n RoboTwin python -m pip install \
   -r policies/dm05/requirements-client.txt
 
-conda run --no-capture-output -p /Data/robotwin-if/envs/robotwin-if-dm05 \
+conda run --no-capture-output -p "$ROBOTWIN_IF_HOME/envs/robotwin-if-dm05" \
   python policies/dm05/download_checkpoint.py \
-  --output-dir /Data/robotwin-if/checkpoints/DM05-robotwin2
+  --output-dir "$ROBOTWIN_IF_HOME/checkpoints/DM05-robotwin2"
 
-conda run --no-capture-output -p /Data/robotwin-if/envs/robotwin-if-dm05 \
+conda run --no-capture-output -p "$ROBOTWIN_IF_HOME/envs/robotwin-if-dm05" \
   python policies/dm05/serve.py \
-  --checkpoint-dir /Data/robotwin-if/checkpoints/DM05-robotwin2 \
-  --gpu 0 --port 8014 \
+  --checkpoint-dir "$ROBOTWIN_IF_HOME/checkpoints/DM05-robotwin2" \
+  --gpu 1 --port 8014 \
   --output-dir outputs/policy-eval/servers/dm05-002
 ```
 
-The dedicated environment uses Python 3.10, Torch 2.11.0 / torchvision 0.26.0 CUDA 12.8, Transformers 5.3.0, and NumPy 1.26.4. Setup installs the official inference import dependencies; training/UI dependencies are omitted. Use `--env-prefix` and `--source-dir` to override locations. The environment, temporary downloads and Conda package cache default to external storage under `/Data`, since this CUDA stack is large. Weights require about 11 GiB. Setup does not modify the RoboTwin or other policy environments.
+The dedicated environment uses Python 3.10, Torch 2.11.0 / torchvision 0.26.0 CUDA 12.8, Transformers 5.3.0, and NumPy 1.26.4. Setup installs the official inference import dependencies; training/UI dependencies are omitted. Use `ROBOTWIN_IF_HOME` to select a writable storage root (default: `$HOME/.local/share/robotwin-if`), or `--env-prefix` and `--source-dir` to override individual locations. Conda package cache and temporary downloads default to the environment's parent directory. If you override the environment prefix, use that same path in every `conda run -p` command. Weights require about 11 GiB. Setup does not modify the RoboTwin or other policy environments. For an existing `/Data/robotwin-if` installation, set `ROBOTWIN_IF_HOME=/Data/robotwin-if` to reuse it; no automatic migration is performed. See the [Quickstart](../../docs/quickstart.md) for simulator setup and the six-task evaluation entry point.
 
 The download and every server startup verify the weights' SHA-256 against the pinned Hugging Face LFS object `74e8dbb475148080e35ede3f6823322eb6a0b061c8f843a932a4c4ce879bd282`. The download records processor/config/statistics hashes, which are checked again at startup. Inference uses local files with Hub offline mode, rejects missing/unexpected/mismatched model keys, and requires a clean pinned OpenDM checkout. No OpenDM source patch is needed.
 
@@ -83,7 +84,7 @@ A saved real observation can also be checked using `preflight.py --observation <
 ```bash
 conda run --no-capture-output -n RoboTwin \
   python -m unittest discover -s tests/dm05 -p 'test_client.py'
-conda run --no-capture-output -p /Data/robotwin-if/envs/robotwin-if-dm05 \
+conda run --no-capture-output -p "${ROBOTWIN_IF_HOME:-$HOME/.local/share/robotwin-if}/envs/robotwin-if-dm05" \
   python -m unittest discover -s tests/dm05 -p 'test_service.py'
 ruff check policies/dm05 tests/dm05
 ```

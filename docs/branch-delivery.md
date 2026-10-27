@@ -23,25 +23,22 @@ VLAct 使用 All 100K，不能用旧 Clean 50K 代替。
 RoboTwin 环境/资产和所选模型的独立环境。默认 sim 用 GPU 0、模型用 GPU 1，单次只启动一个模型服务。
 环境和权重大小因模型而异，具体版本与要求见各 policy README。
 同时按该 README 在 RoboTwin 环境安装 `requirements-client.txt` 中的通信依赖。
-模型文档中的 `/Data/robotwin-if/...` 是示例存储路径，可改为接收方有写权限的位置，
-并在下载与服务启动参数中保持一致。
+当前安装流程见 [Quickstart](quickstart.md)。模型文档使用 `ROBOTWIN_IF_HOME` 指定权重与 DM05/Hy-VLA 环境存储根目录，
+默认 `$HOME/.local/share/robotwin-if`；可改为有写权限的数据盘，并在下载与服务启动参数中保持一致。
 
 先准备 RoboTwin、任务 bridge 和 arm_select cube-v3 配置：
 
 ```bash
-# 从仓库根目录执行；首次安装按根 README/setup_robotwin.sh 完成环境与资产准备。
+# 从仓库根目录执行；首次安装按 Quickstart 完成环境与资产准备。
 git submodule update --init third_party/robotwin
 conda activate RoboTwin
 bash scripts/bridge_tasks.sh
-
-# cube-v3 config 不属于 bridge 的 env/instruction 链接；目标不存在时安装。
-ln -s "$PWD/tasks/task_config/demo_clean_arm_select_v3.yml" \
-  third_party/robotwin/task_config/demo_clean_arm_select_v3.yml
+bash scripts/bridge_tasks.sh --check
 
 python tools/export_seed_modes.py --check
 ```
 
-配置已正确安装时无需重复 `ln -s`。外部/不同 commit 的 runtime 按 [bridge 使用说明](task-bridge.md)使用
+Arm 配置随 bridge 统一安装。外部/不同 commit 的 runtime 按 [bridge 使用说明](task-bridge.md)使用
 `--robotwin-dir` 和经审阅的 `--allow-compatible-commit`；不应跳过 bridge 的静态 API 检查。
 不同机器的 renderer 可能产生不同初始像素，本脚本记录新运行，不宣称逐像素重现历史结果。
 

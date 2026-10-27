@@ -199,7 +199,12 @@ def main():
     )
     check("bridge env task order is canonical", desired_env_tasks == BRIDGE_TASKS)
     check("bridge instruction order is canonical", desired_instructions == BRIDGE_TASKS)
-    check("bridge owns exactly 18 task plugin links", len(desired) == 18)
+    desired_configs = tuple(
+        source.name for source, destination in desired
+        if destination.parent == Path("task_config")
+    )
+    check("bridge installs the Arm cube-v3 config", desired_configs == ("demo_clean_arm_select_v3.yml",))
+    check("bridge owns exactly 19 task/config links", len(desired) == 19)
 
     for helper in BRIDGE_HELPERS:
         check(f"bridge helper exists: {helper}", (REPO / "tasks/envs" / helper).is_file())

@@ -39,6 +39,7 @@ ENV_HELPERS = (
     "_press_lift_bell.py",
     "_press_lift_stapler.py",
 )
+TASK_CONFIGS = ("demo_clean_arm_select_v3.yml",)
 
 BASE_TASK_METHODS = {
     "_init_task_env_",
@@ -83,7 +84,9 @@ REQUIRED_PATHS = CONTRACT_PATHS + (
     "envs",
     "description/task_instruction",
 )
-ALLOWED_DESTINATION_ROOTS = (Path("envs"), Path("description/task_instruction"))
+ALLOWED_DESTINATION_ROOTS = (
+    Path("envs"), Path("description/task_instruction"), Path("task_config"),
+)
 
 
 class BridgeError(RuntimeError):
@@ -104,6 +107,8 @@ def desired_links(repo_root=REPO_ROOT):
                 Path("description/task_instruction") / f"{task}.json",
             )
         )
+    for name in TASK_CONFIGS:
+        links.append((repo_root / "tasks/task_config" / name, Path("task_config") / name))
     return tuple(links)
 
 
@@ -351,6 +356,7 @@ def _validate_source(source):
     if not (
         _path_is_within(rel, Path("tasks/envs"))
         or _path_is_within(rel, Path("tasks/task_instruction"))
+        or _path_is_within(rel, Path("tasks/task_config"))
     ):
         raise BridgeError(f"bridge state source is outside task roots: {source!r}")
     return rel
@@ -448,6 +454,7 @@ def _legacy_links(target, desired_destinations):
             target / "description/task_instruction",
             "*.json",
         ),
+        (REPO_ROOT / "tasks/task_config", target / "task_config", "*.yml"),
     )
     for source_dir, destination_dir, pattern in roots:
         if not source_dir.is_dir() or not destination_dir.is_dir():

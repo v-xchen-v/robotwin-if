@@ -2,7 +2,7 @@
 
 [`scripts/collect.sh`](../scripts/collect.sh) 用原生 expert 规划和采集数据，方便在跑 policy 前查看各个 mode 的场景、instruction 和成功动作。
 默认六任务、每任务 **1 个完整 block**，合计 23 个 episodes；不需要模型服务，也不要求 manifest。
-环境、bridge 和 Arm v3 配置先按[主 README](../README.md#run-evaluation)安装。
+环境和 bridge 先按 [Quickstart](quickstart.md)安装；Arm v3 配置已包含在 bridge 中。
 
 ```bash
 conda activate RoboTwin

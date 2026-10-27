@@ -9,18 +9,19 @@ The previous **50K-step Base / Clean** checkpoint, `StarVLA/VLAct_Qwen3OFT_Robot
 Run from this repository root:
 
 ```bash
+export ROBOTWIN_IF_HOME="${ROBOTWIN_IF_HOME:-$HOME/.local/share/robotwin-if}"
 bash policies/vlact/setup_env.sh
 conda run --no-capture-output -n RoboTwin python -m pip install \
   -r policies/vlact/requirements-client.txt
 
 conda run --no-capture-output -n robotwin-if-vlact \
   python policies/vlact/download_checkpoint.py \
-  --variant all --output-dir /Data/robotwin-if/checkpoints/VLAct_Qwen3OFT_Robotwin_all_Finetune
+  --variant all --output-dir "$ROBOTWIN_IF_HOME/checkpoints/VLAct_Qwen3OFT_Robotwin_all_Finetune"
 
 conda run --no-capture-output -n robotwin-if-vlact \
   python policies/vlact/serve.py \
-  --checkpoint-dir /Data/robotwin-if/checkpoints/VLAct_Qwen3OFT_Robotwin_all_Finetune \
-  --gpu 0 --port 8013 \
+  --checkpoint-dir "$ROBOTWIN_IF_HOME/checkpoints/VLAct_Qwen3OFT_Robotwin_all_Finetune" \
+  --gpu 1 --port 8013 \
   --output-dir outputs/policy-eval/servers/vlact-001
 ```
 

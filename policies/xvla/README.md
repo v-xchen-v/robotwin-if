@@ -38,7 +38,7 @@ bash policies/xvla/setup_env.sh \
 ```bash
 conda activate robotwin-if-xvla
 cd third_party/xvla
-python -m deploy \
+CUDA_VISIBLE_DEVICES=1 python -m deploy \
   --model_path 2toINF/X-VLA-RoboTwin2 \
   --host 127.0.0.1 \
   --port 8010 \
@@ -47,6 +47,7 @@ python -m deploy \
 ```
 
 首次加载会下载权重到 Hugging Face cache；也可以将 `--model_path` 指向已下载的本地 checkpoint 目录。正式记录验证证据前应固定 HF revision，并使用对应的本地 snapshot 路径。
+上述服务使用 GPU 1；当前六任务统一评测入口在 GPU 0 上运行仿真，安装与首次评测见 [Quickstart](../../docs/quickstart.md)。
 
 客户端请求地址为 `http://127.0.0.1:8010/act`。上游会在 `--output_dir` 下写入 `info.json`，每次启动使用一个新的 run 目录。自定义安装时将上述环境名和 checkout 路径换成 setup 时的值。模型服务与客户端在不同机器时，按部署需要设置 `--host` 和客户端地址。
 
@@ -75,14 +76,14 @@ IF 首个完整 block 共 2 个 episodes，结果为 1/2，无跳过或补抽。
 ```bash
 # 1. Raw task：exact episode seed，无隐式 seed 偏移/替换。
 conda run --no-capture-output -n RoboTwin python policies/xvla/eval.py \
-  --task click_bell --seeds 2000 --sim-gpu 1 \
+  --task click_bell --seeds 2000 --sim-gpu 0 \
   --output-dir outputs/policy-eval/raw-smoke-002/xvla/click_bell
 
 # 2. Raw 成功后：IF task，manifest 的首个完整左右臂 block。
 conda run --no-capture-output -n RoboTwin python policies/xvla/eval.py \
   --task arm_select --task-config demo_clean_arm_select_v3 \
   --seed-manifest seed-manifests/robotwin-if-press-lift-stapler-v1-20-per-mode/arm_select.json \
-  --blocks 1 --sim-gpu 1 \
+  --blocks 1 --sim-gpu 0 \
   --output-dir outputs/policy-eval/smoke-blocks1-002/xvla/arm_select
 ```
 

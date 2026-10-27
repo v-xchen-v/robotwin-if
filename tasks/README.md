@@ -16,7 +16,7 @@
 `_press_lift_bell.py` 的接触采样、干扰物布局及分类器基类仍被 Stapler 使用；`_press_lift_stapler.py` 定义 Stapler 阈值和朝向采样。
 这些源码及当前指令保持发布时的字节，供五任务结果复用审计使用；例如 `_if_eval.py` 中的历史 Bottle 预算条目继续保留，但 Bottle 已不在可运行清单内。
 
-安装并核对 18 个 env/helper/instruction 链接：
+安装并核对 19 个 env/helper/instruction/config 链接：
 
 ```bash
 bash scripts/bridge_tasks.sh --dry-run
@@ -24,7 +24,7 @@ bash scripts/bridge_tasks.sh
 bash scripts/bridge_tasks.sh --check
 ```
 
-Arm v3 配置需先按[主 README](../README.md#run-evaluation)创建软链；[`scripts/eval.sh`](../scripts/eval.sh) 启动前校验配置存在且与交付版本一致。
+Arm v3 配置随 bridge 安装；[`scripts/eval.sh`](../scripts/eval.sh) 启动前校验配置存在且与交付版本一致。首次安装见 [Quickstart](../docs/quickstart.md)。
 Bridge 会清理指向本仓库旧任务的链接，包括源文件已删除的旧链接；原生任务与其他来源的链接继续保留。
 
 旧任务、配套 instruction 和 Arm v2 配置的原文件见[清理记录](../docs/archive/obsolete-task-scripts.md)。

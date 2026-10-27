@@ -2,6 +2,9 @@
 
 本目录维护六个开源 policy 的独立模型环境、推理服务、客户端和评测适配。
 模型服务与 RoboTwin 仿真分别运行；安装、权重下载、服务启动及输出格式见各 policy README。
+首次从零安装见 [Quickstart](../docs/quickstart.md)。下载示例使用 `ROBOTWIN_IF_HOME`，默认 `$HOME/.local/share/robotwin-if`；
+DM05/Hy-VLA 的环境也默认存储在其 `envs/` 下，可用 `--env-prefix` 覆盖。
+其他四个模型使用 Conda 环境名，可用 `--env-name` 覆盖。服务示例统一使用 GPU 1，仿真使用 GPU 0。
 
 | Policy | 当前 checkpoint | 通信与动作接口 |
 |---|---|---|
@@ -47,7 +50,7 @@ Grasp-Approach 已下线，所有 evaluator 都拒绝执行该任务。
 六个 evaluator 共用 `policies/evaluation.py`：每回合先对固定 seed 做 oracle qualification，
 关闭场景后用同一个 seed 重建 policy 场景，并检查 mode、配对资格和成功判据基线。
 完成的 policy failure 是有效结果；基础设施错误停止评测，不替换 seed。
-Bottle pick 在完整动作预算结束后裁决；其他任务保留各自的终止协议。
+各任务按自身的成功判据与终止协议裁决。
 
 模型历史状态更新、动作解码和输出转换由各 policy 适配器维护。
 输出目录为 `<output-dir>/<policy>/<task>/`，包含逐回合指令、视频、动作、初始观测、

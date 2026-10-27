@@ -15,6 +15,7 @@ python -m unittest discover -s tests -p 'test_*.py' -v
 
 这个命令发现根目录的 unittest 模块；子目录中的独立脚本另行执行。
 Bridge 集成检查会读取本机 RoboTwin checkout，并在临时目录验证安装/解绑；它仍检查 runtime 的 commit 和本地兼容性文件状态。
+同时覆盖旧版 Arm 配置软链的接管、冲突文件保留，以及配置随 bridge 统一校验和解绑。
 
 | 范围 | 主要入口 |
 |---|---|

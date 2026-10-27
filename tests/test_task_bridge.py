@@ -217,6 +217,50 @@ class TaskBridgeTests(unittest.TestCase):
         self.quiet_bridge(target)
         self.quiet_bridge(target, check=True)
 
+    def test_adopts_manual_arm_config_when_upgrading_existing_bridge(self):
+        target = self.fake_robotwin()
+        desired = BRIDGE.desired_links()
+        config_rel = Path("task_config/demo_clean_arm_select_v3.yml")
+        # Older installations have ownership state for env/instruction links only.
+        with mock.patch.object(BRIDGE, "desired_links", return_value=tuple(
+            item for item in desired if item[1] != config_rel
+        )):
+            self.quiet_bridge(target)
+        config = target / config_rel
+        config.symlink_to(REPO / "tasks" / config_rel)
+        original_target = os.readlink(config)
+        self.quiet_bridge(target)
+        self.quiet_bridge(target, check=True)
+        state = BRIDGE.load_state(target)
+        self.assertIn(str(config_rel), [item["destination"] for item in state["links"]])
+        self.assertEqual(os.readlink(config), original_target)
+        self.quiet_unbridge(target)
+        self.assertFalse(os.path.lexists(config))
+        self.assertTrue((target / "task_config/_eval_step_limit.yml").is_file())
+
+    def test_arm_config_regular_file_is_preserved_before_any_links_are_installed(self):
+        target = self.fake_robotwin()
+        rel = Path("task_config/demo_clean_arm_select_v3.yml")
+        config = target / rel
+        # Even an identical copied config is user-owned, not a bridge link.
+        shutil.copyfile(REPO / "tasks" / rel, config)
+        before = config.read_bytes()
+        with self.assertRaisesRegex(BRIDGE.BridgeError, "preflight"):
+            self.quiet_bridge(target)
+        self.assert_no_install(target, except_rel=rel)
+        self.assertEqual(config.read_bytes(), before)
+        self.assertFalse(config.is_symlink())
+
+    def test_legacy_unbridge_removes_manual_arm_link_and_preserves_native_config(self):
+        target = self.fake_robotwin()
+        config = target / "task_config/demo_clean_arm_select_v3.yml"
+        config.symlink_to(REPO / "tasks/task_config" / config.name)
+        native = target / "task_config/_eval_step_limit.yml"
+        before = native.read_bytes()
+        self.quiet_unbridge(target)
+        self.assertFalse(os.path.lexists(config))
+        self.assertEqual(native.read_bytes(), before)
+
     def test_adopts_correct_link_and_removes_inactive_legacy_link(self):
         target = self.fake_robotwin()
         source, rel = BRIDGE.desired_links()[0]
@@ -247,15 +291,16 @@ class TaskBridgeTests(unittest.TestCase):
         self.assertFalse(os.path.lexists(destination))
 
     def test_symlinked_injection_root_is_rejected(self):
-        target = self.fake_robotwin()
-        external_envs = self.root / "external-envs"
-        (target / "envs").rename(external_envs)
-        (target / "envs").symlink_to(external_envs, target_is_directory=True)
-        with self.assertRaisesRegex(BRIDGE.BridgeError, "injection root"):
-            self.quiet_bridge(target)
-        for _source, rel in BRIDGE.desired_links():
-            self.assertFalse(os.path.lexists(target / rel), rel)
-        self.assertFalse((target / BRIDGE.STATE_NAME).exists())
+        for root in ("envs", "task_config"):
+            with self.subTest(root=root):
+                target = self.fake_robotwin()
+                external = self.root / f"external-{root}"
+                (target / root).rename(external)
+                (target / root).symlink_to(external, target_is_directory=True)
+                with self.assertRaisesRegex(BRIDGE.BridgeError, "injection root"):
+                    self.quiet_bridge(target)
+                self.assert_no_install(target)
+                shutil.rmtree(target)
 
     def test_unbridge_rejects_replaced_symlinked_injection_root(self):
         target = self.fake_robotwin()

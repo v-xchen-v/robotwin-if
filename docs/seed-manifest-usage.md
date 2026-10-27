@@ -80,6 +80,7 @@ Manifest 生成需要 RoboTwin/SAPIEN oracle 环境；manifest 验证和 policy 
 
 ```bash
 bash setup_robotwin.sh
+conda activate RoboTwin
 bash scripts/bridge_tasks.sh
 bash scripts/bridge_tasks.sh --check
 ```
@@ -87,7 +88,7 @@ bash scripts/bridge_tasks.sh --check
 `--check` 应显示：
 
 ```text
-check passed: 18 owned links
+check passed: 19 owned links
 ```
 
 生成期间不要修改以下输入：

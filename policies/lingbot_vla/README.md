@@ -21,14 +21,15 @@ Setup creates the dedicated `robotwin-if-lingbot-vla` environment (Python 3.12, 
 The checkpoint is about **15.6 GiB** (FP32 on disk). Allocate at least 18 GiB for the weights and processor assets:
 
 ```bash
+export ROBOTWIN_IF_HOME="${ROBOTWIN_IF_HOME:-$HOME/.local/share/robotwin-if}"
 conda run --no-capture-output -n robotwin-if-lingbot-vla \
   python policies/lingbot_vla/download_checkpoint.py \
-  --output-dir /Data/robotwin-if/checkpoints/lingbot-vla-4b-posttrain-robotwin
+  --output-dir "$ROBOTWIN_IF_HOME/checkpoints/lingbot-vla-4b-posttrain-robotwin"
 
 conda run --no-capture-output -n robotwin-if-lingbot-vla \
   python policies/lingbot_vla/serve.py \
-  --checkpoint-dir /Data/robotwin-if/checkpoints/lingbot-vla-4b-posttrain-robotwin \
-  --gpu 0 --port 8012 \
+  --checkpoint-dir "$ROBOTWIN_IF_HOME/checkpoints/lingbot-vla-4b-posttrain-robotwin" \
+  --gpu 1 --port 8012 \
   --output-dir outputs/policy-eval/servers/lingbot-vla-002
 ```
 

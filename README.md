@@ -202,7 +202,8 @@ python seed-manifests/robotwin-if-press-lift-stapler-v1-20-per-mode/verify.py
 ## 运行评测
 
 需要 Linux、NVIDIA GPU、RoboTwin 环境和资产，以及所选模型的独立推理环境。
-首次安装按[环境搭建](docs/features/01-环境搭建.md)和[六模型交付说明](docs/branch-delivery.md)完成：
+首次安装按 [Quickstart：安装 → expert 场景预览 → policy 评测](docs/quickstart.md)完成。
+已有 clone 从仓库根目录执行：
 
 ```bash
 git submodule update --init third_party/robotwin
@@ -216,14 +217,8 @@ RoboTwin 与 CuRobo 的版本统一定义在 [`runtime_pins.json`](scripts/runti
 安装器先核对 submodule gitlink 和现有源码版本；已有 CuRobo checkout 会复用，版本不符或存在未提交源码修改时停止并保留文件。
 可用 `bash setup_robotwin.sh --sources-only` 单独验证源码准备流程，不安装系统包、Conda 依赖或资产。
 
-Arm 使用单独的 cube-v3 配置；首次安装、目标文件尚不存在时执行：
-
-```bash
-ln -s "$PWD/tasks/task_config/demo_clean_arm_select_v3.yml" \
-  third_party/robotwin/task_config/demo_clean_arm_select_v3.yml
-```
-
-Bridge 安装任务、helper 和指令软链；实际评测成员由 [IF inventory](eval_cfg/if_tasks.yml) 与当前 manifest 指定。
+Bridge 统一安装任务、helper、指令和 Arm cube-v3 配置，共 19 个软链；`--check` 验证安装完整性。
+实际评测成员由 [IF inventory](eval_cfg/if_tasks.yml) 与当前 manifest 指定。
 外部 RoboTwin 可通过 `--robotwin-dir` 接入，版本兼容检查和配置方法见[bridge 使用说明](docs/task-bridge.md)。
 
 跑 policy 前，可先采集 expert 演示查看场景：
