@@ -11,7 +11,7 @@ from if_benchmark.seed_contracts import (
 )
 from if_benchmark.seed_manifest import validate_manifest
 from policies.xvla.eval import load_task
-from tools.run_formal_policy_suite import check_active_tasks
+from tools.run_formal_policy_suite import check_active_tasks, current_success_checker
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -32,6 +32,8 @@ class RetirementTest(unittest.TestCase):
         for task in sorted(RETIRED_TASKS):
             with self.subTest(task=task), self.assertRaisesRegex(ValueError, 'retired'):
                 load_task(ROOT / 'third_party/robotwin', task, 'demo_clean')
+            with self.subTest(task=task), self.assertRaisesRegex(ValueError, 'retired'):
+                current_success_checker(task)
 
     def test_archived_manifest_still_parses_without_reactivating_task(self):
         for task in ARCHIVED_SEED_CONTRACTS:

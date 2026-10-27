@@ -1,7 +1,11 @@
 # robotwin-if — Press/Lift Stapler v1
 
-基于 [RoboTwin 2.0](https://github.com/RoboTwin-Platform/RoboTwin) 的六任务 instruction-following benchmark：分别检查动作、目标物体、属性、机械臂、堆叠顺序和空间关系。
-当前 Verb 任务为 **Press / Lift Stapler**：同一初始场景、相同对象短语，只改变动作指令。
+robotwin-if 是基于 [RoboTwin 2.0](https://github.com/RoboTwin-Platform/RoboTwin) 构建的六任务 instruction-following benchmark，
+核心问题是：**面对相同的初始画面，VLA 模型能否根据不同的语言指令，选择并完成相应的行为？**
+
+在原生操控任务中，物体与场景布置往往已经强烈暗示要执行什么动作，完成任务可能同时依赖场景识别和语言理解。
+我们将可执行的不同目标放入共享场景，通过改变指令中的动作、物体、属性、机械臂、顺序或空间关系，检查语言能否实际改变模型的选择。
+当前 Verb 任务 **Press / Lift Stapler** 就是一个直接例子：同一只订书器、同一幅初始画面，分别要求按压和拿起。
 
 **当前版本：随机朝向 Stapler v1 · 每任务 20 blocks · 六个开源 checkpoint · 2760 回合、720 blocks 全部完成。**
 评测于 2026-10-26 11:53 UTC 完成校验。
@@ -10,14 +14,41 @@
 [完整结果](result/robotwin-if-press-lift-stapler-v1-20blocks/README.md) ·
 [六任务视频](#task-demos) · [运行评测](#run-evaluation) · [历史文档 archive](docs/archive/README.md)
 
-| 诊断轴 | Task | 指令对照 |
-|---|---|---|
-| Verb-Select | [`press_lift_stapler`](#press-lift-stapler) | press / lift |
-| Noun-Grounding | [`pick_diverse_object`](#pick-diverse-object) | 按物体名称选择；分别覆盖 seen / unseen 物体池 |
-| Attribute-Select | [`attribute_select`](#attribute-select) | color / decal / shape / size，每种属性两个目标值 |
-| Arm-Select | [`arm_select`](#arm-select) | left arm / right arm |
-| Sequence | [`stack_sequence`](#stack-sequence) | 红、绿、蓝三个方块的六种自下而上顺序 |
-| Spatial-Direction | [`place_relative`](#place-relative) | left / right / on top |
+## 任务如何构造
+
+**从原生任务已有的原子技能出发。** 设计目标是让模型在训练中接触过的基本动作之间按指令做选择。
+选型时优先从 RoboTwin 原生 50 个任务的演示中提取抓取、抬升、按压、放置和堆叠等子动作，再组成新的指令对照。
+例如，Stapler 的 Press 参考 `press_stapler`，Lift 取自 `move_stapler_pad` 的抓持抬升阶段，省去后续搬运和放置。
+“原生演示中出现过”是选型依据；具体 checkpoint 的训练覆盖与动作掌握程度仍需结合模型说明和能力检查确认。
+
+**共享初始状态，让指令决定目标。** 对同场景对照，场景采样与指令取值分开控制：同一组回合共享物体、布局和机器人初态，改变被测试的语言因素。
+**当前除 Noun 外的五项任务，均已验证同场景对照的初始画面 pixel-equal**：头部与双腕相机的 RGB 逐像素一致，机器人初始状态也逐数组一致。
+Stapler 的 20 对 Press/Lift 还在 seed 资格筛选中核对了物体位姿，保存了[配对校验证据](seed-manifests/robotwin-if-press-lift-stapler-v1-20-per-mode/qualification-summary.json)。
+两条指令保留相同对象短语 `the stapler`，只改变动作短语：
+`Press down on the stapler.` / `Lift the stapler.`。仅凭初始图像无法区分这两个目标，模型需要利用指令作出选择。
+
+**用共享干扰物减弱场景对某个原生任务的提示。** 场景布置尽量避免与某一个原生任务一一对应，减少“看到这幅画面就执行惯用动作”的线索。
+例如，Stapler 场景加入鼠标和玩具车作为背景干扰物（distractors），并移除会提示搬运目标的垫子；同时沿用原生资产与可达区域，控制额外的操控难度。
+目标和干扰物的位置、朝向在不同场景间随机变化，在同一组指令对照中保持一致，避免干扰物本身泄露指令取值。
+
+**先验证可行性，再冻结评测。** 任务设计先经过 expert/oracle、成功判据反例和少量模型能力检查；正式 manifest 只按 expert 与场景资格筛选完整 blocks，
+不根据模型表现挑选 seeds。冻结后，所有 checkpoint 使用同一清单，成功和失败全部保留。
+结果同时关注各 mode 成功率与同场景成组成功情况，以区分“某种动作能做到”和“能随指令切换行为”；单次失败仍需结合动作能力和执行轨迹解释。
+
+六项任务的对照单位如下。**Noun 的 Seen/Unseen 是独立物体池、独立场景，不属于 pixel-equal 配对**；Attribute 则在同一属性的两个目标值之间共享场景。
+
+| 诊断轴 | Task | 指令对照 | 场景与对照单位 |
+|---|---|---|---|
+| Verb-Select | [`press_lift_stapler`](#press-lift-stapler) | press / lift | 同场景两回合；初始观测逐数组校验 |
+| Noun-Grounding | [`pick_diverse_object`](#pick-diverse-object) | 按物体名称选择 | Seen / Unseen 各一回合，使用独立场景 |
+| Attribute-Select | [`attribute_select`](#attribute-select) | color / decal / shape / size | 每种属性两个目标值共享场景；共四对、八回合 |
+| Arm-Select | [`arm_select`](#arm-select) | left arm / right arm | 同一方块布局，两回合 |
+| Sequence | [`stack_sequence`](#stack-sequence) | 三个方块的六种自下而上顺序 | 同一布局，六回合 |
+| Spatial-Direction | [`place_relative`](#place-relative) | left / right / on top | 同一布局，三回合 |
+
+初始观测核验（2026-10-27）：直接比较当前正式运行中六个 checkpoint 保存的 **2520 份非 Noun 初始观测**。
+按上述单位分成 960 个同场景组，其中 Stapler / Arm / Sequence / Spatial 各 120 组，Attribute 480 对；
+三路 RGB 和机器人 proprio 均通过 `numpy.array_equal`，不一致组数为 **0**。这里的相同指执行动作前的观测；后续轨迹随指令和模型动作变化。
 
 任务、干扰物、指令、成功判据和评测适配由本仓库维护；开源 checkpoint 直接用于推理。
 RoboTwin 通过 submodule 固定版本，任务通过软链安装；模型服务与仿真分别使用独立环境。

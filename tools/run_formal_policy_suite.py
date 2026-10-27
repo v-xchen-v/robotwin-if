@@ -98,20 +98,14 @@ def validate_episode(directory, task, seed, config):
 
 def current_success_checker(task):
     """Pin new plans to the checker actually used by the current task source."""
-    from dataclasses import asdict
+    from if_benchmark.seed_contracts import IF_SEED_CONTRACTS
+    if task not in IF_SEED_CONTRACTS:
+        raise ValueError(f'Task is retired or unknown: {task}')
     from tasks.envs._if_grounding import ArmPickMonitor, AttributePickMonitor
-    if task == 'press_lift_bell':
-        from tasks.envs._press_lift_bell import BellMonitor, BellRules
-        return dict(success_checker_version=BellMonitor.VERSION,
-                    success_checker_parameters=asdict(BellRules()))
     if task == 'press_lift_stapler':
         from tasks.envs._press_lift_stapler import StaplerMonitor, stapler_rules
         return dict(success_checker_version=StaplerMonitor.VERSION,
                     success_checker_parameters=StaplerMonitor(stapler_rules()).signals()['thresholds'])
-    if task == 'bottle_verb':
-        from if_benchmark.legacy_bottle_checker import PickHoldMonitor, PickHoldRules
-        return dict(success_checker_version=PickHoldMonitor.VERSION,
-                    success_checker_parameters=asdict(PickHoldRules()))
     if task == 'attribute_select':
         return dict(success_checker_version=AttributePickMonitor.VERSION,
                     success_checker_parameters={'lift_m': AttributePickMonitor.LIFT_THRESH})
@@ -132,14 +126,6 @@ def matches_success_checker(spec, record):
     parameters = spec.get('success_checker_parameters')
     if parameters is not None and signals.get('thresholds') != parameters:
         return False
-    if expected == 'relative-lift-hold-v6-terminal' and record.get('mode') == 'pick':
-        # A physical hold / diagnostic replay is not a terminal policy verdict.
-        return (signals.get('pick_verdict_protocol') == 'action-budget-end'
-                and signals.get('pick_terminal_evaluation') is True
-                and signals.get('pick_verdict_finalized') is True
-                and signals.get('pick_final_success') is record.get('success')
-                and record.get('action_calls') == record.get('step_limit') == 700
-                and signals.get('policy_action_count') == signals.get('policy_action_limit') == 700)
     return True
 
 

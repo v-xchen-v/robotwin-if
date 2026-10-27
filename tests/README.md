@@ -29,8 +29,8 @@ Bridge 集成检查会读取本机 RoboTwin checkout，并在临时目录验证�
 | 双路并行与共享远端调度 | [test_parallel_stapler_suite.py](test_parallel_stapler_suite.py)、`test_remote*.py`、[test_sharded_remote_suite.py](test_sharded_remote_suite.py) |
 
 `test_press_lift_shared.py` 仍测试 Stapler 所继承的 `BellMonitor` 基类；基类的兼容撤离条件与 Stapler 的接触即完成条件分别验证。
-`test_bottle_verb_success.py` 与轨迹 fixture 仅测试 `if_benchmark/legacy_bottle_checker.py` 的纯 CPU 历史判据；旧 Bottle env 接线测试已退休。历史 schema 和退休任务测试继续防止旧结果混入当前评分。
-这些测试使用旧任务名，不表示旧任务重新进入默认 suite。`test_remote_attribute_suite.py` 覆盖的 helper 仍被 Stapler 双路调度器使用。
+旧 Bottle 轨迹判据、专用测试和 fixture 已退休，见[清理记录](../docs/archive/obsolete-benchmark-scripts.md)。历史 schema 读取与退休任务拒绝测试保留，通用复用/续跑测试使用当前 Stapler。
+`test_remote_attribute_suite.py` 覆盖的 helper 仍被 Stapler 双路调度器使用。
 
 ## 子目录测试
 

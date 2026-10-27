@@ -11,7 +11,7 @@ import unittest
 REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO))
 
-from if_benchmark.seed_contracts import describe_seed  # noqa: E402
+from if_benchmark.seed_contracts import ARCHIVED_SEED_CONTRACTS, describe_seed  # noqa: E402
 from if_benchmark.seed_generation import (  # noqa: E402
     GenerationError,
     accepted_seeds,
@@ -63,6 +63,23 @@ class SeedGenerationTests(unittest.TestCase):
         self.assertEqual(state["status"], "complete")
         self.assertEqual(accepted_seeds(state), (100000, 100001, 100002, 100003))
         self.assertEqual(calls, [100000, 100001, 100002, 100003])
+
+    def test_archived_task_evidence_is_readable_but_cannot_start_or_resume_generation(self):
+        for task in ARCHIVED_SEED_CONTRACTS:
+            with self.subTest(task=task):
+                with self.assertRaisesRegex(GenerationError, 'retired'):
+                    self.state(task=task)
+                # Old two-mode checkpoints still parse, including ones written
+                # with schema v2 before the task was retired.
+                state = self.state()
+                state['parameters']['task'] = task
+                validate_generation_state(state)
+                original = deepcopy(state)
+                calls = []
+                with self.assertRaisesRegex(GenerationError, 'retired'):
+                    run_generation(state, lambda seed: calls.append(seed))
+                self.assertEqual(calls, [])
+                self.assertEqual(state, original)
 
     def test_one_failed_member_rejects_whole_block_without_substitution(self):
         calls = []

@@ -8,7 +8,7 @@
 | `bottle_verb`、`press_lift_bell` | 已被 Stapler 替代；移除两个 env 与对应 instruction JSON。 |
 | `laptop_verb`、`operate_stapler`、`operate_tabletop`、`operate_mic_drawer`、`smoke_click_bell` | 移除五个停用实验 env 与对应 instruction JSON。 |
 | `demo_clean_arm_select_v2.yml` | 旧长柱配置退休；当前 Arm 使用 cube-v3 配置。 |
-| `_if_bottle_verb.py` | 纯 CPU 历史判据移至 [legacy_bottle_checker.py](../../if_benchmark/legacy_bottle_checker.py)，仅供历史来源审计和轨迹回归，不再由 bridge 安装。 |
+| `_if_bottle_verb.py` | 当时迁移为[历史 legacy_bottle_checker.py](https://github.com/v-xchen-v/robotwin-if/blob/b15374c/if_benchmark/legacy_bottle_checker.py)，后续在 [if_benchmark 清理](obsolete-benchmark-scripts.md)中退休。 |
 
 共移除 **7 个旧任务实现、7 份 instruction 和 1 份旧配置**，另迁移 1 个历史判据模块。
 Bottle 的 9 项 env 接线测试与 2 项旧任务预算测试一并退休；纯 CPU 轨迹与历史结果兼容检查保留。

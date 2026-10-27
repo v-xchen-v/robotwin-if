@@ -8,6 +8,7 @@ import tempfile
 
 from .seed_contracts import (
     CONTRACT_SCHEMA_VERSION,
+    IF_SEED_CONTRACTS,
     contract_for,
     describe_seed,
     expand_block,
@@ -33,6 +34,8 @@ def new_generation_state(
     provenance,
 ):
     contract_for(task)
+    if task not in IF_SEED_CONTRACTS:
+        raise GenerationError(f'Task is retired: {task}; historical generation evidence is read-only')
     if not isinstance(task_config, str) or not task_config.strip():
         raise GenerationError("task_config must be a non-empty string")
     if isinstance(accepted_blocks, bool) or not isinstance(accepted_blocks, int) or accepted_blocks < 1:
@@ -433,6 +436,8 @@ def run_generation(state, probe, checkpoint=None):
         raise GenerationError("Historical seed contract is read-only; start a new generation")
     params = state["parameters"]
     task = params["task"]
+    if task not in IF_SEED_CONTRACTS:
+        raise GenerationError(f'Task is retired: {task}; historical generation evidence is read-only')
     target = params["accepted_blocks"]
     limit = params["max_candidate_blocks"]
 

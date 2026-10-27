@@ -1,6 +1,6 @@
 # Bottle-Verb：相对抬升与稳定保持判定
 
-> 历史 Bottle 任务记录。运行实现已退休；纯 CPU 判据保留用于历史结果审计，见[任务清理记录](archive/obsolete-task-scripts.md)。
+> 历史 Bottle 任务记录。运行实现、纯 CPU 判据和专用测试均已退休，原文件见[清理记录](archive/obsolete-benchmark-scripts.md)。下文命令和验证次数描述历史版本。
 
 2026-09-15，根据视频复核反馈修复 pick 的两类错误：低幅抬起被判失败，以及摇晃过程中被判 pick 成功。
 旧代码位于 git `bf25bc3` 的 `tasks/envs/bottle_verb.py`；它只要求历史最高 z 超过
@@ -11,7 +11,7 @@ RoboTwin 每个物理步检查 success，并在首次 True 时锁定成功、提
 
 当前版本为 `relative-lift-hold-v6-terminal`。用户在复核 X-VLA seed 100002 后确认：
 **pick 跑满本回合预算后判定；拿起后允许 translation，主要排除旋转摇晃（rot）。**
-阈值在 [`PickHoldRules`](../if_benchmark/legacy_bottle_checker.py)，接线在
+阈值在[历史 `PickHoldRules`](https://github.com/v-xchen-v/robotwin-if/blob/b15374c/if_benchmark/legacy_bottle_checker.py)，接线在
 [`bottle_verb.py`](https://github.com/v-xchen-v/robotwin-if/blob/ff5dd2f/tasks/envs/bottle_verb.py) 与 [`policies/evaluation.py`](../policies/evaluation.py)。
 
 | 条件 | 默认值 / 行为 |

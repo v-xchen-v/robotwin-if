@@ -20,23 +20,23 @@ class FormalReuseTest(unittest.TestCase):
         self.tmp = tempfile.TemporaryDirectory()
         self.addCleanup(self.tmp.cleanup)
         self.base = Path(self.tmp.name)
-        self.spec = dict(task='bottle_verb', task_config='demo_clean',
-                         seeds=[100002, 100003, 100004, 100005], manifest='bottle_verb.json')
+        self.spec = dict(task='press_lift_stapler', task_config='demo_clean',
+                         seeds=[100002, 100003, 100004, 100005], manifest='press_lift_stapler.json')
         suite.write(self.base / 'plan.json', dict(tasks=[self.spec]))
-        suite.write(self.base / 'provenance/reused/xvla/bottle_verb/run.json',
+        suite.write(self.base / 'provenance/reused/xvla/press_lift_stapler/run.json',
                     dict(arguments=dict(server_url='http://127.0.0.1:8010', request_timeout=600)))
 
     def test_changed_checker_excludes_old_success_and_failure_from_reuse(self):
-        self.spec['success_checker_version'] = 'relative-lift-hold-v3'
+        self.spec['success_checker_version'] = 'press-lift-stapler-v1-native-press-contact'
         episodes = []
         for seed, success in ((100002, True), (100003, False), (100004, True)):
             source = self.episode(seed, success)
             if seed == 100004:
-                path = source / 'bottle_verb_ep100004_result.json'
+                path = source / 'press_lift_stapler_ep100004_result.json'
                 record = suite.read(path)
-                record['signals'] = {'checker_version': 'relative-lift-hold-v3'}
+                record['signals'] = {'checker_version': 'press-lift-stapler-v1-native-press-contact'}
                 suite.write(path, record)
-            episodes.append(dict(policy='xvla', task='bottle_verb', seed=seed,
+            episodes.append(dict(policy='xvla', task='press_lift_stapler', seed=seed,
                                  source_directory=str(source)))
         accepted, excluded = suite.compatible_reuse([self.spec], episodes)
         self.assertEqual([r['seed'] for r in accepted], [100004])
@@ -67,18 +67,18 @@ class FormalReuseTest(unittest.TestCase):
         self.assertTrue(suite.matches_success_checker(dict(task='attribute_select'), {}))
 
     def test_prior_metadata_accepts_direct_and_formal_archive_layouts(self):
-        direct = self.base / 'xvla/bottle_verb'
-        archived = self.base / 'provenance/reused/xvla/bottle_verb'
+        direct = self.base / 'xvla/press_lift_stapler'
+        archived = self.base / 'provenance/reused/xvla/press_lift_stapler'
         with self.assertRaises(FileNotFoundError):
-            suite.prior_metadata_directory(self.base, 'xvla', 'bottle_verb')
+            suite.prior_metadata_directory(self.base, 'xvla', 'press_lift_stapler')
         for name in ('resolved_config.json', 'summary.json'):
             suite.write(archived / name, {})
-        self.assertEqual(suite.prior_metadata_directory(self.base, 'xvla', 'bottle_verb'), archived)
+        self.assertEqual(suite.prior_metadata_directory(self.base, 'xvla', 'press_lift_stapler'), archived)
         suite.write(direct / 'run.json', {})
-        self.assertEqual(suite.prior_metadata_directory(self.base, 'xvla', 'bottle_verb'), archived)
+        self.assertEqual(suite.prior_metadata_directory(self.base, 'xvla', 'press_lift_stapler'), archived)
         for name in ('resolved_config.json', 'summary.json'):
             suite.write(direct / name, {})
-        self.assertEqual(suite.prior_metadata_directory(self.base, 'xvla', 'bottle_verb'), direct)
+        self.assertEqual(suite.prior_metadata_directory(self.base, 'xvla', 'press_lift_stapler'), direct)
 
     def test_arm_history_contract_excludes_legacy_successes_and_failures(self):
         spec = dict(task='arm_select', **suite.current_success_checker('arm_select'))
@@ -104,92 +104,36 @@ class FormalReuseTest(unittest.TestCase):
         self.assertTrue(suite.matches_success_checker(dict(task='arm_select'), {}))
 
     def test_same_checker_version_with_changed_thresholds_is_not_reused(self):
-        spec = dict(self.spec, success_checker_version='relative-lift-hold-v3',
-                    success_checker_parameters={'hold_seconds': 1.0})
-        record = dict(signals={'checker_version': 'relative-lift-hold-v3',
-                               'thresholds': {'hold_seconds': 2.0}})
+        spec = dict(self.spec, success_checker_version='press-lift-stapler-v1-native-press-contact',
+                    success_checker_parameters={'lift_m': 0.03})
+        record = dict(signals={'checker_version': 'press-lift-stapler-v1-native-press-contact',
+                               'thresholds': {'lift_m': 0.05}})
         self.assertFalse(suite.matches_success_checker(spec, record))
-        record['signals']['thresholds']['hold_seconds'] = 1.0
+        record['signals']['thresholds']['lift_m'] = 0.03
         self.assertTrue(suite.matches_success_checker(spec, record))
 
-    def test_current_three_second_contract_rejects_one_second_results(self):
-        from dataclasses import asdict
-        from if_benchmark.legacy_bottle_checker import PickHoldMonitor, PickHoldRules
-        parameters = asdict(PickHoldRules())
-        self.assertEqual(parameters['hold_seconds'], 3.0)
-        self.assertNotIn('position_travel', parameters)
-        self.assertEqual(parameters['rotation_travel_degrees'], 135.0)
-        spec = dict(self.spec, success_checker_version=PickHoldMonitor.VERSION,
-                    success_checker_parameters=parameters)
-        old_parameters = dict(parameters, hold_seconds=1.0)
-        for version in ('relative-lift-hold-v3', PickHoldMonitor.VERSION):
-            for success in (True, False):
-                record = dict(success=success, signals=dict(checker_version=version, thresholds=old_parameters))
-                self.assertFalse(suite.matches_success_checker(spec, record))
-        self.assertTrue(suite.matches_success_checker(spec, dict(signals=dict(
-            checker_version=PickHoldMonitor.VERSION, thresholds=parameters))))
-        for version in ('relative-lift-hold-v4', PickHoldMonitor.VERSION):
-            old_budget = dict(parameters, position_travel=0.04, rotation_travel_degrees=45.0)
-            self.assertFalse(suite.matches_success_checker(spec, dict(signals=dict(
-                checker_version=version, thresholds=old_budget))))
-
-    def test_terminal_contract_rejects_early_stop_v5_even_with_matching_thresholds(self):
-        from dataclasses import asdict
-        from if_benchmark.legacy_bottle_checker import PickHoldMonitor, PickHoldRules
-        parameters=asdict(PickHoldRules())
-        self.assertNotIn('position_radius',parameters)
-        self.assertNotIn('reversal_distance',parameters)
-        self.assertEqual(parameters['rotation_radius_degrees'],10)
-        spec=dict(self.spec,success_checker_version=PickHoldMonitor.VERSION,
-                  success_checker_parameters=parameters)
-        for version in ('relative-lift-hold-v5',PickHoldMonitor.VERSION):
-            old=dict(parameters,position_radius=.015,rotation_radius_degrees=15,
-                     reversal_distance=.025,reversal_angle_degrees=20)
-            self.assertFalse(suite.matches_success_checker(spec,dict(signals=dict(
-                checker_version=version,thresholds=old))))
-        self.assertFalse(suite.matches_success_checker(spec,dict(signals=dict(
-            checker_version='relative-lift-hold-v5',thresholds=parameters))))
-
     def test_import_rejects_old_checker_before_copying_any_artifacts(self):
-        self.spec['success_checker_version'] = 'relative-lift-hold-v3'
+        self.spec['success_checker_version'] = 'press-lift-stapler-v1-native-press-contact'
         source = self.episode(100002, True)
         with self.assertRaisesRegex(AssertionError, 'incompatible success checker'):
             suite.import_episode(self.base, 'xvla', self.spec, 100002, source, 'reused')
-        self.assertFalse((self.base / 'xvla/bottle_verb').exists())
-
-    def test_terminal_pick_requires_a_full_finalized_policy_rollout(self):
-        from dataclasses import asdict
-        from if_benchmark.legacy_bottle_checker import PickHoldMonitor, PickHoldRules
-        parameters=asdict(PickHoldRules())
-        spec=dict(self.spec,success_checker_version=PickHoldMonitor.VERSION,
-                  success_checker_parameters=parameters)
-        for success in (True,False):
-            record=dict(mode='pick',success=success,action_calls=700,step_limit=700,
-                signals=dict(checker_version=PickHoldMonitor.VERSION,thresholds=parameters,
-                    pick_verdict_protocol='action-budget-end',pick_terminal_evaluation=True,
-                    pick_verdict_finalized=True,pick_final_success=success,
-                    policy_action_count=700,policy_action_limit=700))
-            self.assertTrue(suite.matches_success_checker(spec,record))
-            for key in ('pick_verdict_finalized','pick_terminal_evaluation'):
-                signals=dict(record['signals'],**{key:False})
-                self.assertFalse(suite.matches_success_checker(spec,dict(record,signals=signals)))
-            self.assertFalse(suite.matches_success_checker(spec,dict(record,action_calls=106)))
+        self.assertFalse((self.base / 'xvla/press_lift_stapler').exists())
 
     def test_legacy_run_validation_remains_readable_but_new_resume_rejects_old_checker(self):
         source = self.episode(100002, False)
         suite.import_episode(self.base, 'xvla', self.spec, 100002, source, 'reused')
         self.assertIsNotNone(suite.completed_record(self.base, 'xvla', self.spec, 100002))
-        self.spec['success_checker_version'] = 'relative-lift-hold-v3'
+        self.spec['success_checker_version'] = 'press-lift-stapler-v1-native-press-contact'
         with self.assertRaisesRegex(AssertionError, 'incompatible success checker'):
             suite.completed_record(self.base, 'xvla', self.spec, 100002)
 
     def episode(self, seed, success):
         directory = self.base / 'source'
         directory.mkdir(exist_ok=True)
-        pre = directory / suite.prefix('bottle_verb', seed)
-        record = dict(task='bottle_verb', seed=seed, success=success, status='success' if success else 'failure',
+        pre = directory / suite.prefix('press_lift_stapler', seed)
+        record = dict(task='press_lift_stapler', seed=seed, success=success, status='success' if success else 'failure',
                       oracle_success=True, instruction_type='unseen', instruction='Test instruction',
-                      action_calls=2, step_limit=2, mode='shake' if seed % 2 else 'pick')
+                      action_calls=2, step_limit=2, mode='lift' if seed % 2 else 'press')
         suite.write(str(pre) + '_result.json', record)
         suite.write(str(pre) + '_summary.json', dict(config='demo_clean', execution_runtime_error=None,
                     success=success, instruction_type='unseen', instruction=record['instruction'], steps=2))
@@ -203,18 +147,18 @@ class FormalReuseTest(unittest.TestCase):
         source = self.episode(100002, False)
         with self.assertRaises(AssertionError):
             suite.import_episode(self.base, 'xvla', self.spec, 100002, source, 'reused',
-                                 {'bottle_verb_ep100002_result.json': 'wrong'})
+                                 {'press_lift_stapler_ep100002_result.json': 'wrong'})
         self.assertIsNone(suite.completed_record(self.base, 'xvla', self.spec, 100002))
 
     def test_failure_is_immutable_and_copy_uses_exact_prefix(self):
         source = self.episode(100002, False)
-        (source / 'bottle_verb_ep1000020_summary.json').write_text('unrelated')
+        (source / 'press_lift_stapler_ep1000020_summary.json').write_text('unrelated')
         self.assertTrue(suite.import_episode(self.base, 'xvla', self.spec, 100002, source, 'reused'))
         self.assertFalse(suite.import_episode(self.base, 'xvla', self.spec, 100002, source, 'new'))
-        self.assertFalse((self.base / 'xvla/bottle_verb/bottle_verb_ep1000020_summary.json').exists())
+        self.assertFalse((self.base / 'xvla/press_lift_stapler/press_lift_stapler_ep1000020_summary.json').exists())
         record = suite.completed_record(self.base, 'xvla', self.spec, 100002)
         self.assertEqual(record['status'], 'failure')
-        path = self.base / 'xvla/bottle_verb/bottle_verb_ep100002_result.json'
+        path = self.base / 'xvla/press_lift_stapler/press_lift_stapler_ep100002_result.json'
         path.write_text(path.read_text() + ' ')
         with self.assertRaises(AssertionError):
             suite.completed_record(self.base, 'xvla', self.spec, 100002)
@@ -238,11 +182,11 @@ class FormalReuseTest(unittest.TestCase):
         with patch.object(suite.importlib, 'import_module', return_value=fake), \
              patch.object(sim_device, 'pin_renderer', return_value='0000:af:00.0'), \
              patch.object(suite.sys, 'argv', []), patch.dict(suite.os.environ):
-            self.assertEqual(suite.worker(self.base, 'xvla', 'bottle_verb', self.base / 'batch/bottle_verb'), 0)
+            self.assertEqual(suite.worker(self.base, 'xvla', 'press_lift_stapler', self.base / 'batch/press_lift_stapler'), 0)
         self.assertIs(fake.run_episode, original)
         self.assertEqual(executed, [(100003, 0), (100004, 1)])
         self.assertEqual([r['status'] for r in returned], ['failure', 'new', 'new', 'success'])
-        resume = suite.read(self.base / 'batch/bottle_verb-resume.json')
+        resume = suite.read(self.base / 'batch/press_lift_stapler-resume.json')
         self.assertEqual(resume['skipped_seeds'], [100002, 100005])
         self.assertEqual(resume['argv'][resume['argv'].index('--blocks') + 1], '2')
 
@@ -258,7 +202,7 @@ class FormalReuseTest(unittest.TestCase):
         self.assertEqual((status['completed_episodes'], status['pending_episodes']), (24, 16))
         self.assertEqual(status['policy_failures'], 24)
         row = suite.read(self.base / 'summary.json')['tasks'][0]
-        self.assertEqual(row['per_mode']['pick']['expected'], 20)
+        self.assertEqual(row['per_mode']['press']['expected'], 20)
         self.assertIn('completed 24/40', (self.base / 'report.md').read_text())
         self.assertIn('20 blocks', (self.base / 'report.md').read_text())
         self.spec['blocks'] = 12
@@ -267,7 +211,7 @@ class FormalReuseTest(unittest.TestCase):
 
     def test_worker_checks_scene_before_inference_and_restores_hooks(self):
         policy = 'dm05'
-        suite.write(self.base / f'provenance/reused/{policy}/bottle_verb/run.json',
+        suite.write(self.base / f'provenance/reused/{policy}/press_lift_stapler/run.json',
                     dict(arguments=dict(server_url='http://127.0.0.1:8014', request_timeout=600)))
         setup = Mock(return_value=('instruction', {}))
         inference = Mock()
@@ -280,7 +224,7 @@ class FormalReuseTest(unittest.TestCase):
              patch.object(sim_device, 'pin_renderer'), patch.dict(suite.os.environ), \
              patch.object(suite, 'check_scene', side_effect=AssertionError('Initial RGB mismatch')) as guard:
             with self.assertRaisesRegex(AssertionError, 'Initial RGB mismatch'):
-                suite.worker(self.base, policy, 'bottle_verb', self.base / 'batch/bottle_verb')
+                suite.worker(self.base, policy, 'press_lift_stapler', self.base / 'batch/press_lift_stapler')
         guard.assert_called_once()
         setup.assert_called_once()
         inference.assert_not_called()
@@ -306,7 +250,7 @@ class FormalReuseTest(unittest.TestCase):
                         suite.gpu_check(self.base, 'test', idle=idle)
 
     def oracle_error(self):
-        return dict(task='bottle_verb', seed=100002, status='error', oracle_success=False,
+        return dict(task='press_lift_stapler', seed=100002, status='error', oracle_success=False,
                     action_calls=0, chunks=0, instruction=None,
                     error=dict(stage='episode_setup', type='RuntimeError',
                                message='Exact seed failed oracle qualification; no seed substitution'))
@@ -335,7 +279,7 @@ class FormalReuseTest(unittest.TestCase):
 
     def test_oracle_retry_budget_survives_restart(self):
         for attempt in range(3):
-            path = self.base / 'batches' / str(attempt) / 'xvla/bottle_verb/bottle_verb_ep100002_result.json'
+            path = self.base / 'batches' / str(attempt) / 'xvla/press_lift_stapler/press_lift_stapler_ep100002_result.json'
             suite.write(path, self.oracle_error())
             if attempt < 2:
                 suite.check_oracle_budget(self.base, 'xvla', self.spec)
