@@ -15,7 +15,9 @@ import tempfile
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-LOCKED_ROBOTWIN_COMMIT = "b82ffb81d291d14c24be444bb7b6f81719481e0f"
+LOCKED_ROBOTWIN_COMMIT = json.loads(
+    (Path(__file__).with_name("runtime_pins.json")).read_text(encoding="utf-8")
+)["robotwin"]
 STATE_NAME = ".robotwin-if-bridge.json"
 STATE_SCHEMA_VERSION = 1
 MAX_STATE_BYTES = 1024 * 1024

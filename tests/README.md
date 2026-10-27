@@ -18,6 +18,7 @@ Bridge 集成检查会读取本机 RoboTwin checkout，并在临时目录验证�
 
 | 范围 | 主要入口 |
 |---|---|
+| Runtime 版本一致性、首次源码获取、已有 CuRobo 安全复用 | [test_runtime_setup.py](test_runtime_setup.py) |
 | Expert 完整 block 采集、失败跳过、可选 manifest | [test_expert_collection.py](test_expert_collection.py) |
 | Stapler 判据、随机朝向 | [test_press_lift_stapler.py](test_press_lift_stapler.py) |
 | 共享接触分类、干扰物采样、指令 reset | [test_press_lift_shared.py](test_press_lift_shared.py) |

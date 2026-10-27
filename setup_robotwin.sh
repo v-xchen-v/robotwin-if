@@ -1,30 +1,54 @@
 #!/bin/bash
 set -euo pipefail
 
-##############################################
-# RoboTwin-2.0 Simulation Environment Setup Script
-# For AMLT server job submission (CogACT)
-##############################################
+REPO_ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)"
+ROBOTWIN_DIR="$REPO_ROOT/third_party/robotwin"
+source "$REPO_ROOT/scripts/_runtime_setup.sh"
+
+usage() {
+    cat <<'HELP'
+Usage: bash setup_robotwin.sh [--assets-cache PATH] [--sources-only]
+
+Prepare the pinned RoboTwin/CuRobo sources, then install the RoboTwin environment.
+  --assets-cache PATH  Reuse an existing asset directory (--assets_cache also works)
+  --sources-only       Prepare/check Git sources only; no apt, Conda, pip or assets
+  -h, --help           Show this help
+
+Versions come from scripts/runtime_pins.json and must match the submodule gitlink.
+Existing source checkouts are never deleted or switched to another revision.
+HELP
+}
 
 # Parse arguments
 ASSETS_CACHE=""
+SOURCES_ONLY=0
 while [[ $# -gt 0 ]]; do
     case $1 in
-        --assets_cache)
+        --assets_cache|--assets-cache)
+            [[ $# -ge 2 && -n "$2" && "$2" != -* ]] || { runtime_fail "$1 requires a path"; exit 2; }
             ASSETS_CACHE="$2"
             shift 2
             ;;
+        --sources-only) SOURCES_ONLY=1; shift ;;
+        -h|--help) usage; exit 0 ;;
         *)
-            shift
+            runtime_fail "Unknown option: $1 (see --help)"
+            exit 2
             ;;
     esac
 done
 
 echo "====== Setting up RoboTwin-2.0 Environment ======"
 
-# This script lives at the repo root; RoboTwin is the git submodule under third_party/.
-REPO_ROOT="$(cd "$(dirname "$0")" && pwd)"
-ROBOTWIN_DIR="$REPO_ROOT/third_party/robotwin"
+# Validate source revisions before changing system packages or Conda environments.
+load_runtime_pins "$REPO_ROOT"
+ensure_robotwin_source "$REPO_ROOT" "$ROBOTWIN_REVISION"
+CUROBO_DIR="$ROBOTWIN_DIR/envs/curobo"
+ensure_curobo_source "$CUROBO_DIR" https://github.com/NVlabs/curobo.git "$CUROBO_REVISION"
+if (( SOURCES_ONLY )); then
+    echo "Pinned source checkouts are ready."
+    exit 0
+fi
 
 # 1. Install Vulkan dependencies (required for MuJoCo/SAPIEN rendering)
 echo "Installing Vulkan and rendering dependencies..."
@@ -48,25 +72,10 @@ fi
 
 conda activate RoboTwin
 
-# 3. Setup RoboTwin (as a git submodule, pinned via .gitmodules gitlink)
-TARGET_COMMIT="0aeea2d669c0f8516f4d5785f0aa33ba812c14b4"
-
-if [ -d "$ROBOTWIN_DIR" ] && [ -n "$(ls -A "$ROBOTWIN_DIR" 2>/dev/null)" ]; then
-    echo "RoboTwin submodule already populated. Updating and checking out commit..."
-    cd "$ROBOTWIN_DIR"
-    git fetch origin
-else
-    echo "Initializing RoboTwin submodule..."
-    git -C "$REPO_ROOT" submodule update --init --recursive third_party/robotwin
-    cd "$ROBOTWIN_DIR"
-fi
-
-echo "Aligning to commit: $TARGET_COMMIT"
-git checkout "$TARGET_COMMIT"
-
 # 4. Install dependencies (manual steps instead of _install.sh to avoid
 #    interactive prompts and pytorch3d build-from-source failures)
 echo "Installing RoboTwin dependencies..."
+cd "$ROBOTWIN_DIR"
 
 # 4a. Install script/requirements.txt (includes torch, sapien, mplib, huggingface_hub, etc.)
 if [ -f "script/requirements.txt" ]; then
@@ -130,26 +139,9 @@ else
     echo "mplib not found, skipping patch."
 fi
 
-# 4e. Install CuRobo (Clean Reinstall)
+# 4e. Install the checked CuRobo source into this environment.
 echo "Setting up CuRobo..."
-cd "$ROBOTWIN_DIR"
-
-TARGET_COMMIT="d64c4b005459db10c5dd867d8b30a87d5bda9bdb"
-
-if [ -d "envs/curobo" ]; then
-    echo "Existing cuRobo directory found. Removing for a clean reinstall..."
-    rm -rf "envs/curobo"
-fi
-
-mkdir -p envs && cd envs
-echo "Cloning cuRobo repository..."
-git clone https://github.com/NVlabs/curobo.git
-cd curobo
-
-echo "Checking out commit $TARGET_COMMIT..."
-git checkout "$TARGET_COMMIT"
-
-pip install -e . --no-build-isolation
+pip install -e "$CUROBO_DIR" --no-build-isolation
 
 cd "$ROBOTWIN_DIR"
 

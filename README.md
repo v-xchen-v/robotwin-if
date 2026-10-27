@@ -212,6 +212,10 @@ bash scripts/bridge_tasks.sh
 bash scripts/bridge_tasks.sh --check
 ```
 
+RoboTwin 与 CuRobo 的版本统一定义在 [`runtime_pins.json`](scripts/runtime_pins.json)，RoboTwin 使用官方可获取的已验证基线。
+安装器先核对 submodule gitlink 和现有源码版本；已有 CuRobo checkout 会复用，版本不符或存在未提交源码修改时停止并保留文件。
+可用 `bash setup_robotwin.sh --sources-only` 单独验证源码准备流程，不安装系统包、Conda 依赖或资产。
+
 Arm 使用单独的 cube-v3 配置；首次安装、目标文件尚不存在时执行：
 
 ```bash

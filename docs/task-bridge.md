@@ -2,14 +2,17 @@
 
 Bridge 将本仓库的任务、共享 helper 和指令 JSON 软链到 RoboTwin，检查已有目标的归属和兼容性。
 它负责让 runtime 找到任务；当前执行哪六项任务由 [IF inventory](../eval_cfg/if_tasks.yml) 和 [Stapler manifest](../seed-manifests/robotwin-if-press-lift-stapler-v1-20-per-mode/README.md)决定。
-安装列表仍包含 Bottle / Bell 兼容任务及共享 helper，这些兼容项不计入当前六任务成绩。
+安装列表包含当前六任务、六个共享 helper 和六份 instruction，共 18 个软链。
 
 ## 仓库内的 runtime
 
-当前 submodule 与 installer 锁定 RoboTwin commit `b82ffb81d291d14c24be444bb7b6f81719481e0f`。
+当前 submodule、installer 与 bridge 使用 [`runtime_pins.json`](../scripts/runtime_pins.json) 中的官方已验证基线 `0aeea2d`，不自动追踪上游最新版本。
+历史 `b82ffb81` 仅在该基线上提交了四个 IF 软链，无法从配置的官方上游获取；这些链接现在统一由 bridge 管理。
+已发布 manifest/result 中的历史 commit 记录保留原样。
 从项目根目录执行：
 
 ```bash
+git submodule update --init third_party/robotwin
 bash scripts/bridge_tasks.sh --dry-run
 bash scripts/bridge_tasks.sh
 bash scripts/bridge_tasks.sh --check
