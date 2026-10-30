@@ -1,4 +1,4 @@
-# robotwin-if — Press/Lift Stapler v1
+# robotwin-if — Stapler v2 · Size 6 cm
 
 robotwin-if 是基于 [RoboTwin 2.0](https://github.com/RoboTwin-Platform/RoboTwin) 构建的六任务 instruction-following benchmark，
 核心问题是：**面对相同的初始画面，VLA 模型能否根据不同的语言指令，选择并完成相应的行为？**
@@ -7,12 +7,12 @@ robotwin-if 是基于 [RoboTwin 2.0](https://github.com/RoboTwin-Platform/RoboTw
 我们将可执行的不同目标放入共享场景，通过改变指令中的动作、物体、属性、机械臂、顺序或空间关系，检查语言能否实际改变模型的选择。
 当前 Verb 任务 **Press / Lift Stapler** 就是一个直接例子：同一只订书器、同一幅初始画面，分别要求按压和拿起。
 
-**当前版本：随机朝向 Stapler v1 · 每任务 20 blocks · 六个开源 checkpoint · 2760 回合、720 blocks 全部完成。**
-评测于 2026-10-26 11:53 UTC 完成校验。
-固定版本 tag：`stapler-v1.0.0` · [Release notes](docs/releases/stapler-v1.0.0.md)。
+**当前版本：Stapler v2 · Attribute Size 大块 6 cm / 小块 4 cm · 每任务 20 blocks · 六个开源 checkpoint。**
+完整成绩为 2760 回合、720 blocks：2026-10-29 完成的 240 回合 Size 重测，合并 v1 中未变化的 2520 回合。
+[尺寸实验与成绩变化](docs/attribute-size-6cm-ablation.md) · [旧 8 cm 成绩](result/robotwin-if-press-lift-stapler-v1-20blocks/README.md)（tag `stapler-v1.0.0`）。
 
 [固定 seed 清单](seed-manifests/robotwin-if-press-lift-stapler-v1-20-per-mode/README.md) ·
-[完整结果](result/robotwin-if-press-lift-stapler-v1-20blocks/README.md) ·
+[完整结果](result/robotwin-if-press-lift-stapler-v2-size6cm-20blocks/README.md) ·
 [六任务视频](#task-demos) · [运行评测](#run-evaluation) · [历史文档 archive](docs/archive/README.md)
 
 ## 任务如何构造
@@ -24,7 +24,7 @@ robotwin-if 是基于 [RoboTwin 2.0](https://github.com/RoboTwin-Platform/RoboTw
 
 **共享初始状态，让指令决定目标。** 对同场景对照，场景采样与指令取值分开控制：同一组回合共享物体、布局和机器人初态，改变被测试的语言因素。
 **当前除 Noun 外的五项任务，均已验证同场景对照的初始画面 pixel-equal**：头部与双腕相机的 RGB 逐像素一致，机器人初始状态也逐数组一致。
-Stapler 的 20 对 Press/Lift 还在 seed 资格筛选中核对了物体位姿，保存了[配对校验证据](seed-manifests/robotwin-if-press-lift-stapler-v1-20-per-mode/qualification-summary.json)。
+Stapler 的 20 对 Press/Lift 还在 seed 资格筛选中核对了物体位姿，保留了[原配对校验证据](seed-manifests/robotwin-if-press-lift-stapler-v1-20-per-mode/qualification-summary.json)；Size 的 20 对也已在 6 cm 设置下重新通过 expert 和初始观测校验，见[实验记录](docs/attribute-size-6cm-ablation.md)。
 两条指令保留相同对象短语 `the stapler`，只改变动作短语：
 `Press down on the stapler.` / `Lift the stapler.`。仅凭初始图像无法区分这两个目标，模型需要利用指令作出选择。
 
@@ -47,9 +47,9 @@ Stapler 的 20 对 Press/Lift 还在 seed 资格筛选中核对了物体位姿�
 | Sequence | [`stack_sequence`](#stack-sequence) | 三个方块的六种自下而上顺序 | 同一布局，六回合 |
 | Spatial-Direction | [`place_relative`](#place-relative) | left / right / on top | 同一布局，三回合 |
 
-初始观测核验（2026-10-27）：直接比较当前正式运行中六个 checkpoint 保存的 **2520 份非 Noun 初始观测**。
+初始观测核验：v1 已直接比较六个 checkpoint 保存的 **2520 份非 Noun 初始观测**（2026-10-27）。
 按上述单位分成 960 个同场景组，其中 Stapler / Arm / Sequence / Spatial 各 120 组，Attribute 480 对；
-三路 RGB 和机器人 proprio 均通过 `numpy.array_equal`，不一致组数为 **0**。这里的相同指执行动作前的观测；后续轨迹随指令和模型动作变化。
+三路 RGB 和机器人 proprio 均通过 `numpy.array_equal`，不一致组数为 **0**。本版替换的 240 份 Size 观测也重新通过 120 对初始数组完全一致的校验，其余组继承原证据。这里的相同指执行动作前的观测；后续轨迹随指令和模型动作变化。
 
 任务、干扰物、指令、成功判据和评测适配由本仓库维护；开源 checkpoint 直接用于推理。
 RoboTwin 通过 submodule 固定版本，任务通过软链安装；模型服务与仿真分别使用独立环境。
@@ -58,14 +58,14 @@ RoboTwin 通过 submodule 固定版本，任务通过软链安装；模型服务
 
 ## 六个开源 checkpoint 的评测结果
 
-每个模型完成 **460 回合、120 blocks**。Stapler 新跑 240 回合，其余五任务复用既有的 2520 回合；成功和已完成的 policy failure 全部保留。
+每个模型完成 **460 回合、120 blocks**。Attribute Size 新跑 240 回合；其余五任务及 Attribute 的 Color/Decal/Shape 复用 v1 的 2520 回合。成功和已完成的 policy failure 全部保留。
 
 | Policy | Verb Stapler | Noun | Attribute | Arm | Sequence | Spatial | Overall (%) |
 |---|---:|---:|---:|---:|---:|---:|---:|
 | [X-VLA](policies/xvla/README.md) | 24/40 | 15/40 | 73/160 | 5/40 | 0/120 | 6/60 | 27.6 |
 | [LingBot-VA](policies/lingbot_va/README.md) | 18/40 | 30/40 | 108/160 | 37/40 | 17/120 | 26/60 | 56.2 |
 | [LingBot-VLA](policies/lingbot_vla/README.md) | 19/40 | 13/40 | 77/160 | 18/40 | 14/120 | 3/60 | 31.6 |
-| [VLAct All](policies/vlact/README.md) | 36/40 | 28/40 | 108/160 | 29/40 | 15/120 | 19/60 | 57.4 |
+| [VLAct All](policies/vlact/README.md) | 36/40 | 28/40 | 109/160 | 29/40 | 15/120 | 19/60 | 57.5 |
 | [DM05](policies/dm05/README.md) | 32/40 | 25/40 | 88/160 | 25/40 | 9/120 | 20/60 | 50.1 |
 | [Hy-VLA](policies/hy_vla/README.md) | 35/40 | 11/40 | 83/160 | 17/40 | 15/120 | 7/60 | 38.9 |
 
@@ -87,20 +87,21 @@ X-VLA 使用公开 clean checkpoint，其余五个模型使用对应的 clean + 
 | DM05 | 20/20 | 12/20 | 12/20 |
 | Hy-VLA | 17/20 | 18/20 | 17/20 |
 
-[六任务分模式成绩](result/robotwin-if-press-lift-stapler-v1-20blocks/results.md) ·
-[HTML 报表](result/robotwin-if-press-lift-stapler-v1-20blocks/results.html) ·
-[逐回合 CSV](result/robotwin-if-press-lift-stapler-v1-20blocks/episodes.csv) ·
+[六任务分模式成绩](result/robotwin-if-press-lift-stapler-v2-size6cm-20blocks/results.md) ·
+[HTML 报表](result/robotwin-if-press-lift-stapler-v2-size6cm-20blocks/results.html) ·
+[逐回合 CSV](result/robotwin-if-press-lift-stapler-v2-size6cm-20blocks/episodes.csv) ·
 [Press/Lift 配对统计](result/robotwin-if-press-lift-stapler-v1-20blocks/stapler-summary.json)
 
-本版替换了 Verb 任务，Overall 与旧版的变化不能视为同一任务上的能力提升。
+本版只改变 Attribute Size 的大块尺寸，六份 seed 列表与 v1 相同。Big 成功为 **1/120**（原 0/120），Small 仍为 **120/120**。
+Big 指令下 **119/120 次先抬小块，其中 92 次随后也抬大块**；大块曾被抬起从 40/120 增至 93/120，成功率没有完整体现这一行为变化。详见[尺寸实验与动作模式分析](docs/attribute-size-6cm-ablation.md)。
 Hy-VLA 的 Noun seed `100052` 自动标签与用户视频复核存在分歧；当前成绩保留原标签，该回合未用于下方展示，见[复核记录](docs/assets/task-demos/README.md)。
 
 <a id="task-demos"></a>
 
 ## 六个任务与当前评测视频
 
-下方 14 个示例全部来自当前结果包中的成功回合，包含本轮新跑的 Stapler 和原样复用的其余五任务。
-视频仅用于说明任务行为，完整成功率以上方表格为准。GIF 可直接预览，点击打开 MP4；[素材来源](docs/assets/stapler-v1-demos/README.md)记录指令、seed、checkpoint 对应模型与原始文件哈希。
+下方 12 个示例均来自当前结果包中的成功回合：Size 使用本次 6 cm 重测，其余任务示例继承 v1。
+视频仅用于说明任务行为，完整成功率以上方表格为准。GIF 可直接预览，点击打开 MP4；[继承素材来源](docs/assets/stapler-v1-demos/README.md)和[新版 Size 素材来源](docs/assets/size6cm-v2-demos/README.md)记录指令、seed、checkpoint 与原始文件哈希。
 
 <a id="press-lift-stapler"></a>
 
@@ -131,11 +132,12 @@ Seen 与 Unseen 使用不同物体池，是两个独立场景；每个场景内�
 ### 3. Attribute-Select：按视觉属性选择目标
 
 按颜色、图案、形状或大小，在两个物体中选择目标。每种属性的两个目标指令共享场景；一个 block 共四组对照、八个回合。
+Size 大块边长为 **6 cm**，小块为 **4 cm**；其他三个属性的场景保持 v1 设置。
 目标当前抬升须超过 5 cm，且干扰物整回合从未越过该高度；先抓错再抓对仍失败。详见[当前判据](docs/attribute-select-target-only.md)。
 
-[![按当前判据成功抓取 red、cat、long bar 和 small 四类属性目标](docs/assets/stapler-v1-demos/attribute_select.gif)](docs/assets/stapler-v1-demos/attribute_select.mp4)
+[![同一初始场景下分别按指令抬起 6 cm 大块与 4 cm 小块](docs/assets/size6cm-v2-demos/attribute_select.gif)](docs/assets/size6cm-v2-demos/attribute_select.mp4)
 
-[观看 MP4](docs/assets/stapler-v1-demos/attribute_select.mp4) · Hy-VLA · seeds `100008 / 100010 / 100013 / 100015` · 从左上到右下：red、cat、long bar、small。
+[观看 MP4](docs/assets/size6cm-v2-demos/attribute_select.mp4) · VLAct All · seeds `100174 / 100175` · 左 Big，右 Small。Big 是本次 120 个 Big 回合中唯一成功例，不代表总体成功率。
 
 <a id="arm-select"></a>
 
@@ -172,9 +174,9 @@ Seen 与 Unseen 使用不同物体池，是两个独立场景；每个场景内�
 
 ## 固定 seed 与复现
 
-当前清单为 [`robotwin-if-press-lift-stapler-v1-20-per-mode`](seed-manifests/robotwin-if-press-lift-stapler-v1-20-per-mode/README.md)。
+继续使用原清单 [`robotwin-if-press-lift-stapler-v1-20-per-mode`](seed-manifests/robotwin-if-press-lift-stapler-v1-20-per-mode/README.md)。
 每任务 20 个完整 blocks；Stapler 的 `110000–110039` 共 40 个 seeds 经过 expert 筛选，配对初始 RGB、机器人状态和物体位姿一致。
-其余五份 seeds 及资格证据原样保留。
+本次不生成新 manifest，六份 seed 文件保持原样。Attribute Size 的 20 对已在 6 cm 设置下重新通过 expert；本次资格证据随 Azure 结果备份保存，原清单内的源码快照仍代表当时的 8 cm 设置。
 
 | Task | 每 block 回合数 | 每模型回合数 | 动作预算 | Task config |
 |---|---:|---:|---:|---|
@@ -193,7 +195,7 @@ Seen 与 Unseen 使用不同物体池，是两个独立场景；每个场景内�
 ```bash
 python tools/export_seed_modes.py --check
 python seed-manifests/robotwin-if-press-lift-stapler-v1-20-per-mode/verify.py
-(cd result/robotwin-if-press-lift-stapler-v1-20blocks && sha256sum -c SHA256SUMS)
+(cd result/robotwin-if-press-lift-stapler-v2-size6cm-20blocks && sha256sum -c SHA256SUMS)
 ```
 
 以上检查无需运行模型或仿真。新环境仍可能有渲染和推理随机性差异，固定 seed 不保证成功数逐次完全相同。
@@ -252,9 +254,10 @@ bash scripts/eval.sh --policy vlact --task press_lift_stapler --blocks 2 \
 
 ## 完整视频与文档
 
-完整备份包含 **2760 个正式回合的视频、动作、观测和结果证据，约 8.19 GiB**，已保存到 Azure。
+完整备份包含 **2760 个正式回合的视频、动作、观测和结果证据，约 5.78 GiB**，已保存到 Azure。
 目前需要容器读取权限；[下载与 SHA-256 校验说明](docs/download-results.md)提供浏览器登录、AzCopy 下载和本地视频浏览步骤。
 下载后运行随包提供的 `view_videos.sh`，可按模型、任务、mode 和成败查看全部视频。
+也可运行 `just video-review-azure`，从 Azure 按需加载当前 6 cm 结果；[网页](tools/policy-video-review/README.md)提供模型 × 任务 / mode 成绩表，点击即可进入对应视频。
 README 中的示例 GIF/MP4 随仓库保存，可直接查看。
 
 | 内容 | 入口 |
@@ -270,4 +273,4 @@ README 中的示例 GIF/MP4 随仓库保存，可直接查看。
 | 当前六任务场景、指令与共享模块 | [tasks](tasks/README.md) |
 | 旧版 Bottle README、过渡版快照与早期 pilot | [docs/archive](docs/archive/README.md) |
 
-`seed-manifests/` 和 `result/` 各保留当前 Stapler v1 一套发布；旧版说明保存在 archive 文档中，旧发布原件可从 `master-261027-staper-v1` 备份分支恢复。
+`seed-manifests/` 和 `result/` 当前入口为 Stapler v2 · Size 6 cm；v1（8 cm）原件保留为 archive。更早发布可从 `master-261027-staper-v1` 备份分支恢复。

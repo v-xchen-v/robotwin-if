@@ -172,7 +172,7 @@ def snapshot(base, include_archived_tasks=False, include_archived_modes=False):
                    expected_blocks=sum(r['expected_blocks'] for r in rows),
                    complete_task_policy_runs=sum(r['complete'] for r in rows))
     return dict(updated_at=source['updated_at'], run_dir=str(base),
-                result_reuse=(dict(source_run=plan['old_run'],
+                result_reuse=(dict(source_run=plan['old_run'], note=plan.get('result_reuse_note'),
                     reused_episodes=plan['expected_reused_episodes'], new_episodes=plan['expected_new_episodes'])
                     if 'expected_reused_episodes' in plan else None),
                 task_configs={task: specs[task].get('task_config') for task in task_names},
@@ -229,7 +229,7 @@ def generate(data, output):
         'Sequence 缩写为从下往上的颜色顺序；Spatial Top 指 on_top。',
     ]
     if reuse := data.get('result_reuse'):
-        legend.insert(0, f"本版复用其余五任务的 {reuse['reused_episodes']} 回合；仅 {labels[data['tasks'][0]]} 的 {reuse['new_episodes']} 回合新跑。成功与失败均保留，旧 Bottle 分数不纳入本版。")
+        legend.insert(0, reuse.get('note') or f"本版复用其余五任务的 {reuse['reused_episodes']} 回合；仅 {labels[data['tasks'][0]]} 的 {reuse['new_episodes']} 回合新跑。成功与失败均保留，旧 Bottle 分数不纳入本版。")
     if data.get('excluded_modes'):
         legend.insert(0, 'Spatial 当前仅统计 left/right/on_top；front/back 的历史回合保留但排除计分。这是评测后的范围调整，不代表模型性能提升。')
     if attribute_v2:

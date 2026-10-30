@@ -49,7 +49,7 @@ class attribute_select(Base_Task):
     JIT_YAW = np.pi / 7
 
     CUBE_HALF = 0.03
-    BIG_HALF = 0.04
+    BIG_HALF = 0.03                  # 6 cm edge: native blocks_ranking_size range
     SMALL_HALF = 0.02
     BAR_HALF = (0.06, 0.014, 0.025)    # slim, clearly-long bar (long axis 0.12)
     # The bar's long axis exceeds the gripper span, so it must be grasped across

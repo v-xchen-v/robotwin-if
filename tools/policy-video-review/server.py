@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Local, CPU-only video review. Evaluation artifacts are never modified."""
+"""CPU-only review of local results or a pinned Azure backup. Original artifacts are read-only."""
 import argparse
 import csv
 from contextlib import contextmanager
@@ -15,14 +15,17 @@ import secrets
 import sqlite3
 import subprocess
 import threading
+import time
 from urllib.parse import parse_qs, quote, unquote, urlsplit
+from urllib.request import Request, build_opener, HTTPRedirectHandler
+from urllib.error import HTTPError
 
 ROOT = Path(__file__).resolve().parents[2]
 STATIC = Path(__file__).resolve().parent
 POLICIES = dict(xvla="X-VLA", lingbot_va="LingBot-VA", lingbot_vla="LingBot-VLA",
                 vlact="VLAct", dm05="DM05", hy_vla="Hy-VLA")
-TASKS = ("bottle_verb", "pick_diverse_object", "attribute_select", "arm_select",
-         "stack_sequence", "place_relative", "grasp_cube_approach")
+TASKS = ("press_lift_stapler", "pick_diverse_object", "attribute_select", "arm_select",
+         "stack_sequence", "place_relative", "bottle_verb", "grasp_cube_approach")
 LABELS = ("success", "failure", "uncertain", "unreviewed")
 ASSETS = {"result": "_result.json", "summary": "_summary.json", "oracle": "_oracle.json",
           "diagnostics": "_diagnostics.json", "status": "_status.json",
@@ -58,6 +61,34 @@ def verdict(row, review):
     return "false_positive" if row["automatic"] == "success" else "false_negative"
 
 
+def score_overview(rows):
+    """Automatic labels only; Overall equally weights tasks, never episodes."""
+    rows = [r for r in rows if not r["archived"]]
+    tasks = sorted({r["task"] for r in rows}, key=lambda t: (TASKS.index(t) if t in TASKS else len(TASKS), t))
+    def counts(group):
+        n = len(group)
+        success = sum(r["automatic"] == "success" for r in group)
+        errors = sum(r["automatic"] == "error" for r in group)
+        rate = success / n if n and not errors else None
+        return dict(success=success, total=n, errors=errors, rate=rate,
+                    percent=round(100 * rate, 1) if rate is not None else None)
+    policies = {}
+    for policy in POLICIES:
+        own = [r for r in rows if r["policy"] == policy]
+        if not own:
+            continue
+        scores = {}
+        for task in tasks:
+            group = [r for r in own if r["task"] == task]
+            scores[task] = dict(**counts(group), modes={mode: counts([r for r in group if r["mode"] == mode])
+                                for mode in sorted({r["mode"] for r in group if r["mode"]})})
+        rates = [s["rate"] for s in scores.values()]
+        overall = sum(rates) / len(rates) if rates and all(r is not None for r in rates) else None
+        policies[policy] = dict(tasks=scores, overall=overall,
+                               overall_percent=round(100 * overall, 1) if overall is not None else None)
+    return dict(tasks=tasks, policies=policies)
+
+
 class Catalog:
     def __init__(self, run):
         self.run = run.resolve(strict=True)
@@ -65,6 +96,9 @@ class Catalog:
         self.rows, self.paths, self.warnings = {}, {}, []
         self.probes = {}
         self.refresh()
+
+    def ensure_file(self, path):
+        return inside(path, self.run)
 
     def signature(self, files):
         evidence = {}
@@ -157,6 +191,139 @@ class Catalog:
         with self.lock:
             self.probes[key] = result
         return result
+
+
+class NoRedirect(HTTPRedirectHandler):
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        raise OSError("Azure blob redirects are not accepted")
+
+
+class AzureCatalog(Catalog):
+    """Pinned Azure backup, downloaded per asset into a separate SHA-verified cache.
+
+    Only the CLI backend sees Azure tokens. The browser uses the normal local
+    media endpoints, including Range requests after the requested video is cached.
+    """
+    def __init__(self, base_url, checksums_sha256, cache):
+        parsed = urlsplit(base_url)
+        if (parsed.scheme != "https" or not re.fullmatch(r"[a-z0-9]+\.blob\.core\.windows\.net", parsed.netloc)
+                or parsed.query or parsed.fragment or not parsed.path.strip("/")):
+            raise ValueError("Expected an Azure Blob HTTPS bundle URL without credentials")
+        self.source_url = base_url.rstrip("/")
+        self.pinned_sha256 = checksums_sha256
+        self.run = cache.resolve()
+        self.run.mkdir(parents=True, exist_ok=True)
+        self.lock = threading.RLock()
+        self.auth_lock = threading.Lock()
+        self.download_locks = {}
+        self.token, self.expires = None, 0
+        self.verified, self.probes = {}, {}
+        self.hashes = {"SHA256SUMS": checksums_sha256}
+        self.rows, self.paths, self.warnings = {}, {}, []
+        self.refresh()
+
+    def access_token(self):
+        with self.auth_lock:
+            if self.expires < time.time() + 120:
+                try:
+                    proc = subprocess.run(["az", "account", "get-access-token", "--resource", "https://storage.azure.com/", "-o", "json"],
+                                          capture_output=True, text=True, timeout=45)
+                except subprocess.TimeoutExpired:
+                    raise OSError("Azure token request timed out; check az login on the server") from None
+                if proc.returncode:
+                    raise OSError("Azure authentication failed. Run az login using a browser on the server.")
+                data = json.loads(proc.stdout)
+                self.token, self.expires = data["accessToken"], float(data["expires_on"])
+            return self.token
+
+    def ensure_file(self, path):
+        path = inside(path, self.run)
+        relative = path.relative_to(self.run).as_posix()
+        expected = self.hashes[relative]  # Whitelisted, frozen archive assets only.
+        with self.lock:
+            lock = self.download_locks.setdefault(relative, threading.Lock())
+        with lock:
+            if path.is_file():
+                stat = path.stat()
+                fingerprint = (stat.st_size, stat.st_mtime_ns)
+                if self.verified.get(relative) == fingerprint or digest(path.read_bytes()) == expected:
+                    self.verified[relative] = fingerprint
+                    return path
+            path.parent.mkdir(parents=True, exist_ok=True)
+            temp = path.with_name(path.name + ".download-" + secrets.token_hex(6))
+            try:
+                request = Request(self.source_url + "/" + quote(relative, safe="/"), headers={
+                    "Authorization": "Bearer " + self.access_token(), "x-ms-version": "2023-11-03"})
+                checksum = hashlib.sha256()
+                with build_opener(NoRedirect).open(request, timeout=60) as response, temp.open("wb") as stream:
+                    # Azure blobs do not redirect; never accept an unexpected response origin.
+                    if urlsplit(response.url).netloc != urlsplit(self.source_url).netloc:
+                        raise OSError("Unexpected Azure response origin")
+                    while chunk := response.read(1024 * 1024):
+                        stream.write(chunk)
+                        checksum.update(chunk)
+                if checksum.hexdigest() != expected:
+                    raise ValueError(f"Azure checksum mismatch: {relative}")
+                temp.replace(path)
+                stat = path.stat()
+                self.verified[relative] = (stat.st_size, stat.st_mtime_ns)
+            except HTTPError as exc:
+                raise OSError(f"Azure HTTP {exc.code} for {relative}; check Blob read access / az login") from None
+            finally:
+                temp.unlink(missing_ok=True)
+            return path
+
+    def signature(self, files):
+        return digest(json.dumps({key: self.hashes[p.relative_to(self.run).as_posix()]
+                                  for key, p in files.items() if key in ("result", "provenance", "video")},
+                                 sort_keys=True).encode())
+
+    def refresh(self):
+        inventory = self.ensure_file(self.run / "SHA256SUMS").read_text()
+        for line in inventory.splitlines():
+            checksum, relative = line.split("  ", 1)
+            if (not re.fullmatch(r"[0-9a-f]{64}", checksum) or relative.startswith("/")
+                    or ".." in Path(relative).parts or "\\" in relative or relative == "SHA256SUMS"):
+                raise ValueError("Invalid Azure checksum inventory")
+            inside(self.run / relative, self.run)
+            self.hashes[relative] = checksum
+        index = self.ensure_file(self.run / "episode-index.csv")
+        plan = read_json(self.ensure_file(self.run / "evaluation/plan.json"))
+        blocks = {(spec["task"], seed): i // len(spec["modes"])
+                  for spec in plan["tasks"] for i, seed in enumerate(spec["seeds"])}
+        rows, paths = {}, {}
+        with index.open(newline="") as stream:
+            for record in csv.DictReader(stream):
+                policy, task, seed = record["policy"], record["task"], int(record["seed"])
+                prefix = f"evaluation/{policy}/{task}/{task}_ep{seed}"
+                # v1 exported verbose *_path columns; v2 uses record/video.
+                record_file = record.get("record", record.get("record_path"))
+                video_file = record.get("video", record.get("video_path"))
+                if (policy not in POLICIES or not re.fullmatch(r"[a-z_0-9]+", task) or seed < 0
+                        or record_file != prefix + "_result.json" or record["success"] not in ("0", "1")
+                        or video_file != prefix + "_" + record["success"] + ".mp4"):
+                    raise ValueError("Invalid Azure episode index")
+                files = {key: self.run / (prefix + suffix) for key, suffix in ASSETS.items()
+                         if prefix + suffix in self.hashes}
+                if video_file in self.hashes:
+                    files["video"] = self.run / video_file
+                identifier = f"{policy}/{task}/{seed}"
+                if identifier in rows:
+                    raise ValueError("Duplicate Azure episode")
+                rows[identifier] = dict(id=identifier, policy=policy, task=task, seed=seed, mode=record["mode"],
+                    instruction=record["instruction"], automatic="success" if record["success"] == "1" else "failure",
+                    archived=(task == "grasp_cube_approach" or (task == "place_relative" and record["mode"] in ("front", "back"))),
+                    block=blocks.get((task, seed)), steps=int(record["action_calls"]) if record.get("action_calls") else None,
+                    step_limit=int(record["step_limit"]) if record.get("step_limit") else None,
+                    termination=record.get("termination"),
+                    video_url=self.url(identifier, "video") if "video" in files else None,
+                    image_url=self.url(identifier, "image") if "image" in files else None,
+                    source_signature=self.signature(files), result_sha256=self.hashes[record_file])
+                paths[identifier] = files
+        if not rows:
+            raise ValueError("Empty Azure episode index")
+        with self.lock:
+            self.rows, self.paths = rows, paths
 
 
 class Reviews:
@@ -293,21 +460,26 @@ class Handler(BaseHTTPRequestHandler):
                         for row in catalog.rows.values()]
                 return self.respond(dict(run=catalog.run.name, run_path=str(catalog.run),
                                          review_path=str(reviews.path), policies=POLICIES, tasks=TASKS,
-                                         episodes=rows, warnings=catalog.warnings, token=self.server.token))
+                                         source=getattr(catalog, "source_url", "local"),
+                                         scores=score_overview(rows), episodes=rows,
+                                         warnings=catalog.warnings, token=self.server.token))
         if url.path == "/api/episode":
             identifier = query.get("id", [""])[0]
             with catalog.lock:
                 row, files = catalog.rows[identifier].copy(), catalog.paths[identifier].copy()
-            data = {key: read_json(inside(files[key], catalog.run)) for key in
+            data = {key: read_json(catalog.ensure_file(files[key])) for key in
                     ("result", "summary", "oracle", "diagnostics", "provenance") if key in files}
-            return self.respond(dict(episode=row, data=data, video=catalog.probe(files.get("video")),
+            record = data.get("result", {})
+            row.update(steps=record.get("action_calls"), step_limit=record.get("step_limit"), termination=record.get("termination"))
+            video = catalog.ensure_file(files["video"]) if "video" in files else None
+            return self.respond(dict(episode=row, data=data, video=catalog.probe(video),
                                      history=reviews.history(identifier),
                                      artifacts={key: catalog.url(identifier, key) for key in files}))
         if url.path.startswith("/media/"):
             identifier, asset = unquote(url.path[len("/media/"):]).rsplit("/", 1)
             with catalog.lock:
                 path = catalog.paths[identifier][asset]
-            return self.send_file(inside(path, catalog.run))
+            return self.send_file(catalog.ensure_file(path))
         if url.path in ("/api/export.csv", "/api/export.json"):
             # Exports must not classify a replaced checkpoint/video using old labels.
             catalog.refresh()
@@ -409,12 +581,23 @@ class Handler(BaseHTTPRequestHandler):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--run-dir", type=Path, required=True)
+    source = parser.add_mutually_exclusive_group(required=True)
+    source.add_argument("--run-dir", type=Path)
+    source.add_argument("--azure-backup", type=Path, help="Azure verification receipt JSON with destination and root_sha256sums_sha256; requires az login")
+    parser.add_argument("--cache-dir", type=Path, default=Path.home() / ".cache/robotwin-if/video-review",
+                        help="Azure asset cache root (each release gets its own directory)")
     parser.add_argument("--review-dir", type=Path, help="Separate annotation directory; defaults under outputs/policy-eval/video-reviews")
     parser.add_argument("--host", default="127.0.0.1")
     parser.add_argument("--port", type=int, default=8893)
     args = parser.parse_args()
-    catalog = Catalog(args.run_dir)
+    if args.azure_backup:
+        backup = read_json(args.azure_backup)
+        if not backup or backup.get("complete") is not True:
+            parser.error("--azure-backup must point to a completed Azure verification receipt")
+        url, checksum = backup["destination"], backup["root_sha256sums_sha256"]
+        catalog = AzureCatalog(url, checksum, args.cache_dir / (urlsplit(url).path.rstrip("/").split("/")[-1] + "-" + checksum[:12]))
+    else:
+        catalog = Catalog(args.run_dir)
     directory = args.review_dir or ROOT / "outputs/policy-eval/video-reviews" / (catalog.run.name + "-" + digest(str(catalog.run).encode())[:10])
     if directory.resolve().is_relative_to(catalog.run):
         parser.error("--review-dir must be outside the evaluation archive")

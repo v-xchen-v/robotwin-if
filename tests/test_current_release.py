@@ -14,6 +14,7 @@ from if_benchmark.seed_modes import check_seed_modes
 
 ROOT = Path(__file__).resolve().parents[1]
 RESULT = ROOT / 'result/robotwin-if-press-lift-stapler-v1-20blocks'
+UPDATED_RESULT = ROOT / 'result/robotwin-if-press-lift-stapler-v2-size6cm-20blocks'
 
 
 class CurrentReleaseTest(unittest.TestCase):
@@ -25,10 +26,32 @@ class CurrentReleaseTest(unittest.TestCase):
         self.assertFalse((ROOT / 'bak/robotwin-if-press-lift-bell-v1-20-per-mode').exists())
         check_seed_modes(RELEASE)
 
-    def test_only_latest_result_is_exposed(self):
+    def test_size_update_and_original_result_are_exposed(self):
         entries = list((ROOT / 'result').iterdir())
-        self.assertEqual([p.name for p in entries if p.is_dir()], [RESULT.name])
+        self.assertEqual({p.name for p in entries if p.is_dir()}, {RESULT.name, UPDATED_RESULT.name})
         self.assertFalse(any(p.is_symlink() for p in entries))
+
+    def test_size_update_changes_only_one_vlact_success_label(self):
+        def episodes(directory):
+            with (directory / 'episodes.csv').open(newline='') as stream:
+                rows = list(csv.DictReader(stream))
+            indexed = {(r['policy'], r['task'], r['seed']): r for r in rows}
+            self.assertEqual(len(rows), len(indexed))
+            return indexed
+        old, new = episodes(RESULT), episodes(UPDATED_RESULT)
+        self.assertEqual(old.keys(), new.keys())
+        self.assertEqual(len(new), 2760)
+        changed = [key for key in old if old[key]['success'] != new[key]['success']]
+        self.assertEqual(changed, [('vlact', 'attribute_select', '100174')])
+        self.assertEqual((old[changed[0]]['success'], new[changed[0]]['success']), ('0', '1'))
+        for key in old:
+            self.assertEqual((old[key]['mode'], old[key]['instruction']), (new[key]['mode'], new[key]['instruction']))
+        old_scores = json.loads((RESULT / 'results.json').read_text())['policies']
+        new_scores = json.loads((UPDATED_RESULT / 'results.json').read_text())['policies']
+        for policy in old_scores:
+            if policy != 'vlact':
+                self.assertEqual(old_scores[policy], new_scores[policy])
+        self.assertAlmostEqual(new_scores['vlact']['overall_pct'], 57.46527777777778)
 
     def test_current_files_and_checker_evidence_match_checksums(self):
         directories = [RELEASE, RESULT]

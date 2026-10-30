@@ -5,8 +5,26 @@
 
 ## 启动
 
-查看本版全部 2760 回合，可先按[完整备份下载说明](../../docs/download-results.md)下载 Azure 备份，
-再运行包内 `bash view_videos.sh`（默认端口 8898）。下面的命令用于当前仓库和自行指定的运行目录。
+直接浏览 Azure 上的当前版本，不必下载整个备份：
+
+```bash
+# 服务所在机器已通过浏览器完成 az login，且账号有 Blob 读取权限
+python tools/policy-video-review/server.py \
+  --azure-backup result/robotwin-if-press-lift-stapler-v2-size6cm-20blocks/azure-backup.json
+# 等价入口
+just video-review-azure
+```
+
+`--azure-backup` 直接指定备份校验记录，其中只有 URL、哈希和上传校验信息，不需要版本注册或 latest 指针。
+先下载校验清单、回合索引和 plan；打开回合时再下载其视频和诊断。
+每个文件都按发布时的 SHA-256 校验，缓存默认放在 `~/.cache/robotwin-if/video-review/`，
+可用 `--cache-dir` 更换。Azure token 仅由 Python 后端从本机 Azure CLI 获取，不传给浏览器。
+视频首次打开需等待该文件下载完成，之后支持拖动、Range 和缓存复用。
+这个模式需要 Azure CLI；本地文件模式仍只需要 Python 标准库。
+
+查看新版全部 2760 回合，可使用本机合并目录，或从 [Azure](../../docs/download-results.md) 下载当前 6 cm 备份。
+下载后运行包内 `bash view_videos.sh`（默认端口 8898）。`just video-review` 默认打开当前完整推理目录；
+旧版通过指定 `--run-dir` 或下载对应版本的备份查看。
 
 只需要 Python 3.10+ 标准库。无需安装模型环境、Node、前端依赖或启动 GPU 作业。
 可选 `ffprobe` 用于读取视频的真实编码帧率，以支持逐帧查看；缺少它仍可播放、拖动和标注。
@@ -14,7 +32,7 @@
 
 ```bash
 python tools/policy-video-review/server.py \
-  --run-dir outputs/policy-eval/robotwin-if-press-lift-stapler-v1-20blocks-001
+  --run-dir outputs/policy-eval/robotwin-if-press-lift-stapler-v2-size6cm-20blocks-001
 
 # 等价入口（已安装 just 时）
 just video-review
@@ -31,6 +49,11 @@ ssh -N -L 8893:127.0.0.1:8893 user@your-server
 这是本地复核工具，不含用户登录；多人通过同一服务协作时共享一套标签，并检查版本冲突以防覆盖。
 
 ## 复核流程
+
+顶部「模型 × 任务」展示各模型的自动成功数、总数和成功率；Overall 按任务等权平均，
+不把 460 个回合直接混算。选择「展开模式」可比较 press/lift、Big/Small 或各堆叠顺序。
+点击成绩单元格会筛选对应视频。统计基于当前归档内的回合；未完成的本地 run 不代表完整正式成绩，
+含错误的分组不显示成功率。人工标签不改变成绩表。
 
 1. 选择 policy、task、mode、block、自动结果或人工状态。搜索框支持 seed、指令和备注。
    默认排除已下线 grasp 和 Spatial front/back；当前 Stapler 六任务共 **2760 回合**，运行中仅展示已归档回合。历史七任务目录打开归档开关后为 **3240 回合**。
@@ -79,6 +102,7 @@ http://127.0.0.1:8893/?episode=hy_vla/pick_diverse_object/100052
 `/api/export.json` 提供同样的 JSON；`?only=disagreements&archived=1` 可导出包含历史任务的分歧。
 
 源指纹包含 result/provenance 内容 SHA-256 与视频路径、大小、mtime；不会为了浏览扫描全部视频内容。
+Azure 模式使用冻结清单中的内容 SHA-256 作为源指纹，单纯下载或填充缓存不会使标注失效。
 若评测文件继续更新，点击「刷新归档」重新索引；保存和导出也会检查源变化。
 多标签页同时修改同一条标注时，旧 revision 的保存会拒绝并提示刷新。
 修改标签的完整历史保留在 `history` 表。正式成功率仍以原自动结果为准，工具不会重算或覆盖已发布结果。

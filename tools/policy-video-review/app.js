@@ -2,7 +2,7 @@
 const $ = s => document.querySelector(s);
 const $$ = s => [...document.querySelectorAll(s)];
 const escape = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const names = {bottle_verb:'Verb · Bottle', pick_diverse_object:'Noun · Pick diverse object', attribute_select:'Attribute select', arm_select:'Arm select v2', stack_sequence:'Stack sequence', place_relative:'Place relative', grasp_cube_approach:'Grasp approach · 已归档'};
+const names = {press_lift_stapler:'Verb · Stapler', bottle_verb:'Verb · Bottle', pick_diverse_object:'Noun · Pick diverse object', attribute_select:'Attribute select', arm_select:'Arm select v2', stack_sequence:'Stack sequence', place_relative:'Place relative', grasp_cube_approach:'Grasp approach · 已归档'};
 const verdictNames = {unreviewed:'未复核', agree:'与自动一致', false_positive:'疑似误报成功', false_negative:'疑似漏判成功', uncertain:'待确认', stale:'源文件已更新', unscored:'自动判定无效'};
 const labelNames = {success:'Success', failure:'Fail', uncertain:'待确认', unreviewed:'未复核', error:'Error'};
 const S = {rows:[], visible:[], id:null, detail:null, dirty:false, saving:false, serial:0, page:0, pageSize:40, tab:'compare', view:'all', loaded:false};
@@ -20,6 +20,23 @@ async function api(path, payload) {
   return data;
 }
 function current(){return S.rows.find(r=>r.id===S.id);}
+function renderScores(){
+  const task=$('#score-task').value, scores=S.scores;
+  const columns=task?[...new Set(Object.values(scores.policies).flatMap(p=>Object.keys(p.tasks[task]?.modes || {})))]:scores.tasks;
+  const rate=n=>n===null || n===undefined?'—':n.toFixed(1)+'%';
+  $('#score-table').innerHTML='<table><thead><tr><th>Model</th>'+columns.map(c=>`<th>${escape(task?c:names[c] || c)}</th>`).join('')+`<th>${task?'Task avg.':'Overall'}</th></tr></thead><tbody>`+
+    Object.entries(scores.policies).map(([policy,p])=>'<tr><th>'+escape(S.policies[policy])+'</th>'+columns.map(c=>{
+      const s=task?p.tasks[task]?.modes[c]:p.tasks[c];
+      return `<td><button data-score-policy="${escape(policy)}" data-score-task="${escape(task || c)}" data-score-mode="${escape(task?c:'')}" ${!s?.total?'disabled':''}><strong>${rate(s?.percent)}</strong><small>${s?`${s.success} / ${s.total}${s.errors?' · '+s.errors+' errors':''}`:'无回合'}</small></button></td>`;
+    }).join('')+`<td class="macro">${rate(task?p.tasks[task]?.percent:p.overall_percent)}</td></tr>`).join('')+'</tbody></table>';
+  $$('[data-score-policy]').forEach(b=>b.onclick=()=>{
+    if(!allowNavigate())return;
+    $$('.filters select,.filters input').forEach(e=>e.value='');
+    $('#policy').value=b.dataset.scorePolicy;$('#task').value=b.dataset.scoreTask;
+    populateFilters();$('#mode').value=b.dataset.scoreMode;S.page=0;renderQueue();
+    select(S.visible[0]?.id || null);$('.workspace').scrollIntoView({behavior:'smooth'});
+  });
+}
 function allowNavigate(){return !S.saving && (!S.dirty || window.confirm('观察记录尚未保存，是否放弃这些修改？'));}
 function time(t){if(!Number.isFinite(t))return '0:00';return `${Math.floor(t/60)}:${(t%60).toFixed(2).padStart(5,'0')}`;}
 function setOptions(selector, values, initial) {
@@ -131,6 +148,8 @@ async function select(identifier){
     const detail=await api('/api/episode?id='+encodeURIComponent(identifier));
     if(serial!==S.serial)return;
     S.detail=detail;setView('all');
+    $('#step-info').textContent=`actions ${detail.episode.steps ?? '—'} / ${detail.episode.step_limit ?? '—'}`;
+    $('#termination-info').textContent=detail.episode.termination || '';
     const fps=detail.video.fps;
     $('#frame-prev').disabled=$('#frame-next').disabled=!(fps>0 && row.video_url);
     $('#video-info').textContent=fps?`${detail.video.width} × ${detail.video.height} · ${fps.toFixed(2)} fps`:'未探测到编码帧率，逐帧按钮不可用';
@@ -184,7 +203,9 @@ function switchTab(tab){
 }
 async function load(initial=false){
   const data=await api('/api/episodes');
-  S.rows=data.episodes;S.policies=data.policies;S.token=data.token;
+  S.rows=data.episodes;S.policies=data.policies;S.token=data.token;S.scores=data.scores;
+  setOptions('#score-task',data.scores.tasks.map(t=>[t,names[t] || t]),'任务总览');renderScores();
+  $('#source-label').textContent=data.source==='local'?'本地结果':'Azure · 按需缓存';
   const tasks=[...data.tasks,...new Set(S.rows.map(r=>r.task).filter(t=>!data.tasks.includes(t)))];
   S.rows.sort((a,b)=>tasks.indexOf(a.task)-tasks.indexOf(b.task) || a.seed-b.seed || Object.keys(S.policies).indexOf(a.policy)-Object.keys(S.policies).indexOf(b.policy));
   $('#run-name').textContent=data.run;$('#run-name').title=data.run_path;
@@ -200,6 +221,7 @@ async function load(initial=false){
 
 $$('#policy,#task,#automatic,#review-filter,#mode,#block,#archived').forEach(el=>el.addEventListener('change',changeFilters));
 $('#search').addEventListener('input',()=>{if(!S.dirty && !S.saving){S.page=0;renderQueue();if(!S.visible.some(r=>r.id===S.id))select(S.visible[0]?.id || null);}});
+$('#score-task').onchange=renderScores;
 $('#clear-filters').onclick=()=>{if(!allowNavigate())return;$$('.filters select,.filters input').forEach(e=>e.value='');changeFilters();};
 $('#page-prev').onclick=()=>{S.page--;renderQueue();$('#episode-list').scrollTop=0;};$('#page-next').onclick=()=>{S.page++;renderQueue();$('#episode-list').scrollTop=0;};
 $('#previous').onclick=()=>navigate(-1);$('#next').onclick=()=>navigate(1);
