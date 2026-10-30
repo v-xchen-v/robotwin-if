@@ -1,7 +1,7 @@
 # RoboTwin-IF · canonical maintained IF task suite
 #
 # This is the default six-task inventory; versioned seed releases retain their own suite.yml. The order follows
-# the six remaining diagnostic axes; Grasp-Approach is retired; bak/ retains its retirement notice.
+# the six maintained diagnostic axes.
 # tasks/envs retains these six tasks and their shared helpers. Retired task sources
 # live in Git history; their old manifests/results remain readable as evidence.
 #

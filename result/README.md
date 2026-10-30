@@ -1,16 +1,28 @@
-# 评测结果
+# 六个开源 checkpoint 的评测结果
 
-**当前：[Attribute Size 6 cm 的完整成绩](robotwin-if-press-lift-stapler-v2-size6cm-20blocks/README.md)**。
-仍为六模型 × 六任务 × 每任务 20 blocks，共 2760 回合、720 blocks。
+六个任务，每任务 20 blocks；每模型 460 回合，共 **2760 回合、720 blocks**。
+Attribute Size 大块 6 cm、小块 4 cm；任务定义和固定 seeds 见[仓库 README](../README.md)。
 
-相对原 8 cm 结果，正式成功标签只有一处变化：VLAct 的 Big seed `100174` 失败 → 成功，
-Attribute 从 108/160 到 109/160，Overall 从 57.4% 到 57.5%。其他五模型的成绩数值不变。
+| Policy | Overall (%) |
+|---|---:|
+| X-VLA | 27.6 |
+| LingBot-VA | 56.2 |
+| LingBot-VLA | 31.6 |
+| VLAct | 57.5 |
+| DM05 | 50.1 |
+| Hy-VLA | 38.9 |
 
-- [当前分模式成绩](robotwin-if-press-lift-stapler-v2-size6cm-20blocks/results.md) · [HTML](robotwin-if-press-lift-stapler-v2-size6cm-20blocks/results.html)
-- [当前逐回合 CSV](robotwin-if-press-lift-stapler-v2-size6cm-20blocks/episodes.csv)
-- [原 8 cm 完整结果](robotwin-if-press-lift-stapler-v1-20blocks/README.md)
-- [Azure 下载与网页查看](../docs/download-results.md)
+Overall 是六个任务成功率的等权平均，各任务内部按 mode 等权。它不是全部回合的合并成功率。
 
-继续使用原 [Stapler v1 seed manifest](../seed-manifests/robotwin-if-press-lift-stapler-v1-20-per-mode/README.md)。
-不另建清单或 latest 注册机制。Size 的 240 条 6 cm 重测输出与未变化的 2520 条旧回合组成完整视频集；
-成绩不变的模型仍保留新尺寸视频，具体行为差异见[实验记录](../docs/attribute-size-6cm-ablation.md)。
+- [分模式成绩](results.md) · [HTML 表格](results.html) · [JSON](results.json) · [CSV](results.csv)
+- [2760 条逐回合记录](episodes.csv)：seed、instruction、判定和原始记录 SHA-256。
+- [Checkpoint 身份](checkpoints.json)及 `checkpoint-evidence/`：公开权重的 revision 与哈希证据。
+- [Press/Lift 配对统计](stapler-summary.json)：同场景两种指令的双成功率。
+- [完整结果下载](../docs/download-results.md) · [Azure 上传校验记录](azure-backup.json)
+
+Size 的 240 个回合在 6 cm 设置下重测，其余 2520 个回合复用未变化设置的结果。
+[结果来源](../docs/release-provenance.md)说明资格证据、复用范围和已知复核分歧。
+原始输出保持原始 metadata；通过下载包的 `episode-index.csv` 定位文件。
+
+从仓库根目录执行 `python tools/verify_benchmark.py` 核对 seeds、分数和文件 SHA-256。
+完整视频与推理输出不存入 Git；使用 `just video-review-azure` 按需浏览。

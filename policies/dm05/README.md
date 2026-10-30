@@ -58,26 +58,20 @@ The response contains `actions` with shape `(50, 14)` and `metadata` with model/
 
 These settings follow [OpenDM's RoboTwin2 guide](https://github.com/dexmal/opendm/blob/c4762fed95e430bf14e86beed73166b8dd18b094/docs/en/dm05_robotwin2.md): three cameras, absolute actions and horizon 50.
 
-## Raw → IF validation
+## Run the benchmark
+
+Keep the model server running, then use the RoboTwin environment from the repository root:
 
 ```bash
-conda run --no-capture-output -n RoboTwin python policies/dm05/eval.py \
-  --task click_bell --seeds 2000 --sim-gpu 0 \
-  --output-dir outputs/policy-eval/raw-smoke-001/dm05/click_bell
-
-# After a successful raw episode, run the complete first balanced IF block.
-conda run --no-capture-output -n RoboTwin python policies/dm05/eval.py \
-  --task arm_select --task-config demo_clean_arm_select_v3 \
-  --seed-manifest seed-manifests/robotwin-if-press-lift-stapler-v1-20-per-mode/arm_select.json \
-  --blocks 1 --sim-gpu 0 \
-  --output-dir outputs/policy-eval/smoke-blocks1/dm05/arm_select
+bash scripts/eval.sh --policy dm05 --task press_lift_stapler --blocks 1 \
+  --output-dir outputs/policy-eval/first-run
+bash scripts/eval.sh --policy dm05 --output-dir outputs/policy-eval/full-run
 ```
 
-Use `--server-url` and `--request-timeout` to override connection settings. Native tasks default to generated `seen` instructions; IF uses `unseen`. Each exact seed is oracle-qualified and recreated before policy execution. Failed seeds are retained without replacements. The initial IF entry point supports `arm_select`. Exit codes: 0 = complete with at least one success, 1 = complete/all failures, 2 = incomplete/error.
+The full run uses 20 blocks per task and 460 exact-seed episodes. Choose fresh output directories.
+See [evaluation](../../docs/formal-policy-evaluation.md) for options and scoring,
+and [published results](../../result/README.md) for the frozen six-task benchmark.
 
-Outputs follow `outputs/policy-eval/<run>/dm05/<task>/<task>_ep<seed>*`: summary/status, instruction, initial observation/image, three-camera video, timings, action logs, oracle, requests and diagnostics. `_actions.npz` stores complete denormalized `raw_actions` chunks, the actually executed prefix, and measured joints/EE poses. EE prediction fields and uncollected grasp diagnostics are null. Per-request sampling seeds and server graph/timing metadata are retained. Seed/task/instruction/output utilities are reused from the existing X-VLA runner.
-
-A saved real observation can also be checked using `preflight.py --observation <npz> --instruction <text> --output-dir <new-directory>`. This repeats the first prediction three times with the same seed and records numerical differences and graph/fallback status.
 
 ## Checks
 
@@ -91,18 +85,5 @@ ruff check policies/dm05 tests/dm05
 
 The client/runner checks cover lossless camera order, measured state, absolute actions, seed reset/wraparound, HTTP failures and partial-chunk execution/evidence. Service checks exercise input rejection, error recovery and the real upstream image parsing/absolute output transform with an asymmetric synthetic normalization profile.
 
-## Validation results (2026-09-07)
 
-Environment setup, `pip check`, the full official inference import path, CUDA SDPA, all **9 client/runner/service tests**, Ruff and shell syntax checks passed. The real checkpoint loaded with zero missing, unexpected or mismatched keys on an RTX A6000. A saved real observation returned finite `(50, 14)` predictions; three requests reset to seed 2000 produced bitwise-identical actions. First prediction took 1.80 seconds; warmed requests took 0.91–0.93 seconds including image encoding and HTTP transport. CUDA Graph capture fell back to ordinary SDPA as described above; no graph replay was used.
-
-| Task / mode | Exact seed | Result | Actions / chunks |
-|---|---:|---|---:|
-| raw `click_bell` | 2000 | success | 54 / 2 |
-| IF `arm_select` / left | 100000 | success; lifted, arm match true | 85 / 2 |
-| IF `arm_select` / right | 100001 | success; lifted, arm match true | 80 / 2 |
-
-The raw → IF sequence passed: raw **1/1**, complete balanced IF block **2/2**. Both IF modes use identical initial RGB images and joint states, with their respective actual left/right instructions. All **219 executed actions** exactly match the recorded prediction prefixes, and all per-chunk seeds match the declared schedule. Videos contain 55, 86 and 81 frames respectively. No seeds were skipped or replaced. These are initial integration smoke results, not estimates of benchmark success rates.
-
-The server remains on GPU 0 at `http://127.0.0.1:8014`, using about **11.5 GiB** of GPU memory. Its PID and console log are beside the server output directory. Other policy services remain running.
-
-Evidence: [server metadata](../../outputs/policy-eval/servers/dm05-002/server.json), [launch command](../../outputs/policy-eval/servers/dm05-002/launch.json), [real-observation preflight](../../outputs/policy-eval/servers/dm05-002/preflight/preflight.json), [raw summary](../../outputs/policy-eval/raw-smoke-001/dm05/click_bell/summary.json), [raw trace validation](../../outputs/policy-eval/raw-smoke-001/dm05/click_bell/validation.json), [IF summary](../../outputs/policy-eval/smoke-blocks1/dm05/arm_select/summary.json), [IF trace validation](../../outputs/policy-eval/smoke-blocks1/dm05/arm_select/validation.json). Setup/download/test logs, both environments' package versions and the trace/frame validation script are saved beside server metadata. Weights, environments, third-party source and evaluation outputs are excluded from Git.
+Checkpoint identities and full inference evidence: [results](../../result/README.md) · [download](../../docs/download-results.md).

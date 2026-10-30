@@ -45,26 +45,20 @@ The default endpoint is `ws://127.0.0.1:8015`; HTTP `/healthz` is available afte
 - Use the official `exc_action_size=7`: execute the first seven targets, then replan. No extra 3× interpolation is added; the card's 3× downsampling describes training data. UMI coordinate/gripper conversion is disabled as in `deploy_policy.yml`. Continuous grippers are passed through without binarization.
 - Execute with `env.take_action(action, action_type="ee")`, stopping on success or the task action limit. The model uses its official FlashAttention vision/MEM path and eager dual-tower attention, with 10 flow-matching denoising steps.
 
-## Raw → IF evaluation
+## Run the benchmark
+
+Keep the model server running, then use the RoboTwin environment from the repository root:
 
 ```bash
-conda run --no-capture-output -n RoboTwin python policies/hy_vla/eval.py \
-  --task click_bell --seeds 2000 --sim-gpu 0 \
-  --output-dir outputs/policy-eval/raw-smoke-001/hy_vla/click_bell
-
-# Run after a successful raw episode: the complete first left/right IF block.
-conda run --no-capture-output -n RoboTwin python policies/hy_vla/eval.py \
-  --task arm_select --task-config demo_clean_arm_select_v3 \
-  --seed-manifest seed-manifests/robotwin-if-press-lift-stapler-v1-20-per-mode/arm_select.json \
-  --blocks 1 --sim-gpu 0 \
-  --output-dir outputs/policy-eval/smoke-blocks1/hy_vla/arm_select
+bash scripts/eval.sh --policy hy_vla --task press_lift_stapler --blocks 1 \
+  --output-dir outputs/policy-eval/first-run
+bash scripts/eval.sh --policy hy_vla --output-dir outputs/policy-eval/full-run
 ```
 
-Both native and IF tasks default to generated **unseen** instructions, following the official Hy-VLA native evaluation launcher. Use `--instruction-type seen` for an explicit alternative. `--server-url` and `--request-timeout` override connection settings. Choose a new output directory for each run. Every exact seed is oracle-qualified and recreated for policy execution; no failed seeds are replaced or omitted. The initial IF runner supports `arm_select`. Exit codes: 0 = complete with at least one success, 1 = complete/all failures, 2 = incomplete/error.
+The full run uses 20 blocks per task and 460 exact-seed episodes. Choose fresh output directories.
+See [evaluation](../../docs/formal-policy-evaluation.md) for options and scoring,
+and [published results](../../result/README.md) for the frozen six-task benchmark.
 
-Outputs follow `outputs/policy-eval/<run>/hy_vla/<task>/<task>_ep<seed>*`: summary/status, instruction, initial observations, three-camera video, timings, action logs, oracle, requests and diagnostics. `_actions.npz` contains original normalized `model_actions` `(chunks,40,20)`, full decoded `raw_actions` `(chunks,20,16)`, the actually executed seven-step prefixes, measured native EE poses/grippers and measured joints. Action logs describe the full decoded targets with native wxyz quaternions and row-major rotation6D; unavailable predicted joints/grasp diagnostics are null.
-
-Every step has a request and a latency, even when it serves a cached action. `new_chunk` distinguishes real model calls; server timing includes cache size and selected history indices/validity on those calls. The runner reuses X-VLA's task/seed/instruction/output utilities and the existing LingBot-VA NumPy wire format.
 
 ## Checks and preflight
 
@@ -80,24 +74,5 @@ Ten tests cover native quaternion/gripper order, fresh images during cached step
 
 `preflight.py --observation <npz> --instruction <text> --output-dir <new-directory>` uses a saved real observation containing native 16D `proprio`. It repeats eight steps with the same observation and seed, records both model calls in each repeat, compares reset reproducibility, and checks reset-required/single-client/invalid-reset behavior. This is a protocol diagnostic; task success requires the actual closed-loop evaluations above.
 
-## Recorded integration validation
 
-The pinned real checkpoint loaded all **4,526,672,912 parameters** strictly and passed the real-observation preflight. Repeating eight steps after the same seed/reset produced an exact match for both original model outputs and decoded actions (maximum absolute difference `0.0`). Model calls occurred at steps 0 and 7; the second call selected available observations 2 and 7, with earlier slots zeroed. Reset-required, exclusive-client and invalid-reset checks passed. Their intentionally rejected requests produce expected tracebacks in the server log.
-
-Server evidence is in [`hy-vla-002`](../../outputs/policy-eval/servers/hy-vla-002/), with [metadata](../../outputs/policy-eval/servers/hy-vla-002/server.json), [preflight](../../outputs/policy-eval/servers/hy-vla-002/preflight/preflight.json), source patch, launch command/PID, dependency freezes, installation/test logs and the trace-validation script. The service runs on GPU 1 at port 8015; the simulator uses GPU 0. Observed policy GPU allocation after warmup was 9,220 MiB on an RTX A6000.
-
-The first startup failed strict loading because upstream inference retained `expert.lm_head`, which official training deletes, and constructed some parameters as FP32 while the checkpoint stores BF16. Its [original log](../../outputs/policy-eval/servers/hy-vla-001.log) is retained. The checked loading patch resolves these differences while retaining strict validation of every inference parameter.
-
-| Task | Exact seed | Instruction split | Result | Executed steps | Model calls |
-| --- | --- | --- | --- | ---: | ---: |
-| raw `click_bell` | 2000 | unseen | success | 23 | 4 |
-| IF `arm_select`, left | 100000 | unseen | action limit; no success | 400 | 58 |
-| IF `arm_select`, right | 100001 | unseen | action limit; no success | 400 | 58 |
-
-Raw evidence: [episode result](../../outputs/policy-eval/raw-smoke-001/hy_vla/click_bell/click_bell_ep2000_result.json), [trace checks](../../outputs/policy-eval/raw-smoke-001/hy_vla/click_bell/validation.json), [video](../../outputs/policy-eval/raw-smoke-001/hy_vla/click_bell/click_bell_ep2000_1.mp4). Its 24 video frames match 23 executed actions plus the initial view. Model-call RPC latency averaged 1.28 s with the simulator active.
-
-IF evidence: [complete paired summary](../../outputs/policy-eval/smoke-blocks1/hy_vla/arm_select/summary.json), [trace checks](../../outputs/policy-eval/smoke-blocks1/hy_vla/arm_select/validation.json), [left episode](../../outputs/policy-eval/smoke-blocks1/hy_vla/arm_select/arm_select_ep100000_result.json), [right episode](../../outputs/policy-eval/smoke-blocks1/hy_vla/arm_select/arm_select_ep100001_result.json). Both exact seeds passed their oracle; both policy episodes reached the 400-action limit without lifting the block. The run completed without inference or execution errors, returning exit code 1 for complete/all-fail. The paired initial RGB, measured EE state and measured joints were identical. Each 401-frame video matches 400 actions plus the initial view. No seeds were replaced.
-
-Trace validation confirmed finite `(chunks,40,20)` model outputs, `(chunks,20,16)` decoded targets, exact execution of seven-step prefixes, one request per executed action, new model calls every seven steps, and correct history indices/masks, cache sizes and episode seeds.
-
-The raw smoke passed; **IF success acceptance has not passed (0/2)**. These are integration smoke results, not benchmark success-rate estimates.
+Checkpoint identities and full inference evidence: [results](../../result/README.md) · [download](../../docs/download-results.md).

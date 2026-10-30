@@ -15,7 +15,7 @@ DM05/Hy-VLA 的环境也默认存储在其 `envs/` 下，可用 `--env-prefix` �
 | [DM05](dm05/README.md) | `Dexmal/DM05-robotwin2` | HTTP；absolute 14D joint chunks |
 | [Hy-VLA](hy_vla/README.md) | `tencent/Hy-Embodied-0.5-VLA-RoboTwin` | WebSocket；六帧历史，relative/absolute EE 融合 |
 
-六个 policy 的完整正式结果已发布，见[当前结果包](../result/robotwin-if-press-lift-stapler-v1-20blocks/README.md)。
+六个 policy 的完整正式结果已发布，见[当前结果包](../result/README.md)。
 X-VLA 使用 clean 微调权重，其他五个使用 clean + randomized 权重，比较时须保留这项训练数据差异。
 Checkpoint revisions、模型参数和各回合来源随结果包记录。
 
@@ -36,7 +36,7 @@ bash scripts/eval.sh --policy hy_vla --task arm_select --blocks 2 \
   --output-dir outputs/policy-eval/hy-vla-arm-pilot
 ```
 
-默认使用[当前六任务清单](../seed-manifests/robotwin-if-press-lift-stapler-v1-20-per-mode/README.md)：
+默认使用[当前六任务清单](../seed-manifests/20-blocks/README.md)：
 每个 policy 460 回合；六任务各取两个 blocks 时为 46 回合。
 Arm 使用 `demo_clean_arm_select_v3` 与[错误手臂历史判据](../docs/arm-select-target-arm-only.md)。
 Grasp-Approach 已下线，所有 evaluator 都拒绝执行该任务。

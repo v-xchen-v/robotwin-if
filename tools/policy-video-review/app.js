@@ -2,7 +2,7 @@
 const $ = s => document.querySelector(s);
 const $$ = s => [...document.querySelectorAll(s)];
 const escape = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const names = {press_lift_stapler:'Verb · Stapler', bottle_verb:'Verb · Bottle', pick_diverse_object:'Noun · Pick diverse object', attribute_select:'Attribute select', arm_select:'Arm select v2', stack_sequence:'Stack sequence', place_relative:'Place relative', grasp_cube_approach:'Grasp approach · 已归档'};
+const names = {press_lift_stapler:'Verb · Stapler', bottle_verb:'Verb · Bottle', pick_diverse_object:'Noun · Pick diverse object', attribute_select:'Attribute select', arm_select:'Arm select', stack_sequence:'Stack sequence', place_relative:'Place relative', grasp_cube_approach:'Grasp approach · 已归档'};
 const verdictNames = {unreviewed:'未复核', agree:'与自动一致', false_positive:'疑似误报成功', false_negative:'疑似漏判成功', uncertain:'待确认', stale:'源文件已更新', unscored:'自动判定无效'};
 const labelNames = {success:'Success', failure:'Fail', uncertain:'待确认', unreviewed:'未复核', error:'Error'};
 const S = {rows:[], visible:[], id:null, detail:null, dirty:false, saving:false, serial:0, page:0, pageSize:40, tab:'compare', view:'all', loaded:false};

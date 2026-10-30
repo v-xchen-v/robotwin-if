@@ -38,7 +38,7 @@ def git_identity(path):
 
 def select_seeds(args):
     if args.task in RETIRED_TASKS:
-        raise ValueError(f"Task {args.task} is retired; see docs/archive/obsolete-task-scripts.md")
+        raise ValueError(f"Task {args.task} is retired; see eval_cfg/README.md")
     manifest = None
     is_if = args.task in IF_SEED_CONTRACTS
     if args.seed_manifest:
@@ -68,7 +68,7 @@ def select_seeds(args):
 
 def load_task(target, task_name, task_config):
     if task_name in RETIRED_TASKS:
-        raise ValueError(f"Task {task_name} is retired; see docs/archive/obsolete-task-scripts.md")
+        raise ValueError(f"Task {task_name} is retired; see eval_cfg/README.md")
     # Reuse RoboTwin's config/embodiment resolution, without running collection.
     os.chdir(target)
     sys.path[:0] = [str(target / "script"), str(target), str(target / "description/utils")]

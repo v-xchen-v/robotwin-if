@@ -1,10 +1,9 @@
-"""Six-task scores and explicit historical scope have independent denominators."""
+"""Scores use exact manifest seeds and complete blocks from the public evaluator."""
 import json
 from pathlib import Path
 import tempfile
 import unittest
-
-from if_benchmark.seed_contracts import contract_for, describe_seed, expand_block
+from if_benchmark.seed_modes import build_seed_modes
 from tools import summarize_formal_policy_results as report
 
 
@@ -13,107 +12,65 @@ class ResultScopeTest(unittest.TestCase):
         tmp = tempfile.TemporaryDirectory()
         self.addCleanup(tmp.cleanup)
         self.base = Path(tmp.name)
+        self.manifests = report.ROOT / 'seed-manifests/20-blocks'
 
-    def fixture(self, historical=True, incomplete_grasp=False, bell=False, stapler=False):
-        tasks = list(report.TASKS) + (list(report.ARCHIVED_TASKS) if historical else [])
-        if bell:
-            tasks[0] = 'press_lift_bell'
-        if stapler:
-            tasks[0] = 'press_lift_stapler'
-        specs = [dict(task=t, seeds=list(expand_block(t, 0, legacy=historical))) for t in tasks]
-        rows = []
-        for policy in report.POLICIES:
-            for spec in specs:
-                task = spec['task']
-                pending = spec['seeds'][-1:] if task in report.ARCHIVED_TASKS and incomplete_grasp else []
-                modes = {}
-                for seed in spec['seeds']:
-                    mode = describe_seed(task, seed).mode
-                    success = task not in ('bottle_verb', 'press_lift_bell', 'press_lift_stapler')
-                    modes[mode] = dict(recorded=int(seed not in pending), successes=int(success and seed not in pending))
-                    if seed in pending:
-                        continue
-                    pre = self.base / policy / task / f'{task}_ep{seed}'
-                    pre.parent.mkdir(parents=True, exist_ok=True)
-                    result = dict(task=task, seed=seed, mode=mode, success=success,
-                                  status='success' if success else 'failure', oracle_success=True)
-                    path = Path(str(pre) + '_result.json')
-                    path.write_text(json.dumps(result))
-                    marker = dict(policy=policy, task=task, seed=seed, mode=mode, success=success,
-                                  formal_block=0, files_sha256={path.name: report.hashlib.sha256(path.read_bytes()).hexdigest()})
-                    Path(str(pre) + '_provenance.json').write_text(json.dumps(marker))
-                rows.append(dict(policy=policy, task=task, pending_seeds=pending, per_mode=modes,
-                                 completed_blocks=int(not pending), recorded_episodes=len(spec['seeds'])-len(pending),
-                                 complete=not pending, successes=sum(m['successes'] for m in modes.values())))
-        source = dict(tasks=rows, updated_at='fixture', completed_episodes=sum(r['recorded_episodes'] for r in rows),
-                      successes=sum(r['successes'] for r in rows), completed_blocks=sum(r['completed_blocks'] for r in rows))
-        (self.base / 'summary.json').write_text(json.dumps(source))
-        (self.base / 'plan.json').write_text(json.dumps(dict(policies=list(report.POLICIES), tasks=specs)))
+    def fixture(self):
+        for task in build_seed_modes(self.manifests)['tasks']:
+            name = task['task']
+            directory = self.base / 'vlact' / name
+            directory.mkdir(parents=True)
+            rows = []
+            for r in task['episodes']:
+                if r['block'] != 0:
+                    continue
+                success = name != 'press_lift_stapler'
+                row = dict(task=name, seed=r['seed'], mode=r['mode'], success=success,
+                           status='success' if success else 'failure', oracle_success=True)
+                (directory / f'{name}_ep{r["seed"]}_result.json').write_text(json.dumps(row))
+                rows.append(row)
+            (directory / 'results.jsonl').write_text(''.join(json.dumps(r)+'\n' for r in rows))
 
-    def test_six_task_projection_and_explicit_seven_task_average(self):
+    def test_public_evaluator_layout_needs_no_plan_or_history(self):
         self.fixture()
-        current = report.snapshot(self.base)
-        legacy = report.snapshot(self.base, include_archived_tasks=True, include_archived_modes=True)
-        self.assertEqual(current['summary']['expected_episodes'], 138)
-        self.assertEqual(legacy['summary']['expected_episodes'], 162)
-        self.assertEqual(current['summary']['expected_blocks'], 36)
-        self.assertEqual(legacy['summary']['expected_blocks'], 42)
-        self.assertAlmostEqual(current['policies']['xvla']['overall_pct'], 500/6)
-        self.assertAlmostEqual(legacy['policies']['xvla']['overall_pct'], 600/7)
-        self.assertEqual(current['source_summary'], legacy['source_summary'])
-        report.generate(current, self.base / 'current.md')
-        text = (self.base / 'current.md').read_text()
-        self.assertIn('138/138', text)
-        self.assertIn('36/36', text)
-        self.assertIn('6 个 Task Avg.', text)
-        self.assertNotIn('Grasp v2', (self.base / 'current.html').read_text())
+        data = report.snapshot(self.base, self.manifests, 1)
+        self.assertEqual(data['summary']['completed_episodes'], 23)
+        self.assertEqual(data['summary']['completed_blocks'], 6)
+        self.assertAlmostEqual(data['policies']['vlact']['overall_pct'], 500/6)
+        report.generate(data, self.base/'report.md')
+        self.assertIn('Verb Stapler', (self.base/'report.md').read_text())
+        self.assertIn('6 个 Task Avg.', (self.base/'report.md').read_text())
 
-    def test_incomplete_retired_task_does_not_hide_completed_current_overall(self):
-        self.fixture(incomplete_grasp=True)
-        self.assertIsNotNone(report.snapshot(self.base)['policies']['xvla']['overall_pct'])
-        self.assertIsNone(report.snapshot(self.base, True)['policies']['xvla']['overall_pct'])
+    def test_frozen_individual_records_match_jsonl_scores(self):
+        self.fixture()
+        original = report.snapshot(self.base, self.manifests, 1)
+        for path in self.base.rglob('results.jsonl'):
+            path.unlink()
+        frozen = report.snapshot(self.base, self.manifests, 1)
+        self.assertEqual(original['rows'], frozen['rows'])
+        self.assertEqual(original['policies'], frozen['policies'])
 
-    def test_native_six_task_plan_is_supported(self):
-        self.fixture(historical=False)
-        data = report.snapshot(self.base)
-        self.assertEqual(data['tasks'], list(report.TASKS))
-        self.assertEqual(data['excluded_tasks'], [])
+    def test_partial_block_is_progress_but_never_score_or_overall(self):
+        self.fixture()
+        path = self.base/'vlact/place_relative/results.jsonl'
+        rows = path.read_text().splitlines()
+        path.write_text('\n'.join(rows[:-1])+'\n')
+        data = report.snapshot(self.base, self.manifests, 1)
+        self.assertIsNone(data['policies']['vlact']['overall_pct'])
+        spatial = next(r for r in data['rows'] if r['task'] == 'place_relative')
+        self.assertEqual((spatial['recorded_episodes'], spatial['included_episodes']), (2, 0))
 
-    def test_bell_replaces_bottle_without_changing_denominators(self):
-        self.fixture(historical=False, bell=True)
-        data = report.snapshot(self.base)
-        self.assertEqual(data['tasks'][0], 'press_lift_bell')
-        self.assertNotIn('bottle_verb', data['tasks'])
-        self.assertEqual(data['summary']['expected_episodes'], 138)
-        self.assertAlmostEqual(data['policies']['xvla']['overall_pct'], 500/6)
-        report.generate(data, self.base / 'bell.md')
-        self.assertIn('Press', (self.base / 'bell.md').read_text())
-        self.assertIn('Lift', (self.base / 'bell.md').read_text())
-
-    def test_cube_report_uses_its_recorded_config_without_relabeling_history(self):
-        self.fixture(historical=False)
-        plan_path = self.base / 'plan.json'
-        plan = json.loads(plan_path.read_text())
-        arm = next(s for s in plan['tasks'] if s['task'] == 'arm_select')
-        for config, label in (('demo_clean_arm_select_v3', 'Arm cube-v3'),
-                              ('demo_clean_arm_select_v2', 'Arm v2')):
-            arm['task_config'] = config
-            plan_path.write_text(json.dumps(plan))
-            data = report.snapshot(self.base)
-            report.generate(data, self.base / 'report.md')
-            self.assertIn(label, (self.base / 'report.md').read_text())
-            self.assertIn(label, (self.base / 'report.html').read_text())
-            self.assertAlmostEqual(data['policies']['xvla']['overall_pct'], 500/6)
-
-    def test_stapler_replaces_bell_and_bottle_without_changing_denominators(self):
-        self.fixture(historical=False, stapler=True)
-        data = report.snapshot(self.base)
-        self.assertEqual(data['tasks'][0], 'press_lift_stapler')
-        self.assertFalse({'bottle_verb', 'press_lift_bell'} & set(data['tasks']))
-        self.assertEqual(data['summary']['expected_episodes'], 138)
-        self.assertAlmostEqual(data['policies']['xvla']['overall_pct'], 500/6)
-        report.generate(data, self.base / 'stapler.md')
-        self.assertIn('Verb Stapler', (self.base / 'stapler.md').read_text())
+    def test_duplicates_unplanned_seeds_and_tampered_records_rejected(self):
+        self.fixture()
+        index = self.base/'vlact/press_lift_stapler/results.jsonl'
+        original = index.read_text()
+        index.write_text(original+original.splitlines()[0]+'\n')
+        with self.assertRaisesRegex(ValueError, 'duplicate'):
+            report.snapshot(self.base, self.manifests, 1)
+        index.write_text(original)
+        path = next(index.parent.glob('*_result.json'))
+        path.write_text('{}')
+        with self.assertRaisesRegex(ValueError, 'differs from results.jsonl'):
+            report.snapshot(self.base, self.manifests, 1)
 
 
 if __name__ == '__main__':

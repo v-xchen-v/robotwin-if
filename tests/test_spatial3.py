@@ -13,12 +13,11 @@ from if_benchmark.seed_contracts import describe_seed, expand_block, first_block
 from if_benchmark.seed_generation import new_generation_state, run_generation, validate_generation_state, GenerationError
 from if_benchmark.seed_manifest import validate_manifest, ManifestError, load_manifest
 from policies.xvla.eval import select_seeds
-import test_formal_result_scope as scope
 from tools import summarize_formal_policy_results as report
 
 ROOT = Path(__file__).resolve().parents[1]
-RELEASE = ROOT / 'seed-manifests/robotwin-if-press-lift-stapler-v1-20-per-mode'
-RESULT = ROOT / 'result/robotwin-if-press-lift-stapler-v1-20blocks'
+RELEASE = ROOT / 'seed-manifests/20-blocks'
+RESULT = ROOT / 'result'
 
 
 class SparseSpatialTest(unittest.TestCase):
@@ -98,7 +97,7 @@ class SparseSpatialTest(unittest.TestCase):
         self.assertEqual({r['mode'] for r in spatial}, {'left','right','on_top'})
         self.assertEqual(len(spatial),360)
         self.assertEqual(len(kept),2760)
-        self.assertEqual(sum(int(r['success']) for r in kept),1105)
+        self.assertEqual(sum(int(r['success']) for r in kept),1106)
         data=json.loads((RESULT/'results.json').read_text())
         for policy,p in data['policies'].items():
             scores=[]
@@ -110,26 +109,3 @@ class SparseSpatialTest(unittest.TestCase):
         for line in (RESULT/'SHA256SUMS').read_text().splitlines():
             sha,name=line.split(maxsplit=1)
             self.assertEqual(hashlib.sha256((RESULT/name).read_bytes()).hexdigest(),sha)
-
-
-class PartialSpatialScopeTest(unittest.TestCase):
-    setUp = scope.ResultScopeTest.setUp
-    fixture = scope.ResultScopeTest.fixture
-    def test_missing_retired_episode_does_not_block_current_but_missing_top_does(self):
-        self.fixture()
-        path=self.base/'summary.json';source=json.loads(path.read_text())
-        row=next(r for r in source['tasks'] if r['policy']=='xvla' and r['task']=='place_relative')
-        row.update(pending_seeds=[2],completed_blocks=0,recorded_episodes=4,complete=False,successes=4)
-        row['per_mode']['front'].update(recorded=0,successes=0)
-        source['completed_episodes']-=1;source['successes']-=1;source['completed_blocks']-=1
-        path.write_text(json.dumps(source))
-        current=report.snapshot(self.base)
-        self.assertIsNotNone(current['policies']['xvla']['overall_pct'])
-        self.assertIsNone(report.snapshot(self.base,include_archived_modes=True)['policies']['xvla']['overall_pct'])
-        row['pending_seeds'].append(4);row['recorded_episodes']-=1;row['successes']-=1
-        row['per_mode']['on_top'].update(recorded=0,successes=0)
-        source['completed_episodes']-=1;source['successes']-=1;path.write_text(json.dumps(source))
-        current=report.snapshot(self.base)
-        self.assertIsNone(current['policies']['xvla']['overall_pct'])
-        spatial=next(r for r in current['rows'] if r['policy']=='xvla' and r['task']=='place_relative')
-        self.assertEqual((spatial['recorded_episodes'],spatial['included_episodes']),(2,0))

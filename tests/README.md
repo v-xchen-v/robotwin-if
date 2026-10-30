@@ -1,7 +1,6 @@
 # 当前测试入口
 
-当前 benchmark 为 Stapler v1 六任务。测试保留当前任务、六模型适配、seed/release、结果复用和调度器的回归覆盖；
-早期任务试验、一次性渲染及 sweep 脚本的去向见[历史测试清理说明](../docs/archive/obsolete-test-scripts.md)。
+测试覆盖当前六任务、六模型适配、固定 seeds、成绩与视频查看入口。
 
 ## CPU 回归
 
@@ -24,16 +23,13 @@ Bridge 集成检查会读取本机 RoboTwin checkout，并在临时目录验证�
 | Stapler 判据、随机朝向 | [test_press_lift_stapler.py](test_press_lift_stapler.py) |
 | 共享接触分类、干扰物采样、指令 reset | [test_press_lift_shared.py](test_press_lift_shared.py) |
 | Stapler 初始 RGB / proprio / 位姿配对审计 | [test_press_lift_seed_audit.py](test_press_lift_seed_audit.py) |
-| 当前清单与结果发布 | [test_stapler_manifest_release.py](test_stapler_manifest_release.py)、[test_stapler_result_delivery.py](test_stapler_result_delivery.py)、[test_current_release.py](test_current_release.py) |
+| 当前清单与结果发布 | [test_current_release.py](test_current_release.py) |
 | 固定 seed、完整 block、无 seed 替换 | `test_if_seed_*.py`、[test_evaluation_setup.py](test_evaluation_setup.py) |
 | 当前预算与 bridge inventory | [test_eval_step_limits.py](test_eval_step_limits.py)、[test_task_manifests.py](test_task_manifests.py)、[test_task_bridge.py](test_task_bridge.py) |
 | Attribute / Arm 当前历史错误判据 | [test_attribute_select_success.py](test_attribute_select_success.py)、[arm_select/test_policy_success.py](arm_select/test_policy_success.py)、[arm_select/test_scene_variation.py](arm_select/test_scene_variation.py) |
-| 结果复用、评分和视频复核 | `test_formal*.py`、[test_spatial3.py](test_spatial3.py)、[test_policy_video_review.py](test_policy_video_review.py) |
-| 双路并行与共享远端调度 | [test_parallel_stapler_suite.py](test_parallel_stapler_suite.py)、`test_remote*.py`、[test_sharded_remote_suite.py](test_sharded_remote_suite.py) |
+| 完整 block 评分和视频复核 | `test_formal*.py`、[test_spatial3.py](test_spatial3.py)、[test_policy_video_review.py](test_policy_video_review.py) |
 
 `test_press_lift_shared.py` 仍测试 Stapler 所继承的 `BellMonitor` 基类；基类的兼容撤离条件与 Stapler 的接触即完成条件分别验证。
-旧 Bottle 轨迹判据、专用测试和 fixture 已退休，见[清理记录](../docs/archive/obsolete-benchmark-scripts.md)。历史 schema 读取与退休任务拒绝测试保留，通用复用/续跑测试使用当前 Stapler。
-`test_remote_attribute_suite.py` 覆盖的 helper 仍被 Stapler 双路调度器使用。
 
 ## 子目录测试
 

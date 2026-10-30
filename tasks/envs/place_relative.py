@@ -17,7 +17,7 @@ class place_relative(Base_Task):
     Preserve the original physical seed mapping: scene_seed = seed // 5,
     and each active block contains seeds (5k, 5k+1, 5k+4). Slots 2/3
     (front/back) are retired. Never remap to seed // 3 or seed % 3.
-    The archived five-mode task is in bak/place_relative-five-modes/.
+    Only the three active directions are accepted for evaluation.
     """
 
     ORDER = ["left", "right", "on_top"]

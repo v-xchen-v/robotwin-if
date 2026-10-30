@@ -5,12 +5,12 @@
 
 ## 启动
 
-直接浏览 Azure 上的当前版本，不必下载整个备份：
+直接浏览 Azure 上的当前结果，不必下载整个备份：
 
 ```bash
 # 服务所在机器已通过浏览器完成 az login，且账号有 Blob 读取权限
 python tools/policy-video-review/server.py \
-  --azure-backup result/robotwin-if-press-lift-stapler-v2-size6cm-20blocks/azure-backup.json
+  --azure-backup result/azure-backup.json
 # 等价入口
 just video-review-azure
 ```
@@ -22,9 +22,8 @@ just video-review-azure
 视频首次打开需等待该文件下载完成，之后支持拖动、Range 和缓存复用。
 这个模式需要 Azure CLI；本地文件模式仍只需要 Python 标准库。
 
-查看新版全部 2760 回合，可使用本机合并目录，或从 [Azure](../../docs/download-results.md) 下载当前 6 cm 备份。
-下载后运行包内 `bash view_videos.sh`（默认端口 8898）。`just video-review` 默认打开当前完整推理目录；
-旧版通过指定 `--run-dir` 或下载对应版本的备份查看。
+查看全部 2760 回合，可使用本机合并目录，或从 [Azure](../../docs/download-results.md) 下载当前 6 cm 备份。
+下载后运行包内 `bash view_videos.sh`（默认端口 8898）。`just video-review` 默认打开当前完整推理目录。
 
 只需要 Python 3.10+ 标准库。无需安装模型环境、Node、前端依赖或启动 GPU 作业。
 可选 `ffprobe` 用于读取视频的真实编码帧率，以支持逐帧查看；缺少它仍可播放、拖动和标注。
@@ -32,7 +31,7 @@ just video-review-azure
 
 ```bash
 python tools/policy-video-review/server.py \
-  --run-dir outputs/policy-eval/robotwin-if-press-lift-stapler-v2-size6cm-20blocks-001
+  --run-dir outputs/policy-eval/benchmark
 
 # 等价入口（已安装 just 时）
 just video-review
@@ -56,7 +55,7 @@ ssh -N -L 8893:127.0.0.1:8893 user@your-server
 含错误的分组不显示成功率。人工标签不改变成绩表。
 
 1. 选择 policy、task、mode、block、自动结果或人工状态。搜索框支持 seed、指令和备注。
-   默认排除已下线 grasp 和 Spatial front/back；当前 Stapler 六任务共 **2760 回合**，运行中仅展示已归档回合。历史七任务目录打开归档开关后为 **3240 回合**。
+   默认排除已下线 grasp 和 Spatial front/back；当前 Stapler 六任务共 **2760 回合**，运行中仅展示已归档回合。
    Block 显示 `B1…B20`，同时注明原始零基 index，不能用 `seed // block_size` 代替。
 2. 播放视频，切换全部 / 主相机 / 左腕 / 右腕，慢放、逐帧、跳到末帧或最后两秒。
    相机顺序读取 `_diagnostics.json`，未知相机布局时只显示完整视频。

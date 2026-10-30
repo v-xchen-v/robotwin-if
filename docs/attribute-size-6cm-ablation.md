@@ -27,10 +27,10 @@
 
 ## 评测与解释
 
-使用已发布 Stapler v1 中的 20 对 Size seeds，六个公开 checkpoints 各 40 回合。
+使用原评测中的 20 对 Size seeds，六个公开 checkpoints 各 40 回合。
 这些是旧清单的固定 seed 子集，本次需重新通过 expert，不能沿用旧尺寸的资格结论。
 失败 seed 保留并报告，不按 policy 成败换 seed。保存新源码、配置、指令和原始结果；
-新产物独立存放，既有 release、seed manifest 与成绩不覆盖。
+新产物单独记录，保留与原 8 cm 结果的对照。
 
 除 Big/Small 成功率外，统计首先抬起的是大块还是小块、是否曾抬起目标、
 以及先错后对的次数，并与原 8 cm 结果逐 seed 对照。检查新尺寸内配对初始观测
@@ -43,16 +43,9 @@
 
 ## 运行结果
 
-运行目录：`outputs/policy-eval/attribute-size-6cm-20pairs-20261029/`
-（链接到 `/Data/robotwin-if/evaluations/attribute-size-6cm-20pairs-20261029/`）。
-双路独立 simulator / server，GPU 0 仿真、GPU 1 推理，按显存预算加载六个模型。
-
-- `status.json`：当前进度、运行中的模型和错误状态。
-- `comparison.json` / `episodes.csv`：新旧逐 seed 成败及首个抬升对象。
-- `comparison.md`：自动更新的可读进度表；完成后 `verification.json` 核对全部
-  240 条记录、旧指令、expert 资格以及 120 对初始观测。
-- `<policy>/attribute_select/`：归档的视频、动作、初始观测、oracle 和判定记录。
-- `support/`：实验计划、旧成绩校验信息、完整源码快照及本次 Size 子集调度脚本。
+原始实验证据随[完整结果下载](download-results.md)保存在 `audit/size-experiment/`：
+`comparison.json` 保存行为比较，`verification.json` 核对 240 条记录、旧指令、expert 资格与 120 对初始观测；
+`support/` 保存实验源码和配置。当前六模型的视频、动作、初始观测位于 `evaluation/<policy>/attribute_select/`。
 
 模板生成、原有成功判据与客户端保持不变。调度脚本先验证原完整 Attribute seed
 manifest，再只选择其中 20 对 Size seeds；这些回合不冒充完整的八模式 Attribute blocks。
@@ -137,10 +130,6 @@ Hy-VLA 的 20 个 Big 回合全部属于先小后大。这些失败回合本身�
 这条经验也收录在[任务设计原则](task-design/被测行为须在能力库内-IF避免塌成OOD.md)：
 对低成功率任务，结合完整动作过程判断能力与指令选择，避免仅凭 0 分作归因。
 
-本实验原始产物独立保留，Stapler v1 六任务成绩未覆盖。
-2026-10-30 起，这 240 条 Size 记录同时纳入 [当前 6 cm 成绩](../result/robotwin-if-press-lift-stapler-v2-size6cm-20blocks/README.md)，
-与未变化的 2520 条 v1 记录组成完整新版；原始实验范围和 metadata 保持不变。
-
-使用原 Stapler v1 seed manifest，不再复制新清单或维护 latest 注册机制。
-正式分数仅 VLAct 的 Big seed 100174 更新，其余五模型的各模式和 Overall 数值沿用原值。
-已完成的 240 条 6 cm Size 原始输出保留在完整结果与 Azure 备份中，便于查看当前尺寸下的行为。
+这 240 条 Size 记录已纳入[正式成绩](../result/README.md)，与未变化的 2520 条记录组成完整交付。
+原始实验范围和 metadata 保留在下载包中；旧版成绩目录已从当前仓库清理。
+六份 seed 文件保持原字节，统一放在 `seed-manifests/20-blocks/`。

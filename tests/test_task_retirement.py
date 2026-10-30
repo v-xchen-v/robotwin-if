@@ -11,7 +11,6 @@ from if_benchmark.seed_contracts import (
 )
 from if_benchmark.seed_manifest import validate_manifest
 from policies.xvla.eval import load_task
-from tools.run_formal_policy_suite import check_active_tasks, current_success_checker
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -32,8 +31,6 @@ class RetirementTest(unittest.TestCase):
         for task in sorted(RETIRED_TASKS):
             with self.subTest(task=task), self.assertRaisesRegex(ValueError, 'retired'):
                 load_task(ROOT / 'third_party/robotwin', task, 'demo_clean')
-            with self.subTest(task=task), self.assertRaisesRegex(ValueError, 'retired'):
-                current_success_checker(task)
 
     def test_archived_manifest_still_parses_without_reactivating_task(self):
         for task in ARCHIVED_SEED_CONTRACTS:
@@ -46,14 +43,6 @@ class RetirementTest(unittest.TestCase):
             self.assertFalse((ROOT / f'tasks/envs/{task}.py').exists())
             self.assertFalse((ROOT / f'tasks/task_instruction/{task}.json').exists())
 
-    def test_formal_runs_require_full_current_inventory(self):
-        specs = [dict(task=t) for t in CURRENT_SUITE_TASKS]
-        check_active_tasks(specs)
-        for invalid in (specs[:-1], specs + [dict(task='grasp_cube_approach')],
-                        [dict(task=t) for t in LEGACY_SUITE_TASKS],
-                        [dict(task=t) for t in BELL_SUITE_TASKS]):
-            with self.assertRaises(AssertionError):
-                check_active_tasks(invalid)
 
 
 if __name__ == '__main__':

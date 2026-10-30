@@ -1,6 +1,6 @@
 # X-VLA inference environment
 
-首个 checkpoint 为 [`2toINF/X-VLA-RoboTwin2`](https://huggingface.co/2toINF/X-VLA-RoboTwin2)，面向 Agilex 双臂，采用 20D EE6D。这里维护独立的模型服务环境；RoboTwin 仿真和后续客户端使用原有 `RoboTwin` 环境。
+使用公开 checkpoint [`2toINF/X-VLA-RoboTwin2`](https://huggingface.co/2toINF/X-VLA-RoboTwin2)，面向 Agilex 双臂，采用 20D EE6D。这里维护独立的模型服务环境；RoboTwin 仿真和后续客户端使用原有 `RoboTwin` 环境。
 
 ## 安装
 
@@ -43,7 +43,7 @@ CUDA_VISIBLE_DEVICES=1 python -m deploy \
   --host 127.0.0.1 \
   --port 8010 \
   --disable_slurm \
-  --output_dir ./logs/raw-click-bell-001
+  --output_dir ./logs/benchmark
 ```
 
 首次加载会下载权重到 Hugging Face cache；也可以将 `--model_path` 指向已下载的本地 checkpoint 目录。正式记录验证证据前应固定 HF revision，并使用对应的本地 snapshot 路径。
@@ -51,47 +51,18 @@ CUDA_VISIBLE_DEVICES=1 python -m deploy \
 
 客户端请求地址为 `http://127.0.0.1:8010/act`。上游会在 `--output_dir` 下写入 `info.json`，每次启动使用一个新的 run 目录。自定义安装时将上述环境名和 checkout 路径换成 setup 时的值。模型服务与客户端在不同机器时，按部署需要设置 `--host` 和客户端地址。
 
-## 验证状态与下一步
+## 运行 benchmark
 
-2026-09-06 已在本地完成环境验证：Python 3.10.21、PyTorch 2.1.2+cu121、torchvision 0.16.2+cu121、Transformers 4.51.3；`pip check`、模型/processor 导入和 20D EE6D 检查通过，RTX A6000 上的 CUDA 小张量运算通过。X-VLA checkout 与固定 revision 一致，且没有本地修改。
-
-随后已连接用户启动的 `http://127.0.0.1:8010` 服务完成 raw → IF 的初次闭环验证：
-
-| Task / mode | Exact seed | 结果 | Action calls |
-|---|---:|---|---:|
-| raw `click_bell` | 2000 | 成功 | 56 |
-| IF `arm_select` / left | 100000 | 成功，抬升与手臂匹配均通过 | 101 |
-| IF `arm_select` / right | 100001 | 达到动作上限；抬升与手臂匹配均未通过 | 400 |
-
-IF 首个完整 block 共 2 个 episodes，结果为 1/2，无跳过或补抽。左右 episode 的三路初始 RGB 与 proprio 完全一致。两项初始接入 gate 已有成功 episode；右臂失败作为策略结果保留，当前完整 benchmark 已完成，见[正式成绩](../../result/robotwin-if-press-lift-stapler-v1-20blocks/README.md)。已将运行证据按 CogACT 的 episode 格式整理到 `outputs/policy-eval/raw-smoke-001/xvla/click_bell/` 和 `outputs/policy-eval/smoke-blocks1/xvla/arm_select/`；这是已有结果的离线转换，没有重跑推理。
-
-后续可以扩大固定 seed 覆盖，或单独诊断右臂失败；当前三次 rollout 只支持初次集成结论，不能估计 benchmark 成功率。
-
-[`client.py`](client.py) 已实现 HTTP 请求、20D EE6D 到 16D RoboTwin EE action 的转换及 episode reset；[`eval.py`](eval.py) 提供初始 raw/IF smoke runner。External RoboTwin policy bridge 仍待实现。
-
-## 运行最小评测客户端
-
-从本仓库根目录执行，保持已有模型服务运行。客户端使用 `RoboTwin` 环境中的 NumPy、SciPy、requests、json_numpy、imageio/ffmpeg；模型依赖留在 `robotwin-if-xvla`。
+从仓库根目录执行，保持模型服务运行，仿真使用 RoboTwin 环境：
 
 ```bash
-# 1. Raw task：exact episode seed，无隐式 seed 偏移/替换。
-conda run --no-capture-output -n RoboTwin python policies/xvla/eval.py \
-  --task click_bell --seeds 2000 --sim-gpu 0 \
-  --output-dir outputs/policy-eval/raw-smoke-002/xvla/click_bell
-
-# 2. Raw 成功后：IF task，manifest 的首个完整左右臂 block。
-conda run --no-capture-output -n RoboTwin python policies/xvla/eval.py \
-  --task arm_select --task-config demo_clean_arm_select_v3 \
-  --seed-manifest seed-manifests/robotwin-if-press-lift-stapler-v1-20-per-mode/arm_select.json \
-  --blocks 1 --sim-gpu 0 \
-  --output-dir outputs/policy-eval/smoke-blocks1-002/xvla/arm_select
+bash scripts/eval.sh --policy xvla --task press_lift_stapler --blocks 1 \
+  --output-dir outputs/policy-eval/first-run
+bash scripts/eval.sh --policy xvla --output-dir outputs/policy-eval/full-run
 ```
 
-`--sim-gpu` 仅设置客户端进程的 CUDA GPU，不改变现有服务；单 GPU 机器使用 `--sim-gpu 0`。服务地址可用 `--server-url` 设置。每次使用新的 `--output-dir`，保留之前的成功、失败和错误证据。
-
-Raw 默认按官方 client 使用 task name 文本（`click bell`）；IF 默认使用 `unseen` 模板生成的实际指令，不允许以 task name 代替。每个 seed 先经过 oracle qualification，再重建场景、reset client 和执行策略。失败不补抽；基础设施/推理错误会标记整次 run 不完整。当前 IF 入口仅支持已经检查过评测初始化的 `arm_select`。
-
-Exit code：`0` = 完整且至少一个 episode 成功，`1` = 完整但全失败，`2` = 不完整/错误；mode 结果以 `summary.json` 为准。
+六任务默认各 20 blocks，固定 seeds。完整结果见 [result](../../result/README.md)，
+参数与评分规则见[评测说明](../../docs/formal-policy-evaluation.md)。
 
 ### 输出格式
 
@@ -145,3 +116,5 @@ conda run --no-capture-output -n RoboTwin python tests/arm_select/test_policy_su
 ```
 
 官方评测入口见 [`evaluation/robotwin-2.0/README.md`](https://github.com/2toinf/X-VLA/blob/6bc2513f5f1cbec715cc668b414392a6cae5c671/evaluation/robotwin-2.0/README.md)。
+
+Checkpoint identities and full inference evidence: [results](../../result/README.md) · [download](../../docs/download-results.md).

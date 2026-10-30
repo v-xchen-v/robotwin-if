@@ -1,7 +1,7 @@
 # 安装与首次运行
 
-本文对应当前 Stapler v1 六任务，从新 clone 到 expert 场景预览，再到一个开源 policy 的小规模评测。
-以下命令从仓库根目录执行。完整成绩见[当前结果](../result/robotwin-if-press-lift-stapler-v1-20blocks/README.md)。
+本文对应当前六任务，从新 clone 到 expert 场景预览，再到一个开源 policy 的小规模评测。
+以下命令从仓库根目录执行。完整成绩见[当前结果](../result/README.md)。
 
 ## 1. 准备环境
 
@@ -11,7 +11,7 @@ Expert 采集使用一张 GPU；当前 `scripts/eval.sh` 使用两张 GPU，默�
 为 RoboTwin 资产预留约 16 GB，另外为所选模型的环境与权重预留空间。
 
 ```bash
-git clone --recurse-submodules https://github.com/v-xchen-v/robotwin-if.git
+git clone --branch release-20261030 --recurse-submodules https://github.com/v-xchen-v/robotwin-if.git
 cd robotwin-if
 nvidia-smi
 
@@ -34,7 +34,7 @@ bash setup_robotwin.sh --sources-only
 
 `--sources-only` 不安装依赖或资产，不能单独完成仿真环境准备。
 资产路径应是包含 `objects/`、`embodiments/` 等内容的 RoboTwin 资产目录。
-安装时会生成含绝对路径的机器人配置，安装后移动目录需重新配置，详见[环境搭建记录](features/01-环境搭建.md)。
+安装时会生成含绝对路径的机器人配置，安装后移动目录需重新配置，可重新运行安装器配置资产路径。
 
 已有 checkout 更新后，重新运行 `bridge_tasks.sh` 和 `--check`。
 旧版手工创建、指向当前仓库 Arm 配置的软链会被接管；同名真实文件或其他来源的软链会报冲突并保留。
@@ -57,7 +57,7 @@ bash scripts/collect.sh --output-dir outputs/expert-review/first-review
 
 ```bash
 bash scripts/collect.sh \
-  --seed-manifest seed-manifests/robotwin-if-press-lift-stapler-v1-20-per-mode \
+  --seed-manifest seed-manifests/20-blocks \
   --output-dir outputs/expert-review/manifest-review
 ```
 
@@ -113,4 +113,4 @@ bash scripts/eval.sh --policy vlact --sim-gpu 0 --model-gpu 1 \
 
 输出按 `<output-dir>/<policy>/<task>/` 保存，含 `summary.json`、逐回合结果、instruction、视频和动作。
 正常执行后的模型失败是有效评测结果；初始化或基础设施错误会停止，不替换 seed。
-更多运行参数见[交付说明](branch-delivery.md)，并行与复用结果见[正式评测说明](formal-policy-evaluation.md)。
+更多运行参数和成绩汇总见[评测说明](formal-policy-evaluation.md)。

@@ -74,7 +74,7 @@ class PolicyEvaluationTests(unittest.TestCase):
             module = importlib.import_module(f'policies.{policy}.eval')
             for task in CURRENT_SUITE_TASKS:
                 contract = IF_SEED_CONTRACTS[task]
-                manifest_path = ROOT/'seed-manifests/robotwin-if-press-lift-stapler-v1-20-per-mode'/f'{task}.json'
+                manifest_path = ROOT/'seed-manifests/20-blocks'/f'{task}.json'
                 with self.subTest(policy=policy, task=task), patch.object(sys, 'argv', [
                     'eval.py','--task',task,'--seed-manifest',
                     str(manifest_path), '--task-config', load_manifest(manifest_path)['task_config'],

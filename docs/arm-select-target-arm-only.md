@@ -1,7 +1,6 @@
 # Arm-Select：禁止先用错误手臂再换指定手臂
 
-2026-09-18 修正成功判据为 `target-arm-only-lift-v2`。Cube-v3 的方块尺寸、
-位置/旋转采样、配对指令、seed 清单和 400-action 预算保持原设置。
+成功判据标识为 `target-arm-only-lift-v2`。场景使用 5 cm 方块，在双臂共用区域随机平移和旋转；配对场景相同，动作预算为 400。
 
 ## 判定规则
 
@@ -20,9 +19,6 @@
 | 错误手臂轻碰或轻抬，没有超过 5 cm，随后指定手臂拿起 | 成功 |
 | 目标尚未抬起，或当前已放下 | 失败 |
 
-旧实现仅检查查询时的 `lifted && arm_match`，丢失了此前使用错误手臂的历史。
-此次修复前，在 left/right 两种指令下均复现“先错后对仍返回 True”。
-
 [`ArmPickMonitor`](../tasks/envs/_if_grounding.py) 在每个真实 physics step 后观察高度和两臂距离。
 一旦错误手臂满足拿起条件，就锁定 `wrong_arm_lifted_ever=true`，直到下一次 `setup_demo`。
 动作内部的短暂错误抬升也会记录；放下、换手、再次执行 oracle、查询信号均不会清除此标记。
@@ -33,37 +29,7 @@
 `target_arm_only_success`。因此最后 `arm_match=true` 且 `lifted=true` 的回合仍可能因历史错误失败。
 该判据应用于共享 `arm_select` 任务，旧几何配置也使用同样的历史检查。
 
-## 历史结果
+## 验证
 
-已经发布的 cube-v3 和 Attribute-v2 包中的 Arm/Overall 仍使用旧终态判据，保留原始字节与计数。
-当前 [Stapler v1 结果](../result/robotwin-if-press-lift-stapler-v1-20blocks/README.md)原样复用 Arm-only-v2 按新判据重跑的 240 个 Arm 回合；旧包保留在 Git 历史中。
-[`run_formal_policy_suite.py`](../tools/run_formal_policy_suite.py) 为新计划固定新判据版本、
-5 cm 抬升阈值与 20 cm TCP 阈值，拒绝将旧判据的 Arm 成功或失败记录混入新计划。
-显式读取历史计划仍按原合同验证。
-
-## 验证入口
-
-2026-09-18 已完成 **4/4 组真实仿真与 76 项 CPU 回归**，见[验证包](https://github.com/v-xchen-v/robotwin-if/blob/ac582a75267126c7a8fe17c220475d517b73882b/result/robotwin-if-arm-only-v2-20blocks/evidence/arm-target-only/README.md)。
-两个方向均真实执行“错误臂拿起→放回→指定臂拿起”，最终仍失败；直接正确抓取的两个对照仍成功。
-4 组初始观测逐数组匹配旧 cube-v3 同 seed 的观测。
-
-CPU 回归覆盖左右臂、放下后再抓、空中换手、动作内子步、轻碰、严格阈值、
-reset/close、oracle 不清空历史，以及旧成绩禁止复用。
-
-```bash
-python -m unittest discover -s tests/arm_select -p 'test_*.py' -v
-python -m unittest discover -s tests -p 'test_formal*.py' -v
-```
-
-真实仿真验证脚本在同一配对场景的两个指令下分别执行“指定臂直接抓”和
-“错误臂抓起→放回→退回→指定臂抓起”，全程用机器人动作驱动物体，不传送物体或手臂。
-逐 physics step 记录信号，保存视频、阶段截图，并逐数组核对初始观测与已归档 cube-v3 的一致性。
-
-```bash
-CUDA_VISIBLE_DEVICES=0 PYTHONNOUSERSITE=1 \
-  /home/xichen6/miniconda3/envs/RoboTwin/bin/python \
-  tests/arm_select/verify_target_arm_only.py \
-  --output /Data/robotwin-if/evaluations/arm-select-target-arm-only-v2-review-new
-```
-
-输出目录必须不存在。结果标记为 `diagnostic_only=true`，不能混入正式 policy 成绩。
+`python -m unittest discover -s tests/arm_select -p 'test_*.py' -v` 检查左右臂、先错后对、严格阈值与 reset。
+当前成绩见 [result](../result/README.md)。

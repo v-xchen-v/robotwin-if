@@ -7,7 +7,7 @@ export PYTHONNOUSERSITE=1
 SIM_PYTHON=${SIM_PYTHON:-python3}
 POLICY= TASK=all OUTPUT_DIR= SERVER_URL=
 BLOCKS=20 SIM_GPU=0 MODEL_GPU=1 DRY_RUN=0
-MANIFEST_DIR="$REPO_ROOT/seed-manifests/robotwin-if-press-lift-stapler-v1-20-per-mode"
+MANIFEST_DIR="$REPO_ROOT/seed-manifests/20-blocks"
 ROBOTWIN_DIR="$REPO_ROOT/third_party/robotwin"
 
 usage() {

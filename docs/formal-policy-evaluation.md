@@ -1,132 +1,39 @@
-# 六任务正式评测
+# 运行与汇总评测
 
-当前任务为 press_lift_stapler、pick_diverse_object、attribute_select、arm_select、stack_sequence、place_relative。
-Grasp-Approach 已暂时下线，见 [归档说明](../bak/grasp_cube_approach/README.md)。
-当前使用 [Press/Lift Stapler v1 taskset](../seed-manifests/robotwin-if-press-lift-stapler-v1-20-per-mode/README.md)：
-六个 policies 各任务 20 blocks；复用 Arm-only-v2 的其余五任务共 2520 回合，新增 Stapler 240 回合。
-本轮已于 **2026-10-26 11:53 UTC** 完成：2760 回合、720 blocks 全部通过校验。
-见[六任务结果包](../result/robotwin-if-press-lift-stapler-v1-20blocks/README.md)，执行使用下述双路入口。
-
-历史 [Arm-only-v2 结果](https://github.com/v-xchen-v/robotwin-if/blob/ac582a75267126c7a8fe17c220475d517b73882b/result/robotwin-if-arm-only-v2-20blocks/README.md)的
-**2760 回合、720 blocks** 已于 2026-09-18 05:26 UTC 完成校验；其 Verb 为 Bottle。
-历史 [远端推理/并发调度记录](arm-select-target-only-v2-evaluation.md)、
-[Bottle v6 判据](bottle-verb-pick-hold.md)和[发布溯源说明](release-provenance.md)继续保留。
-基础 runner 的默认清单与运行目录均为 Stapler v1。准备和发布时，旧包的复用证据从固定 Git 提交读取，见[溯源说明](release-provenance.md)。
-
-## 基础入口：单机串行
-
-`tools/run_formal_policy_suite.py` 按 policy、task、seed 依次运行，只启动一个
-simulator（GPU 0）和一个模型服务（GPU 1）。同一个模型跑完各任务后释放，再加载下一个模型。
-六个 policy 的客户端、模型历史状态、checkpoint 校验与动作解码保持各自的官方协议。
-当前 runner 的 Python/模型环境路径及两张 GPU 的配置面向本机，见脚本顶部常量。
-
-每个新回合都执行完整 oracle qualification，通过后关闭场景，再用原 seed 重建 policy
-场景。基础 runner 使用 RoboTwin 原生渲染和串行调度；任务本身的配对资格检查仍保留。
-需要远端模型、并发 simulator 或 Hy-VLA 双实例时，使用 [Arm 重评说明](arm-select-target-only-v2-evaluation.md) 中的专用 controller。
-
-X-VLA 首先建立参考场景。随后五个 policy 在调用模型前逐回合核对参考文件 SHA-256、
-三路 RGB 逐像素相等、机器人状态绝对误差不超过 `1e-6`、指令及步数上限相同。
-任何不一致都停止该回合；不会跳过检查或替换 seed。
-SAPIEN 的显式设备绑定由仓库内 `tools/sim_device.py` 提供，无需加载旧运行目录中的 Python 适配器。
-
-## Stapler：单机双路
-
-[`run_parallel_stapler_suite.py`](../tools/run_parallel_stapler_suite.py) 最多同时运行两个
-独立模型服务和两个 simulator：仿真均在 GPU 0，推理均在 GPU 1。每个 policy 使用独立端口、
-客户端历史及输出目录；单一调度器持有原 scheduler lock 并写入归档结果。
-根据历史显存峰值和实时占用选择可并行的模型组合，例如 LingBot-VA 与 DM05 不同时加载。
-
-原 evaluator、任务、指令、manifest 和推理参数保持冻结。新增调度代码另存源码哈希；
-`support/execution-transition.json` 记录拓扑变更，`support/execution-revisions/` 保留切换前证据。
-切换时按 PID 和启动时间接管正在运行的 X-VLA，不中断当前回合。完成的成功和失败均不重跑。
-新 worker 仍逐回合检查 manifest 和 X-VLA 参考场景，未完成的参考场景会在调用模型前等待。
-任一路检测到 GPU 0 达到 80°C 时，两路通过共享 gate 一起在动作之间等待降到 74°C，
-随后一起恢复；等待不推进物理、不修改动作。这样避免一路等待降温时另一路继续加热 GPU。
-
-运行目录为 `outputs/policy-eval/robotwin-if-press-lift-stapler-v1-20blocks-001`。
-其 `status.json` 的 `current.workers` 列出两路进程与队列；完整产物的[下载与视频浏览说明](download-results.md)提供可在自己机器使用的入口。
-自动工作流在全部回合完成后执行原全量校验与 `publish_stapler_policy_results.py`，生成六任务结果包。
-
-## 准备、续跑与验证
-
-正式 runner 使用冻结的运行目录。`prepare` 会验证 release，保存源码/config/manifest
-哈希及快照，按 release 的 `reusable-results.yml` 校验并复制已有结果。
-`--old-run` 提供原来的每 policy/task `run.json`、resolved config 及
-`support/services-before-recovery.json`，用于保留模型启动参数与 checkpoint 身份。
-同时支持元数据保存在 `provenance/reused/<policy>/<task>/` 的正式归档目录。
-这是一条已有正式评测的迁移/续跑入口；单独测试新模型可直接用 [policy evaluator](../policies/README.md)。
+使用固定的 `seed-manifests/20-blocks/`，六任务每任务 20 blocks，每模型 460 回合。
+先按 [Quickstart](quickstart.md) 安装 RoboTwin、bridge 和所选 policy，再按 [policies](../policies/README.md) 启动模型服务。
 
 ```bash
-# 新运行需使用不存在的目录、匹配的 release 与模型运行元数据。
-python tools/run_formal_policy_suite.py prepare \
-  --run-dir /path/to/new-run --release /path/to/qualified-release \
-  --old-run /path/to/matching-prior-run
+# 预览计划，不连接服务或写输出。
+bash scripts/eval.sh --policy vlact --output-dir outputs/policy-eval/my-run --dry-run
 
-# 启动或显式恢复该运行，使用 RoboTwin Python 环境。
-python tools/run_formal_policy_suite.py run --run-dir /path/to/new-run
+# 模型已在 GPU 1 上服务；仿真使用 GPU 0。
+bash scripts/eval.sh --policy vlact --sim-gpu 0 --model-gpu 1   --output-dir outputs/policy-eval/my-run
 
-# 读取进度；验证当前已归档结果（verify 会更新 validation.json）。
-python tools/run_formal_policy_suite.py status --run-dir /path/to/new-run
-python tools/run_formal_policy_suite.py verify --run-dir /path/to/new-run
+# 小规模接入检查：一个完整 Press/Lift block。
+bash scripts/eval.sh --policy vlact --task press_lift_stapler --blocks 1   --output-dir outputs/policy-eval/smoke
 ```
 
-运行中新完成的文件先复制并校验 SHA-256，最后写入 `_provenance.json` 才计入完成。
-成功和 policy failure 都是不可覆盖的完成结果。worker 始终读取完整 manifest，
-仅跳过已归档的回合，所以在 block 中间恢复也保持原始 block 序号。
-`batches/` 保留每次启动的原始输出、执行错误与 `*-resume.json`。
+输出为 `<output-dir>/<policy>/<task>/`，包含逐回合 JSON、`results.jsonl`、summary、动作和视频。
+已存在的任务输出目录会被拒绝，避免覆盖结果。Policy failure 是有效结果；基础设施错误或 oracle 失败会停止，不替换 seed。
+不同 policy 可以使用同一输出根目录，各自写入独立子目录。
 
-`summary.json`、`status.json` 和 `report.md` 在运行中每 15 秒更新。
-缺任何回合的 block 都不算完整；每项的目标数量来自 manifest，不写死为 12 blocks。
-完整校验还会检查动作 traces、跨 policy 的初始场景以及新视频帧数。
-只有所有计划回合和完整 blocks 均通过校验，运行才标记 `complete`。
-
-GPU 查询超时、温度达到 87°C、显存超限、日志停止更新或其他基础设施错误会停止运行并
-清理本次启动的进程组。启动前要求两张 GPU 空闲，避免与其他任务叠加。
-唯一的自动重试是尚未调用模型时明确的 oracle 资格阴性，且 GPU 健康检查通过：
-新建 simulator 对同一个 seed 最多再试两次。次数跨重启保留；policy failure 不重跑，
-GPU、网络、场景不一致及执行异常不走这个重试。
-
-重构改变了 evaluator 的源码哈希。旧运行目录仍可读取和汇总，但不能直接用新源码继续
-旧的冻结运行；重放历史运行应使用其源码/config 快照。新的运行需要新的冻结快照，
-且复用结果的 checkpoint、场景、指令与动作配置必须匹配。
-不同 evaluator 版本的耗时分开统计。X-VLA 官方接口不控制 server RNG，不能宣称推理逐位确定。
-
-## 历史结果与当前六任务统计
-
-历史七任务版本仅在 Git 历史中保留，六个模型各 540 回合，
-全套 **3,240 回合、840 个完整 blocks**。从 12 扩到 20 时保留全部 1,944 条旧成功/失败结果，
-新增 1,296 回合；seed 选择不参考 policy 成败。
-
-结果入口在 [`result/`](../result/README.md)。当前 Stapler v1 六任务完整数据目录为
-`/Data/robotwin-if/evaluations/robotwin-if-press-lift-stapler-v1-20blocks-001`，
-repo 入口为同名的 `outputs/policy-eval/` 子目录。历史七任务目录
-`/Data/robotwin-if/evaluations/if-seven-tasks-v2-wide-20blocks-001` 保留原判定和原始产物。
-
-`tools/summarize_formal_policy_results.py` 读取单次 summary 快照，核对归档结果的 SHA-256、
-provenance、mode 和计数，生成 Markdown、HTML、JSON 与分模式 CSV：
+## 汇总
 
 ```bash
-python tools/summarize_formal_policy_results.py \
-  --run-dir /Data/robotwin-if/evaluations/robotwin-if-press-lift-stapler-v1-20blocks-001 \
-  --output outputs/policy-eval/reports/results-current.md
+python tools/summarize_formal_policy_results.py   --run-dir outputs/policy-eval/my-run --output outputs/report/results.md
 ```
 
-每格显示 SR (%) 和成功数/纳入评分回合数，并附完整 blocks 与已完成/计划回合数。
-SR 只使用完整、均衡的 blocks；半个 block 中已完成的回合仍计入进度，标为待成组。
-未完成的任务均值标 `†`，没有完整 block 时用 `—`；未跑回合不当作 failure。
-Attribute 的 Color/Decal/Shape/Size 各平均两个 target values，Task Avg. 对 modes 等权。
-默认报告排除 grasp，进度分母为 2,760 回合/720 blocks/36 个 policy-task 组合。
-Overall 仅在该 policy 六任务全部完成后显示，按六个 Task Avg. 等权平均。
-如需还原原七任务统计，显式传 `--include-archived-tasks`；报告会标明七任务范围，分母恢复为 3,240/840/42。
-新旧范围的 Overall 不直接比较；源 summary 与已发布的 `result/` 文件均不改写。
+自动发现已运行的公开模型，输出 Markdown、HTML、JSON、CSV。
+用 `--blocks N` 指定本次计划的 blocks 数（默认 20）；任务未完成时只统计完整均衡 blocks，Overall 留空。
+每个任务内各 mode 等权，Overall 为六个任务等权平均。汇总检查 exact seeds、mode、逐回合 JSON 与索引；
+若有 provenance 文件，还检查记录 SHA-256。
 
-## 冻结运行与调度器维护
+完整已发布结果的校验使用 `python tools/verify_benchmark.py`；浏览全部视频使用 `just video-review-azure`。
+本仓库只维护通用 evaluator 和汇总入口，不要求历史迁移脚本、旧结果目录或作者机器路径。
 
-已完成的运行目录保留其源码/config 快照。当前源码发生变化后，原冻结运行的源码哈希检查
-仍会拒绝直接续跑；应使用原快照复现，或为新运行准备新的配置和源码哈希，不能绕过校验。
+## 参数与运行约束
 
-远端调度与 Hy-VLA 双实例入口见 [Arm 重评说明](arm-select-target-only-v2-evaluation.md)。
-旧单机 Attribute 双路入口已移除；共享的进程身份、模型显存预算、父场景和源码检查位于
-`tools/remote_eval_support.py`，由现有远端/分片调度器使用。
-`support/parallel-source-hashes.json` 保留原元数据文件名；新运行需要记录新的 helper 与控制器源码哈希。
-历史部署流水账及旧调度器保存在 Git 历史 `833d496`，不作为当前运行入口。
+`bash scripts/eval.sh --help` 列出 `--server-url`、`--robotwin-dir`、`--python`、`--manifest-dir` 等选项。
+默认一个模型服务和一个串行 simulator，使用独立 GPU；温度或显存超限会停止当前 simulator。
+固定清单按原始顺序消费，不能跳过已完成失败、排序、补 seed 或混入不同设置的输出。

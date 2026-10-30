@@ -15,6 +15,5 @@
 因此保留原始 `seed // 5` 和 offsets `0, 1, 4` 的身份映射。
 
 Bottle/Bell/Grasp 的简短 seed 元数据供历史清单、结果和报告读取使用；`new_generation_state` 与 `run_generation`
-拒绝已退休任务，policy 入口也不会重新启用它们。旧 Bottle 的轨迹判据和测试已移除，原文件见[清理记录](../docs/archive/obsolete-benchmark-scripts.md)。
 
 当前使用方法见 [seed manifest 指南](../docs/seed-manifest-usage.md)和[发布溯源](../docs/release-provenance.md)。

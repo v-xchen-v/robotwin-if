@@ -2,8 +2,8 @@
 
 当前备份为 **Attribute Size 6 cm**：2760 个正式回合 / 视频、720 blocks，约 **5.78 GiB**。
 Size 使用已完成的 240 条 6 cm 重测输出，其余 2520 条复用旧输出；正式分数只有 VLAct 更新。
-原 seed manifest 不变。仓库仅保存[精简成绩](../result/README.md)，完整证据保存在 Azure。
-[上传校验记录](../result/robotwin-if-press-lift-stapler-v2-size6cm-20blocks/azure-backup.json)包含地址、文件数和校验清单哈希。
+固定 seed 清单为 `seed-manifests/20-blocks/`。仓库仅保存[精简成绩](../result/README.md)，完整证据保存在 Azure。
+[上传校验记录](../result/azure-backup.json)包含地址、文件数和校验清单哈希。
 
 ## 访问权限
 
@@ -13,7 +13,7 @@ Size 使用已完成的 240 条 6 cm 重测输出，其余 2520 条复用旧输�
 https://eaidatashare.blob.core.windows.net/xichen/robotwin-if/results/
 ```
 
-当前目录为 `opensource-eval-stapler-v2-size6cm-20blocks-20261030`，已完成上传和远端校验。
+当前目录为 `robotwin-if-20261030`，已完成上传和远端校验。
 
 **当前需要授权下载。** 此存储账号禁用了匿名访问，直接用浏览器打开链接会返回
 `409 PublicAccessNotPermitted`。下载账号需要该容器的读取、列出权限，例如容器范围的
@@ -30,8 +30,8 @@ https://eaidatashare.blob.core.windows.net/xichen/robotwin-if/results/
 az login
 export AZCOPY_AUTO_LOGIN_TYPE=AZCLI
 
-BUNDLE_URL=https://eaidatashare.blob.core.windows.net/xichen/robotwin-if/results/opensource-eval-stapler-v2-size6cm-20blocks-20261030
-BUNDLE_SHA256=248faf9b4943ddc577b3eab7a382b1a47674e6eb83b2043f01f023fd40e60c44
+BUNDLE_URL=https://eaidatashare.blob.core.windows.net/xichen/robotwin-if/results/robotwin-if-20261030
+BUNDLE_SHA256=6a35c189b6f97006bfd76a2f9b4105f80482a24369ffa280fb58256955f258df
 BUNDLE=${BUNDLE_URL##*/}
 BUNDLE_DIR="$PWD/downloads/$BUNDLE"
 
@@ -69,7 +69,7 @@ just video-review-azure
 打开 **http://127.0.0.1:8893/**。顶部成绩表支持模型 × 任务 / mode 对比，点击单元格进入视频队列。
 服务所在机器需要已完成浏览器 `az login`，账号需有 Blob 读取权限。
 入口直接读取当前结果目录的 `azure-backup.json`，不依赖 release registry；不用 just 的命令见[工具说明](../tools/policy-video-review/README.md)。
-已发布备份中自带的是当时冻结的查看器；新增的 Azure 入口和成绩总览使用当前 repo 中的版本。
+备份自带相同的成绩总览与视频查看器，可离线使用。
 
 打开 `reports/results.html` 查看六模型成绩。视频查看器只需 **Python 3.10+ 标准库**，
 可选安装 `ffprobe` 以支持准确帧率与逐帧查看。
@@ -103,8 +103,4 @@ ssh -N -L 8898:127.0.0.1:8898 user@your-server
 备份包含 checkpoint 的 repo、revision、哈希和推理配置；**模型权重、模型环境和仿真资产需另行安装**，
 见 [policies](../policies/README.md) 与 [Quickstart](quickstart.md)。
 原始 JSON / 日志中的绝对路径保留为历史来源记录；下载后的定位以 `episode-index.csv` 的相对路径为准。
-整个目录可继续复制或移动。v2 的人工标注另存于备份目录的 `reviews/`；旧 v1 使用 `outputs/policy-eval/video-reviews/`。正式结果保持只读。
-
-旧 8 cm 备份仍保存在相同前缀的 `opensource-eval-stapler-v1-20blocks-20261027`，
-校验清单 SHA-256 为 `15224cd42cbe37f6603574a62780fed5c1a7d7d64131bffdd20953f79f80928b`。
-下载时替换上面的 URL 和哈希即可；下载后用包内 `view_videos.sh` 浏览。
+整个目录可继续复制或移动。人工标注另存于备份目录的 `reviews/`，正式结果保持只读。

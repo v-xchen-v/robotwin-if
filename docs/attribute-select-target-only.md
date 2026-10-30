@@ -1,6 +1,6 @@
 # Attribute-Select：禁止先抓错物体再抓目标
 
-2026-09-17 修正成功判据，版本为 `target-only-lift-v2`。场景、指令、seed 清单、
+成功判据标识为 `target-only-lift-v2`。场景、指令、seed 清单、
 相对抬升阈值和 400-action 预算保持原设置。
 
 ## 判定规则
@@ -14,9 +14,6 @@
 - 接触或轻推干扰物，未越过抬升阈值：不记为错误抓取。
 - `setup_demo` 为新回合重新记录静止高度，并清空此前的错误记录。
 
-旧 `_lifted()` 只检查查询时的高度，而且先检查 target。干扰物曾经被抓起后放回时，
-其历史会丢失；两个物体同时在空中时，也会因为 target 优先而误判成功。
-
 [`AttributePickMonitor`](../tasks/envs/_if_grounding.py) 现在独立检查两个物体，
 一旦观测到干扰物越过阈值，就锁定 `distractor_lifted_ever=true`。
 [`attribute_select`](../tasks/envs/attribute_select.py) 在场景每次真实 physics step 后更新它，
@@ -27,45 +24,7 @@
 `first_lifted`、`first_distractor_lift_action`，以及两个物体的当前/最高相对抬升。
 `grasped_target` 表示符合新规则的目标抓取；实际目标高度状态另由 `target_lifted` 表示。
 
-## 历史结果与后续评测
+## 验证
 
-当前 [Stapler v1 完整成绩](../result/robotwin-if-press-lift-stapler-v1-20blocks/README.md)中的
-Attribute 使用本判据，原样复用六个 policies 已重跑的 960 回合。旧判据成绩仅保留在 Git 历史中，
-不能当作当前判据的结果；复用来源见[发布溯源说明](release-provenance.md)。
-
-[`run_formal_policy_suite.py`](../tools/run_formal_policy_suite.py) 为新计划固定
-`target-only-lift-v2` 和 `lift_m=0.05`。旧版本或缺少版本标记的 Attribute-Select 成功/失败记录，
-均不允许复用到新计划中；显式读取历史计划仍按其原记录的判据处理。
-
-## 验证入口
-
-两个用户指出的案例和一个正确抓取对照均完成原始动作回放，轻量证据保存在
-[`result/robotwin-if-arm-only-v2-20blocks/evidence/attribute-target-only/`](https://github.com/v-xchen-v/robotwin-if/blob/ac582a75267126c7a8fe17c220475d517b73882b/result/robotwin-if-arm-only-v2-20blocks/evidence/attribute-target-only/README.md)。
-
-| Policy / seed | 错误物体首次越过 5 cm 的 action | 干扰物最高抬升 | 原始动作数 | 新判据 |
-|---|---:|---:|---:|---|
-| LingBot-VA / 100003 | 79 | 9.10 cm | 256 | failure |
-| X-VLA / 100001 | 74 | 8.69 cm | 232 | failure |
-| LingBot-VA / 100002（正确抓取对照） | — | 0.00 cm | 84 | success |
-
-三次回放均匹配全部原始动作数、旧判据的成功停止点、三路初始 RGB 和初始机器人状态。
-前两个案例的目标最终仍在空中，但历史错误被保留，正好覆盖此次误判。
-
-CPU 回归覆盖八种 axis/value 下的正确抓取与先错后对、同时抓取、轻推、阈值、
-reset/close、物理子步观察及双目标 gate：
-
-```bash
-python -m unittest discover -s tests -p test_attribute_select_success.py -v
-python -m unittest discover -s tests -p 'test_formal*.py' -v
-```
-
-历史动作回放工具 [`replay_target_only.py`](https://github.com/v-xchen-v/robotwin-if/blob/ac582a75267126c7a8fe17c220475d517b73882b/tests/attribute_select/replay_target_only.py)已从当前测试目录移除。
-它当时核对初始 RGB / 机器人状态，按已保存 EE actions 和旧停止条件观察新判据，输出为 `diagnostic_only=true`，不作为正式 policy 成绩。
-上述诊断证据和过往验证结果继续保留；当前测试入口见 [tests/README.md](../tests/README.md)，旧实验重放方法见[清理说明](archive/obsolete-test-scripts.md)。
-
-此次 CPU 检查中，9 项专用回归、24 项 formal 测试、9 项 setup/finalization 测试、
-16 项预算测试、1 项现有 Attribute policy reset 测试均通过；另有 8/8 指令路由检查通过。
-真实 SAPIEN 环境中的 `tests/attribute_select/test_check_success.py` 也通过 9/9 检查，
-覆盖同场景换目标、正确/错误抓取、先错后对及原有 pair gate。
-额外 bridge 测试为 23/24：唯一失败是当前已有 RoboTwin checkout 为 `b82ffb8`，
-与 bridge 锁定的 `0aeea2d` 不同，且兼容性文件有本地修改。本次没有变更这些本地 runtime 配置或绕过该 gate。
+`python -m unittest discover -s tests -p test_attribute_select_success.py -v` 检查正确抓取、先错后对、阈值与 reset。
+完整成绩见 [result](../result/README.md)；6 cm 场景与行为分析见 [尺寸实验](attribute-size-6cm-ablation.md)。

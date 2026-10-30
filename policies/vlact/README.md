@@ -53,24 +53,20 @@ The packaged config selects `robotwin_all_wrap_32` (All) or `robotwin_wrap_32` (
 
 The model card's generic `q01/q99` description differs from this training configuration. Upstream's evaluation client selects wrap by checking whether the **checkpoint pathname contains `wrap`**, so renaming the published directory can silently choose the wrong decoder. This integration explicitly validates the training config and fixes wrap semantics independently of the path. Tests compare decoding and resized pixels directly with the pinned official implementation. No min/max or percentile rescaling is applied to this checkpoint's angular outputs.
 
-## Raw → IF validation
+## Run the benchmark
+
+Keep the model server running, then use the RoboTwin environment from the repository root:
 
 ```bash
-conda run --no-capture-output -n RoboTwin python policies/vlact/eval.py \
-  --task click_bell --seeds 2000 --sim-gpu 0 \
-  --output-dir outputs/policy-eval/raw-smoke-001/vlact/click_bell
-
-# Run after a successful raw episode: the complete first left/right IF block.
-conda run --no-capture-output -n RoboTwin python policies/vlact/eval.py \
-  --task arm_select --task-config demo_clean_arm_select_v3 \
-  --seed-manifest seed-manifests/robotwin-if-press-lift-stapler-v1-20-per-mode/arm_select.json \
-  --blocks 1 --sim-gpu 0 \
-  --output-dir outputs/policy-eval/smoke-blocks1/vlact/arm_select
+bash scripts/eval.sh --policy vlact --task press_lift_stapler --blocks 1 \
+  --output-dir outputs/policy-eval/first-run
+bash scripts/eval.sh --policy vlact --output-dir outputs/policy-eval/full-run
 ```
 
-Use `--server-url` and `--request-timeout` for endpoint/timeout overrides. Native instructions default to generated `seen`; IF uses `unseen`. Every exact seed is oracle-qualified and recreated before policy execution. No failed seeds are replaced or excluded. The initial IF entry point supports `arm_select`. Exit codes: 0 = complete with at least one success, 1 = complete/all failures, 2 = incomplete/error.
+The full run uses 20 blocks per task and 460 exact-seed episodes. Choose fresh output directories.
+See [evaluation](../../docs/formal-policy-evaluation.md) for options and scoring,
+and [published results](../../result/README.md) for the frozen six-task benchmark.
 
-Outputs follow `outputs/policy-eval/<run>/vlact/<task>/<task>_ep<seed>*`, using the same episode files as the other policies: summary/status, instruction, initial image, three-camera video, timings, action logs, oracle, requests and diagnostics. `_actions.npz` contains original `model_actions`, complete decoded `raw_actions`, the actually executed prefix, and measured joints/EE poses. EE prediction fields and uncollected grasp diagnostics are null; task-specific signals are retained. The runner reuses X-VLA's seed/task/instruction/output utilities and the existing NumPy WebSocket envelope.
 
 ## Checks
 
@@ -82,20 +78,5 @@ ruff check policies/vlact tests/vlact
 
 Tests cover pinned All/Clean identities and rejection of mixed revisions or weight hashes, angular wrap, asymmetric arm/gripper ordering, official decoder/image/wire parity, fresh image observations without state input, episode reset, protocol errors, partial-chunk action limits and failure evidence.
 
-## Validation results (2026-09-07)
 
-These are historical results from the **Clean 50K** checkpoint, not results from the All rerun.
-
-Environment installation, `pip check`, the full official QwenOFT import path, CUDA SDPA, eight client/runner/codec tests and Ruff passed. The pinned checkpoint loaded with strict parameter checking on an RTX A6000. A saved real observation returned finite `(32, 14)` predictions; repeated reset with seed 2000 produced bitwise-identical actions. First prediction took 2.52 seconds and the warmed prediction 0.12 seconds. Live checks also verified that inference requires reset, a second client is rejected, and an invalid reset invalidates the episode.
-
-| Task / mode | Exact seed | Result | Actions / chunks |
-|---|---:|---|---:|
-| raw `click_bell` | 2000 | success | 59 / 2 |
-| IF `arm_select` / left | 100000 | action limit; no lift, arm match false | 400 / 13 |
-| IF `arm_select` / right | 100001 | success; lifted, arm match true | 99 / 4 |
-
-The raw → IF sequence completed: raw **1/1**, complete balanced IF block **1/2**. The left-arm failure is retained; no seeds were skipped or replaced. These are initial integration smoke outcomes under the recorded SDPA/precision configuration, not benchmark success-rate estimates.
-
-All **558 executed actions** exactly match the decoded model-prediction prefixes. Videos contain 60, 401 and 100 frames respectively. The two IF episodes have identical initial RGB views and joint states. The server remains on GPU 0 at port 8013, using about 9.2 GiB of GPU memory when idle.
-
-Evidence: [server metadata](../../outputs/policy-eval/servers/vlact-001/server.json), [real-observation preflight](../../outputs/policy-eval/servers/vlact-001/preflight.json), [live protocol checks](../../outputs/policy-eval/servers/vlact-001/live_protocol.json), [raw summary](../../outputs/policy-eval/raw-smoke-001/vlact/click_bell/summary.json), [raw trace validation](../../outputs/policy-eval/raw-smoke-001/vlact/click_bell/validation.json), [IF summary](../../outputs/policy-eval/smoke-blocks1/vlact/arm_select/summary.json), [IF trace validation](../../outputs/policy-eval/smoke-blocks1/vlact/arm_select/validation.json). Setup/download logs and both environments' package versions are saved beside the server metadata. Checkpoints, third-party source and evaluation outputs are not committed.
+Checkpoint identities and full inference evidence: [results](../../result/README.md) · [download](../../docs/download-results.md).

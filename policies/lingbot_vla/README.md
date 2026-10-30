@@ -37,25 +37,20 @@ Downloads resume and write `checkpoint.json`. Only the configuration/tokenizer/p
 
 The service defaults to `ws://127.0.0.1:8012`; `/healthz` responds after model loading. Use a new `--output-dir` for each launch. The handshake and `server.json` record checkpoint identity, normalization/config hashes, source patch, GPU, precision and sampling settings. One client may connect at a time. Every new connection must reset before prediction; each episode reset seeds Python, NumPy and Torch. Full kernel determinism is not enforced.
 
-## Raw → IF validation
+## Run the benchmark
 
-Keep the server running and use the simulator environment:
+Keep the model server running, then use the RoboTwin environment from the repository root:
 
 ```bash
-# Native task first; generated seen instruction, exact seed.
-conda run --no-capture-output -n RoboTwin python policies/lingbot_vla/eval.py \
-  --task click_bell --seeds 2000 --sim-gpu 0 \
-  --output-dir outputs/policy-eval/raw-smoke-002/lingbot_vla/click_bell
-
-# After native success: the complete first left/right IF block.
-conda run --no-capture-output -n RoboTwin python policies/lingbot_vla/eval.py \
-  --task arm_select --task-config demo_clean_arm_select_v3 \
-  --seed-manifest seed-manifests/robotwin-if-press-lift-stapler-v1-20-per-mode/arm_select.json \
-  --blocks 1 --sim-gpu 0 \
-  --output-dir outputs/policy-eval/smoke-blocks1/lingbot_vla/arm_select
+bash scripts/eval.sh --policy lingbot_vla --task press_lift_stapler --blocks 1 \
+  --output-dir outputs/policy-eval/first-run
+bash scripts/eval.sh --policy lingbot_vla --output-dir outputs/policy-eval/full-run
 ```
 
-Use `--server-url` for a different server and `--request-timeout` for a bounded RPC timeout (default 600 seconds). Native instructions default to `seen`; IF uses `unseen` and cannot substitute task-name text. Seeds are oracle-qualified, the scene is recreated, and then the actual generated instruction goes to the policy. No seed replacement or success-based exclusion. The initial IF entry point supports `arm_select`. Exit codes: 0 = complete with at least one success, 1 = complete/all failures, 2 = incomplete/error.
+The full run uses 20 blocks per task and 460 exact-seed episodes. Choose fresh output directories.
+See [evaluation](../../docs/formal-policy-evaluation.md) for options and scoring,
+and [published results](../../result/README.md) for the frozen six-task benchmark.
+
 
 ## Action and output contract
 
@@ -77,18 +72,5 @@ ruff check policies/lingbot_vla tests/lingbot_vla
 
 Six tests cover absolute joint/gripper semantics, official wire-format parity, fresh observations, reset/protocol validation, bounded execution and failure evidence.
 
-## Validation results (2026-09-07)
 
-Environment installation, `pip check`, official imports, CUDA arithmetic, eager vision forward/mask checks, six client/runner tests and Ruff passed. The complete checkpoint loaded with strict state-dict checking on an RTX A6000. A real saved initial observation returned finite `(50, 14)` actions; two resets with seed 2000 produced exactly identical predictions. Preflight latency was 1.82 seconds initially and 1.13 seconds after warming up. The server remains on GPU 0, port 8012, with metadata at [`servers/lingbot-vla-002`](../../outputs/policy-eval/servers/lingbot-vla-002/server.json).
-
-| Task / mode | Exact seed | Result | Actions / chunks |
-|---|---:|---|---:|
-| raw `click_bell` | 2000 | success | 59 / 2 |
-| IF `arm_select` / left | 100000 | action limit; no lift, arm match false | 400 / 8 |
-| IF `arm_select` / right | 100001 | action limit; no lift, arm match false | 400 / 8 |
-
-Raw inference has a successful closed-loop episode. **The IF success gate is not met**: the complete first left/right block finished with 0/2 successes and no infrastructure errors. No seeds were skipped or replaced. These are initial smoke outcomes under the recorded eager/BF16 configuration, not benchmark success-rate estimates.
-
-All 859 executed actions match their raw predicted prefixes exactly. The videos contain 60, 401 and 401 frames respectively. The paired IF initial RGB views and joint states are identical. Evidence: [raw summary](../../outputs/policy-eval/raw-smoke-002/lingbot_vla/click_bell/summary.json), [raw trace validation](../../outputs/policy-eval/raw-smoke-002/lingbot_vla/click_bell/validation.json), [IF summary](../../outputs/policy-eval/smoke-blocks1/lingbot_vla/arm_select/summary.json), [IF trace validation](../../outputs/policy-eval/smoke-blocks1/lingbot_vla/arm_select/validation.json), and [real-observation preflight](../../outputs/policy-eval/servers/lingbot-vla-002/preflight.json).
-
-The first raw attempt found the upstream eager branch's missing `rotate_half` import before executing any action. That [error record](../../outputs/policy-eval/raw-smoke-001/lingbot_vla/click_bell/click_bell_ep2000_result.json) and the original server metadata remain available. After fixing the import, the same seed was rerun in `raw-smoke-002`; all initial observation arrays match the first attempt exactly. Choose fresh server/evaluation output directories when repeating these commands.
+Checkpoint identities and full inference evidence: [results](../../result/README.md) · [download](../../docs/download-results.md).

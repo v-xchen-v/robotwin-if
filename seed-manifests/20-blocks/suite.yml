@@ -1,0 +1,109 @@
+schema_version: 1
+purpose: fixed_seed_evaluation
+instruction_type: unseen
+blocks_per_task: 20
+release: 20-blocks
+tasks:
+- task: press_lift_stapler
+  task_config: demo_clean
+  manifest: press_lift_stapler.json
+  manifest_sha256: a73f8c23d0d79802a0e36493b889a409451620fe660964a471b3010b1c13a996
+  blocks: 20
+  episodes_per_policy: 40
+  modes:
+    press: 20
+    lift: 20
+  instructions:
+    press: Press down on the stapler.
+    lift: Lift the stapler.
+  action_limit: 250
+  yaw_limits_degrees:
+    048_stapler: 15.0
+    047_mouse: 180.0
+    057_toycar: 180.0
+  success_checker_version: press-lift-stapler-v1-native-press-contact
+  success_checker_parameters:
+    sample_seconds: 0.004
+    lift_height_m: 0.03
+    lift_seconds: 0.1
+    preclosed_seconds: 0.08
+    descent_m: 0.005
+    press_max_rise_m: 0.015
+    press_max_xy_m: 0.03
+    top_xy_m: 0.03
+    top_z_m: 0.03
+- task: pick_diverse_object
+  task_config: demo_clean
+  manifest: pick_diverse_object.json
+  manifest_sha256: 2c5cc9d5162062fe598f46be0244be5399b102b65cc92ef74a95c45916e9ed79
+  blocks: 20
+  episodes_per_policy: 40
+  modes:
+    seen: 20
+    unseen: 20
+  success_checker_version: null
+  success_checker_parameters: null
+- task: attribute_select
+  task_config: demo_clean
+  manifest: attribute_select.json
+  manifest_sha256: 03bb5beb48737996acc856aad219d7cefcd095de4af56f9ff4323999b90d1043
+  blocks: 20
+  episodes_per_policy: 160
+  modes:
+    color:red: 20
+    color:blue: 20
+    decal:cat: 20
+    decal:dog: 20
+    shape:block: 20
+    shape:bar: 20
+    size:big: 20
+    size:small: 20
+  success_checker_version: target-only-lift-v2
+  success_checker_parameters:
+    lift_m: 0.05
+  size_edges_m:
+    big: 0.06
+    small: 0.04
+- task: arm_select
+  task_config: demo_clean_arm_select_v3
+  manifest: arm_select.json
+  manifest_sha256: 334b5ab9a6f908dd603694f23a441aab1bbf8a7a1af6e5ae528d5c7e513aedd6
+  blocks: 20
+  episodes_per_policy: 40
+  modes:
+    left: 20
+    right: 20
+  success_checker_version: target-arm-only-lift-v2
+  success_checker_parameters:
+    lift_m: 0.05
+    near_tcp_m: 0.2
+- task: stack_sequence
+  task_config: demo_clean
+  manifest: stack_sequence.json
+  manifest_sha256: c5806f106c92ec33ea01896319e1e497ddf6d9ef7091ab80d980fcc102762c42
+  blocks: 20
+  episodes_per_policy: 120
+  modes:
+    red>green>blue: 20
+    red>blue>green: 20
+    green>red>blue: 20
+    green>blue>red: 20
+    blue>red>green: 20
+    blue>green>red: 20
+  success_checker_version: null
+  success_checker_parameters: null
+- task: place_relative
+  task_config: demo_clean
+  manifest: place_relative.json
+  manifest_sha256: eb165c97c2175b2415d1a053290d4f5a0f70c9bf6385da39cf64943a9b03be5a
+  blocks: 20
+  episodes_per_policy: 60
+  modes:
+    left: 20
+    right: 20
+    on_top: 20
+  success_checker_version: null
+  success_checker_parameters: null
+episodes_per_policy: 460
+qualification: See qualification.json and docs/release-provenance.md; full original
+  evidence is in the result download.

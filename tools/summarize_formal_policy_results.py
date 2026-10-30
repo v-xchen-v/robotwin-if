@@ -2,27 +2,27 @@
 """Snapshot the formal IF run into balanced, fine-grained result tables."""
 import argparse
 import csv
-from copy import deepcopy
 import hashlib
 import html
 import json
 from pathlib import Path
 import statistics
+from datetime import datetime, timezone
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
-from if_benchmark.seed_contracts import contract_for_seeds, describe_seed, IF_SEED_CONTRACTS  # noqa: E402
+from if_benchmark.seed_contracts import contract_for_seeds, describe_seed, CURRENT_SUITE_TASKS  # noqa: E402
 
 POLICIES = dict(xvla='X-VLA', lingbot_va='LingBot-VA', lingbot_vla='LingBot-VLA',
                 vlact='VLAct', dm05='DM05', hy_vla='Hy-VLA')
 TASKS = {
-    'bottle_verb': ('Verb', [('Pick', ['pick']), ('Shake', ['shake'])]),
+    'press_lift_stapler': ('Verb Stapler', [('Press', ['press']), ('Lift', ['lift'])]),
     'pick_diverse_object': ('Noun', [('Seen', ['seen']), ('Unseen', ['unseen'])]),
     'attribute_select': ('Attribute', [
         ('Color', ['color:red', 'color:blue']), ('Decal', ['decal:cat', 'decal:dog']),
         ('Shape', ['shape:block', 'shape:bar']), ('Size', ['size:big', 'size:small'])]),
-    'arm_select': ('Arm v2', [('Left', ['left']), ('Right', ['right'])]),
+    'arm_select': ('Arm', [('Left', ['left']), ('Right', ['right'])]),
     'stack_sequence': ('Sequence', [
         ('RGB', ['red>green>blue']), ('RBG', ['red>blue>green']),
         ('GRB', ['green>red>blue']), ('GBR', ['green>blue>red']),
@@ -30,18 +30,10 @@ TASKS = {
     'place_relative': ('Spatial', [(x.title(), [x]) for x in ('left', 'right')]
                        + [('Top', ['on_top'])]),
 }
-ARCHIVED_TASKS = {
-    'grasp_cube_approach': ('Grasp v2 wide-r1', [('Top', ['top']), ('Side', ['side'])]),
-}
-TASK_COLUMNS = TASKS | {
-    task: (label, [('Press', ['press']), ('Lift', ['lift'])])
-    for task, label in (('press_lift_bell', 'Verb Bell'), ('press_lift_stapler', 'Verb Stapler'))
-} | ARCHIVED_TASKS
-LEGACY_SPATIAL_COLUMNS = [(x.title(), [x]) for x in ("left", "right", "front", "back")] + [("Top", ["on_top"])]
+TASK_COLUMNS = TASKS
+
 
 def columns_for(task, modes):
-    if task == "place_relative" and "front" in modes:
-        return LEGACY_SPATIAL_COLUMNS
     return TASK_COLUMNS[task][1]
 
 
@@ -89,76 +81,65 @@ def balanced_row(spec, source, records):
         avg_pct=statistics.mean(v['sr_pct'] for v in modes.values()) if used else None)
 
 
-def snapshot(base, include_archived_tasks=False, include_archived_modes=False):
-    # summary.json is atomically replaced by the scheduler. Use only its recorded seeds.
-    source = read(base/'summary.json')
-    plan = read(base/'plan.json')
-    assert plan['policies'] == list(POLICIES)
-    planned = {r['task'] for r in plan['tasks']}
-    from if_benchmark.seed_contracts import CURRENT_SUITE_TASKS, LEGACY_SUITE_TASKS, BELL_SUITE_TASKS
-    inventory = (CURRENT_SUITE_TASKS if 'press_lift_stapler' in planned else
-                 BELL_SUITE_TASKS if 'press_lift_bell' in planned else LEGACY_SUITE_TASKS)
-    assert set(inventory) <= planned <= set(inventory) | set(ARCHIVED_TASKS)
-    task_names = list(inventory) + [t for t in ARCHIVED_TASKS if t in planned and include_archived_tasks]
-    assert len(planned) == len(plan['tasks'])
-    assert {(r['policy'], r['task']) for r in source['tasks']} == {(p, t) for p in POLICIES for t in planned}
-    assert len(source['tasks']) == len(POLICIES) * len(planned)
-    specs = {r['task']: r for r in plan['tasks']}
+def snapshot(base, manifest_dir=ROOT / 'seed-manifests/20-blocks', blocks=20):
+    """Read exact-seed evaluator outputs; partial blocks never enter scores."""
+    from if_benchmark.seed_modes import build_seed_modes, check_seed_modes
+    if not 1 <= blocks <= 20:
+        raise ValueError('blocks must be 1..20')
+    check_seed_modes(manifest_dir)
+    manifests = build_seed_modes(manifest_dir)
+    if [t['task'] for t in manifests['tasks']] != list(CURRENT_SUITE_TASKS):
+        raise ValueError('Expected the six maintained tasks')
+    policies = [p for p in POLICIES if (base / p).is_dir()]
+    if not policies:
+        raise ValueError('No policy directories found')
     rows = []
-    spatial_records = {}
-    for row in source['tasks']:
-        spec = specs[row['task']]
-        records = {}
-        for seed in spec['seeds']:
-            if seed in row['pending_seeds']:
-                continue
-            pre = base/row['policy']/row['task']/f"{row['task']}_ep{seed}"
-            marker = read(Path(str(pre)+'_provenance.json'))
-            result_path = Path(str(pre)+'_result.json')
-            payload = result_path.read_bytes()
-            assert hashlib.sha256(payload).hexdigest() == marker['files_sha256'][result_path.name]
-            r = json.loads(payload)
-            assert marker['policy'] == row['policy']
-            assert marker['task'] == r['task'] == row['task']
-            assert marker['seed'] == r['seed'] == seed
-            assert r['status'] in ('success', 'failure') and r['oracle_success']
-            assert marker['success'] == r['success'] == (r['status'] == 'success')
-            assert marker['mode'] == r['mode'] == describe_seed(row['task'], seed).mode
-            assert marker['formal_block'] == spec['seeds'].index(seed)//contract_for_seeds(row['task'], spec['seeds']).block_size
-            records[seed] = r
-        rows.append(balanced_row(spec, row, records))
-        if row["task"] == "place_relative":
-            spatial_records[row["policy"]] = records
-    assert sum(r['recorded_episodes'] for r in rows) == source['completed_episodes']
-    assert sum(r['recorded_successes'] for r in rows) == source['successes']
-    assert sum(r['completed_blocks'] for r in rows) == source['completed_blocks']
-    rows = [r for r in rows if r['task'] in task_names]
-    excluded_modes = {}
-    if not include_archived_modes and any(s % 5 in (2, 3) for s in specs['place_relative']['seeds']):
-        excluded_modes = {'place_relative': ['front', 'back']}
-        spec = deepcopy(specs['place_relative'])
-        spec['seeds'] = [s for s in spec['seeds'] if describe_seed('place_relative', s).mode in IF_SEED_CONTRACTS['place_relative'].modes]
-        projected = []
-        for row in rows:
-            if row['task'] != 'place_relative':
-                projected.append(row)
-                continue
-            records = {s: r for s, r in spatial_records[row['policy']].items() if s in spec['seeds']}
-            size = IF_SEED_CONTRACTS['place_relative'].block_size
-            blocks = [spec['seeds'][i:i+size] for i in range(0, len(spec['seeds']), size)]
-            counters = dict(policy=row['policy'], recorded_episodes=len(records),
+    for policy in policies:
+        for task in manifests['tasks']:
+            name = task['task']
+            spec = dict(task=name, seeds=[r['seed'] for r in task['episodes'] if r['block'] < blocks])
+            directory = base / policy / name
+            records = {}
+            index = directory / 'results.jsonl'
+            if index.exists():
+                pending = [json.loads(line) for line in index.read_text().splitlines()]
+            else:
+                # Frozen downloads keep individual records without a JSONL index.
+                pending = [read(p) for p in directory.glob(f'{name}_ep*_result.json')]
+                pending.sort(key=lambda r: r['seed'])
+            for r in pending:
+                seed = r['seed']
+                if seed not in spec['seeds'] or seed in records:
+                    raise ValueError(f'{policy}/{name}: duplicate or unplanned seed {seed}')
+                if (r['task'] != name or r['mode'] != describe_seed(name, seed).mode or
+                    r['status'] not in ('success', 'failure') or not r['oracle_success'] or
+                    r['success'] != (r['status'] == 'success')):
+                    raise ValueError(f'{policy}/{name}/{seed}: invalid episode')
+                path = directory / f'{name}_ep{seed}_result.json'
+                payload = path.read_bytes()
+                if json.loads(payload) != r:
+                    raise ValueError(f'{path}: differs from results.jsonl')
+                marker_path = directory / f'{name}_ep{seed}_provenance.json'
+                if marker_path.exists():
+                    marker = read(marker_path)
+                    if hashlib.sha256(payload).hexdigest() != marker['files_sha256'][path.name]:
+                        raise ValueError(f'{path}: provenance hash mismatch')
+                records[seed] = r
+            if list(records) != [seed for seed in spec['seeds'] if seed in records]:
+                raise ValueError(f'{policy}/{name}: record order differs from manifest')
+            size = len(task['mode_counts'])
+            counts = dict(policy=policy, recorded_episodes=len(records),
                 successes=sum(r['success'] for r in records.values()),
                 complete=len(records) == len(spec['seeds']),
-                completed_blocks=sum(all(s in records for s in b) for b in blocks),
+                completed_blocks=sum(all(s in records for s in spec['seeds'][i:i+size])
+                                     for i in range(0, len(spec['seeds']), size)),
                 per_mode={m: dict(recorded=sum(r['mode'] == m for r in records.values()),
                     successes=sum(r['success'] for r in records.values() if r['mode'] == m))
-                    for m in IF_SEED_CONTRACTS['place_relative'].modes})
-            projected.append(balanced_row(spec, counters, records))
-        rows = projected
+                    for m in task['mode_counts']})
+            rows.append(balanced_row(spec, counts, records))
     totals = {}
-    for policy in POLICIES:
+    for policy in policies:
         selected = [r for r in rows if r['policy'] == policy]
-        assert len(selected) == len(task_names)
         totals[policy] = dict(recorded=sum(r['recorded_episodes'] for r in selected),
             expected=sum(r['expected_episodes'] for r in selected),
             complete_tasks=sum(r['complete'] for r in selected),
@@ -171,16 +152,9 @@ def snapshot(base, include_archived_tasks=False, include_archived_modes=False):
                    completed_blocks=sum(r['completed_blocks'] for r in rows),
                    expected_blocks=sum(r['expected_blocks'] for r in rows),
                    complete_task_policy_runs=sum(r['complete'] for r in rows))
-    return dict(updated_at=source['updated_at'], run_dir=str(base),
-                result_reuse=(dict(source_run=plan['old_run'], note=plan.get('result_reuse_note'),
-                    reused_episodes=plan['expected_reused_episodes'], new_episodes=plan['expected_new_episodes'])
-                    if 'expected_reused_episodes' in plan else None),
-                task_configs={task: specs[task].get('task_config') for task in task_names},
-                success_checkers={task: specs[task].get('success_checker_version') for task in task_names},
-                tasks=task_names, excluded_modes=excluded_modes, spatial_scope=("five-modes" if include_archived_modes else "spatial3"), excluded_tasks=sorted(planned - set(task_names)), summary=summary,
-                checkpoint_replacement=plan.get('checkpoint_replacement'),
-                block_extension=plan.get('block_extension'),
-                source_summary=source, rows=rows, policies=totals)
+    return dict(updated_at=datetime.now(timezone.utc).isoformat(), run_dir=str(base),
+                manifest_dir=str(manifest_dir), blocks_per_task=blocks,
+                tasks=list(CURRENT_SUITE_TASKS), summary=summary, rows=rows, policies=totals)
 
 
 def cell(value):
@@ -206,20 +180,15 @@ def generate(data, output):
     rows = {(r['policy'], r['task']): r for r in data['rows']}
     source = data['summary']
     task_count = len(data['tasks'])
-    cube = data.get('task_configs', {}).get('arm_select') == 'demo_clean_arm_select_v3'
-    labels = {task: ('Arm cube-v3' if task == 'arm_select' and cube else TASK_COLUMNS[task][0])
-              for task in data['tasks']}
-    attribute_v2 = data.get('success_checkers', {}).get('attribute_select') == 'target-only-lift-v2'
-    if attribute_v2:
-        labels['attribute_select'] = 'Attribute v2'
-    arm_version = 'cube-v3' if cube else 'v2'
+    labels = {task: TASK_COLUMNS[task][0] for task in data['tasks']}
+    policies = {p: POLICIES[p] for p in data['policies']}
     panels_spec = [('Xa — Selection / Grounding', data['tasks'][:4]),
                    ('Xb — Structured Execution', data['tasks'][4:])]
     overview = (f"快照：{data['updated_at']}；完成 {source['completed_episodes']}/{source['expected_episodes']} 回合，"
                 f"完整 blocks {source['completed_blocks']}/{source['expected_blocks']}，"
-                f"跑齐任务组合 {source['complete_task_policy_runs']}/{len(POLICIES) * task_count}。")
+                f"跑齐任务组合 {source['complete_task_policy_runs']}/{len(policies) * task_count}。")
     legend = [
-        f'本报告采用 {task_count} 项任务；arm select 使用 {arm_version}。已下线任务只有显式选择历史范围时才纳入。',
+        f'本报告采用 {task_count} 项任务，使用固定 seeds 的完整 blocks。',
         '模式单元格为 SR (%)（成功数/纳入统计回合数）；0.0 表示已评测但没有成功，— 表示尚无完整 block 可统计。',
         '每项进度为已完成/计划 blocks、全部有效已完成回合/计划 ep。成功与 policy failure 均计入已完成；缺失/运行错误不计入。',
         'SR 和 Avg. 仅使用已完成的完整、均衡 blocks。半个 block 中已完成的回合仍计入进度，标为待成组，成组后才进入评分。',
@@ -229,26 +198,12 @@ def generate(data, output):
         'Sequence 缩写为从下往上的颜色顺序；Spatial Top 指 on_top。',
     ]
     if reuse := data.get('result_reuse'):
-        legend.insert(0, reuse.get('note') or f"本版复用其余五任务的 {reuse['reused_episodes']} 回合；仅 {labels[data['tasks'][0]]} 的 {reuse['new_episodes']} 回合新跑。成功与失败均保留，旧 Bottle 分数不纳入本版。")
-    if data.get('excluded_modes'):
-        legend.insert(0, 'Spatial 当前仅统计 left/right/on_top；front/back 的历史回合保留但排除计分。这是评测后的范围调整，不代表模型性能提升。')
-    if attribute_v2:
-        legend.insert(0, 'Attribute 使用 target-only-lift-v2：目标当前抬升超过 5 cm，且干扰物整回合从未超过该阈值；先抓错再抓对仍失败。')
-    if data.get('success_checkers', {}).get('arm_select') == 'target-arm-only-lift-v2':
-        legend.insert(0, 'Arm 使用 target-arm-only-lift-v2：指定臂当前抬升超过 5 cm，且非指定臂整回合从未完成该抬升；先错后对仍失败。')
-    if data['excluded_tasks']:
-        legend.insert(0, '当前范围排除已下线任务：' + ', '.join(data['excluded_tasks']) + '；原始七任务结果未改写。')
-    if replacement := data.get('checkpoint_replacement'):
-        checkpoint = replacement['new']
-        legend.insert(0, f"{POLICIES[replacement['policy']]} 使用 {checkpoint['repo_id']} "
-                      f"@ {checkpoint['revision']}；旧 Clean checkpoint 的回合不计入。")
-    if extension := data.get('block_extension'):
-        legend.insert(0, f"每项任务从 {extension['from_blocks']} 扩至 {extension['to_blocks']} blocks。")
-    md = ['# IF-Ext 分轴结果与完成进度', '', overview, '', *[f'- {x}' for x in legend], '',
+        legend.insert(0, reuse['note'])
+    md = ['# robotwin-if 评测结果', '', overview, '', *[f'- {x}' for x in legend], '',
           f'两 panel 合并表头版：[{output.with_suffix(".html").name}]({output.with_suffix(".html").name})。下方按任务拆开，便于 Markdown 阅读。', '',
           '| Policy | 已完成回合 | 跑齐任务 | 完整 blocks | Overall |',
           '|---|---:|---:|---:|---:|']
-    for policy, label in POLICIES.items():
+    for policy, label in policies.items():
         p = data['policies'][policy]
         overall = f"{p['overall_pct']:.1f}" if p['overall_pct'] is not None else '—'
         md.append(f"| {label} | {p['recorded']}/{p['expected']} | {p['complete_tasks']}/{task_count} | "
@@ -260,14 +215,14 @@ def generate(data, output):
         second = '<tr>'
         for task in tasks:
             label = labels[task]
-            cols = columns_for(task, rows[next(iter(POLICIES)), task]["modes"])
+            cols = columns_for(task, rows[next(iter(policies)), task]["modes"])
             first += f'<th colspan="{len(cols)+2}">{html.escape(label)}</th>'
             second += ''.join(f'<th>{html.escape(name)}</th>' for name, _ in cols)
             second += '<th>Avg.</th><th>完成进度</th>'
         if tasks == panels_spec[1][1]:
             first += '<th rowspan="2">Overall</th>'
         table = '<table><thead>'+first+'</tr>'+second+'</tr></thead><tbody>'
-        for policy, label in POLICIES.items():
+        for policy, label in policies.items():
             table += '<tr><th>'+html.escape(label)+'</th>'
             for task in tasks:
                 row = rows[policy, task]
@@ -281,31 +236,31 @@ def generate(data, output):
         panels.append('<h2>'+html.escape(title)+'</h2><div class="scroll">'+table+'</tbody></table></div>')
         for task in tasks:
             label = labels[task]
-            cols = columns_for(task, rows[next(iter(POLICIES)), task]["modes"])
+            cols = columns_for(task, rows[next(iter(policies)), task]["modes"])
             md += ['', f'### {label} — `{task}`', '',
                    '| Policy | '+' | '.join(name for name, _ in cols)+' | Avg. | 完成进度 |',
                    '|---|'+'---:|'*(len(cols)+1)+'---|']
-            for policy, name in POLICIES.items():
+            for policy, name in policies.items():
                 row = rows[policy, task]
                 md.append('| '+name+' | '+' | '.join(cell(c) for c in row['columns'])+
                           ' | '+average(row)+' | '+progress(row)+' |')
     md += ['', '## 原始计数与核对', '',
            f'[分模式 CSV]({output.with_suffix(".csv").name}) · [完整快照 JSON]({output.with_suffix(".json").name})', '',
-           '配套 JSON 保留此次中央 summary 快照、评分纳入的 seeds、完整 block 序号和全部 mode 计数；CSV 同时列出评分纳入数与实际已完成数。',
-           '生成时核对已归档结果的 SHA-256、provenance、mode 和成功数，并与快照总数交叉检查；不改动正在运行的评测。', '',
+           '配套 JSON 保留评分纳入的 seeds、完整 block 序号和全部 mode 计数；CSV 同时列出评分纳入数与实际已完成数。',
+           '汇总时核对逐回合 JSON、manifest seed 和 mode；若存在 results.jsonl 或 provenance，还验证索引与记录 SHA-256。', '',
            '刷新命令：', '', '```bash',
            'python tools/summarize_formal_policy_results.py --run-dir '+str(data['run_dir'])+
-           ' --output '+str(output) + (' --include-archived-tasks' if set(data['tasks']) & set(ARCHIVED_TASKS) else '') + (' --include-archived-modes' if data.get('spatial_scope') == 'five-modes' else ''), '```', '']
+           ' --blocks '+str(data.get('blocks_per_task', 20))+' --output outputs/report/results.md', '```', '']
     output.write_text('\n'.join(md))
     page = ('<!doctype html><html lang="zh-CN"><meta charset="utf-8">'
             '<meta name="viewport" content="width=device-width,initial-scale=1">'
-            '<title>IF-Ext 分轴结果与完成进度</title><style>'
+            '<title>robotwin-if 评测结果</title><style>'
             'body{font:15px/1.65 system-ui,sans-serif;margin:24px;color:#182230;background:#fff}'
             '.scroll{overflow-x:auto;margin:16px 0 32px}table{border-collapse:collapse;font-variant-numeric:tabular-nums}'
             'th,td{border:1px solid #d5dce5;padding:9px 12px;white-space:nowrap;text-align:right}'
             'thead th{background:#eef3f8;text-align:center}tbody th{text-align:left;background:#fafbfd}'
             '.progress{font-size:12px;color:#4d596b}li{margin:5px 0}h1{font-size:24px}h2{font-size:20px}'
-            '</style><h1>IF-Ext 分轴结果与完成进度</h1><p>'+html.escape(overview)+'</p><ul>'+
+            '</style><h1>robotwin-if 评测结果</h1><p>'+html.escape(overview)+'</p><ul>'+
             ''.join('<li>'+html.escape(x)+'</li>' for x in legend)+'</ul>'+''.join(panels)+'</html>')
     output.with_suffix('.html').write_text(page)
     output.with_suffix('.json').write_text(json.dumps(data, ensure_ascii=False, indent=2)+'\n')
@@ -323,14 +278,11 @@ def generate(data, output):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--run-dir', type=Path, required=True)
-    parser.add_argument('--output', type=Path,
-        default=ROOT/'notes/2026-09-01-if-ext-tasklist/results-current.md')
-    parser.add_argument('--include-archived-tasks', action='store_true',
-                        help='Include retired tasks when reproducing a historical seven-task report')
-    parser.add_argument("--include-archived-modes", action="store_true",
-                        help="Reproduce the historical five-mode Spatial metric")
+    parser.add_argument('--output', type=Path, default=Path('outputs/report/results.md'))
+    parser.add_argument('--manifest-dir', type=Path, default=ROOT / 'seed-manifests/20-blocks')
+    parser.add_argument('--blocks', type=int, default=20, help='Planned blocks per task (1..20)')
     args = parser.parse_args()
-    data = snapshot(args.run_dir.resolve(), args.include_archived_tasks, args.include_archived_modes)
+    data = snapshot(args.run_dir.resolve(), args.manifest_dir.resolve(), args.blocks)
     generate(data, args.output.resolve())
     print(json.dumps(dict(updated_at=data['updated_at'], output=str(args.output),
                           policies=data['policies']), ensure_ascii=False, indent=2))

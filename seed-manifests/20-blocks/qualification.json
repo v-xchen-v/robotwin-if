@@ -1,0 +1,67 @@
+{
+  "selection": "Expert-qualified complete blocks; no filtering by policy performance.",
+  "press_lift_stapler": {
+    "accepted_block_ids": [
+      55000,
+      55001,
+      55002,
+      55003,
+      55004,
+      55005,
+      55006,
+      55007,
+      55008,
+      55009,
+      55010,
+      55011,
+      55012,
+      55013,
+      55014,
+      55015,
+      55016,
+      55017,
+      55018,
+      55019
+    ],
+    "accepted_blocks": 20,
+    "candidate_blocks": 20,
+    "failure_categories": {},
+    "rejected_block_ids": [],
+    "rejected_blocks": 0,
+    "press_episodes": 20,
+    "lift_episodes": 20,
+    "paired_initial_arrays_and_poses_equal": 20,
+    "rotation_sampling_version": "random-yaw-v1",
+    "coverage": [
+      {
+        "stapler_id": 0,
+        "side": "left",
+        "blocks": 5
+      },
+      {
+        "stapler_id": 0,
+        "side": "right",
+        "blocks": 5
+      },
+      {
+        "stapler_id": 4,
+        "side": "left",
+        "blocks": 5
+      },
+      {
+        "stapler_id": 4,
+        "side": "right",
+        "blocks": 5
+      }
+    ]
+  },
+  "attribute_size": {
+    "big_edge_m": 0.06,
+    "small_edge_m": 0.04,
+    "expert_qualified_pairs": 20,
+    "saved_model_initial_pairs_equal": 120,
+    "episodes": 240,
+    "evidence": "audit/size-experiment/verification.json in the result download"
+  },
+  "other_modes": "Retained qualified seeds and unchanged environments. Original qualification evidence is in audit/seed-qualification/ in the result download."
+}

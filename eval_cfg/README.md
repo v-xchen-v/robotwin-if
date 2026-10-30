@@ -13,13 +13,8 @@
 
 `eval_cfg/all_tasks_plus_if.yml` is a compatibility list for callers that want one loop over the locked RoboTwin native 50 followed by the maintained IF six. Its final six entries must exactly equal `if_tasks.yml`; `tests/test_task_manifests.py` enforces this relationship.
 
-`grasp_cube_approach` was retired on 2026-09-15; [retirement notes](../bak/grasp_cube_approach/README.md) remain while its implementation is kept in Git history. It is excluded from generation, installation, evaluation and current Overall scores. Historical seven-task results remain archived.
-
-## Membership and readiness
-
-`tasks/` retains exactly the current six task implementations and their shared helpers. Bottle, Bell and earlier experimental tasks have been removed; original files and retirement details are in the [task cleanup record](../docs/archive/obsolete-task-scripts.md). Historical manifests/results remain readable, while evaluation rejects retired task names.
-
-Conversely, manifest membership describes the suite this repository maintains; it does not bypass task-specific release gates. `pick_diverse_object` is the maintained Noun-Grounding task, and its locked four-noun production Unseen pool is independently enforced by `tests/pick_diverse_object/test_pool.py` (currently 34/34).
+The current task inventory is the six tasks above. Retired task names and Spatial front/back modes are rejected by the evaluator.
+`pick_diverse_object` uses a locked four-noun production Unseen pool, covered by `tests/pick_diverse_object/test_pool.py`.
 
 ## Runtime installation
 
@@ -31,22 +26,12 @@ bash scripts/bridge_tasks.sh
 bash scripts/bridge_tasks.sh --check
 ```
 
-For an external runtime, pass `--robotwin-dir PATH` or set `ROBOTWIN_DIR`. A non-locked/unknown target commit or locally modified compatibility-contract file is rejected by default and requires explicit `--allow-compatible-commit`; static RoboTwin API checks always remain mandatory. The target-side `.robotwin-if-bridge.json` owns the 18 env/helper/instruction links, records source/target dirty provenance plus an exact linked-source digest, and makes stale cleanup and unbridge independent of the current source inventory. A target-scoped operation lock serializes bridge/check/unbridge transactions.
+For an external runtime, pass `--robotwin-dir PATH` or set `ROBOTWIN_DIR`. A non-locked/unknown target commit or locally modified compatibility-contract file is rejected by default and requires explicit `--allow-compatible-commit`; static RoboTwin API checks always remain mandatory. The target-side `.robotwin-if-bridge.json` owns the 19 task/helper/instruction/config links, records source/target dirty provenance plus an exact linked-source digest, and makes stale cleanup and unbridge independent of the current source inventory. A target-scoped operation lock serializes bridge/check/unbridge transactions.
 
 ## Using the task inventory
 
-RoboTwin's locked collect/eval entry points are single-task. Bridge the task plugins, then loop over the selected task-name list:
-
-```bash
-bash scripts/bridge_tasks.sh
-cd third_party/robotwin
-
-for t in $(python3 -c "import yaml; print(' '.join(yaml.safe_load(open('../../eval_cfg/if_tasks.yml'))['tasks']))"); do
-  bash collect_data.sh "$t" demo_clean 0
- done
-```
-
-For evaluation, pass each task name to the chosen policy's own `policy/<PolicyName>/eval.sh`; policy wrappers do not share one universal argument signature.
+Use `bash scripts/collect.sh` for expert previews and `bash scripts/eval.sh` for fixed-seed policy evaluation.
+The launchers select the correct task config, including the Arm-specific config. See [Quickstart](../docs/quickstart.md).
 
 ## Fixed eval budgets
 
@@ -61,7 +46,7 @@ Task-local setup (including `_if_eval.py` for the existing tasks) applies these 
 | `stack_sequence` | 1200 |
 | `place_relative` | 400 |
 
-These are analog-derived runtime budgets, not seed manifests or benchmark metrics. Oracle trajectory frame maxima support their relative ordering but do not measure policy calls; a future CogACT rollout must monitor truncation and update the central map plus its contract test if needed.
+These are analog-derived runtime budgets, not seed manifests or benchmark metrics. Oracle trajectory frame maxima support their relative ordering but do not measure policy calls; published evaluations use these fixed action budgets.
 
 ## Episode seed manifests
 
@@ -97,14 +82,10 @@ Example pilot generation and independent validation:
 python tools/generate_if_seed_manifest.py \
   --all --task-config demo_clean \
   --accepted-blocks 2 --max-candidate-blocks 20 \
-  --output-dir notes/if-seed-pilot
+  --output-dir outputs/seed-candidates
 
 python tools/validate_if_seed_manifest.py \
-  --require-evidence notes/if-seed-pilot
+  --require-evidence outputs/seed-candidates
 ```
 
 The adjacent `.generation.json` file is audit evidence, not part of the evaluator input. It binds the accepted list by SHA-256 and records source/target commits, linked-source digest, exact task-config YAML SHA-256, and whole-block rejections. An external evaluator only loops over `seeds`; it must not sort, deduplicate, drop, increment, replace, or silently fall back when an explicit seed fails. Accepted blocks may have gaps because failed candidate blocks are omitted as a whole.
-
-The 2026-09-03 non-production bounded pilot requested one accepted block with a two-candidate cap. Six tasks emitted and independently validated complete manifests; `pick_diverse_object` exhausted both blocks and correctly emitted evidence without a partial manifest. Exact seeds, timings, rejection reasons, and provenance caveats are recorded in `notes/2026-09-03-if-seed-manifest-pilot/README.md`. The sample does not set production block counts or rejection-rate expectations.
-
-This seed pipeline does not yet implement policy-result `eval_signals()` consumption or per-mode/directional reporting. Those remain benchmark-layer responsibilities after the production manifest size is decided.

@@ -15,7 +15,7 @@ from if_benchmark.seed_contracts import IF_SEED_CONTRACTS, CURRENT_SUITE_TASKS
 from if_benchmark.seed_modes import build_seed_modes, check_seed_modes, export_texts
 
 ROOT = Path(__file__).resolve().parents[1]
-RELEASE = ROOT / 'seed-manifests/robotwin-if-press-lift-stapler-v1-20-per-mode'
+RELEASE = ROOT / 'seed-manifests/20-blocks'
 POLICIES = ('xvla', 'lingbot_va', 'lingbot_vla', 'vlact', 'dm05', 'hy_vla')
 
 
@@ -26,9 +26,9 @@ class SeedModeDeliveryTest(unittest.TestCase):
         self.assertEqual(data['episodes_per_policy'], 460)
         self.assertEqual([t['task'] for t in data['tasks']], list(CURRENT_SUITE_TASKS))
         for task in data['tasks']:
-            source = ROOT / 'result/robotwin-if-press-lift-stapler-v1-20blocks/manifests'
-            frozen = json.loads((source / task['manifest']).read_text())
-            self.assertEqual([r['seed'] for r in task['episodes']], frozen['seeds'])
+            with (ROOT / 'result/episodes.csv').open(newline='') as stream:
+                frozen = [int(r['seed']) for r in csv.DictReader(stream) if r['policy'] == 'xvla' and r['task'] == task['task']]
+            self.assertEqual([r['seed'] for r in task['episodes']], frozen)
             self.assertEqual(task['mode_counts'], dict.fromkeys(IF_SEED_CONTRACTS[task['task']].modes, 20))
             blocks = {i: [r for r in task['episodes'] if r['block'] == i] for i in range(20)}
             for rows in blocks.values():
@@ -148,7 +148,7 @@ print('1, 10000, 40000, 40, 20')
                 run = self.run_launcher('--policy', policy, '--dry-run')
                 self.assertEqual(run.returncode, 0, run.stderr)
                 self.assertEqual(run.stdout.count('20 blocks,'), 6)
-                self.assertIn(str(ROOT / 'seed-manifests' / 'robotwin-if-press-lift-stapler-v1-20-per-mode' / 'arm_select.json'), run.stdout)
+                self.assertIn(str(ROOT / 'seed-manifests' / '20-blocks' / 'arm_select.json'), run.stdout)
                 protocol = 'http' if policy in ('xvla', 'dm05') else 'ws'
                 self.assertIn(f'{protocol}://127.0.0.1:{8010 + index}', run.stdout)
                 self.assertNotIn('grasp_cube_approach', run.stdout)

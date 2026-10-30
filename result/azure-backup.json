@@ -1,0 +1,15 @@
+{
+  "complete": true,
+  "verified_at_utc": "2026-10-30T10:05:04.188322+00:00",
+  "destination": "https://eaidatashare.blob.core.windows.net/xichen/robotwin-if/results/robotwin-if-20261030",
+  "expected_files": 47570,
+  "remote_files": 47570,
+  "expected_bytes": 6201622337,
+  "remote_bytes": 6201622337,
+  "all_file_sizes_and_content_md5_match": true,
+  "local_inventory_unchanged": true,
+  "root_sha256sums_download_matches": true,
+  "root_sha256sums_sha256": "6a35c189b6f97006bfd76a2f9b4105f80482a24369ffa280fb58256955f258df",
+  "result_sha256": "ae2deb8caa1a6ca147d4357338720845cfa089ef4109a5f627a5bb26cc470b7c",
+  "local_inventory_sha256": "5a9f05d16aa8a57ade8262fff093012937c876ef920f8de8524d13fa8ba3b44f"
+}

@@ -1,8 +1,7 @@
-# Press / Lift Stapler v1：当前场景、指令与判据
+# Press / Lift Stapler：当前场景、指令与判据
 
-当前 Verb-Select 任务为 `press_lift_stapler`，属于[六任务、每任务 20 blocks 的正式清单](../seed-manifests/robotwin-if-press-lift-stapler-v1-20-per-mode/README.md)。
-随机朝向场景完成 20 组资格筛选，expert Press 20/20、Lift 20/20；六个开源 checkpoint 的正式评测也已完成，见[结果包](../result/robotwin-if-press-lift-stapler-v1-20blocks/README.md)。
-固定朝向的四场景试验已整理为[历史 pilot](archive/press-lift-stapler-pilot.md)。
+当前 Verb-Select 任务为 `press_lift_stapler`，属于[六任务、每任务 20 blocks 的正式清单](../seed-manifests/20-blocks/README.md)。
+随机朝向场景完成 20 组资格筛选，expert Press 20/20、Lift 20/20；六个开源 checkpoint 的正式评测也已完成，见[结果包](../result/README.md)。
 
 ## 指令与场景
 
@@ -48,10 +47,10 @@ Episode seed `2k` 为 Press，`2k+1` 为 Lift；初始场景使用 scene seed `k
 | DM05 | 20/20 | 12/20 | 12/20 |
 | Hy-VLA | 17/20 | 18/20 | 17/20 |
 
-这些成绩来自随机朝向、固定 seeds 的正式清单。Stapler 新跑 240 回合，其余五任务复用 2520 回合；早期 pilot 不混入统计。
+这些成绩来自随机朝向、固定 seeds 的正式清单。Stapler 共 240 回合。
 模型成功、policy failure 和初始场景校验均按正式流程保留。
 
-[当前视频示例](assets/stapler-v1-demos/press_lift_stapler.mp4) ·
-[逐回合诊断](../result/robotwin-if-press-lift-stapler-v1-20blocks/stapler-episodes.json) ·
-[完整六任务结果](../result/robotwin-if-press-lift-stapler-v1-20blocks/README.md) ·
+[当前视频示例](assets/demos/press_lift_stapler.mp4) ·
+[逐回合诊断](../result/episodes.csv) ·
+[完整六任务结果](../result/README.md) ·
 [新评测入口](branch-delivery.md)

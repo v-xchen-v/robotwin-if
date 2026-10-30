@@ -20,7 +20,7 @@ stack_blocks_two + place_object_stand (stacked / xy-aligned)，论文未确认.
 """
 import numpy as np
 
-# Active lateral directions. The historical front/back mapping is archived in bak/.
+# Active lateral directions. Front/back remain retired.
 _AXIS = {"x": 0, "y": 1}
 DIRECTIONS = {
     "left":  ("x", -1.0),

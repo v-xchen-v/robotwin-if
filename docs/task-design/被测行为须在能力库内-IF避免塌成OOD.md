@@ -91,4 +91,3 @@ verb-select 这类任务，价值来自"指令去命令一个**非默认**动词
 - [ ] **把 action-OOD 检查前移到任务选型**，别等 oracle 建完——用 `/task-design-review <task>` 的第 5、8 维度。
 
 ---
-相关：本仓库 `.claude/commands/task-design-review.md`（review 命令）· `docs/features/09-IF-Ext-单轴扩展任务集设计.md`（IF-Verb-Select 设计）· 私有笔记 `notes/2026-08-31-laptop-verb/design-review.md`（laptop_verb 逐维度评审）。

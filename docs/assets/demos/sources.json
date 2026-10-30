@@ -1,0 +1,305 @@
+{
+  "published_episodes": "result/episodes.csv",
+  "selection": "Successful episodes under the current release checker; illustrations do not change benchmark scores.",
+  "processing": {
+    "camera_crop": [
+      0,
+      0,
+      320,
+      240
+    ],
+    "panel_size": [
+      320,
+      280
+    ],
+    "mp4_fps": 20,
+    "gif_fps": 8,
+    "tail_hold_seconds": 1.5,
+    "short_clips": "Hold the final frame until the longest clip ends",
+    "audio": false,
+    "gif_width": 480
+  },
+  "tasks": {
+    "press_lift_stapler": {
+      "playback_speed": 1,
+      "panels": [
+        {
+          "policy": "vlact",
+          "seed": 110000,
+          "mode": "press",
+          "instruction": "Press down on the stapler.",
+          "success": true,
+          "action_calls": 70,
+          "origin": "new",
+          "record": "evaluation/vlact/press_lift_stapler/press_lift_stapler_ep110000_result.json",
+          "record_sha256": "70c3551bcf51cd39490cabd6c694b7d53859944def28ccb2de4cf57d250fe73e",
+          "video": "evaluation/vlact/press_lift_stapler/press_lift_stapler_ep110000_1.mp4",
+          "video_sha256": "da769fd509b486d234c71a5cf58a6b6abe4d7167b83d5734ad25ffd3d8299540",
+          "label": "Press down on the stapler.",
+          "checker_version": "press-lift-stapler-v1-native-press-contact"
+        },
+        {
+          "policy": "vlact",
+          "seed": 110001,
+          "mode": "lift",
+          "instruction": "Lift the stapler.",
+          "success": true,
+          "action_calls": 68,
+          "origin": "new",
+          "record": "evaluation/vlact/press_lift_stapler/press_lift_stapler_ep110001_result.json",
+          "record_sha256": "dd684065b0b77c61ff67811e6841422ca91b51a873bfdd6d0ca4ac7634b8fd06",
+          "video": "evaluation/vlact/press_lift_stapler/press_lift_stapler_ep110001_1.mp4",
+          "video_sha256": "9e5cc0900808d9348f08201ae8003ec0265f9e323f5fea49d694cb2ede086889",
+          "label": "Lift the stapler.",
+          "checker_version": "press-lift-stapler-v1-native-press-contact"
+        }
+      ],
+      "exports": {
+        "press_lift_stapler.mp4": {
+          "sha256": "de3ed9aeffd39f7cb5c28cabb80e5f13478017d2673f9513b523b0457b7ded54",
+          "bytes": 158359
+        },
+        "press_lift_stapler.gif": {
+          "sha256": "b5a3ba4bb5ba1a7cbcaf11fc1025a3e3afceb3f32996e6121500038918aa5945",
+          "bytes": 1276749
+        }
+      }
+    },
+    "pick_diverse_object": {
+      "playback_speed": 1,
+      "panels": [
+        {
+          "policy": "dm05",
+          "seed": 100014,
+          "mode": "seen",
+          "instruction": "Pick up the mug carefully using the left arm",
+          "success": true,
+          "action_calls": 71,
+          "origin": "reused",
+          "record": "evaluation/dm05/pick_diverse_object/pick_diverse_object_ep100014_result.json",
+          "record_sha256": "2ee3ac0587e00fbe88df61d8a9166b03c934e607af49654bb108bb189ac77690",
+          "video": "evaluation/dm05/pick_diverse_object/pick_diverse_object_ep100014_1.mp4",
+          "video_sha256": "cc8ddb30a49288b33abf9f538825318c4fcf41958c106967bb262d42973a755d",
+          "label": "Seen: mug | DM05",
+          "checker_version": null
+        },
+        {
+          "policy": "hy_vla",
+          "seed": 100053,
+          "mode": "unseen",
+          "instruction": "Pick up the wooden mallet using the correct arm",
+          "success": true,
+          "action_calls": 31,
+          "origin": "reused",
+          "record": "evaluation/hy_vla/pick_diverse_object/pick_diverse_object_ep100053_result.json",
+          "record_sha256": "1cbe7ab0e9f1f2559fb6d49138404cfd0b50c9d3de15f27373c4621bc38230d4",
+          "video": "evaluation/hy_vla/pick_diverse_object/pick_diverse_object_ep100053_1.mp4",
+          "video_sha256": "a7b5ca943e43cc3bbc9c629353a721e658770cb618ecbc08d4c6b4e7aec902b6",
+          "label": "Unseen: wooden mallet | Hy-VLA",
+          "checker_version": null
+        }
+      ],
+      "exports": {
+        "pick_diverse_object.mp4": {
+          "sha256": "af6c74f02aa792feb7e9ce39b85c5037bddad703d9966668e4e5346954cd31fc",
+          "bytes": 105424
+        },
+        "pick_diverse_object.gif": {
+          "sha256": "49e1ea8fd52ffc696c4a2ec6ee66809f77ddb4de4d0b17b26af0d07546f34d85",
+          "bytes": 793761
+        }
+      }
+    },
+    "attribute_select": {
+      "playback_speed": 1,
+      "panels": [
+        {
+          "policy": "vlact",
+          "seed": 100174,
+          "mode": "size:big",
+          "instruction": "Reach for the big block and lift it.",
+          "success": true,
+          "action_calls": 74,
+          "record": "evaluation/vlact/attribute_select/attribute_select_ep100174_result.json",
+          "record_sha256": "36ed6dccb97e5446a0ae7d342f63a7ca8473607af90fcb6943af8f9c8198d021",
+          "video": "evaluation/vlact/attribute_select/attribute_select_ep100174_1.mp4",
+          "video_sha256": "d5eb9e4f30b2729a015635ec07766891362314e8f4aada750694e981a57f392d"
+        },
+        {
+          "policy": "vlact",
+          "seed": 100175,
+          "mode": "size:small",
+          "instruction": "Fetch the small block.",
+          "success": true,
+          "action_calls": 72,
+          "record": "evaluation/vlact/attribute_select/attribute_select_ep100175_result.json",
+          "record_sha256": "3dfe39060f8dbe7cb894c8b2e977e5d24ba6e8152d2f7f664f3535a47758b6ee",
+          "video": "evaluation/vlact/attribute_select/attribute_select_ep100175_1.mp4",
+          "video_sha256": "7529d584f76847e8c47f7c023a8da070feee38c9d9d8292eae44f4a4a7d93aed"
+        }
+      ],
+      "processing": {
+        "crop": [
+          0,
+          0,
+          320,
+          240
+        ],
+        "panel": [
+          320,
+          280
+        ],
+        "mp4_fps": 20,
+        "gif_fps": 8,
+        "gif_width": 480,
+        "tail_hold_seconds": 1.5
+      },
+      "exports": {
+        "attribute_select.gif": {
+          "sha256": "dcda223711569f88d0663caba815e3725d673dc1cb2442067c992707b7dcbbf8",
+          "bytes": 1056499
+        },
+        "attribute_select.mp4": {
+          "sha256": "124107ad74f045bd43226c17784df730de2d816b40ec3167a7f66778e68f8586",
+          "bytes": 112117
+        }
+      }
+    },
+    "arm_select": {
+      "playback_speed": 1,
+      "panels": [
+        {
+          "policy": "lingbot_va",
+          "seed": 500000,
+          "mode": "left",
+          "instruction": "Use the left arm to retrieve the block.",
+          "success": true,
+          "action_calls": 83,
+          "origin": "reused",
+          "record": "evaluation/lingbot_va/arm_select/arm_select_ep500000_result.json",
+          "record_sha256": "4b73c0e33b1deb87470505e2e93faa11ddd4e9f80945d0b0361970d4232d2bd3",
+          "video": "evaluation/lingbot_va/arm_select/arm_select_ep500000_1.mp4",
+          "video_sha256": "137bbbee71fda6b27922f19c9f1db1150c165695b7639ec470708f1b9f8f3d48",
+          "label": "Left arm | LingBot-VA",
+          "checker_version": "target-arm-only-lift-v2"
+        },
+        {
+          "policy": "lingbot_va",
+          "seed": 500001,
+          "mode": "right",
+          "instruction": "Use the right arm to retrieve the block.",
+          "success": true,
+          "action_calls": 84,
+          "origin": "reused",
+          "record": "evaluation/lingbot_va/arm_select/arm_select_ep500001_result.json",
+          "record_sha256": "e6fb95a1aa7f38c904b5f5c06ba45c357e84fbe4675f1d508bc07db462777286",
+          "video": "evaluation/lingbot_va/arm_select/arm_select_ep500001_1.mp4",
+          "video_sha256": "1e875e54bba45c7855e661ba208c32969c66bebad703220f220afa788dd25283",
+          "label": "Right arm | LingBot-VA",
+          "checker_version": "target-arm-only-lift-v2"
+        }
+      ],
+      "exports": {
+        "arm_select.mp4": {
+          "sha256": "ffbed7e1a56ca078d589f40e96b94fc0c0b60a3610cab8764b3f65f5a3af97f0",
+          "bytes": 179762
+        },
+        "arm_select.gif": {
+          "sha256": "55c35b44c77433bd63619bcd4f33533aabafd29de1c84955a4f558109c6866d3",
+          "bytes": 1609859
+        }
+      }
+    },
+    "stack_sequence": {
+      "playback_speed": 3,
+      "panels": [
+        {
+          "policy": "vlact",
+          "seed": 100014,
+          "mode": "red>green>blue",
+          "instruction": "First set red block, then green block, then blue block at the very top.",
+          "success": true,
+          "action_calls": 431,
+          "origin": "reused",
+          "record": "evaluation/vlact/stack_sequence/stack_sequence_ep100014_result.json",
+          "record_sha256": "a8771fd4dcb784f2b9d909ec4024e41ede9f08fd802ab9f4500bbbcdad6d6402",
+          "video": "evaluation/vlact/stack_sequence/stack_sequence_ep100014_1.mp4",
+          "video_sha256": "c1d77d98ed59e8984cbb78fc4579b23d3f0518afc12941fd44f57af4649e8853",
+          "label": "Bottom to top: R > G > B | 3x",
+          "checker_version": null
+        },
+        {
+          "policy": "vlact",
+          "seed": 100017,
+          "mode": "green>blue>red",
+          "instruction": "Put green block down, blue block on green block, red block on blue block.",
+          "success": true,
+          "action_calls": 413,
+          "origin": "reused",
+          "record": "evaluation/vlact/stack_sequence/stack_sequence_ep100017_result.json",
+          "record_sha256": "29817f0aa0fca281332f905bf9b9d02b21c0b760fec7168b525a02dcaa6e3990",
+          "video": "evaluation/vlact/stack_sequence/stack_sequence_ep100017_1.mp4",
+          "video_sha256": "5c79ac0c6d61233bc1c568fb9b87c6500118e6b6cb98eec24ecd6cdc5ce77323",
+          "label": "Bottom to top: G > B > R | 3x",
+          "checker_version": null
+        }
+      ],
+      "exports": {
+        "stack_sequence.mp4": {
+          "sha256": "3aa640a3a5a7deaa32efd3d52adbfa116a7ee8e553656f645795bac100bbf359",
+          "bytes": 463679
+        },
+        "stack_sequence.gif": {
+          "sha256": "8197059ca033c7be7dfb5fcf5eabeb9a942b4e00d64ddc031e52b304a51c9a15",
+          "bytes": 2712934
+        }
+      }
+    },
+    "place_relative": {
+      "playback_speed": 1.5,
+      "panels": [
+        {
+          "policy": "vlact",
+          "seed": 100055,
+          "mode": "left",
+          "instruction": "Grab the green toycar and set it to the left of the red tea-box",
+          "success": true,
+          "action_calls": 119,
+          "origin": "reused",
+          "record": "evaluation/vlact/place_relative/place_relative_ep100055_result.json",
+          "record_sha256": "df681bedb2c35e76abf0fc43d003985d5a079e7286b6a374f3704862fd465ce1",
+          "video": "evaluation/vlact/place_relative/place_relative_ep100055_1.mp4",
+          "video_sha256": "69c8550d123d9a0cf69c9edffbbfbf46ac9fe654ba208779c957aec0a102d853",
+          "label": "Left of the tea-box | 1.5x",
+          "checker_version": null
+        },
+        {
+          "policy": "vlact",
+          "seed": 100059,
+          "mode": "on_top",
+          "instruction": "Pick up the green toycar and move it on top of the red tea-box",
+          "success": true,
+          "action_calls": 117,
+          "origin": "reused",
+          "record": "evaluation/vlact/place_relative/place_relative_ep100059_result.json",
+          "record_sha256": "d219c85e5d52e682e3d361f36964ca6eacb6301f33a3f754235fec3f35e7e7c7",
+          "video": "evaluation/vlact/place_relative/place_relative_ep100059_1.mp4",
+          "video_sha256": "071ac037948e7f82ec1a6316e13728314ef36e9b45dbf8b20c13b592eb20be61",
+          "label": "On top of the tea-box | 1.5x",
+          "checker_version": null
+        }
+      ],
+      "exports": {
+        "place_relative.mp4": {
+          "sha256": "d5f59f54499919e69a5dade82a8a7c4459c3b35637879d789140ab83b130a512",
+          "bytes": 174999
+        },
+        "place_relative.gif": {
+          "sha256": "a4bf0dcfa27a4a876b293ecfb1069b369678e162ee50cc0db6a20701a78d069c",
+          "bytes": 1299109
+        }
+      }
+    }
+  },
+  "published_episodes_sha256": "cc92e18217996bbd17b84326ad9ddb9305eb19d3f8dc64fe1ff511010e2bdc8c"
+}

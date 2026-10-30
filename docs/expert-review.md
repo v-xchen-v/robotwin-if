@@ -16,12 +16,12 @@ bash scripts/collect.sh --task press_lift_stapler --blocks 3 \
 
 # 可选：直接用当前已筛选的 seeds，减少无效场景尝试。
 bash scripts/collect.sh \
-  --seed-manifest seed-manifests/robotwin-if-press-lift-stapler-v1-20-per-mode \
+  --seed-manifest seed-manifests/20-blocks \
   --output-dir outputs/expert-review/current-suite
 
 # 也可以提供单个 manifest 文件，自动识别任务和配置。
 bash scripts/collect.sh \
-  --seed-manifest seed-manifests/robotwin-if-press-lift-stapler-v1-20-per-mode/press_lift_stapler.json
+  --seed-manifest seed-manifests/20-blocks/press_lift_stapler.json
 ```
 
 `--seed-manifest` 可重复传入多个文件；目录默认读取六任务，也可用 `--task` 选一个。
