@@ -8,7 +8,7 @@
 | Press / Lift Stapler | [press_lift_stapler.py](envs/press_lift_stapler.py) | [JSON](task_instruction/press_lift_stapler.json) | `demo_clean` |
 | Noun | [pick_diverse_object.py](envs/pick_diverse_object.py) | [JSON](task_instruction/pick_diverse_object.json) | `demo_clean` |
 | Attribute | [attribute_select.py](envs/attribute_select.py) | [JSON](task_instruction/attribute_select.json) | `demo_clean` |
-| Arm | [arm_select.py](envs/arm_select.py) | [JSON](task_instruction/arm_select.json) | [demo_clean_arm_select_v3](task_config/demo_clean_arm_select_v3.yml) |
+| Arm | [arm_select.py](envs/arm_select.py) | [JSON](task_instruction/arm_select.json) | [demo_clean_arm_select](task_config/demo_clean_arm_select.yml) |
 | Sequence | [stack_sequence.py](envs/stack_sequence.py) | [JSON](task_instruction/stack_sequence.json) | `demo_clean` |
 | Spatial | [place_relative.py](envs/place_relative.py) | [JSON](task_instruction/place_relative.json) | `demo_clean` |
 

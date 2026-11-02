@@ -19,7 +19,7 @@ bash scripts/bridge_tasks.sh --check
 ```
 
 软链与 `.robotwin-if-bridge.json` 是本机安装状态。新 clone 或 worktree 需要重新 bridge。
-Arm 的 `task_config/demo_clean_arm_select_v3.yml` 随 bridge 安装、校验和解绑，无需手工 `ln -s`。
+Arm 的 `task_config/demo_clean_arm_select.yml` 随 bridge 安装、校验和解绑，无需手工 `ln -s`。
 升级旧安装时，已正确指向本仓库配置的软链会被接管；同名真实文件（即使内容一致）或其他来源的软链会保留并报告冲突。
 其他原生配置不由 bridge 管理。首次安装完整流程见 [Quickstart](quickstart.md)。
 

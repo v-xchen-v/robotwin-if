@@ -21,8 +21,7 @@ def write(path, data):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, required=True)
-    parser.add_argument("--reference", type=Path, default=Path(
-        "/Data/robotwin-if/evaluations/robotwin-if-cube-v3-20blocks-001/xvla/arm_select"))
+    parser.add_argument("--reference", type=Path, default=ROOT / "outputs/policy-eval/benchmark/xvla/arm_select")
     args = parser.parse_args()
     output, reference = args.output.resolve(), args.reference.resolve()
     output.mkdir(parents=True, exist_ok=False)
@@ -35,18 +34,18 @@ def main():
     from policies.xvla.eval import load_task
 
     pci = pin_renderer()
-    env, config = load_task(ROOT / "third_party/robotwin", "arm_select", "demo_clean_arm_select_v3")
+    env, config = load_task(ROOT / "third_party/robotwin", "arm_select", "demo_clean_arm_select")
     from envs.utils import ArmTag
 
     sources = [ROOT / name for name in (
         "tasks/envs/arm_select.py", "tasks/envs/_if_grounding.py",
-        "tasks/task_config/demo_clean_arm_select_v3.yml",
+        "tasks/task_config/demo_clean_arm_select.yml",
         "tests/arm_select/verify_target_arm_only.py")]
     (output / "source").mkdir()
     for path in sources:
         (output / "source" / path.name).write_bytes(path.read_bytes())
     report = dict(diagnostic_only=True, complete=False, all_checks_passed=False,
-                  simulator_pci=pci, task_config="demo_clean_arm_select_v3", episodes=[],
+                  simulator_pci=pci, task_config="demo_clean_arm_select", episodes=[],
                   sources_sha256={str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest()
                                   for p in sources})
     write(output / "report.json", report)

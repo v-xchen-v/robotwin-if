@@ -65,9 +65,9 @@ tasks:
     big: 0.06
     small: 0.04
 - task: arm_select
-  task_config: demo_clean_arm_select_v3
+  task_config: demo_clean_arm_select
   manifest: arm_select.json
-  manifest_sha256: 334b5ab9a6f908dd603694f23a441aab1bbf8a7a1af6e5ae528d5c7e513aedd6
+  manifest_sha256: 6de2148e3055e8154095a3682182c87b1241a7b594d10b885ad6a653305d9a55
   blocks: 20
   episodes_per_policy: 40
   modes:

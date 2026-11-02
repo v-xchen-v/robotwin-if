@@ -113,7 +113,7 @@ def collection_specs(args):
         if args.task_config and len(names) != 1:
             raise ValueError("--task-config requires a single --task")
         specs = [dict(task=name, task_config=args.task_config or (
-            "demo_clean_arm_select_v3" if name == "arm_select" else "demo_clean"),
+            "demo_clean_arm_select" if name == "arm_select" else "demo_clean"),
             start_block=first_block_at_or_above(name, args.start_seed or 0),
             source="candidate scan") for name in names]
     for spec in specs:
@@ -294,8 +294,8 @@ def main(argv=None):
         bridge.bridge(target, check=True, allow_compatible_commit=args.allow_compatible_commit)
         for spec in specs:
             spec.update(_task_config_identity(target, spec["task_config"]))
-            if spec["task_config"] == "demo_clean_arm_select_v3":
-                installed = target / "task_config/demo_clean_arm_select_v3.yml"
+            if spec["task_config"] == "demo_clean_arm_select":
+                installed = target / "task_config/demo_clean_arm_select.yml"
                 if installed.read_bytes() != (REPO_ROOT / "tasks/task_config" / installed.name).read_bytes():
                     raise ValueError("Installed Arm config differs from tasks/task_config")
         if shutil.which("ffmpeg") is None:

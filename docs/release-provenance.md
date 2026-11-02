@@ -2,7 +2,7 @@
 
 当前代码、`seed-manifests/20-blocks/` 与 `result/` 构成同一份六任务交付。
 任务设置为 Press/Lift Stapler、Noun、Attribute、Arm、Sequence、Spatial；Attribute Size 为 6 cm / 4 cm。
-六份输入 manifest 保持原字节，不维护版本注册表或 latest 解析。
+六份输入 manifest 的 seed 数值和顺序保持不变，不维护版本注册表或 latest 解析。
 
 ## 评测与复用
 
@@ -40,3 +40,10 @@ Noun Seen/Unseen 属于独立物体池和独立场景，不作 pixel-equal 声�
 - 固定 seed、代码和 checkpoint 有助于复现；渲染、硬件与推理随机性仍可能影响逐回合表现。
 
 [完整结果下载及校验](download-results.md) · [当前使用入口](quickstart.md)
+
+## Arm 配置命名
+
+当前配置为 `demo_clean_arm_select.yml`，原 `release-20261030` 使用 `demo_clean_arm_select_v3.yml`。
+本次配置改名同步更新了 Arm manifest 的 `task_config`、seed-mode 导出与校验哈希；seed 数值与顺序未改，其他五份输入保持原字节。
+配置内容与任务参数在此次改名中保持一致。`result/` 和 Azure 包保留真实评测时的配置名、原始记录和哈希；
+这属于名称整理，不是新的模型评测。完整原始代码、配置和结果仍可从冻结的 tag 与下载包定位。

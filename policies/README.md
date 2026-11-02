@@ -38,7 +38,7 @@ bash scripts/eval.sh --policy hy_vla --task arm_select --blocks 2 \
 
 默认使用[当前六任务清单](../seed-manifests/20-blocks/README.md)：
 每个 policy 460 回合；六任务各取两个 blocks 时为 46 回合。
-Arm 使用 `demo_clean_arm_select_v3` 与[错误手臂历史判据](../docs/arm-select-target-arm-only.md)。
+Arm 使用 `demo_clean_arm_select` 与[错误手臂历史判据](../docs/arm-select-target-arm-only.md)。
 Grasp-Approach 已下线，所有 evaluator 都拒绝执行该任务。
 
 同一个有状态模型服务一次只接一个客户端。需要并发时使用独立服务实例，

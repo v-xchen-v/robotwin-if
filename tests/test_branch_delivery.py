@@ -69,8 +69,8 @@ class EvalLauncherTest(unittest.TestCase):
         for task in IF_SEED_CONTRACTS:
             (self.runtime / 'envs' / f'{task}.py').touch()
         (self.runtime / 'task_config/demo_clean.yml').touch()
-        shutil.copyfile(ROOT / 'tasks/task_config/demo_clean_arm_select_v3.yml',
-                        self.runtime / 'task_config/demo_clean_arm_select_v3.yml')
+        shutil.copyfile(ROOT / 'tasks/task_config/demo_clean_arm_select.yml',
+                        self.runtime / 'task_config/demo_clean_arm_select.yml')
         self.output = self.base / 'output with spaces'
         self.env = dict(os.environ, PATH=str(self.bin) + os.pathsep + os.environ['PATH'],
                         TMPDIR=str(self.base), FAKE_LOG=str(self.base / 'launched.jsonl'),
@@ -177,7 +177,7 @@ print('1, 10000, 40000, 40, 20')
         calls = self.launched()
         self.assertEqual([r['options']['--task'] for r in calls], list(CURRENT_SUITE_TASKS))
         self.assertTrue(all(r['gpu'] == '0' for r in calls))
-        self.assertEqual(calls[3]['options']['--task-config'], 'demo_clean_arm_select_v3')
+        self.assertEqual(calls[3]['options']['--task-config'], 'demo_clean_arm_select')
 
     def test_infrastructure_failure_and_substituted_seed_stop_following_tasks(self):
         self.env['FAKE_RC'] = '2'

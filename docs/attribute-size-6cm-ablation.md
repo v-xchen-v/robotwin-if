@@ -132,4 +132,4 @@ Hy-VLA 的 20 个 Big 回合全部属于先小后大。这些失败回合本身�
 
 这 240 条 Size 记录已纳入[正式成绩](../result/README.md)，与未变化的 2520 条记录组成完整交付。
 原始实验范围和 metadata 保留在下载包中；旧版成绩目录已从当前仓库清理。
-六份 seed 文件保持原字节，统一放在 `seed-manifests/20-blocks/`。
+尺寸实验沿用原 seeds，统一放在 `seed-manifests/20-blocks/`；后续 Arm 配置改名见[来源说明](release-provenance.md#arm-配置命名)。

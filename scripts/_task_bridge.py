@@ -39,7 +39,7 @@ ENV_HELPERS = (
     "_press_lift_bell.py",
     "_press_lift_stapler.py",
 )
-TASK_CONFIGS = ("demo_clean_arm_select_v3.yml",)
+TASK_CONFIGS = ("demo_clean_arm_select.yml",)
 
 BASE_TASK_METHODS = {
     "_init_task_env_",

@@ -8,7 +8,8 @@ robotwin-if 是基于 [RoboTwin 2.0](https://github.com/RoboTwin-Platform/RoboTw
 当前 Verb 任务 **Press / Lift Stapler** 就是一个直接例子：同一只订书器、同一幅初始画面，分别要求按压和拿起。
 
 **六个任务 · 每任务 20 blocks · 六个开源 checkpoint · Attribute Size 为 6 cm / 4 cm。**
-完整结果共 2760 回合、720 blocks，代码、seeds 和成绩固定在日期 tag [`release-20261030`](https://github.com/v-xchen-v/robotwin-if/tree/release-20261030)。
+完整结果共 2760 回合、720 blocks，原始评测代码、seeds 和成绩固定在日期 tag [`release-20261030`](https://github.com/v-xchen-v/robotwin-if/tree/release-20261030)。
+当前 Arm 配置名称的整理见[来源说明](docs/release-provenance.md#arm-配置命名)。
 
 [固定 seed 清单](seed-manifests/20-blocks/README.md) ·
 [完整结果](result/README.md) ·
@@ -183,7 +184,7 @@ Stapler 的 `110000–110039` 共 40 个 seeds 经过 expert 筛选；Size 的 2
 | press_lift_stapler | 2 | 40 | 250 | demo_clean |
 | pick_diverse_object | 2 | 40 | 400 | demo_clean |
 | attribute_select | 8 | 160 | 400 | demo_clean |
-| arm_select | 2 | 40 | 400 | demo_clean_arm_select_v3 |
+| arm_select | 2 | 40 | 400 | demo_clean_arm_select |
 | stack_sequence | 6 | 120 | 1200 | demo_clean |
 | place_relative | 3 | 60 | 400 | demo_clean |
 | 合计 | 23 | 460 | | |

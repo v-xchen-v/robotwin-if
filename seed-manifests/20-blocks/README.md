@@ -1,7 +1,9 @@
 # 六任务固定 seeds
 
-每个 `<task>.json` 是 evaluator 直接读取的输入，六份文件的 seeds 和字节沿用已完成评测的清单。
+每个 `<task>.json` 是 evaluator 直接读取的输入，六份文件的 seed 数值与顺序沿用已完成评测的清单。
 每任务 20 个完整 blocks，每模型 460 回合。seed 顺序不可排序、替换或跳过。
+Arm 的 `task_config` 已简化为 `demo_clean_arm_select`，因此该文件及派生清单的哈希更新；其余五份输入保持原字节。
+原始成绩和 Azure 备份记录评测时的配置名，见[配置命名说明](../../docs/release-provenance.md#arm-配置命名)。
 
 - `suite.yml`：任务、配置、模式数量、动作预算与当前设置。
 - `seed-modes.json` / `seed-modes.csv`：从六份输入导出的 block、mode、scene 对照。

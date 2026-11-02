@@ -33,15 +33,15 @@ class CollectionTest(unittest.TestCase):
         seeds = {s["task"]: next(collect.candidates(s))[1] for s in specs}
         self.assertEqual(sum(map(len, seeds.values())), 23)
         self.assertEqual(seeds["place_relative"], (0, 1, 4))
-        self.assertEqual(specs[3]["task_config"], "demo_clean_arm_select_v3")
+        self.assertEqual(specs[3]["task_config"], "demo_clean_arm_select")
 
     def test_manifest_infers_task_config_and_preserves_gaps(self):
         path = self.manifest("place_relative", (10, 11, 14, 25, 26, 29))
         spec, = collect.collection_specs(self.args("--seed-manifest", path))
         self.assertEqual(list(collect.candidates(spec)), [(2, (10, 11, 14)), (5, (25, 26, 29))])
-        arm = self.manifest("arm_select", (500000, 500001), "demo_clean_arm_select_v3")
+        arm = self.manifest("arm_select", (500000, 500001), "demo_clean_arm_select")
         specs = collect.collection_specs(self.args("--seed-manifest", path, "--seed-manifest", arm))
-        self.assertEqual(specs[1]["task_config"], "demo_clean_arm_select_v3")
+        self.assertEqual(specs[1]["task_config"], "demo_clean_arm_select")
 
     def test_invalid_manifest_requests_fail_before_collection(self):
         path = self.manifest()

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "task": "arm_select",
-  "task_config": "demo_clean_arm_select_v3",
+  "task_config": "demo_clean_arm_select",
   "seeds": [
     500000,
     500001,
