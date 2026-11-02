@@ -24,7 +24,7 @@ bash scripts/bridge_tasks.sh
 bash scripts/bridge_tasks.sh --check
 ```
 
-Arm v3 配置随 bridge 安装；[`scripts/eval.sh`](../scripts/eval.sh) 启动前校验配置存在且与交付版本一致。首次安装见 [Quickstart](../docs/quickstart.md)。
+Arm 配置随 bridge 安装；[`scripts/eval.sh`](../scripts/eval.sh) 启动前校验配置存在且与交付版本一致。首次安装见 [Quickstart](../docs/quickstart.md)。
 Bridge 会清理指向本仓库旧任务的链接，包括源文件已删除的旧链接；原生任务与其他来源的链接继续保留。
 
 历史 Bottle/Bell seed 与结果仍可读取；在当前 checkout 中重新运行这些旧任务会明确报 retired。

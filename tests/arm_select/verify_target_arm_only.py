@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Real cube-v3 oracle regression: wrong arm, put down, then commanded arm.
+"""Real cube oracle regression: wrong arm, put down, then commanded arm.
 
 Run with the RoboTwin environment and one CUDA_VISIBLE_DEVICES GPU. This is a
 diagnostic control, not a policy evaluation. Never overwrite an existing output.

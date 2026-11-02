@@ -1,6 +1,7 @@
-"""CPU checks for paired geometry, version isolation, and paired language."""
+"""CPU checks for paired geometry, reset, and paired language."""
 import ast
 import importlib
+import hashlib
 import json
 from pathlib import Path
 import random
@@ -43,43 +44,13 @@ Task = namespace["arm_select"]
 
 
 class SceneVariationTests(unittest.TestCase):
-    def test_pairs_share_geometry_and_cross_blocks_vary(self):
-        poses, regions = set(), []
-        for block in range(50000, 50012):
-            left, right = Task(), Task()
-            left.setup_demo(seed=2*block, arm_select_scene_version="jitter-v2")
-            # Disturb RNG to ensure the paired scene does not depend on history.
-            np.random.seed(123)
-            np.random.random(37)
-            right.setup_demo(seed=2*block+1, arm_select_scene_version="jitter-v2")
-            self.assertEqual((left.mode, right.mode), ("left", "right"))
-            self.assertEqual(left.info["arm_select_scene"], right.info["arm_select_scene"])
-            np.testing.assert_array_equal(left.box.get_pose().p, right.box.get_pose().p)
-            np.testing.assert_array_equal(left.box.get_pose().q, right.box.get_pose().q)
-            x, y, _ = left.box.get_pose().p
-            self.assertTrue(-0.02 <= x <= 0.02 and 0.10 <= y <= 0.12)
-            self.assertLessEqual(abs(left._scene_spec["yaw_degrees"]), 3)
-            poses.add(tuple(left.box.get_pose().p))
-            regions.append(left._scene_spec["region"])
-        self.assertEqual(len(poses), 12)
-        self.assertEqual([regions.count(r) for r in ("left", "center", "right")], [4, 4, 4])
-
-    def test_default_and_reset_retain_fixed_v1(self):
-        task = Task()
-        task.setup_demo(seed=100000, arm_select_scene_version="jitter-v2")
-        for seed in (100000, 100001, 100099):
-            task.setup_demo(seed=seed)
-            np.testing.assert_array_equal(task.box.get_pose().p, [0, 0.1, 0.842])
-            np.testing.assert_array_equal(task.box.get_pose().q, [1, 0, 0, 0])
-            self.assertEqual(task.scene_version, "fixed-v1")
-
     def test_cube_pairs_vary_pose_without_leaking_arm(self):
         poses, rotations, regions = set(), set(), []
         for block in range(150000, 150012):
             left, right = Task(), Task()
-            left.setup_demo(seed=2*block, arm_select_scene_version="cube-v3")
+            left.setup_demo(seed=2*block)
             np.random.random(37)
-            right.setup_demo(seed=2*block+1, arm_select_scene_version="cube-v3")
+            right.setup_demo(seed=2*block+1)
             self.assertEqual((left.mode, right.mode), ("left", "right"))
             self.assertEqual(left.info["arm_select_scene"], right.info["arm_select_scene"])
             np.testing.assert_array_equal(left.box.get_pose().p, right.box.get_pose().p)
@@ -96,23 +67,22 @@ class SceneVariationTests(unittest.TestCase):
         self.assertEqual(len(rotations), 12)
         self.assertEqual([regions.count(r) for r in ("left", "center", "right")], [4, 4, 4])
 
-    def test_cube_reset_does_not_change_legacy_actor(self):
+    def test_reset_always_uses_the_current_cube(self):
         task = Task()
         with patch.dict(namespace, create_box=lambda **kw: SimpleNamespace(get_pose=lambda: kw["pose"], creation=kw)):
-            task.setup_demo(seed=300000, arm_select_scene_version="cube-v3")
-            cube = task.box.creation
-            self.assertEqual(cube["boxtype"], "default")
-            self.assertEqual(cube["half_size"], (0.025, 0.025, 0.025))
-            self.assertAlmostEqual(cube["pose"].p[2] - cube["half_size"][2], 0.741)
-            task.setup_demo(seed=300000, arm_select_scene_version="jitter-v2")
-            self.assertEqual(task.box.creation["boxtype"], "long")
-            self.assertEqual(task.box.creation["half_size"], (0.03, 0.03, 0.1))
-            self.assertEqual(task.box.get_pose().p[2], 0.842)
-            self.assertEqual(task.pre_grasp_dis, 0.07)
+            for seed in (500000, 500001, 500039):
+                task.setup_demo(seed=seed)
+                cube = task.box.creation
+                self.assertEqual(cube["boxtype"], "default")
+                self.assertEqual(cube["half_size"], (0.025, 0.025, 0.025))
+                self.assertAlmostEqual(cube["pose"].p[2] - cube["half_size"][2], 0.741)
+                self.assertEqual(task.pre_grasp_dis, 0.09)
 
-    def test_unknown_version_fails_before_setup(self):
-        with self.assertRaisesRegex(ValueError, "scene_version"):
-            Task().setup_demo(seed=0, arm_select_scene_version="typo")
+    def test_obsolete_selector_is_rejected_before_setup(self):
+        task = Task()
+        with self.assertRaisesRegex(ValueError, "scene_version is retired"):
+            task.setup_demo(seed=0, arm_select_scene_version="fixed-v1")
+        self.assertFalse(hasattr(task, "scene"))
 
     def test_paired_language_only_changes_arm_and_restores_rng(self):
         from policies.xvla.eval import instruction_for
@@ -121,33 +91,49 @@ class SceneVariationTests(unittest.TestCase):
         utils = str(ROOT / "third_party/robotwin/description/utils")
         with patch.object(sys, "path", [utils, *sys.path]):
             before = random.getstate()
-            for version, block in ((v, b) for v in ("jitter-v2", "cube-v3") for b in range(50000, 50012)):
+            for block in range(250000, 250020):
                 texts = []
                 for offset, arm in enumerate(("left", "right")):
-                    info = {"info": {"{A}": "the block", "{a}": arm},
-                            "arm_select_scene": {"version": version}}
+                    info = {"info": {"{A}": "the block", "{a}": arm}}
                     text = instruction_for("arm_select", info, "unseen", 2*block+offset)
                     self.assertIn(f"the {arm} arm", text)
                     texts.append(text.replace(f"the {arm} arm", "the ARM arm"))
                 self.assertEqual(*texts)
             self.assertEqual(random.getstate(), before)
-            # Fixed-v1 keeps the archived raw-seed language selection.
-            text = instruction_for("arm_select", {"info": {"{A}": "the block", "{a}": "left"}}, "unseen", 100000)
-            self.assertEqual(text, "Have the left arm take the block.")
+
+    def test_formal_seeds_preserve_published_scene_and_instruction_contract(self):
+        from policies.xvla.eval import instruction_for
+        seeds = json.loads((ROOT / "seed-manifests/20-blocks/arm_select.json").read_text())["seeds"]
+        rows = []
+        utils = str(ROOT / "third_party/robotwin/description/utils")
+        with patch.object(sys, "path", [utils, *sys.path]):
+            for seed in seeds:
+                task = Task()
+                task.setup_demo(seed=seed)
+                info = {"info": {"{A}": "the block", "{a}": task.mode},
+                        "arm_select_scene": task.info["arm_select_scene"]}
+                rows.append(dict(seed=seed, mode=task.mode,
+                    instruction=instruction_for("arm_select", info, "unseen", seed),
+                    scene=task.info["arm_select_scene"],
+                    geometry=dict(half_size=list(task.box_half_size), boxtype=task.box_type,
+                        spawn_z=task.box_spawn_z, pre_grasp_dis=task.pre_grasp_dis,
+                        grasp_ids=task.GRASP_IDS, lift_z=task.LIFT_Z)))
+        payload = json.dumps(rows, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode()
+        # Captured from release-20261030 before removing its scene selector.
+        self.assertEqual(hashlib.sha256(payload).hexdigest(),
+                         "c213eda904fd955514aa0aaaa9168a8d09a0e54e93dc121727d078f82a4c14d4")
 
     def test_all_six_evaluators_require_matching_manifest_config(self):
         with tempfile.TemporaryDirectory() as directory:
             manifest = Path(directory) / "arm_select.json"
-            cases = ((v, p) for v in ("v2", "v3") for p in
-                     ("xvla", "lingbot_va", "lingbot_vla", "vlact", "dm05", "hy_vla"))
-            for version, policy in cases:
-                config = f"demo_clean_arm_select_{version}"
+            for policy in ("xvla", "lingbot_va", "lingbot_vla", "vlact", "dm05", "hy_vla"):
+                config = "demo_clean_arm_select"
                 manifest.write_text(json.dumps({"schema_version": 1, "task": "arm_select",
                                                "task_config": config, "seeds": [100000, 100001]}))
                 module = importlib.import_module(f"policies.{policy}.eval")
                 argv = ["eval.py", "--task", "arm_select", "--task-config", config,
                         "--seed-manifest", str(manifest), "--blocks", "1", "--output-dir", "unused"]
-                with self.subTest(policy=policy, version=version), patch.object(sys, "argv", argv):
+                with self.subTest(policy=policy), patch.object(sys, "argv", argv):
                     select = module.select_seeds
                     with patch.object(module, "select_seeds", side_effect=InterruptedError) as called:
                         with self.assertRaises(InterruptedError):

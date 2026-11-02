@@ -203,7 +203,7 @@ def main():
         source.name for source, destination in desired
         if destination.parent == Path("task_config")
     )
-    check("bridge installs the Arm cube-v3 config", desired_configs == ("demo_clean_arm_select.yml",))
+    check("bridge installs the Arm cube config", desired_configs == ("demo_clean_arm_select.yml",))
     check("bridge owns exactly 19 task/config links", len(desired) == 19)
 
     for helper in BRIDGE_HELPERS:

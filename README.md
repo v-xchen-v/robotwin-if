@@ -220,7 +220,7 @@ RoboTwin 与 CuRobo 的版本统一定义在 [`runtime_pins.json`](scripts/runti
 安装器先核对 submodule gitlink 和现有源码版本；已有 CuRobo checkout 会复用，版本不符或存在未提交源码修改时停止并保留文件。
 可用 `bash setup_robotwin.sh --sources-only` 单独验证源码准备流程，不安装系统包、Conda 依赖或资产。
 
-Bridge 统一安装任务、helper、指令和 Arm cube-v3 配置，共 19 个软链；`--check` 验证安装完整性。
+Bridge 统一安装任务、helper、指令和 Arm cube 配置，共 19 个软链；`--check` 验证安装完整性。
 实际评测成员由 [IF inventory](eval_cfg/if_tasks.yml) 与当前 manifest 指定。
 外部 RoboTwin 可通过 `--robotwin-dir` 接入，版本兼容检查和配置方法见[bridge 使用说明](docs/task-bridge.md)。
 

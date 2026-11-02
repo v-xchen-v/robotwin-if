@@ -23,7 +23,7 @@ bash scripts/bridge_tasks.sh --check
 
 安装器创建或复用 `RoboTwin` Conda 环境、获取固定版本的 RoboTwin/CuRobo、安装依赖、下载资产并生成机器人路径配置。
 版本来自 [`runtime_pins.json`](../scripts/runtime_pins.json)。已有源码版本不符时会停止并保留文件。
-Bridge 安装六任务、helper、instruction 和 Arm cube-v3 配置，共 **19 个软链**；检查应输出 `check passed: 19 owned links`。
+Bridge 安装六任务、helper、instruction 和 Arm cube 配置，共 **19 个软链**；检查应输出 `check passed: 19 owned links`。
 
 可用以下选项复用资产或单独准备源码：
 

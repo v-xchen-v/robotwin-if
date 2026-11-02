@@ -1,6 +1,5 @@
-# arm_select cube-v3: native 5 cm cube with top-down oracle grasps.
-# Use a newly qualified manifest whose task_config matches this basename.
-arm_select_scene_version: cube-v3
+# arm_select: native 5 cm cube with top-down oracle grasps.
+# The seed manifest task_config must match this basename.
 render_freq: 0
 episode_num: 2
 use_seed: false

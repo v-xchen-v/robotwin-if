@@ -2,7 +2,7 @@
 
 Bridge 将本仓库的任务、共享 helper、指令 JSON 和专用 task config 软链到 RoboTwin，检查已有目标的归属和兼容性。
 它负责让 runtime 找到任务；当前执行哪六项任务由 [IF inventory](../eval_cfg/if_tasks.yml) 和 [Stapler manifest](../seed-manifests/20-blocks/README.md)决定。
-安装列表包含当前六任务、六个共享 helper、六份 instruction 和 Arm cube-v3 配置，共 19 个软链。
+安装列表包含当前六任务、六个共享 helper、六份 instruction 和 Arm cube 配置，共 19 个软链。
 
 ## 仓库内的 runtime
 

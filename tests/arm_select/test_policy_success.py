@@ -26,7 +26,7 @@ class BaseTask:
         # load_actors currently clears this before the base task settles physics.
         self._init_box_z = None
         self.info = {}
-        self._scene_spec = {"version": self.scene_version}
+        self._scene_spec = {}
         self.tcps = {"left": np.array([-0.3, 0.1, 0.9]), "right": np.array([0.3, 0.1, 0.9])}
 
     def get_arm_pose(self, arm):
@@ -55,22 +55,21 @@ class PolicySuccessTests(unittest.TestCase):
         task.scene.step()
 
     def test_policy_can_succeed_without_play_once(self):
-        for version, seed in ((v, s) for v in ("fixed-v1", "jitter-v2", "cube-v3") for s in (100000, 100001)):
-            with self.subTest(seed=seed, version=version):
+        for seed in (500000, 500001):
+            with self.subTest(seed=seed):
                 task = Task()
-                task.setup_demo(seed=seed, arm_select_scene_version=version)
+                task.setup_demo(seed=seed)
                 self.assertFalse(task.check_success())
                 task.position[2] += 0.1
                 task.tcps[task.mode] = task.position + [0, 0, 0.1]
                 self.assertTrue(task.check_success())
 
     def test_wrong_arm_lift_still_fails(self):
-        for version in ("fixed-v1", "jitter-v2", "cube-v3"):
-            with self.subTest(version=version):
+        for seed in (500000, 500001):
+            with self.subTest(seed=seed):
                 task = Task()
-                task.setup_demo(seed=100000, arm_select_scene_version=version)
-                task.position[2] += 0.1
-                task.tcps["right"] = task.position + [0, 0, 0.1]
+                task.setup_demo(seed=seed)
+                self.set_pose(task, .10, ArmTag(task.mode).opposite)
                 self.assertFalse(task.check_success())
                 self.assertTrue(task.eval_signals()["lifted"])
 
@@ -89,7 +88,7 @@ class PolicySuccessTests(unittest.TestCase):
             for put_down in (False, True):
                 with self.subTest(seed=seed, put_down=put_down):
                     task = Task()
-                    task.setup_demo(seed=seed, arm_select_scene_version="cube-v3")
+                    task.setup_demo(seed=seed)
                     # Do not query success/signals before the final state.
                     self.set_pose(task, .10, ArmTag(task.mode).opposite)
                     if put_down:
@@ -106,7 +105,7 @@ class PolicySuccessTests(unittest.TestCase):
 
     def test_wrong_arm_lift_inside_one_action_is_observed(self):
         task = Task()
-        task.setup_demo(seed=500000, arm_select_scene_version="cube-v3")
+        task.setup_demo(seed=500000)
         self.set_pose(task, .10, "right")
         self.set_pose(task, 0, None, new_action=False)
         self.set_pose(task, .10, "left", new_action=False)
@@ -117,7 +116,7 @@ class PolicySuccessTests(unittest.TestCase):
     def test_wrong_arm_touch_or_small_lift_does_not_invalidate(self):
         for seed in (500000, 500001):
             task = Task()
-            task.setup_demo(seed=seed, arm_select_scene_version="cube-v3")
+            task.setup_demo(seed=seed)
             self.set_pose(task, .02, ArmTag(task.mode).opposite)
             self.set_pose(task, .10, task.mode)
             self.assertTrue(task.check_success())
@@ -127,10 +126,10 @@ class PolicySuccessTests(unittest.TestCase):
 
     def test_reset_clears_wrong_arm_history_and_detaches_old_scene(self):
         task = Task()
-        task.setup_demo(seed=500000, arm_select_scene_version="cube-v3")
+        task.setup_demo(seed=500000)
         self.set_pose(task, .10, "right")
         old_scene = task.scene
-        task.setup_demo(seed=500001, arm_select_scene_version="cube-v3")
+        task.setup_demo(seed=500001)
         task.position[2] += .10
         task.tcps["left"] = task.position + [0, 0, .1]
         old_scene.step()
@@ -141,7 +140,7 @@ class PolicySuccessTests(unittest.TestCase):
 
     def test_close_restores_scene_and_queries_do_not_clear_history(self):
         task = Task()
-        task.setup_demo(seed=500000, arm_select_scene_version="cube-v3")
+        task.setup_demo(seed=500000)
         self.set_pose(task, .10, "right")
         self.set_pose(task, .10, "left")
         before = task.eval_signals()
@@ -176,7 +175,7 @@ class PolicySuccessTests(unittest.TestCase):
 
     def test_play_once_preserves_baseline_and_wrong_arm_history(self):
         task = Task()
-        task.setup_demo(seed=500000, arm_select_scene_version="cube-v3")
+        task.setup_demo(seed=500000)
         initial_z = task._init_box_z
         self.set_pose(task, .10, "right")
         task.grasp_actor = lambda *args, **kwargs: None
