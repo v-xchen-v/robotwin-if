@@ -1,0 +1,25 @@
+# Dedicated X-WAM inference environment, within upstream's supported version ranges.
+# Torch 2.7.1 / CUDA 12.8 is installed by setup_env.sh.
+transformers==4.51.3
+tokenizers==0.21.4
+diffusers==0.38.0
+accelerate==1.14.0
+numpy==1.25.2
+scipy==1.15.3
+Pillow==11.3.0
+einops==0.8.1
+safetensors==0.8.0
+huggingface-hub==0.35.3
+lightning==2.5.5
+torchmetrics==1.8.2
+imageio==2.37.0
+imageio-ffmpeg==0.6.0
+ftfy==6.3.1
+easydict==1.13
+omegaconf==2.3.0
+PyYAML==6.0.2
+tyro==0.9.35
+pyzmq==27.1.0
+websockets==15.0.1
+msgpack==1.1.1
+flash-attn @ https://github.com/Dao-AILab/flash-attention/releases/download/v2.7.4.post1/flash_attn-2.7.4.post1+cu12torch2.7cxx11abiTRUE-cp310-cp310-linux_x86_64.whl
