@@ -14,7 +14,7 @@ usage() {
   cat <<'HELP'
 Usage: bash scripts/eval.sh --policy POLICY --output-dir PATH [options]
 Start the policy's model server first, following policies/<policy>/README.md.
-Policies: xvla, lingbot_va, lingbot_vla, vlact, dm05, hy_vla
+Policies: xvla, lingbot_va, lingbot_vla, vlact, dm05, hy_vla, fastwam, motus, xwam
 
   --task TASK          One maintained task, or all (default: all six)
   --blocks N           First N complete blocks, 1..20 (default: 20)
@@ -57,7 +57,10 @@ case "$POLICY" in
   vlact) DEFAULT_URL=ws://127.0.0.1:8013 ;;
   dm05) DEFAULT_URL=http://127.0.0.1:8014 ;;
   hy_vla) DEFAULT_URL=ws://127.0.0.1:8015 ;;
-  *) fail "--policy must name one of the six policies (see --help)" ;;
+  fastwam) DEFAULT_URL=ws://127.0.0.1:8016 ;;
+  motus) DEFAULT_URL=ws://127.0.0.1:8017 ;;
+  xwam) DEFAULT_URL=ws://127.0.0.1:8018 ;;
+  *) fail "--policy must name a supported policy (see --help)" ;;
 esac
 [[ -n "$OUTPUT_DIR" ]] || fail '--output-dir is required'
 [[ "$BLOCKS" =~ ^([1-9]|1[0-9]|20)$ ]] || fail '--blocks must be 1..20'

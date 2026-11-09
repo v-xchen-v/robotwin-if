@@ -1,9 +1,9 @@
 # Policy inference integrations
 
-本目录维护六个开源 policy 的独立模型环境、推理服务、客户端和评测适配。
+本目录维护九个开源 policy 的独立模型环境、推理服务、客户端和评测适配。
 模型服务与 RoboTwin 仿真分别运行；安装、权重下载、服务启动及输出格式见各 policy README。
 首次从零安装见 [Quickstart](../docs/quickstart.md)。下载示例使用 `ROBOTWIN_IF_HOME`，默认 `$HOME/.local/share/robotwin-if`；
-DM05/Hy-VLA 的环境也默认存储在其 `envs/` 下，可用 `--env-prefix` 覆盖。
+DM05/Hy-VLA/Fast-WAM/Motus/X-WAM 的环境也默认存储在其 `envs/` 下，可用 `--env-prefix` 覆盖。
 其他四个模型使用 Conda 环境名，可用 `--env-name` 覆盖。服务示例统一使用 GPU 1，仿真使用 GPU 0。
 
 | Policy | 当前 checkpoint | 通信与动作接口 |
@@ -14,9 +14,13 @@ DM05/Hy-VLA 的环境也默认存储在其 `envs/` 下，可用 `--env-prefix` �
 | [VLAct](vlact/README.md) | `StarVLA/VLAct_Qwen3OFT_Robotwin_all_Finetune` | WebSocket；32-action joint chunks |
 | [DM05](dm05/README.md) | `Dexmal/DM05-robotwin2` | HTTP；absolute 14D joint chunks |
 | [Hy-VLA](hy_vla/README.md) | `tencent/Hy-Embodied-0.5-VLA-RoboTwin` | WebSocket；六帧历史，relative/absolute EE 融合 |
+| [Fast-WAM](fastwam/README.md) | `yuanty/fastwam` 的 `robotwin_uncond_3cam_384.pt` | WebSocket；absolute 14D joint chunks，预测 32 步、执行 24 步 |
+| [Motus](motus/README.md) | `motus-robotics/Motus_robotwin2` | WebSocket；joint video/action prediction，16-action joint chunks |
+| [X-WAM](xwam/README.md) | `sharinka0715/X-WAM-checkpoints/robotwin_sft` | WebSocket；32 步相对 EE 动作，累积并转换为 absolute 16D EE |
 
-六个 policy 的完整正式结果已发布，见[当前结果包](../result/README.md)。
-X-VLA 使用 clean 微调权重，其他五个使用 clean + randomized 权重，比较时须保留这项训练数据差异。
+原有六个 policy 的完整正式结果已发布，见[当前结果包](../result/README.md)。
+Fast-WAM、Motus 与 X-WAM 为新增接入；验证范围见各模型 README，完整正式结果尚未交付。
+原有六模型中，X-VLA 使用 clean 微调权重，其他五个使用 clean + randomized 权重，比较时须保留这项训练数据差异。
 Checkpoint revisions、模型参数和各回合来源随结果包记录。
 
 ## 运行
@@ -47,7 +51,7 @@ Grasp-Approach 已下线，所有 evaluator 都拒绝执行该任务。
 
 ## 评测契约
 
-六个 evaluator 共用 `policies/evaluation.py`：每回合先对固定 seed 做 oracle qualification，
+九个 evaluator 共用 `policies/evaluation.py`：每回合先对固定 seed 做 oracle qualification，
 关闭场景后用同一个 seed 重建 policy 场景，并检查 mode、配对资格和成功判据基线。
 完成的 policy failure 是有效结果；基础设施错误停止评测，不替换 seed。
 各任务按自身的成功判据与终止协议裁决。

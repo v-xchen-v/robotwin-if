@@ -118,7 +118,7 @@ Azure 模式使用冻结清单中的内容 SHA-256 作为源指纹，单纯下�
   <policy>/<task>/<task>_ep<seed>_provenance.json
 ```
 
-支持当前六个 policy，读取正式归档和 `scripts/eval.sh` 产生的 policy/task 目录。
+支持当前九个 policy，读取正式归档和 `scripts/eval.sh` 产生的 policy/task 目录。
 只扫描 canonical 目录，忽略 `batches/`、`incoming/` 等重复或未归档回合。
 缺少视频的回合仍可查看记录并标记待确认；损坏的结果会在页面提示，不静默算成失败。
 服务只开放索引中的视频/诊断资产；不会把整个仓库或 `/Data` 作为静态目录公开。

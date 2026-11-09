@@ -65,7 +65,7 @@ bash scripts/collect.sh \
 
 ## 3. 安装并启动一个 policy
 
-从[六个 policy](../policies/README.md)中选择一个，按其 README 完成独立环境安装、权重下载和服务启动，
+从[policy 列表](../policies/README.md)中选择一个，按其 README 完成独立环境安装、权重下载和服务启动，
 同时将其 `requirements-client.txt` 安装到 `RoboTwin` 环境（X-VLA 的客户端依赖已由仿真安装器提供）。
 
 权重示例统一使用可配置的存储根目录：
@@ -80,12 +80,13 @@ export ROBOTWIN_IF_HOME="${ROBOTWIN_IF_HOME:-$HOME/.local/share/robotwin-if}"
 | RoboTwin | `third_party/robotwin`；Conda 环境 `RoboTwin` | 外部 runtime 见 bridge 文档 |
 | 模型源码 | `third_party/<model>` | 模型 setup 的 `--source-dir` |
 | X-VLA / LingBot-VA / LingBot-VLA / VLAct 环境 | Conda 管理的 `robotwin-if-<model>` | 模型 setup 的 `--env-name`；`CONDA_ENVS_PATH` 可指定存储目录 |
-| DM05 / Hy-VLA 环境 | `$ROBOTWIN_IF_HOME/envs/robotwin-if-<model>` | 模型 setup 的 `--env-prefix` |
+| DM05 / Hy-VLA / Fast-WAM / Motus / X-WAM 环境 | `$ROBOTWIN_IF_HOME/envs/robotwin-if-<model>` | 模型 setup 的 `--env-prefix` |
 | 下载的权重 | `$ROBOTWIN_IF_HOME/checkpoints/<checkpoint>` | downloader 的 `--output-dir`；服务用相同的 `--checkpoint-dir` |
+| Fast-WAM / Motus / X-WAM 共享权重 | `$ROBOTWIN_IF_HOME/checkpoints/wam/<owner>/<repo>` | downloader 的 `--output-dir`；服务用相同的 `--asset-dir` |
 | 采集和评测产物 | `outputs/expert-review/`、`outputs/policy-eval/` | 运行入口的 `--output-dir` |
 
 X-VLA 默认由官方服务下载到 Hugging Face cache，也可使用本地 checkpoint，见其 README。
-DM05/Hy-VLA 的 Conda 包缓存和临时下载默认放在环境父目录下，可用 `CONDA_PKGS_DIRS`、`TMPDIR` 覆盖。
+使用 `--env-prefix` 的模型，其 Conda 包缓存和临时下载默认放在环境父目录下，可用 `CONDA_PKGS_DIRS`、`TMPDIR` 覆盖。
 已有 `/Data/robotwin-if` 安装可设置 `ROBOTWIN_IF_HOME=/Data/robotwin-if` 继续使用；安装器不会自动迁移环境或权重。
 
 在独立终端启动所选模型，**模型 GPU 设为 1**；保持该服务运行。下面以 VLAct All 为例，

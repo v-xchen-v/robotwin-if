@@ -23,7 +23,7 @@ from urllib.error import HTTPError
 ROOT = Path(__file__).resolve().parents[2]
 STATIC = Path(__file__).resolve().parent
 POLICIES = dict(xvla="X-VLA", lingbot_va="LingBot-VA", lingbot_vla="LingBot-VLA",
-                vlact="VLAct", dm05="DM05", hy_vla="Hy-VLA")
+                vlact="VLAct", dm05="DM05", hy_vla="Hy-VLA", fastwam="Fast-WAM", motus="Motus", xwam="X-WAM")
 TASKS = ("press_lift_stapler", "pick_diverse_object", "attribute_select", "arm_select",
          "stack_sequence", "place_relative", "bottle_verb", "grasp_cube_approach")
 LABELS = ("success", "failure", "uncertain", "unreviewed")

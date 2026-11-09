@@ -16,7 +16,7 @@ from if_benchmark.seed_modes import build_seed_modes, check_seed_modes, export_t
 
 ROOT = Path(__file__).resolve().parents[1]
 RELEASE = ROOT / 'seed-manifests/20-blocks'
-POLICIES = ('xvla', 'lingbot_va', 'lingbot_vla', 'vlact', 'dm05', 'hy_vla')
+POLICIES = ('xvla', 'lingbot_va', 'lingbot_vla', 'vlact', 'dm05', 'hy_vla', 'fastwam', 'motus', 'xwam')
 
 
 class SeedModeDeliveryTest(unittest.TestCase):
