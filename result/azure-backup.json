@@ -1,15 +1,41 @@
 {
   "complete": true,
-  "verified_at_utc": "2026-10-30T10:05:04.188322+00:00",
-  "destination": "https://eaidatashare.blob.core.windows.net/xichen/robotwin-if/results/robotwin-if-20261030",
-  "expected_files": 47570,
-  "remote_files": 47570,
-  "expected_bytes": 6201622337,
-  "remote_bytes": 6201622337,
+  "verified_at_utc": "2026-11-09T03:00:54.783812+00:00",
+  "destination": "https://eaidatashare.blob.core.windows.net/xichen/robotwin-if/results/robotwin-if-20261109",
+  "episodes": 4140,
+  "policies": 9,
+  "expected_files": 68605,
+  "remote_files": 68605,
+  "expected_bytes": 8940269840,
+  "remote_bytes": 8940269840,
   "all_file_sizes_and_content_md5_match": true,
   "local_inventory_unchanged": true,
   "root_sha256sums_download_matches": true,
-  "root_sha256sums_sha256": "6a35c189b6f97006bfd76a2f9b4105f80482a24369ffa280fb58256955f258df",
-  "result_sha256": "ae2deb8caa1a6ca147d4357338720845cfa089ef4109a5f627a5bb26cc470b7c",
-  "local_inventory_sha256": "5a9f05d16aa8a57ade8262fff093012937c876ef920f8de8524d13fa8ba3b44f"
+  "root_sha256sums_sha256": "2b2ccc4ac7a9cd3c9832d9e068c1b3ba7770d39eaf7441198205f315d23d5fb0",
+  "result_sha256": "b10312b543dcdf64b5fb151712a474226382c3e1ba27aa441303eb223b4d4516",
+  "local_inventory_sha256": "d2e0fc0b4b16367794442aaa41af0bffbeb5a71d927b2a25c3fbaa16dd2a909e",
+  "directory_markers": 0,
+  "previous_backup": "https://eaidatashare.blob.core.windows.net/xichen/robotwin-if/results/robotwin-if-20261030",
+  "viewer_verification": {
+    "episodes": 4140,
+    "policy_counts": {
+      "xvla": 460,
+      "lingbot_va": 460,
+      "lingbot_vla": 460,
+      "vlact": 460,
+      "dm05": 460,
+      "hy_vla": 460,
+      "fastwam": 460,
+      "motus": 460,
+      "xwam": 460
+    },
+    "overall_agrees": true,
+    "remote_samples": [
+      "xvla/press_lift_stapler/110000",
+      "fastwam/press_lift_stapler/110000",
+      "motus/press_lift_stapler/110000",
+      "xwam/press_lift_stapler/110000"
+    ],
+    "root_sha256sums_sha256": "2b2ccc4ac7a9cd3c9832d9e068c1b3ba7770d39eaf7441198205f315d23d5fb0"
+  }
 }

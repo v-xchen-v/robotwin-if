@@ -5,7 +5,7 @@
 
 - 任务定义：`tasks/`，清单 `eval_cfg/if_tasks.yml`。
 - 固定 seeds：`seed-manifests/20-blocks/`。
-- 当前六模型成绩：`result/`。
+- 当前九模型成绩：`result/`。
 - 本机已下载输出的入口：`outputs/policy-eval/benchmark/`，不提交 Git。
 - 完整视频、动作、观测与来源证据：[下载说明](download-results.md)。
 

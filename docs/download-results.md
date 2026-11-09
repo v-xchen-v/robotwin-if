@@ -1,7 +1,7 @@
 # 下载完整评测结果与视频
 
-当前备份为 **Attribute Size 6 cm**：2760 个正式回合 / 视频、720 blocks，约 **5.78 GiB**。
-Size 使用已完成的 240 条 6 cm 重测输出，其余 2520 条复用旧输出；正式分数只有 VLAct 更新。
+当前备份覆盖 **九个模型、4140 个正式回合 / 视频、1080 blocks**，共 68,605 个文件、约 **8.33 GiB**；Attribute Size 保持 6 cm / 4 cm。
+原六模型的 2760 回合完整保留，新增 Fast-WAM、Motus、X-WAM 共 1380 回合沿用同一 seed manifest、判据和动作预算。
 固定 seed 清单为 `seed-manifests/20-blocks/`。仓库仅保存[精简成绩](../result/README.md)，完整证据保存在 Azure。
 [上传校验记录](../result/azure-backup.json)包含地址、文件数和校验清单哈希。
 
@@ -13,7 +13,7 @@ Size 使用已完成的 240 条 6 cm 重测输出，其余 2520 条复用旧输�
 https://eaidatashare.blob.core.windows.net/xichen/robotwin-if/results/
 ```
 
-当前目录为 `robotwin-if-20261030`，已完成上传和远端校验。
+当前目录为 `robotwin-if-20261109`，已完成上传和远端校验。原六模型目录 `robotwin-if-20261030` 继续保留，其校验清单 SHA-256 为 `6a35c189b6f97006bfd76a2f9b4105f80482a24369ffa280fb58256955f258df`。
 
 **当前需要授权下载。** 此存储账号禁用了匿名访问，直接用浏览器打开链接会返回
 `409 PublicAccessNotPermitted`。下载账号需要该容器的读取、列出权限，例如容器范围的
@@ -30,8 +30,8 @@ https://eaidatashare.blob.core.windows.net/xichen/robotwin-if/results/
 az login
 export AZCOPY_AUTO_LOGIN_TYPE=AZCLI
 
-BUNDLE_URL=https://eaidatashare.blob.core.windows.net/xichen/robotwin-if/results/robotwin-if-20261030
-BUNDLE_SHA256=6a35c189b6f97006bfd76a2f9b4105f80482a24369ffa280fb58256955f258df
+BUNDLE_URL=https://eaidatashare.blob.core.windows.net/xichen/robotwin-if/results/robotwin-if-20261109
+BUNDLE_SHA256=2b2ccc4ac7a9cd3c9832d9e068c1b3ba7770d39eaf7441198205f315d23d5fb0
 BUNDLE=${BUNDLE_URL##*/}
 BUNDLE_DIR="$PWD/downloads/$BUNDLE"
 
@@ -71,7 +71,7 @@ just video-review-azure
 入口直接读取当前结果目录的 `azure-backup.json`，不依赖 release registry；不用 just 的命令见[工具说明](../tools/policy-video-review/README.md)。
 备份自带相同的成绩总览与视频查看器，可离线使用。
 
-打开 `reports/results.html` 查看六模型成绩。视频查看器只需 **Python 3.10+ 标准库**，
+打开 `reports/results.html` 查看九模型成绩。视频查看器只需 **Python 3.10+ 标准库**，
 可选安装 `ffprobe` 以支持准确帧率与逐帧查看。
 
 ```bash
@@ -79,7 +79,7 @@ cd "$BUNDLE_DIR"
 bash view_videos.sh
 ```
 
-浏览器访问 **http://127.0.0.1:8898/**，按 policy、task、mode 和成功/失败筛选全部 2760 回合。
+浏览器访问 **http://127.0.0.1:8898/**，按 policy、task、mode 和成功/失败筛选全部 4140 回合。
 可用 `bash view_videos.sh --port 8899` 更换端口；在远程机器运行时，在本机另开终端转发：
 
 ```bash
@@ -95,8 +95,9 @@ ssh -N -L 8898:127.0.0.1:8898 user@your-server
 |---|---|
 | `reports/` | 冻结成绩、逐回合表、六任务 manifests、checkpoint 身份和来源证据 |
 | `evaluation/<policy>/<task>/` | 正式回合的视频、动作、初始观测、instruction、判定和 provenance |
-| `episode-index.csv` | 2760 个正式回合的相对路径索引，可定位每条视频与对应数据 |
+| `episode-index.csv` | 4140 个正式回合的相对路径索引，可定位每条视频与对应数据 |
 | `audit/`、其他 support 目录 | 随版本保留的运行源码、推理参考及来源证据；内容范围见该包 `BACKUP.json` |
+| `audit/wam/` | 新增三模型的原始源码快照、服务身份、运行证据及 22 次模型调用前 oracle 错误归档 |
 | `tools/policy-video-review/` | 随备份提供的独立视频查看器 |
 | `BACKUP.json`、`SHA256SUMS` | 打包范围、核验记录及文件校验清单 |
 

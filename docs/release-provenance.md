@@ -4,9 +4,9 @@
 任务设置为 Press/Lift Stapler、Noun、Attribute、Arm、Sequence、Spatial；Attribute Size 为 6 cm / 4 cm。
 六份输入 manifest 的 seed 数值和顺序保持不变，不维护版本注册表或 latest 解析。
 
-## 评测与复用
+## 原六模型的评测与复用
 
-六个公开 checkpoints 共 2760 回合。2026-10-29 在 6 cm 大块设置下重测了全部 240 个 Size 回合；
+原六个公开 checkpoints 共 2760 回合。2026-10-29 在 6 cm 大块设置下重测了全部 240 个 Size 回合；
 其余 2520 回合的环境、指令和判据未变化，复用其原始输出。成功与失败均保留。
 这不是全部 2760 回合的新一轮运行。
 
@@ -18,13 +18,24 @@ VLAct Overall 从 57.3611% 增至 57.4653%，显示为 57.4 → 57.5；其他五
 Checkpoint 身份见 [checkpoints.json](../result/checkpoints.json)。
 每条 episode 的记录哈希见 [episodes.csv](../result/episodes.csv)，对应的视频和其他文件由下载包根 `SHA256SUMS` 覆盖。
 
+## 新增三个 WAM 与九模型结果合并
+
+Fast-WAM、Motus、X-WAM 各完成原 manifest 的 460 回合，总计新增 1380 回合，于 2026-11-06 全部完成。
+任务定义、seed 数值与顺序、指令、动作预算和成功判据保持原 release 分支的设置。2026-11-09 核查后，`result/` 和新 Azure 包 `robotwin-if-20261109` 扩展为九模型、4140 回合、1080 blocks。
+原六模型的分数、逐回合标签与记录哈希逐项保留；原 Azure 包 `robotwin-if-20261030` 及日期 tag 继续可用。
+
+新增回合的 result/index、mode、动作预算、任务汇总和 provenance 已核查一致，证据见 [wam-audit.json](../result/wam-audit.json)。
+Fast-WAM / Motus / X-WAM 分别有 10 / 5 / 7 次模型调用前 oracle 资格失败，均保留完整归档并在原 seed 恢复；含最终通过的尝试数每 seed 不超过 8 次。正常 policy failure 不重跑。
+跨回合 CuRobo 状态通路已确认，但 oracle 的底层确定性未修复；恢复能力与模型成功率分别记录。
+本次最终核查覆盖记录、源文件和归档一致性，未逐帧重解码全量视频或独立重判物理场景。原始运行证据与失败归档位于下载包 `audit/wam/`。
+
 ## 资格与初始观测
 
 正式 seeds 按 expert 可执行性选择完整 blocks，不依据模型成败筛选。
 Stapler 的 20 对 Press/Lift 通过 expert 和初始 RGB、机器人状态、物体位姿检查。
-Size 的 20 对在 6 cm 设置下重新通过 expert；六模型保存的 120 对初始观测也逐数组一致。
+Size 的 20 对在 6 cm 设置下重新通过 expert；原六模型保存的 120 对初始观测也逐数组一致。
 
-除 Noun 外，同一组对照共享初始画面。完整结果的 2520 份非 Noun 观测构成 960 组对照：
+除 Noun 外，同一组对照共享初始画面。原六模型的 2520 份非 Noun 观测构成 960 组对照：
 Stapler、Arm、Sequence、Spatial 各 120 组，Attribute 480 对。头部和双腕 RGB、proprio 的不一致组数为零。
 Noun Seen/Unseen 属于独立物体池和独立场景，不作 pixel-equal 声明。
 
@@ -54,5 +65,5 @@ Noun Seen/Unseen 属于独立物体池和独立场景，不作 pixel-equal 声�
 181 项通用 CPU 测试、16 项 Arm 测试，以及 bridge、采集和六模型评测入口预览通过。
 清理前后连跑到 seed `500007` 时均出现 expert 规划失败，分别冷启动该 seed 后通过；失败记录保留，seed 未替换。
 
-`result/` 和 Azure 包保留真实评测时的配置名、原始记录和哈希，结果文件保持原字节。
-本次未重跑模型、未重新上传推理输出；完整原始代码、配置和结果仍可从冻结的 tag 与下载包定位。
+上述 11 月 2 日配置整理保留了原六模型真实评测时的配置名、原始记录和哈希，未重跑模型或重新上传推理输出。
+11 月 9 日的九模型合并继续保留这些原始记录；完整原始代码、配置和结果仍可从冻结的 tag 与下载包定位。

@@ -1,0 +1,124 @@
+{
+  "ok": true,
+  "created_at": "2026-11-05T19:35:16.472109+00:00",
+  "policy": "motus",
+  "protocol": "wam_robotwin_qpos_v1",
+  "action_type": "qpos",
+  "action_dim": 14,
+  "action_horizon": 16,
+  "use_length": 16,
+  "source_revision": "88f6fe30c62af033874b0a2e48ad1cbdaf12cfdf",
+  "assets": {
+    "motus-robotics/Motus_robotwin2": {
+      "revision": "ab74bc214f7fc5952c85198e062c5f8bf1dc47a7",
+      "files": {
+        "LICENSE": {
+          "size": 11365,
+          "git_blob_sha1": "f6de958ea4b4a330f2776d00506376d7fe27a5b4"
+        },
+        "README.md": {
+          "size": 5530,
+          "git_blob_sha1": "9088e27f82f815126e20a75612772a820d33fb94"
+        },
+        "config.json": {
+          "size": 778,
+          "git_blob_sha1": "97d264671734d01e81587c74ab718925cb802992"
+        },
+        "mp_rank_00_model_states.pt": {
+          "size": 16046580367,
+          "sha256": "70bc1741b45db5e3eae86510ad3bb1bd1aef04f10b17d8c1ff4dbe099300eb65"
+        }
+      }
+    },
+    "Qwen/Qwen3-VL-2B-Instruct": {
+      "revision": "89644892e4d85e24eaac8bacfd4f463576704203",
+      "files": {
+        "chat_template.json": {
+          "size": 5502,
+          "git_blob_sha1": "e49e75bdda104c8de941eb20e0b3765184fb27bc"
+        },
+        "config.json": {
+          "size": 1505,
+          "git_blob_sha1": "0cd8c646eb55794594b14fefcd1d3acea5cc000f"
+        },
+        "generation_config.json": {
+          "size": 269,
+          "git_blob_sha1": "7bb37933d2d86e4ceaabcc6540be989658f238e9"
+        },
+        "merges.txt": {
+          "size": 1671839,
+          "git_blob_sha1": "20024bfe7c83998e9aeaf98a0cd6a2ce6306c2f0"
+        },
+        "preprocessor_config.json": {
+          "size": 390,
+          "git_blob_sha1": "2ea84a437d448ff71b08df68fdd949d5cc4ebb64"
+        },
+        "tokenizer.json": {
+          "size": 7032403,
+          "git_blob_sha1": "c6cc1014128b19d1fc46b1d30a23e3b1d35db421"
+        },
+        "tokenizer_config.json": {
+          "size": 10868,
+          "git_blob_sha1": "d3d3763207692c78780f4bf42d4dadf49a5c8012"
+        },
+        "video_preprocessor_config.json": {
+          "size": 385,
+          "git_blob_sha1": "3ba673a5ad7d4d13f54155ecd38b2a94a6dac8fe"
+        },
+        "vocab.json": {
+          "size": 2776833,
+          "git_blob_sha1": "4783fe10ac3adce15ac8f358ef5462739852c569"
+        }
+      }
+    },
+    "Wan-AI/Wan2.2-TI2V-5B": {
+      "revision": "921dbaf3f1674a56f47e83fb80a34bac8a8f203e",
+      "files": {
+        "Wan2.2_VAE.pth": {
+          "size": 2818839170,
+          "sha256": "20eb789667fa5e60e7516bf509512f6cb61f01b0aa0695eadaea930c13892b36"
+        },
+        "config.json": {
+          "size": 251,
+          "git_blob_sha1": "abb356dedbca416450700e180a6622626d789601"
+        },
+        "google/umt5-xxl/special_tokens_map.json": {
+          "size": 6623,
+          "git_blob_sha1": "14855e7052ffbb595057dfd791d293c1c940db2c"
+        },
+        "google/umt5-xxl/spiece.model": {
+          "size": 4548313,
+          "sha256": "e3909a67b780650b35cf529ac782ad2b6b26e6d1f849d3fbb6a872905f452458"
+        },
+        "google/umt5-xxl/tokenizer.json": {
+          "size": 16837417,
+          "sha256": "6e197b4d3dbd71da14b4eb255f4fa91c9c1f2068b20a2de2472967ca3d22602b"
+        },
+        "google/umt5-xxl/tokenizer_config.json": {
+          "size": 61728,
+          "git_blob_sha1": "4e1cc1cd85599ce0b47fd0a746af188fe4043ff2"
+        },
+        "models_t5_umt5-xxl-enc-bf16.pth": {
+          "size": 11361920418,
+          "sha256": "7cace0da2b446bbbbc57d031ab6cf163a3d59b366da94e5afe36745b746fd81d"
+        }
+      }
+    }
+  },
+  "single_client": true,
+  "torch": "2.7.1+cu128",
+  "gpu": "1",
+  "cpu_threads": 8,
+  "seed_control": "Each episode seeds Python/NumPy/Torch; deterministic kernels are not enforced",
+  "inference": {
+    "checkpoint_format": "official_deepspeed_module",
+    "dtype": "bfloat16",
+    "num_inference_steps": 10,
+    "solver": "Euler",
+    "action_horizon": 16,
+    "image_layout": "head 240x320 above two 120x160 wrists; padded resize to 384x320",
+    "normalization": "official inference passes raw joint state and returns raw qpos",
+    "action_inference": "upstream joint video/action prediction, all 16 actions executed",
+    "stage1_backbone": "downloaded for reproducibility; Stage 3 checkpoint contains backbone weights"
+  }
+}

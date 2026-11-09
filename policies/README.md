@@ -18,8 +18,8 @@ DM05/Hy-VLA/Fast-WAM/Motus/X-WAM 的环境也默认存储在其 `envs/` 下，�
 | [Motus](motus/README.md) | `motus-robotics/Motus_robotwin2` | WebSocket；joint video/action prediction，16-action joint chunks |
 | [X-WAM](xwam/README.md) | `sharinka0715/X-WAM-checkpoints/robotwin_sft` | WebSocket；32 步相对 EE 动作，累积并转换为 absolute 16D EE |
 
-原有六个 policy 的完整正式结果已发布，见[当前结果包](../result/README.md)。
-Fast-WAM、Motus 与 X-WAM 已完成相同 manifest 的六任务评测，各 460 回合；完整成绩见[九模型结果表](../README.md#policy-results)，推理配置与验证记录见各模型 README。
+九个 policy 的完整正式结果已发布，见[当前结果包](../result/README.md)。
+各模型均完成相同 manifest 的六任务评测，各 460 回合；成绩见[九模型结果表](../README.md#policy-results)，推理配置与验证记录见各模型 README。
 原有六模型中，X-VLA 使用 clean 微调权重，其他五个使用 clean + randomized 权重，比较时须保留这项训练数据差异。
 Checkpoint revisions、模型参数和各回合来源随结果包记录。
 

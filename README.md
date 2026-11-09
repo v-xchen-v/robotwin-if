@@ -13,7 +13,7 @@ robotwin-if 是基于 [RoboTwin 2.0](https://github.com/RoboTwin-Platform/RoboTw
 当前 Arm 配置名称的整理见[来源说明](docs/release-provenance.md#arm-配置命名)。
 
 [固定 seed 清单](seed-manifests/20-blocks/README.md) ·
-[九模型成绩](#policy-results) · [原六模型结果包](result/README.md) ·
+[九模型成绩](#policy-results) · [完整结果包](result/README.md) ·
 [六任务视频](#task-demos) · [运行评测](#run-evaluation)
 
 ## 任务如何构造
@@ -77,9 +77,9 @@ RoboTwin 通过 submodule 固定版本，任务通过软链安装；模型服务
 
 任务列为成功数 / 已评测回合数。**Overall 对六个任务的成功率等权平均，每个任务内部各 mode 等权**，不是 460 回合的合并成功率。
 原六模型中，X-VLA 使用公开 clean checkpoint，其余五个使用对应的 clean + randomized checkpoints；VLAct 为 All 100K。
-其版本和权重身份见 [checkpoints.json](result/checkpoints.json)。新增 Fast-WAM 使用官方 RoboTwin `.pt`，Motus 使用 RoboTwin Stage 3，X-WAM 使用 `robotwin_sft/`；固定版本与文件哈希见 [WAM 资源清单](policies/wam/assets.json)及各模型说明。
+九模型的版本、权重身份和服务配置证据见 [checkpoints.json](result/checkpoints.json)。Fast-WAM 使用官方 RoboTwin `.pt`，Motus 使用 RoboTwin Stage 3，X-WAM 使用 `robotwin_sft/`；资源版本与文件哈希另见 [WAM 资源清单](policies/wam/assets.json)。
 
-新增三模型的本机结果位于 `/Data/robotwin-if/evaluations/wam-full-20261104/`，`progress.html` / `progress.json` 提供分模式成绩，`final-audit-20261109.json` 保存核查证据。
+九模型的分模式成绩、4140 条记录索引和 checkpoint 证据已整合到[结果包](result/README.md)，完整视频与推理产物见 [Azure 下载与浏览说明](docs/download-results.md)。新增三模型的[核查记录](result/wam-audit.json)保留逐回合哈希与运行来源。
 1380 条结果的 seed 顺序、mode、动作预算、逐回合记录和汇总已核对一致。Fast-WAM / Motus / X-WAM 分别发生 10 / 5 / 7 次模型调用前的 oracle 资格错误，均归档并在原 seed 恢复；正常 policy failure 保留。该恢复不代表 oracle 底层确定性已修复。
 
 ### Press / Lift 配对结果
@@ -99,7 +99,7 @@ RoboTwin 通过 submodule 固定版本，任务通过软链安装；模型服务
 | Motus | 19/20 | 18/20 | 18/20 |
 | X-WAM | 14/20 | 20/20 | 14/20 |
 
-原六模型结果包：[六任务分模式成绩](result/results.md) ·
+[九模型六任务分模式成绩](result/results.md) ·
 [HTML 报表](result/results.html) ·
 [逐回合 CSV](result/episodes.csv) ·
 [Press/Lift 配对统计](result/stapler-summary.json)
@@ -209,7 +209,7 @@ python tools/export_seed_modes.py --check
 python tools/verify_benchmark.py
 ```
 
-以上检查无需运行模型或仿真；`verify_benchmark.py` 核查原六模型冻结结果包。新环境仍可能有渲染和推理随机性差异，固定 seed 不保证成功数逐次完全相同。
+以上检查无需运行模型或仿真；`verify_benchmark.py` 核查九模型的完整结果包。新环境仍可能有渲染和推理随机性差异，固定 seed 不保证成功数逐次完全相同。
 
 <a id="run-evaluation"></a>
 
@@ -265,7 +265,7 @@ bash scripts/eval.sh --policy vlact --task press_lift_stapler --blocks 2 \
 
 ## 完整视频与文档
 
-原六模型的完整备份包含 **2760 个正式回合的视频、动作、观测和结果证据，约 5.78 GiB**，已保存到 Azure。新增三模型的 1380 回合保存在上文的本机结果目录。
+九模型的完整备份包含 **4140 个正式回合的视频、动作、观测和结果证据**，已保存到 Azure 的 `robotwin-if-20261109` 目录。原六模型的 `robotwin-if-20261030` 备份继续保留。
 目前需要容器读取权限；[下载与 SHA-256 校验说明](docs/download-results.md)提供浏览器登录、AzCopy 下载和本地视频浏览步骤。
 下载后运行随包提供的 `view_videos.sh`，可按模型、任务、mode 和成败查看全部视频。
 也可运行 `just video-review-azure`，从 Azure 按需加载当前 6 cm 结果；[网页](tools/policy-video-review/README.md)提供模型 × 任务 / mode 成绩表，点击即可进入对应视频。
@@ -274,7 +274,7 @@ README 中的示例 GIF/MP4 随仓库保存，可直接查看。
 | 内容 | 入口 |
 |---|---|
 | 九模型安装、权重、服务与 eval adapter | [policies](policies/README.md) |
-| 原六模型完整结果、全部视频的授权下载与校验 | [下载说明](docs/download-results.md) |
+| 九模型完整结果、全部视频的授权下载与校验 | [下载说明](docs/download-results.md) |
 | 任务 inventory、mode 与 block 定义 | [eval_cfg](eval_cfg/README.md) |
 | 生成和消费 qualified seed manifest | [seed manifest 使用指南](docs/seed-manifest-usage.md) |
 | 当前任务场景、指令与判据 | [Press/Lift Stapler](docs/press-lift-stapler-experiment.md) |

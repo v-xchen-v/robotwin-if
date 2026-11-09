@@ -22,7 +22,7 @@ just video-review-azure
 视频首次打开需等待该文件下载完成，之后支持拖动、Range 和缓存复用。
 这个模式需要 Azure CLI；本地文件模式仍只需要 Python 标准库。
 
-查看全部 2760 回合，可使用本机合并目录，或从 [Azure](../../docs/download-results.md) 下载当前 6 cm 备份。
+查看全部 4140 回合，可使用本机合并目录，或从 [Azure](../../docs/download-results.md) 下载当前九模型备份。
 下载后运行包内 `bash view_videos.sh`（默认端口 8898）。`just video-review` 默认打开当前完整推理目录。
 
 只需要 Python 3.10+ 标准库。无需安装模型环境、Node、前端依赖或启动 GPU 作业。
@@ -55,7 +55,7 @@ ssh -N -L 8893:127.0.0.1:8893 user@your-server
 含错误的分组不显示成功率。人工标签不改变成绩表。
 
 1. 选择 policy、task、mode、block、自动结果或人工状态。搜索框支持 seed、指令和备注。
-   默认排除已下线 grasp 和 Spatial front/back；当前 Stapler 六任务共 **2760 回合**，运行中仅展示已归档回合。
+   默认排除已下线 grasp 和 Spatial front/back；当前九模型六任务共 **4140 回合**，运行中仅展示已归档回合。
    Block 显示 `B1…B20`，同时注明原始零基 index，不能用 `seed // block_size` 代替。
 2. 播放视频，切换全部 / 主相机 / 左腕 / 右腕，慢放、逐帧、跳到末帧或最后两秒。
    相机顺序读取 `_diagnostics.json`，未知相机布局时只显示完整视频。

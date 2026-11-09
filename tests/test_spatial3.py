@@ -95,9 +95,9 @@ class SparseSpatialTest(unittest.TestCase):
         kept=read_csv(RESULT/'episodes.csv')
         spatial=[r for r in kept if r['task']=='place_relative']
         self.assertEqual({r['mode'] for r in spatial}, {'left','right','on_top'})
-        self.assertEqual(len(spatial),360)
-        self.assertEqual(len(kept),2760)
-        self.assertEqual(sum(int(r['success']) for r in kept),1106)
+        self.assertEqual(len(spatial),540)
+        self.assertEqual(len(kept),4140)
+        self.assertEqual(sum(int(r['success']) for r in kept),1688)
         data=json.loads((RESULT/'results.json').read_text())
         for policy,p in data['policies'].items():
             scores=[]

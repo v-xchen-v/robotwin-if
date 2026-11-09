@@ -98,4 +98,4 @@ evidence is tracked in the feature's project notes.
 The full six-task evaluation finished on 2026-11-06 using all 460 episodes from
 `seed-manifests/20-blocks`. Overall is **53.06%**, the unweighted mean of the six
 task scores. See the [benchmark results](../../README.md#policy-results).
-Local records and the final audit are under `/Data/robotwin-if/evaluations/wam-full-20261104/`.
+Full inference artifacts and the final audit are available in the [Azure result bundle](../../docs/download-results.md).

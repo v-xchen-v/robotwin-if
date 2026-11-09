@@ -11,7 +11,7 @@ ROOT = Path(__file__).resolve().parents[1]
 
 class CurrentReleaseTest(unittest.TestCase):
     def test_delivery_is_self_consistent_without_git_history(self):
-        self.assertEqual(verify(ROOT), dict(tasks=6, policies=6, episodes=2760, blocks=720))
+        self.assertEqual(verify(ROOT), dict(tasks=6, policies=9, episodes=4140, blocks=1080))
 
     def test_one_seed_set_and_one_result_set_are_exposed(self):
         self.assertEqual([p.name for p in (ROOT / 'seed-manifests').iterdir() if p.is_dir()], ['20-blocks'])

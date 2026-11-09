@@ -1,6 +1,6 @@
 # 当前测试入口
 
-测试覆盖当前六任务、六模型适配、固定 seeds、成绩与视频查看入口。
+测试覆盖当前六任务、九模型适配、固定 seeds、成绩与视频查看入口。
 
 ## CPU 回归
 
@@ -48,4 +48,4 @@ python -m unittest discover -s tests/arm_select -p 'test_*.py' -v
 [verify_target_arm_only.py](arm_select/verify_target_arm_only.py)属于真实 SAPIEN 检查，需要先 bridge 并准备资产。
 Arm 验证保留“错误臂拿起→放回→指定臂拿起”的物理反例；Noun 的 Apple 检查保留当前 grasp 的固定场景 gate。
 
-六个模型各自的 client/runtime 检查位于对应 policy 子目录。`dm05/test_service.py`、`hy_vla/test_runtime.py` 等官方 runtime 一致性检查使用对应模型的独立环境，详见 [policies](../policies/README.md)。
+模型各自的 client/runtime 检查位于对应 policy 子目录；Fast-WAM/Motus 共用 `wam/test_client.py`，X-WAM 使用 `xwam/test_client.py`。`dm05/test_service.py`、`hy_vla/test_runtime.py` 等官方 runtime 一致性检查使用对应模型的独立环境，详见 [policies](../policies/README.md)。

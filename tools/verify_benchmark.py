@@ -43,15 +43,18 @@ def verify(root=ROOT):
     data = json.loads((result / 'results.json').read_text())
     require(data['tasks'] == list(CURRENT_SUITE_TASKS), 'Result task inventory differs')
     require(data['attribute_size'] == dict(big_edge_m=.06, small_edge_m=.04), 'Unexpected Size setting')
-    policies = ('xvla', 'lingbot_va', 'lingbot_vla', 'vlact', 'dm05', 'hy_vla')
-    require(set(data['policies']) == set(policies), 'Expected six policies')
+    policies = ('xvla', 'lingbot_va', 'lingbot_vla', 'vlact', 'dm05', 'hy_vla', 'fastwam', 'motus', 'xwam')
+    require(set(data['policies']) == set(policies), 'Expected nine policies')
+    expected_episodes = len(policies) * seeds['episodes_per_policy']
+    expected_blocks = len(policies) * len(CURRENT_SUITE_TASKS) * 20
+    expected_task_runs = len(policies) * len(CURRENT_SUITE_TASKS)
     with (result / 'episodes.csv').open(newline='') as stream:
         episodes = list(csv.DictReader(stream))
     keys = [(r['policy'], r['task'], int(r['seed'])) for r in episodes]
-    require(len(keys) == len(set(keys)) == 2760, 'Duplicate or missing episodes')
+    require(len(keys) == len(set(keys)) == expected_episodes, 'Duplicate or missing episodes')
     require(all(r['status'] in ('success', 'failure') and r['success'] == str(int(r['status'] == 'success'))
                 for r in episodes), 'Invalid episode labels')
-    require(len(data['rows']) == 36, 'Expected 36 task-policy scores')
+    require(len(data['rows']) == expected_task_runs, 'Expected 54 task-policy scores')
     for policy in policies:
         scores = []
         for task in seeds['tasks']:
@@ -77,15 +80,16 @@ def verify(root=ROOT):
             scores.append(score)
         require(abs(data['policies'][policy]['overall_pct'] - statistics.mean(scores)) < 1e-10,
                 f'{policy}: Overall differs')
-    require(data['summary'] == dict(completed_episodes=2760, expected_episodes=2760,
-            completed_blocks=720, expected_blocks=720, complete_task_policy_runs=36), 'Summary differs')
+    require(data['summary'] == dict(completed_episodes=expected_episodes, expected_episodes=expected_episodes,
+            completed_blocks=expected_blocks, expected_blocks=expected_blocks,
+            complete_task_policy_runs=expected_task_runs), 'Summary differs')
     checkpoints = json.loads((result / 'checkpoints.json').read_text())
     require(set(checkpoints) == set(policies), 'Checkpoint inventory differs')
     for policy, checkpoint in checkpoints.items():
         evidence = result / checkpoint['evidence']
         require(hashlib.sha256(evidence.read_bytes()).hexdigest() == checkpoint['evidence_sha256'],
                 f'{policy}: checkpoint evidence differs')
-    return dict(tasks=6, policies=6, episodes=2760, blocks=720)
+    return dict(tasks=len(CURRENT_SUITE_TASKS), policies=len(policies), episodes=expected_episodes, blocks=expected_blocks)
 
 
 if __name__ == '__main__':

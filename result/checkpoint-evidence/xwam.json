@@ -1,0 +1,107 @@
+{
+  "ok": true,
+  "created_at": "2026-11-05T08:06:02.618796+00:00",
+  "policy": "xwam",
+  "protocol": "wam_robotwin_delta_ee_v1",
+  "action_type": "delta_ee",
+  "action_dim": 14,
+  "state_dim": 16,
+  "action_horizon": 32,
+  "use_length": 32,
+  "source_revision": "72cfb86b33fc5060963ef63412f16439fcfa472f",
+  "assets": {
+    "sharinka0715/X-WAM-checkpoints": {
+      "revision": "bb6fd1643cfa8bdc751612a7ace0bd8062a8917a",
+      "files": {
+        "README.md": {
+          "size": 3888,
+          "git_blob_sha1": "a48f2bfdc5aa1a4a26126429cae8f27b2056564a"
+        },
+        "robotwin_sft/checkpoints/last.ckpt/checkpoint/mp_rank_00_model_states.pt": {
+          "size": 38892887211,
+          "sha256": "7d38fbd7ee7f9dcdbdee33dcdae622077279a3e9f680e76f4e0e000c4dca88f0"
+        },
+        "robotwin_sft/config.yaml": {
+          "size": 2680,
+          "git_blob_sha1": "5891b8b96dd700db85ce37ed58aefe9605367914"
+        }
+      }
+    },
+    "Wan-AI/Wan2.2-TI2V-5B": {
+      "revision": "921dbaf3f1674a56f47e83fb80a34bac8a8f203e",
+      "files": {
+        "README.md": {
+          "size": 15935,
+          "git_blob_sha1": "40523d8b626810c1ff5293746d181fb99aca6a7a"
+        },
+        "Wan2.2_VAE.pth": {
+          "size": 2818839170,
+          "sha256": "20eb789667fa5e60e7516bf509512f6cb61f01b0aa0695eadaea930c13892b36"
+        },
+        "config.json": {
+          "size": 251,
+          "git_blob_sha1": "abb356dedbca416450700e180a6622626d789601"
+        },
+        "configuration.json": {
+          "size": 43,
+          "git_blob_sha1": "d64db5cb6ceecfb2c7f0929427dc5f48bc4b7f37"
+        },
+        "diffusion_pytorch_model-00001-of-00003.safetensors": {
+          "size": 9825014472,
+          "sha256": "720b06c4ade5e87c1246bba8ac95b664c638749cd9b102cf84d823bb44c026a1"
+        },
+        "diffusion_pytorch_model-00002-of-00003.safetensors": {
+          "size": 9995661736,
+          "sha256": "09ec5ef720d8396f6cfa51fbdcbdb2327e37722afd6e89fd38f1e7e5e782c283"
+        },
+        "diffusion_pytorch_model-00003-of-00003.safetensors": {
+          "size": 178558176,
+          "sha256": "6306f7894c345de9093ad588771c2abfaeb668a81f7a6d9a918bd26ba3568e49"
+        },
+        "diffusion_pytorch_model.safetensors.index.json": {
+          "size": 72865,
+          "git_blob_sha1": "2a1d8b9ee7cd1456f79f944ae15c87724d49110e"
+        },
+        "google/umt5-xxl/special_tokens_map.json": {
+          "size": 6623,
+          "git_blob_sha1": "14855e7052ffbb595057dfd791d293c1c940db2c"
+        },
+        "google/umt5-xxl/spiece.model": {
+          "size": 4548313,
+          "sha256": "e3909a67b780650b35cf529ac782ad2b6b26e6d1f849d3fbb6a872905f452458"
+        },
+        "google/umt5-xxl/tokenizer.json": {
+          "size": 16837417,
+          "sha256": "6e197b4d3dbd71da14b4eb255f4fa91c9c1f2068b20a2de2472967ca3d22602b"
+        },
+        "google/umt5-xxl/tokenizer_config.json": {
+          "size": 61728,
+          "git_blob_sha1": "4e1cc1cd85599ce0b47fd0a746af188fe4043ff2"
+        },
+        "models_t5_umt5-xxl-enc-bf16.pth": {
+          "size": 11361920418,
+          "sha256": "7cace0da2b446bbbbc57d031ab6cf163a3d59b366da94e5afe36745b746fd81d"
+        }
+      }
+    }
+  },
+  "single_client": true,
+  "torch": "2.7.1+cu128",
+  "gpu": "0",
+  "cpu_threads": 8,
+  "seed_control": "Each episode seeds Python/NumPy/Torch; deterministic kernels are not enforced",
+  "inference": {
+    "checkpoint_format": "official_deepspeed_module",
+    "dtype": "bfloat16",
+    "video_schedule_steps": 50,
+    "action_denoise_steps": 10,
+    "early_stop": true,
+    "run_depth": false,
+    "cfg": 0.0,
+    "compile": false,
+    "image_layout": "head/left/right separate views; resize 256x320 then center crop 0.95 and resize",
+    "normalization": "official RoboTwin SFT q01/q99 statistics; no clipping",
+    "action_inference": "32 sequential dual-arm EE xyz/axis-angle/gripper deltas",
+    "noise_seed": "official MD5 hash of 0_<manifest episode seed>_<executed action count>"
+  }
+}

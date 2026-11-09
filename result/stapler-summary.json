@@ -75,5 +75,44 @@
       "lift": 18,
       "None": 5
     }
+  },
+  "fastwam": {
+    "episodes": 40,
+    "blocks": 20,
+    "successes": 38,
+    "press_successes": 18,
+    "lift_successes": 20,
+    "both_success_blocks": 18,
+    "first_action_counts": {
+      "press": 18,
+      "lift": 20,
+      "None": 2
+    }
+  },
+  "motus": {
+    "episodes": 40,
+    "blocks": 20,
+    "successes": 37,
+    "press_successes": 19,
+    "lift_successes": 18,
+    "both_success_blocks": 18,
+    "first_action_counts": {
+      "press": 19,
+      "lift": 18,
+      "None": 3
+    }
+  },
+  "xwam": {
+    "episodes": 40,
+    "blocks": 20,
+    "successes": 34,
+    "press_successes": 14,
+    "lift_successes": 20,
+    "both_success_blocks": 14,
+    "first_action_counts": {
+      "None": 6,
+      "lift": 20,
+      "press": 14
+    }
   }
 }

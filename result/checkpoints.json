@@ -47,5 +47,29 @@
     "weights_sha256": "3bd6c16225f905a298340489d519498d4e5ecf5bcdd28a5c1df63e29894fef60",
     "evidence": "checkpoint-evidence/hy_vla.json",
     "evidence_sha256": "d7a381d774a134f77e573770272f22cadb9c9ad1a965fdd26a133f034c09b43b"
+  },
+  "fastwam": {
+    "repo_id": "yuanty/fastwam",
+    "revision": "8eaceeb24c3cc92ff2a9c9a9d266a4941b836705",
+    "weights_sha256": "776475b22566a791854ecf31cf3b50f25e7d8d94c343132ec16eb94994aa9e63",
+    "source_revision": "7faa71108368fbb3b6885649f112af607427a2d4",
+    "evidence": "checkpoint-evidence/fastwam.json",
+    "evidence_sha256": "7ff6d386a5c2e4c5c53f300d24e8cea496befe779f6c7fb2547cf607457e171f"
+  },
+  "motus": {
+    "repo_id": "motus-robotics/Motus_robotwin2",
+    "revision": "ab74bc214f7fc5952c85198e062c5f8bf1dc47a7",
+    "weights_sha256": "70bc1741b45db5e3eae86510ad3bb1bd1aef04f10b17d8c1ff4dbe099300eb65",
+    "source_revision": "88f6fe30c62af033874b0a2e48ad1cbdaf12cfdf",
+    "evidence": "checkpoint-evidence/motus.json",
+    "evidence_sha256": "49348e8eb8ebf9973fd352ea0968a29c843da3e06db8e44474af871beed146b4"
+  },
+  "xwam": {
+    "repo_id": "sharinka0715/X-WAM-checkpoints",
+    "revision": "bb6fd1643cfa8bdc751612a7ace0bd8062a8917a",
+    "weights_sha256": "7d38fbd7ee7f9dcdbdee33dcdae622077279a3e9f680e76f4e0e000c4dca88f0",
+    "source_revision": "72cfb86b33fc5060963ef63412f16439fcfa472f",
+    "evidence": "checkpoint-evidence/xwam.json",
+    "evidence_sha256": "159d3d361d63d1d0ff04f0e6c9c21f7001f66f92c253ed63d6cd429e3a0c7184"
   }
 }
