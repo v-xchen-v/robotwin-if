@@ -84,3 +84,8 @@ full 32-action predictions, executed prefixes and 59/80-frame videos. Subsequent
 chunks took about 0.7 seconds in this pilot; cold startup and the first prediction
 were slower. This two-episode check verifies the integration and is not the full
 460-episode benchmark. Detailed evidence is tracked in the feature's project notes.
+
+The full six-task evaluation finished on 2026-11-05 using all 460 episodes from
+`seed-manifests/20-blocks`. Overall is **51.74%**, the unweighted mean of the six
+task scores. See the [benchmark results](../../README.md#policy-results).
+Local records and the final audit are under `/Data/robotwin-if/evaluations/wam-full-20261104/`.

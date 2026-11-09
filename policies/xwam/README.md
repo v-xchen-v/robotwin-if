@@ -116,7 +116,8 @@ took a median 1.66 seconds; observed model GPU memory was about 27 GiB.
 
 This two-episode pilot establishes a working integration and is not a full-suite
 score. Local evidence is at `/Data/robotwin-if/evaluations/xwam-pilot-20261104/`.
-The three-model full manifest evaluation is running under
-`/Data/robotwin-if/evaluations/wam-full-20261104/`, with `progress.md`/`progress.html`
-and `batch-status.json` tracking progress. The existing six-model published result
-package is unchanged.
+
+The full six-task evaluation finished on 2026-11-05 using all 460 episodes from
+`seed-manifests/20-blocks`. Overall is **42.33%**, the unweighted mean of the six
+task scores. See the [benchmark results](../../README.md#policy-results).
+Local records and the final audit are under `/Data/robotwin-if/evaluations/wam-full-20261104/`.

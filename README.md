@@ -1,18 +1,19 @@
 # robotwin-if — Instruction-following benchmark
 
 robotwin-if 是基于 [RoboTwin 2.0](https://github.com/RoboTwin-Platform/RoboTwin) 构建的六任务 instruction-following benchmark，
-核心问题是：**面对相同的初始画面，VLA 模型能否根据不同的语言指令，选择并完成相应的行为？**
+核心问题是：**面对相同的初始画面，VLA / WAM 模型能否根据不同的语言指令，选择并完成相应的行为？**
 
 在原生操控任务中，物体与场景布置往往已经强烈暗示要执行什么动作，完成任务可能同时依赖场景识别和语言理解。
 我们将可执行的不同目标放入共享场景，通过改变指令中的动作、物体、属性、机械臂、顺序或空间关系，检查语言能否实际改变模型的选择。
 当前 Verb 任务 **Press / Lift Stapler** 就是一个直接例子：同一只订书器、同一幅初始画面，分别要求按压和拿起。
 
-**六个任务 · 每任务 20 blocks · 六个开源 checkpoint · Attribute Size 为 6 cm / 4 cm。**
-完整结果共 2760 回合、720 blocks，原始评测代码、seeds 和成绩固定在日期 tag [`release-20261030`](https://github.com/v-xchen-v/robotwin-if/tree/release-20261030)。
+**六个任务 · 每任务 20 blocks · 九个开源 checkpoint · Attribute Size 为 6 cm / 4 cm。**
+完整结果共 **4140 回合、1080 blocks**。原六模型的 2760 回合、720 blocks 及评测代码、seeds 固定在日期 tag [`release-20261030`](https://github.com/v-xchen-v/robotwin-if/tree/release-20261030)。
+新增 Fast-WAM、Motus、X-WAM 沿用同一 seed manifest、任务判据与动作预算，1380 回合于 2026-11-06 全部完成，2026-11-09 完成结果核查。
 当前 Arm 配置名称的整理见[来源说明](docs/release-provenance.md#arm-配置命名)。
 
 [固定 seed 清单](seed-manifests/20-blocks/README.md) ·
-[完整结果](result/README.md) ·
+[九模型成绩](#policy-results) · [原六模型结果包](result/README.md) ·
 [六任务视频](#task-demos) · [运行评测](#run-evaluation)
 
 ## 任务如何构造
@@ -47,7 +48,7 @@ Stapler 的 20 对 Press/Lift 还在 seed 资格筛选中核对了物体位姿�
 | Sequence | [`stack_sequence`](#stack-sequence) | 三个方块的六种自下而上顺序 | 同一布局，六回合 |
 | Spatial-Direction | [`place_relative`](#place-relative) | left / right / on top | 同一布局，三回合 |
 
-初始观测核验：已直接比较六个 checkpoint 保存的 **2520 份非 Noun 初始观测**（2026-10-27）。
+初始观测核验：已直接比较原六个 checkpoint 保存的 **2520 份非 Noun 初始观测**（2026-10-27）。
 按上述单位分成 960 个同场景组，其中 Stapler / Arm / Sequence / Spatial 各 120 组，Attribute 480 对；
 三路 RGB 和机器人 proprio 均通过 `numpy.array_equal`，不一致组数为 **0**。6 cm 设置下的 240 份 Size 观测也重新通过 120 对初始数组完全一致的校验，其余组继承原证据。这里的相同指执行动作前的观测；后续轨迹随指令和模型动作变化。
 
@@ -56,23 +57,30 @@ RoboTwin 通过 submodule 固定版本，任务通过软链安装；模型服务
 
 <a id="policy-results"></a>
 
-## 六个开源 checkpoint 的评测结果
+## 九个开源 checkpoint 的评测结果
 
 每个模型完成 **460 回合、120 blocks**。成功和已完成的 policy failure 全部保留。
-其中 240 个 Size 回合在 6 cm 设置下重测，其余 2520 回合复用未改变设置的结果，见[结果来源](docs/release-provenance.md)。
+原六模型中 240 个 Size 回合在 6 cm 设置下重测，其余 2520 回合复用未改变设置的结果，见[结果来源](docs/release-provenance.md)。
+新增三个 WAM 的六任务均使用当前设置完整评测。
 
 | Policy | Verb Stapler | Noun | Attribute | Arm | Sequence | Spatial | Overall (%) |
 |---|---:|---:|---:|---:|---:|---:|---:|
-| [X-VLA](policies/xvla/README.md) | 24/40 | 15/40 | 73/160 | 5/40 | 0/120 | 6/60 | 27.6 |
-| [LingBot-VA](policies/lingbot_va/README.md) | 18/40 | 30/40 | 108/160 | 37/40 | 17/120 | 26/60 | 56.2 |
-| [LingBot-VLA](policies/lingbot_vla/README.md) | 19/40 | 13/40 | 77/160 | 18/40 | 14/120 | 3/60 | 31.6 |
-| [VLAct All](policies/vlact/README.md) | 36/40 | 28/40 | 109/160 | 29/40 | 15/120 | 19/60 | 57.5 |
-| [DM05](policies/dm05/README.md) | 32/40 | 25/40 | 88/160 | 25/40 | 9/120 | 20/60 | 50.1 |
-| [Hy-VLA](policies/hy_vla/README.md) | 35/40 | 11/40 | 83/160 | 17/40 | 15/120 | 7/60 | 38.9 |
+| [X-VLA](policies/xvla/README.md) | 24/40 | 15/40 | 73/160 | 5/40 | 0/120 | 6/60 | 27.60 |
+| [LingBot-VA](policies/lingbot_va/README.md) | 18/40 | 30/40 | 108/160 | 37/40 | 17/120 | 26/60 | 56.25 |
+| [LingBot-VLA](policies/lingbot_vla/README.md) | 19/40 | 13/40 | 77/160 | 18/40 | 14/120 | 3/60 | 31.63 |
+| [VLAct All](policies/vlact/README.md) | 36/40 | 28/40 | 109/160 | 29/40 | 15/120 | 19/60 | 57.47 |
+| [DM05](policies/dm05/README.md) | 32/40 | 25/40 | 88/160 | 25/40 | 9/120 | 20/60 | 50.14 |
+| [Hy-VLA](policies/hy_vla/README.md) | 35/40 | 11/40 | 83/160 | 17/40 | 15/120 | 7/60 | 38.92 |
+| [Fast-WAM](policies/fastwam/README.md) | 38/40 | 26/40 | 90/160 | 19/40 | 10/120 | 23/60 | 51.74 |
+| [Motus](policies/motus/README.md) | 37/40 | 26/40 | 84/160 | 26/40 | 8/120 | 22/60 | 53.06 |
+| [X-WAM](policies/xwam/README.md) | 34/40 | 29/40 | 81/160 | 4/40 | 7/120 | 18/60 | 42.33 |
 
 任务列为成功数 / 已评测回合数。**Overall 对六个任务的成功率等权平均，每个任务内部各 mode 等权**，不是 460 回合的合并成功率。
-X-VLA 使用公开 clean checkpoint，其余五个模型使用对应的 clean + randomized checkpoints；VLAct 为 All 100K。
-具体版本和权重身份见 [checkpoints.json](result/checkpoints.json)。
+原六模型中，X-VLA 使用公开 clean checkpoint，其余五个使用对应的 clean + randomized checkpoints；VLAct 为 All 100K。
+其版本和权重身份见 [checkpoints.json](result/checkpoints.json)。新增 Fast-WAM 使用官方 RoboTwin `.pt`，Motus 使用 RoboTwin Stage 3，X-WAM 使用 `robotwin_sft/`；固定版本与文件哈希见 [WAM 资源清单](policies/wam/assets.json)及各模型说明。
+
+新增三模型的本机结果位于 `/Data/robotwin-if/evaluations/wam-full-20261104/`，`progress.html` / `progress.json` 提供分模式成绩，`final-audit-20261109.json` 保存核查证据。
+1380 条结果的 seed 顺序、mode、动作预算、逐回合记录和汇总已核对一致。Fast-WAM / Motus / X-WAM 分别发生 10 / 5 / 7 次模型调用前的 oracle 资格错误，均归档并在原 seed 恢复；正常 policy failure 保留。该恢复不代表 oracle 底层确定性已修复。
 
 ### Press / Lift 配对结果
 
@@ -87,13 +95,16 @@ X-VLA 使用公开 clean checkpoint，其余五个模型使用对应的 clean + 
 | VLAct All | 20/20 | 16/20 | 16/20 |
 | DM05 | 20/20 | 12/20 | 12/20 |
 | Hy-VLA | 17/20 | 18/20 | 17/20 |
+| Fast-WAM | 18/20 | 20/20 | 18/20 |
+| Motus | 19/20 | 18/20 | 18/20 |
+| X-WAM | 14/20 | 20/20 | 14/20 |
 
-[六任务分模式成绩](result/results.md) ·
+原六模型结果包：[六任务分模式成绩](result/results.md) ·
 [HTML 报表](result/results.html) ·
 [逐回合 CSV](result/episodes.csv) ·
 [Press/Lift 配对统计](result/stapler-summary.json)
 
-Size 的 Big 成功为 **1/120**，Small 为 **120/120**。Big 指令下 119/120 次先抬小块，其中 92 次随后也抬大块；
+原六模型的 Size Big 成功为 **1/120**，Small 为 **120/120**。Big 指令下 119/120 次先抬小块，其中 92 次随后也抬大块；
 这说明仅看二值成功率会遗漏行为差异。详见[尺寸实验与动作模式分析](docs/attribute-size-6cm-ablation.md)。
 已知人工复核分歧及统计边界见[结果来源说明](docs/release-provenance.md)。
 
@@ -138,7 +149,7 @@ Size 大块边长为 **6 cm**，小块为 **4 cm**。
 
 [![同一初始场景下分别按指令抬起 6 cm 大块与 4 cm 小块](docs/assets/demos/attribute_select.gif)](docs/assets/demos/attribute_select.mp4)
 
-[观看 MP4](docs/assets/demos/attribute_select.mp4) · VLAct All · seeds `100174 / 100175` · 左 Big，右 Small。Big 是本次 120 个 Big 回合中唯一成功例，不代表总体成功率。
+[观看 MP4](docs/assets/demos/attribute_select.mp4) · VLAct All · seeds `100174 / 100175` · 左 Big，右 Small。Big 是原六模型 120 个 Big 回合中唯一成功例，不代表总体成功率。
 
 <a id="arm-select"></a>
 
@@ -198,7 +209,7 @@ python tools/export_seed_modes.py --check
 python tools/verify_benchmark.py
 ```
 
-以上检查无需运行模型或仿真。新环境仍可能有渲染和推理随机性差异，固定 seed 不保证成功数逐次完全相同。
+以上检查无需运行模型或仿真；`verify_benchmark.py` 核查原六模型冻结结果包。新环境仍可能有渲染和推理随机性差异，固定 seed 不保证成功数逐次完全相同。
 
 <a id="run-evaluation"></a>
 
@@ -254,7 +265,7 @@ bash scripts/eval.sh --policy vlact --task press_lift_stapler --blocks 2 \
 
 ## 完整视频与文档
 
-完整备份包含 **2760 个正式回合的视频、动作、观测和结果证据，约 5.78 GiB**，已保存到 Azure。
+原六模型的完整备份包含 **2760 个正式回合的视频、动作、观测和结果证据，约 5.78 GiB**，已保存到 Azure。新增三模型的 1380 回合保存在上文的本机结果目录。
 目前需要容器读取权限；[下载与 SHA-256 校验说明](docs/download-results.md)提供浏览器登录、AzCopy 下载和本地视频浏览步骤。
 下载后运行随包提供的 `view_videos.sh`，可按模型、任务、mode 和成败查看全部视频。
 也可运行 `just video-review-azure`，从 Azure 按需加载当前 6 cm 结果；[网页](tools/policy-video-review/README.md)提供模型 × 任务 / mode 成绩表，点击即可进入对应视频。
@@ -262,8 +273,8 @@ README 中的示例 GIF/MP4 随仓库保存，可直接查看。
 
 | 内容 | 入口 |
 |---|---|
-| 六模型安装、权重、服务与 eval adapter | [policies](policies/README.md) |
-| 完整结果、全部视频的授权下载与校验 | [下载说明](docs/download-results.md) |
+| 九模型安装、权重、服务与 eval adapter | [policies](policies/README.md) |
+| 原六模型完整结果、全部视频的授权下载与校验 | [下载说明](docs/download-results.md) |
 | 任务 inventory、mode 与 block 定义 | [eval_cfg](eval_cfg/README.md) |
 | 生成和消费 qualified seed manifest | [seed manifest 使用指南](docs/seed-manifest-usage.md) |
 | 当前任务场景、指令与判据 | [Press/Lift Stapler](docs/press-lift-stapler-experiment.md) |

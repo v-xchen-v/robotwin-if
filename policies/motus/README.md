@@ -94,3 +94,8 @@ All checkpoint keys and shapes matched the inference model. Saved evidence inclu
 took about 3.2 seconds; observed model GPU usage was about 41 GiB. This two-episode
 pilot verifies the integration and is not the full 460-episode benchmark. Detailed
 evidence is tracked in the feature's project notes.
+
+The full six-task evaluation finished on 2026-11-06 using all 460 episodes from
+`seed-manifests/20-blocks`. Overall is **53.06%**, the unweighted mean of the six
+task scores. See the [benchmark results](../../README.md#policy-results).
+Local records and the final audit are under `/Data/robotwin-if/evaluations/wam-full-20261104/`.
