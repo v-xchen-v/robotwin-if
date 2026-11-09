@@ -1,0 +1,209 @@
+{
+  "checked_at": "2026-11-04T11:13:05.489397+00:00",
+  "scope": "First complete press_lift_stapler block only; not a full benchmark",
+  "base_branch": "origin/release-20261030",
+  "base_commit": "57cb69cf8174cda61a2ecc5d8773b7c79ec36ca6",
+  "development_branch": "feat/fastwam-motus-inference",
+  "result_root": "/Data/robotwin-if/evaluations/fastwam-motus-pilot-20261104",
+  "asset_receipt": "/Data/robotwin-if/checkpoints/wam/download-verification-20261104.json",
+  "checks": [
+    "exact seeds and oracle qualification",
+    "finite full predictions and measured states",
+    "executed actions match replan prefixes",
+    "all video frames decode and count matches executed actions plus initial frame",
+    "both runs complete with no execution errors"
+  ],
+  "policies": {
+    "fastwam": {
+      "summary": {
+        "task": "press_lift_stapler",
+        "complete": true,
+        "expected_episodes": 2,
+        "recorded_episodes": 2,
+        "successes": 2,
+        "error": null,
+        "per_mode": {
+          "lift": {
+            "successes": 1,
+            "recorded": 1,
+            "expected": 1
+          },
+          "press": {
+            "successes": 1,
+            "recorded": 1,
+            "expected": 1
+          }
+        }
+      },
+      "episodes": [
+        {
+          "seed": 110000,
+          "mode": "press",
+          "instruction": "Press down on the stapler.",
+          "status": "success",
+          "action_calls": 58,
+          "chunks": 3,
+          "oracle_success": true,
+          "elapsed_seconds": 74.70169883593917,
+          "video_frames": 59,
+          "prediction_latency_seconds": [
+            8.1029311446473,
+            0.6692862762138247,
+            0.667991659604013
+          ],
+          "evidence_sha256": {
+            "fastwam/press_lift_stapler/press_lift_stapler_ep110000_result.json": "28625e92f4c185776761e33ebad974fc72396312645e8b0707b088dd633bccdb",
+            "fastwam/press_lift_stapler/press_lift_stapler_ep110000_actions.npz": "228aef872bd38dea8e62ecea445212750990fa0d5868205a5336ca98e1cc64e0",
+            "fastwam/press_lift_stapler/press_lift_stapler_ep110000_initial_observation.npz": "02121910b4901175e627e168266d374968e5b697c8904ebbbf0aca6f20332c46",
+            "fastwam/press_lift_stapler/press_lift_stapler_ep110000_requests.json": "8d7a8d7f132ea96434466ab96c5ef8d1ff9ba9d15d1687b8b437a65ef8c7e78c",
+            "fastwam/press_lift_stapler/press_lift_stapler_ep110000_status.json": "6abd028706f1795bfefc941e555527b385a6562b8e1cdb589607c9ea493d71c1",
+            "fastwam/press_lift_stapler/press_lift_stapler_ep110000_1.mp4": "af5363643247e7d7630f3aea2efe8a27adc507e513a85908be840f3ad208f255"
+          }
+        },
+        {
+          "seed": 110001,
+          "mode": "lift",
+          "instruction": "Lift the stapler.",
+          "status": "success",
+          "action_calls": 79,
+          "chunks": 4,
+          "oracle_success": true,
+          "elapsed_seconds": 27.35758852213621,
+          "video_frames": 80,
+          "prediction_latency_seconds": [
+            0.652892735786736,
+            0.6745734931901097,
+            0.6610664408653975,
+            0.6561228772625327
+          ],
+          "evidence_sha256": {
+            "fastwam/press_lift_stapler/press_lift_stapler_ep110001_result.json": "e1efd9220da0cbe345ee3fcf7ff7478489e3347be9a28a074d297dc345f93adc",
+            "fastwam/press_lift_stapler/press_lift_stapler_ep110001_actions.npz": "9817e241a05c2c10f70f47093b31d8e5ccb3b4d670492a29c7a9b7e67e5360ae",
+            "fastwam/press_lift_stapler/press_lift_stapler_ep110001_initial_observation.npz": "02121910b4901175e627e168266d374968e5b697c8904ebbbf0aca6f20332c46",
+            "fastwam/press_lift_stapler/press_lift_stapler_ep110001_requests.json": "bc007df77d2d9629a769c135dfd47b06fc4758d8ce27039ce7cb4dd1e47fbfdb",
+            "fastwam/press_lift_stapler/press_lift_stapler_ep110001_status.json": "6a5b63ea29825c4a72fdfaf61e7d9201f2a7590ae8e61aeb8ee1ba458c9f59d7",
+            "fastwam/press_lift_stapler/press_lift_stapler_ep110001_1.mp4": "f9ad69dd74332c508ed805ad897e8da90bc6bbafd59f72517101d318c0741224"
+          }
+        }
+      ],
+      "server_metadata": "/home/xichen6/Documents/repos/robotwin-if/outputs/policy-eval/servers/fastwam-002/server.json",
+      "server_metadata_sha256": "39c6787672b1ed16b567a170c7b3afea9e8000a13fa453ae47de88f33f51a3d6",
+      "source_revision": "7faa71108368fbb3b6885649f112af607427a2d4",
+      "task_source_sha256": "233d082bdf33f0519c12572a727a0a0b78ac163b6b6410a5ac1a71d9fad53174",
+      "manifest_sha256": "a73f8c23d0d79802a0e36493b889a409451620fe660964a471b3010b1c13a996",
+      "adapter_source_sha256": {
+        "policies/wam/eval.py": "77775aa1234f0d035e8883825f9720d2bff8d237dcae0ed8a731c0e409c2deaa",
+        "policies/wam/client.py": "ba1376f5a96a54828dc0ad40ce8325ba6149f1ed461a20e0dbadc7061bca0d5c",
+        "policies/wam/assets.py": "3ea91f826f244d58d174569f774c35e9ad52ce40f690dc9a43156a7fcd51d31f",
+        "policies/wam/check_env.py": "24b1f5147484cd099ff7bbf4fcb7231e6c5e8f70f483017669bae6ef4c00c0be",
+        "policies/wam/outputs.py": "468be771041ca9e054986beeb4128693faa9b014afe123430fb10be61dff2689",
+        "policies/wam/runtime.py": "38a9dd939537283b83bbf39aa28e76da6dc3bf3b0467590212681febfe789999",
+        "policies/wam/__init__.py": "4f152efa4b752e5c857538b43e29230350500c5fb53d653148a28cfb1a5f0185",
+        "policies/wam/serve.py": "59826db2dcc9df39649eca85ba20a9da94f04050f57f0290127b1fafa4b58a1e",
+        "policies/fastwam/eval.py": "87615c46d9ea6218ac7ebc5ab576ad5d9ec1ce507961963606026a5ba576b509",
+        "policies/fastwam/download_checkpoint.py": "969c7d5a8c80186140d16cc34effae5bd0032f05cac2cdb63c086c658660bbf4",
+        "policies/fastwam/serve.py": "9f8725c7858d58327fca8660784ef4cc41d825664a5b75f58016b420191430f1",
+        "policies/wam/assets.json": "784a32868effd5934f7e7de546001dd20944b5fc95497d057fb0a2ae88447365",
+        "policies/xvla/eval.py": "3f9dc3e07a104242ba68b9cc729c7707056b772f7e79fc9d2122cd2fa15c5137",
+        "policies/xvla/outputs.py": "2f322ef36d1d7994b23936d8df6da59c7d39e1a69b45a8ed2c6a038c0ae9b2a0",
+        "policies/lingbot_va/client.py": "4049c4dba3dbd5fd7b3cb7726d369da30c48ac6afac94d2a516999e68bcb264e"
+      },
+      "full_benchmark_expected": 460,
+      "overall_pct": null
+    },
+    "motus": {
+      "summary": {
+        "task": "press_lift_stapler",
+        "complete": true,
+        "expected_episodes": 2,
+        "recorded_episodes": 2,
+        "successes": 2,
+        "error": null,
+        "per_mode": {
+          "lift": {
+            "successes": 1,
+            "recorded": 1,
+            "expected": 1
+          },
+          "press": {
+            "successes": 1,
+            "recorded": 1,
+            "expected": 1
+          }
+        }
+      },
+      "episodes": [
+        {
+          "seed": 110000,
+          "mode": "press",
+          "instruction": "Press down on the stapler.",
+          "status": "success",
+          "action_calls": 29,
+          "chunks": 2,
+          "oracle_success": true,
+          "elapsed_seconds": 73.7853242168203,
+          "video_frames": 30,
+          "prediction_latency_seconds": [
+            10.714514026418328,
+            3.1953802462667227
+          ],
+          "evidence_sha256": {
+            "motus/press_lift_stapler/press_lift_stapler_ep110000_result.json": "06cc5eb14f93e217b23e1eef3f52e62662b2db244030e98ee9184a4edb549d32",
+            "motus/press_lift_stapler/press_lift_stapler_ep110000_actions.npz": "b24e8a037f19ba269579ec758ce3722e466f69c043c44f41db940aeb137a790e",
+            "motus/press_lift_stapler/press_lift_stapler_ep110000_initial_observation.npz": "02121910b4901175e627e168266d374968e5b697c8904ebbbf0aca6f20332c46",
+            "motus/press_lift_stapler/press_lift_stapler_ep110000_requests.json": "0d3751322d921a9f5efaab0b2f85be79d1a2529eeeb5c9566731dfaacea2820f",
+            "motus/press_lift_stapler/press_lift_stapler_ep110000_status.json": "6abd028706f1795bfefc941e555527b385a6562b8e1cdb589607c9ea493d71c1",
+            "motus/press_lift_stapler/press_lift_stapler_ep110000_1.mp4": "885db0e18fbf23fc64f5770b541ebac76a6c66e74e8860e9ca9841cbcf3cb439"
+          }
+        },
+        {
+          "seed": 110001,
+          "mode": "lift",
+          "instruction": "Lift the stapler.",
+          "status": "success",
+          "action_calls": 26,
+          "chunks": 2,
+          "oracle_success": true,
+          "elapsed_seconds": 20.127016629092395,
+          "video_frames": 27,
+          "prediction_latency_seconds": [
+            3.2097002547234297,
+            3.196709963493049
+          ],
+          "evidence_sha256": {
+            "motus/press_lift_stapler/press_lift_stapler_ep110001_result.json": "1885a7a0d2ffee365f08acaca686fedb58d2d5b60998c5f7670c66edff482ff4",
+            "motus/press_lift_stapler/press_lift_stapler_ep110001_actions.npz": "5a52ef29f455cb6946941d15cd17b24adcbe73937c52127b3418b0d01a749b6b",
+            "motus/press_lift_stapler/press_lift_stapler_ep110001_initial_observation.npz": "02121910b4901175e627e168266d374968e5b697c8904ebbbf0aca6f20332c46",
+            "motus/press_lift_stapler/press_lift_stapler_ep110001_requests.json": "19ccd0b6a581d9502bededa3820fa2ec29068ea132700de089522fba9b10dcdd",
+            "motus/press_lift_stapler/press_lift_stapler_ep110001_status.json": "6a5b63ea29825c4a72fdfaf61e7d9201f2a7590ae8e61aeb8ee1ba458c9f59d7",
+            "motus/press_lift_stapler/press_lift_stapler_ep110001_1.mp4": "8ab53d9eb7e8d20dfdc29e80f7b1367beb4aa80420b9874d62c0f00dbb113afa"
+          }
+        }
+      ],
+      "server_metadata": "/home/xichen6/Documents/repos/robotwin-if/outputs/policy-eval/servers/motus-001/server.json",
+      "server_metadata_sha256": "c86acadd3e1dedcb3f216b54fbf0b5332ab01d59ed87b5e1c535bde9ce091f28",
+      "source_revision": "88f6fe30c62af033874b0a2e48ad1cbdaf12cfdf",
+      "task_source_sha256": "233d082bdf33f0519c12572a727a0a0b78ac163b6b6410a5ac1a71d9fad53174",
+      "manifest_sha256": "a73f8c23d0d79802a0e36493b889a409451620fe660964a471b3010b1c13a996",
+      "adapter_source_sha256": {
+        "policies/wam/eval.py": "77775aa1234f0d035e8883825f9720d2bff8d237dcae0ed8a731c0e409c2deaa",
+        "policies/wam/client.py": "ba1376f5a96a54828dc0ad40ce8325ba6149f1ed461a20e0dbadc7061bca0d5c",
+        "policies/wam/assets.py": "3ea91f826f244d58d174569f774c35e9ad52ce40f690dc9a43156a7fcd51d31f",
+        "policies/wam/check_env.py": "24b1f5147484cd099ff7bbf4fcb7231e6c5e8f70f483017669bae6ef4c00c0be",
+        "policies/wam/outputs.py": "468be771041ca9e054986beeb4128693faa9b014afe123430fb10be61dff2689",
+        "policies/wam/runtime.py": "38a9dd939537283b83bbf39aa28e76da6dc3bf3b0467590212681febfe789999",
+        "policies/wam/__init__.py": "4f152efa4b752e5c857538b43e29230350500c5fb53d653148a28cfb1a5f0185",
+        "policies/wam/serve.py": "59826db2dcc9df39649eca85ba20a9da94f04050f57f0290127b1fafa4b58a1e",
+        "policies/motus/eval.py": "ae8730663873dfcdd4d60bbde4e9768b4290c9c2a439f45b4f3b70b1631b4552",
+        "policies/motus/download_checkpoint.py": "fce7079ba1d5a615835489674cc706963a47004204ef2baf1cec5d7a31550bc2",
+        "policies/motus/serve.py": "a2226c7dd4b1a3bae73ca3c308dbce4efbdd0d654fe620d093162577a99eb115",
+        "policies/wam/assets.json": "784a32868effd5934f7e7de546001dd20944b5fc95497d057fb0a2ae88447365",
+        "policies/xvla/eval.py": "3f9dc3e07a104242ba68b9cc729c7707056b772f7e79fc9d2122cd2fa15c5137",
+        "policies/xvla/outputs.py": "2f322ef36d1d7994b23936d8df6da59c7d39e1a69b45a8ed2c6a038c0ae9b2a0",
+        "policies/lingbot_va/client.py": "4049c4dba3dbd5fd7b3cb7726d369da30c48ac6afac94d2a516999e68bcb264e"
+      },
+      "full_benchmark_expected": 460,
+      "overall_pct": null
+    }
+  }
+}

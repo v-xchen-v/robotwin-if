@@ -1,0 +1,203 @@
+[
+  {
+    "seed": 100065,
+    "attempt": 1,
+    "initial_positions": [
+      [
+        -0.16381783783435822,
+        -0.06840784847736359,
+        0.7650008201599121
+      ],
+      [
+        0.21849112212657928,
+        -0.058036960661411285,
+        0.7650006413459778
+      ],
+      [
+        -0.2433001697063446,
+        0.04257620871067047,
+        0.7650007605552673
+      ]
+    ],
+    "info": {
+      "cluttered_table_info": [],
+      "texture_info": {
+        "wall_texture": null,
+        "table_texture": null
+      },
+      "info": {
+        "{A}": "green block",
+        "{B}": "blue block",
+        "{C}": "red block",
+        "{a}": "right",
+        "{b}": "left",
+        "{c}": "left"
+      },
+      "mode": 3
+    },
+    "plan_success": true,
+    "check_success": false,
+    "signals": {
+      "mode": 3,
+      "is_default": false,
+      "l1_stacked": false,
+      "l2_ordered": false
+    },
+    "final_positions": [
+      [
+        -0.12855349481105804,
+        0.05779934674501419,
+        0.7650007605552673
+      ],
+      [
+        -0.031332727521657944,
+        -0.1363627314567566,
+        0.7650008797645569
+      ],
+      [
+        -0.07952225208282471,
+        -0.11979760974645615,
+        0.7650010585784912
+      ]
+    ],
+    "grippers_open": [
+      true,
+      true
+    ],
+    "elapsed_seconds": 38.5774847837165
+  },
+  {
+    "seed": 100065,
+    "attempt": 2,
+    "initial_positions": [
+      [
+        -0.16381783783435822,
+        -0.06840784847736359,
+        0.7650008201599121
+      ],
+      [
+        0.21849112212657928,
+        -0.058036960661411285,
+        0.7650006413459778
+      ],
+      [
+        -0.2433001697063446,
+        0.04257620871067047,
+        0.7650007605552673
+      ]
+    ],
+    "info": {
+      "cluttered_table_info": [],
+      "texture_info": {
+        "wall_texture": null,
+        "table_texture": null
+      },
+      "info": {
+        "{A}": "green block",
+        "{B}": "blue block",
+        "{C}": "red block",
+        "{a}": "right",
+        "{b}": "left",
+        "{c}": "left"
+      },
+      "mode": 3
+    },
+    "plan_success": false,
+    "check_success": false,
+    "signals": {
+      "mode": 3,
+      "is_default": false,
+      "l1_stacked": false,
+      "l2_ordered": false
+    },
+    "final_positions": [
+      [
+        -0.162891685962677,
+        -0.06550441682338715,
+        0.7650007605552673
+      ],
+      [
+        0.0021757970098406076,
+        -0.12921369075775146,
+        0.7650008201599121
+      ],
+      [
+        -0.10435304790735245,
+        -0.0916713997721672,
+        0.7650007009506226
+      ]
+    ],
+    "grippers_open": [
+      false,
+      true
+    ],
+    "elapsed_seconds": 5.341056681238115
+  },
+  {
+    "seed": 100065,
+    "attempt": 3,
+    "initial_positions": [
+      [
+        -0.16381783783435822,
+        -0.06840784847736359,
+        0.7650008201599121
+      ],
+      [
+        0.21849112212657928,
+        -0.058036960661411285,
+        0.7650006413459778
+      ],
+      [
+        -0.2433001697063446,
+        0.04257620871067047,
+        0.7650007605552673
+      ]
+    ],
+    "info": {
+      "cluttered_table_info": [],
+      "texture_info": {
+        "wall_texture": null,
+        "table_texture": null
+      },
+      "info": {
+        "{A}": "green block",
+        "{B}": "blue block",
+        "{C}": "red block",
+        "{a}": "right",
+        "{b}": "left",
+        "{c}": "left"
+      },
+      "mode": 3
+    },
+    "plan_success": true,
+    "check_success": true,
+    "signals": {
+      "mode": 3,
+      "is_default": false,
+      "l1_stacked": true,
+      "l2_ordered": true
+    },
+    "final_positions": [
+      [
+        0.0025659457314759493,
+        -0.12827159464359283,
+        0.8649998903274536
+      ],
+      [
+        0.002140388125553727,
+        -0.12900593876838684,
+        0.764997661113739
+      ],
+      [
+        0.001683829352259636,
+        -0.128387451171875,
+        0.8149980902671814
+      ]
+    ],
+    "grippers_open": [
+      true,
+      true
+    ],
+    "elapsed_seconds": 6.429508070461452
+  }
+]

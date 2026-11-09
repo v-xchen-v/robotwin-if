@@ -1,0 +1,84 @@
+{
+  "seed": 100065,
+  "model_requests": 0,
+  "diagnostic_only": true,
+  "communication_flag": false,
+  "initial_scenes_identical": true,
+  "oracle_trials": [
+    {
+      "attempt": 1,
+      "intervention": "retained",
+      "plan_success": true,
+      "success": true,
+      "seconds": 38.543580604717135
+    },
+    {
+      "attempt": 2,
+      "intervention": "retained",
+      "plan_success": true,
+      "success": false,
+      "seconds": 6.151322298683226
+    },
+    {
+      "attempt": 3,
+      "intervention": "retained",
+      "plan_success": true,
+      "success": false,
+      "seconds": 6.7046282682567835
+    },
+    {
+      "attempt": 4,
+      "intervention": "retained",
+      "plan_success": true,
+      "success": false,
+      "seconds": 6.419119236990809
+    },
+    {
+      "attempt": 5,
+      "intervention": "reset_both_generators",
+      "plan_success": false,
+      "success": false,
+      "seconds": 6.006418908946216
+    },
+    {
+      "attempt": 6,
+      "intervention": "reset_both_generators",
+      "plan_success": false,
+      "success": false,
+      "seconds": 6.074694820679724
+    },
+    {
+      "attempt": 7,
+      "intervention": "reset_both_generators",
+      "plan_success": true,
+      "success": true,
+      "seconds": 6.568407696671784
+    },
+    {
+      "attempt": 8,
+      "intervention": "reset_both_generators",
+      "plan_success": true,
+      "success": false,
+      "seconds": 6.877738965675235
+    }
+  ],
+  "reset_ik_rng_states_identical": true,
+  "reset_trajectories_identical": false,
+  "action_tests": [
+    {
+      "action_type": "qpos",
+      "changed_ik_rngs": [],
+      "state_carried_into_next_setup": true
+    },
+    {
+      "action_type": "ee",
+      "changed_ik_rngs": [
+        "left.motion_gen",
+        "right.motion_gen"
+      ],
+      "state_carried_into_next_setup": true
+    }
+  ],
+  "raw_results": "/Data/robotwin-if/tmp/oracle-planner-isolation-20261105/results.json",
+  "raw_sha256": "1f425de4af7532341e68c538f8d3ab2435003bb1d75758568974333616fa5e52"
+}

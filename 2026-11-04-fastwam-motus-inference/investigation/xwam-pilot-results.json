@@ -1,0 +1,459 @@
+[
+  {
+    "policy": "xwam",
+    "task": "press_lift_stapler",
+    "seed": 110000,
+    "status": "failure",
+    "success": false,
+    "instruction_type": "unseen",
+    "instruction": "Press down on the stapler.",
+    "action_calls": 250,
+    "chunks": 8,
+    "oracle_success": true,
+    "mode": "press",
+    "oracle_seconds": 40.996139637194574,
+    "step_limit": 250,
+    "policy_setup_seconds": 11.932620243169367,
+    "termination": "action_limit",
+    "signals": {
+      "checker_version": "press-lift-stapler-v1-native-press-contact",
+      "thresholds": {
+        "sample_seconds": 0.004,
+        "lift_height_m": 0.03,
+        "lift_seconds": 0.1,
+        "preclosed_seconds": 0.08,
+        "descent_m": 0.005,
+        "press_max_rise_m": 0.015,
+        "press_max_xy_m": 0.03,
+        "top_xy_m": 0.03,
+        "top_z_m": 0.03
+      },
+      "time": 61.14800290437415,
+      "first_action": null,
+      "first_action_time": null,
+      "events": [],
+      "max_rise_m": 0.014539122581481934,
+      "max_xy_displacement_m": 0.01244983822107315,
+      "press_candidates": {
+        "left": null,
+        "right": null
+      },
+      "rise_m": 0.010869860649108887,
+      "xy_displacement_m": 0.01180604100227356,
+      "supported": true,
+      "arms": {
+        "left": {
+          "touching": false,
+          "top_touch": false,
+          "contact_links": [],
+          "closed": true,
+          "ee_z": 0.9613993167877197
+        },
+        "right": {
+          "touching": false,
+          "top_touch": false,
+          "contact_links": [],
+          "closed": false,
+          "ee_z": 0.9415916800498962
+        }
+      },
+      "press_completion": "native-contact-after-preclosed-downward-approach",
+      "mode": "press",
+      "scene_seed": 55000,
+      "contact_protocol": "native-all-contact-points",
+      "sampling_protocol": "every-physics-step",
+      "native_press_success": false,
+      "native_press_first_time": null,
+      "press_contact_point": 2,
+      "stapler_id": 0,
+      "scene_layout": "context",
+      "target_is_static": false,
+      "target_mass_kg": 0.05,
+      "context_sampling_version": "random-back-region-v1",
+      "rotation_sampling_version": "random-yaw-v1",
+      "context_objects": [
+        {
+          "name": "047_mouse",
+          "position": [
+            0.09280017763376236,
+            0.09258288145065308,
+            0.7406614422798157
+          ],
+          "initial_position": [
+            0.09280017763376236,
+            0.09258288145065308,
+            0.7406614422798157
+          ],
+          "spawn_position": [
+            0.09280519782377711,
+            0.09258278850077568,
+            0.741
+          ],
+          "quaternion": [
+            0.6917827725410461,
+            0.6902967691421509,
+            0.1466468721628189,
+            0.1530422419309616
+          ],
+          "initial_quaternion": [
+            0.6917827725410461,
+            0.6902967691421509,
+            0.1466468721628189,
+            0.1530422419309616
+          ],
+          "spawn_quaternion": [
+            0.6910456518419106,
+            0.6910456518419106,
+            0.14985295149041628,
+            0.14985295149041628
+          ],
+          "yaw_degrees": -65.5297361793462
+        },
+        {
+          "name": "057_toycar",
+          "position": [
+            -0.28415384888648987,
+            0.18519602715969086,
+            0.7406793236732483
+          ],
+          "initial_position": [
+            -0.28415384888648987,
+            0.18519602715969086,
+            0.7406793236732483
+          ],
+          "spawn_position": [
+            -0.2841539026983329,
+            0.18519620216708507,
+            0.741
+          ],
+          "quaternion": [
+            0.706259548664093,
+            0.7065208554267883,
+            -0.03176185116171837,
+            -0.03188972920179367
+          ],
+          "initial_quaternion": [
+            0.706259548664093,
+            0.7065208554267883,
+            -0.03176185116171837,
+            -0.03188972920179367
+          ],
+          "spawn_quaternion": [
+            0.7063902046743518,
+            0.7063902046743518,
+            -0.031825755923895305,
+            -0.031825755923895305
+          ],
+          "yaw_degrees": -95.15932744502312
+        }
+      ],
+      "stapler_position": [
+        -0.1644122153520584,
+        -0.1296808123588562,
+        0.7512290477752686
+      ],
+      "initial_position": [
+        -0.16214105486869812,
+        -0.1180952861905098,
+        0.7403591871261597
+      ],
+      "spawn_position": [
+        -0.16225571930408478,
+        -0.11804456263780594,
+        0.7400000095367432
+      ],
+      "stapler_quaternion": [
+        0.05008527263998985,
+        0.7070497870445251,
+        -0.04751672223210335,
+        0.7037855982780457
+      ],
+      "initial_quaternion": [
+        0.5455347299575806,
+        0.5389711856842041,
+        0.45100829005241394,
+        0.4566107988357544
+      ],
+      "spawn_quaternion": [
+        0.5420404984876684,
+        0.5420404984876684,
+        0.45408380063512493,
+        0.45408380063512493
+      ],
+      "stapler_yaw_degrees": -10.092136539743306,
+      "verdict_protocol": "first-completed-action",
+      "policy_action_count": 250,
+      "policy_action_limit": 250
+    },
+    "elapsed_seconds": 167.19150466565043,
+    "video_frames": 251,
+    "arrays_and_decoded_actions_verified": true,
+    "noise_seeds": [
+      838047489,
+      3726120068,
+      2622004422,
+      4245818770,
+      1408569731,
+      3172881543,
+      3489066904,
+      65125749
+    ],
+    "files_sha256": {
+      "press_lift_stapler_ep110000.log": "652a094f8141822e2316062c55bf0fb3bd0fe794b0ad8bbe6925a266bbba9ccc",
+      "press_lift_stapler_ep110000_0.mp4": "57997878fcef5032c8b181de9bd410c0004bd1cc1fc9b1b7331f9917f4510225",
+      "press_lift_stapler_ep110000_action_logs.json": "3a9ba5d4f1a2541011fe23e51a664f68c9d92ee25c85382cd8b36c0967263f9e",
+      "press_lift_stapler_ep110000_actions.npz": "35398ac3caa8001475f3fc9f09e01cd122b2b62004a686a610c78b61d37f86b1",
+      "press_lift_stapler_ep110000_diagnostics.json": "03389d4d99fc1db86d382e3d8940c15fc1852b0b22efafa322f0f1ec9f091761",
+      "press_lift_stapler_ep110000_initial_observation.npz": "121767d1b1d112c05e4b3d722c2f1c332e6e071552698c23bb29054de277b652",
+      "press_lift_stapler_ep110000_instruction.txt": "5a6a09b5ae5b3c7e07977a5ae79c0ec9b2381340453e50792ab633cbaec09867",
+      "press_lift_stapler_ep110000_oracle.json": "b6d37c6c8782f101aad592590bfa83adf6a3e0c2b05574837e80dc9357e93f89",
+      "press_lift_stapler_ep110000_requests.json": "c25ca8e3155af804b4172f277b56932f9b032bb8b4b11b721b83397417596dc8",
+      "press_lift_stapler_ep110000_result.json": "c42edabc049859eb39e8084b6002f1fd75aac0c5e9c15d0419af164c2ce1159f",
+      "press_lift_stapler_ep110000_status.json": "1ab281185fac4567cf04b0e4efb27b3f7892b5c8ff5e06a1e7f8759e37d4dcb0",
+      "press_lift_stapler_ep110000_step0000.png": "36b1b82a6d253c1a87e567b6ced92937338c94ce9261215889d6621971ee84c7",
+      "press_lift_stapler_ep110000_summary.json": "9b06c3ebca4a1853c0ed05d0a903d783448d2b690e5a11dc6bdf3901ff36d3e5",
+      "press_lift_stapler_ep110000_timings.json": "bff53b61b937ce5b29a763cb9fbd36fd80716746b2d8bbb976557fecc9649296"
+    }
+  },
+  {
+    "policy": "xwam",
+    "task": "press_lift_stapler",
+    "seed": 110001,
+    "status": "success",
+    "success": true,
+    "instruction_type": "unseen",
+    "instruction": "Lift the stapler.",
+    "action_calls": 85,
+    "chunks": 3,
+    "oracle_success": true,
+    "mode": "lift",
+    "oracle_seconds": 3.6211283849552274,
+    "step_limit": 250,
+    "policy_setup_seconds": 0.6673304392024875,
+    "termination": "task_success",
+    "signals": {
+      "checker_version": "press-lift-stapler-v1-native-press-contact",
+      "thresholds": {
+        "sample_seconds": 0.004,
+        "lift_height_m": 0.03,
+        "lift_seconds": 0.1,
+        "preclosed_seconds": 0.08,
+        "descent_m": 0.005,
+        "press_max_rise_m": 0.015,
+        "press_max_xy_m": 0.03,
+        "top_xy_m": 0.03,
+        "top_z_m": 0.03
+      },
+      "time": 26.236001246143132,
+      "first_action": "lift",
+      "first_action_time": 26.236001246143132,
+      "events": [
+        {
+          "action": "lift",
+          "time": 26.236001246143132
+        }
+      ],
+      "max_rise_m": 0.033385634422302246,
+      "max_xy_displacement_m": 0.009964547120034695,
+      "press_candidates": {
+        "left": null,
+        "right": null
+      },
+      "rise_m": 0.033385634422302246,
+      "xy_displacement_m": 0.00959646888077259,
+      "supported": false,
+      "arms": {
+        "left": {
+          "touching": true,
+          "top_touch": true,
+          "contact_links": [
+            "fl_link7",
+            "fl_link7",
+            "fl_link7",
+            "fl_link7",
+            "fl_link7",
+            "fl_link7",
+            "fl_link7",
+            "fl_link7",
+            "fl_link7",
+            "fl_link7",
+            "fl_link7",
+            "fl_link7",
+            "fl_link8",
+            "fl_link8",
+            "fl_link8",
+            "fl_link8",
+            "fl_link8",
+            "fl_link8",
+            "fl_link8",
+            "fl_link8",
+            "fl_link8",
+            "fl_link8",
+            "fl_link8",
+            "fl_link8"
+          ],
+          "closed": true,
+          "ee_z": 0.9286657571792603
+        },
+        "right": {
+          "touching": false,
+          "top_touch": false,
+          "contact_links": [],
+          "closed": false,
+          "ee_z": 0.9351018667221069
+        }
+      },
+      "press_completion": "native-contact-after-preclosed-downward-approach",
+      "mode": "lift",
+      "scene_seed": 55000,
+      "contact_protocol": "native-all-contact-points",
+      "sampling_protocol": "every-physics-step",
+      "native_press_success": true,
+      "native_press_first_time": 21.54400102328509,
+      "press_contact_point": 2,
+      "stapler_id": 0,
+      "scene_layout": "context",
+      "target_is_static": false,
+      "target_mass_kg": 0.05,
+      "context_sampling_version": "random-back-region-v1",
+      "rotation_sampling_version": "random-yaw-v1",
+      "context_objects": [
+        {
+          "name": "047_mouse",
+          "position": [
+            0.09280017763376236,
+            0.09258288145065308,
+            0.7406614422798157
+          ],
+          "initial_position": [
+            0.09280017763376236,
+            0.09258288145065308,
+            0.7406614422798157
+          ],
+          "spawn_position": [
+            0.09280519782377711,
+            0.09258278850077568,
+            0.741
+          ],
+          "quaternion": [
+            0.6917827725410461,
+            0.6902967691421509,
+            0.1466468721628189,
+            0.1530422419309616
+          ],
+          "initial_quaternion": [
+            0.6917827725410461,
+            0.6902967691421509,
+            0.1466468721628189,
+            0.1530422419309616
+          ],
+          "spawn_quaternion": [
+            0.6910456518419106,
+            0.6910456518419106,
+            0.14985295149041628,
+            0.14985295149041628
+          ],
+          "yaw_degrees": -65.5297361793462
+        },
+        {
+          "name": "057_toycar",
+          "position": [
+            -0.28415384888648987,
+            0.18519602715969086,
+            0.7406793236732483
+          ],
+          "initial_position": [
+            -0.28415384888648987,
+            0.18519602715969086,
+            0.7406793236732483
+          ],
+          "spawn_position": [
+            -0.2841539026983329,
+            0.18519620216708507,
+            0.741
+          ],
+          "quaternion": [
+            0.706259548664093,
+            0.7065208554267883,
+            -0.03176185116171837,
+            -0.03188972920179367
+          ],
+          "initial_quaternion": [
+            0.706259548664093,
+            0.7065208554267883,
+            -0.03176185116171837,
+            -0.03188972920179367
+          ],
+          "spawn_quaternion": [
+            0.7063902046743518,
+            0.7063902046743518,
+            -0.031825755923895305,
+            -0.031825755923895305
+          ],
+          "yaw_degrees": -95.15932744502312
+        }
+      ],
+      "stapler_position": [
+        -0.15901343524456024,
+        -0.10902278870344162,
+        0.7737448215484619
+      ],
+      "initial_position": [
+        -0.16214105486869812,
+        -0.1180952861905098,
+        0.7403591871261597
+      ],
+      "spawn_position": [
+        -0.16225571930408478,
+        -0.11804456263780594,
+        0.7400000095367432
+      ],
+      "stapler_quaternion": [
+        0.5500780940055847,
+        0.5185585021972656,
+        0.47446781396865845,
+        0.45098963379859924
+      ],
+      "initial_quaternion": [
+        0.5455347299575806,
+        0.5389711856842041,
+        0.45100829005241394,
+        0.4566107988357544
+      ],
+      "spawn_quaternion": [
+        0.5420404984876684,
+        0.5420404984876684,
+        0.45408380063512493,
+        0.45408380063512493
+      ],
+      "stapler_yaw_degrees": -10.092136539743306,
+      "verdict_protocol": "first-completed-action",
+      "policy_action_count": 85,
+      "policy_action_limit": 250
+    },
+    "elapsed_seconds": 42.57862571440637,
+    "video_frames": 86,
+    "arrays_and_decoded_actions_verified": true,
+    "noise_seeds": [
+      2605509612,
+      3437438017,
+      882901248
+    ],
+    "files_sha256": {
+      "press_lift_stapler_ep110001.log": "dac659fa33be2f6d60e79347d01dc1a3c811d7bbfd4c41bdbe9be7f28357a623",
+      "press_lift_stapler_ep110001_1.mp4": "e1810f1da50c7cda4f6120e78eb39d162f966f142cc0db7f555ed93e41806d9a",
+      "press_lift_stapler_ep110001_action_logs.json": "4d00d1732c65fb7ffa5656b341e85b87ba684267573d886f3d7e8ce69aa6631f",
+      "press_lift_stapler_ep110001_actions.npz": "96b282cc8bc5c06c2d12a0250d50d092efa82f761dcebfe4c2d27867a3fa8224",
+      "press_lift_stapler_ep110001_diagnostics.json": "03389d4d99fc1db86d382e3d8940c15fc1852b0b22efafa322f0f1ec9f091761",
+      "press_lift_stapler_ep110001_initial_observation.npz": "121767d1b1d112c05e4b3d722c2f1c332e6e071552698c23bb29054de277b652",
+      "press_lift_stapler_ep110001_instruction.txt": "200067ac3f9304cae2e3930a121c317e016c2e6c26068236cbd3e502259ef8c9",
+      "press_lift_stapler_ep110001_oracle.json": "b286b512f74808e7b98b334bdd2f04967876b84d7fb34b7313ba34c953e118b5",
+      "press_lift_stapler_ep110001_requests.json": "7b2091e5fad822424705d08abb0a97a0287eb89ee392b229a4fdb17bafbe849d",
+      "press_lift_stapler_ep110001_result.json": "ec6227c9c4a5360fc6bc6000db5fb0a340294517587b999f3d5b993a62d0adc6",
+      "press_lift_stapler_ep110001_status.json": "6a5b63ea29825c4a72fdfaf61e7d9201f2a7590ae8e61aeb8ee1ba458c9f59d7",
+      "press_lift_stapler_ep110001_step0000.png": "36b1b82a6d253c1a87e567b6ced92937338c94ce9261215889d6621971ee84c7",
+      "press_lift_stapler_ep110001_summary.json": "3a7d7f748d49381c2a7d054f1fa28ae613a86b06a7958e41818b24dc3eadd84b",
+      "press_lift_stapler_ep110001_timings.json": "14caa5fae0c654dd3728919cd10a18a1944e51a80af349bf84f40e11371e0a9a"
+    }
+  }
+]
