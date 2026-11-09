@@ -1,0 +1,23 @@
+# Dedicated Motus inference environment; Torch is installed by setup_env.sh.
+transformers==4.57.0
+tokenizers==0.22.1
+accelerate==1.14.0
+diffusers==0.36.0
+numpy==1.26.4
+scipy==1.15.3
+Pillow==11.3.0
+einops==0.8.1
+safetensors==0.6.2
+huggingface-hub==0.35.3
+opencv-python-headless==4.11.0.86
+matplotlib==3.10.7
+imageio==2.37.0
+imageio-ffmpeg==0.6.0
+ftfy==6.3.1
+easydict==1.13
+omegaconf==2.3.0
+PyYAML==6.0.2
+deepspeed==0.18.7
+websockets==15.0.1
+msgpack==1.1.1
+flash-attn @ https://github.com/Dao-AILab/flash-attention/releases/download/v2.7.4.post1/flash_attn-2.7.4.post1+cu12torch2.7cxx11abiTRUE-cp310-cp310-linux_x86_64.whl

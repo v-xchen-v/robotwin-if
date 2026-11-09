@@ -1,0 +1,180 @@
+{
+  "yuanty/fastwam": {
+    "revision": "8eaceeb24c3cc92ff2a9c9a9d266a4941b836705",
+    "files": {
+      "README.md": {
+        "size": 2759,
+        "git_blob_sha1": "29371cf2801b0e93d830b41e2cabb6101f07ec15"
+      },
+      "robotwin_uncond_3cam_384.pt": {
+        "size": 12041813092,
+        "sha256": "776475b22566a791854ecf31cf3b50f25e7d8d94c343132ec16eb94994aa9e63"
+      },
+      "robotwin_uncond_3cam_384_dataset_stats.json": {
+        "size": 88715,
+        "git_blob_sha1": "f1652563d2dedbd7063c55bd8c2f4297ec648d45"
+      }
+    }
+  },
+  "motus-robotics/Motus_robotwin2": {
+    "revision": "ab74bc214f7fc5952c85198e062c5f8bf1dc47a7",
+    "files": {
+      "LICENSE": {
+        "size": 11365,
+        "git_blob_sha1": "f6de958ea4b4a330f2776d00506376d7fe27a5b4"
+      },
+      "README.md": {
+        "size": 5530,
+        "git_blob_sha1": "9088e27f82f815126e20a75612772a820d33fb94"
+      },
+      "config.json": {
+        "size": 778,
+        "git_blob_sha1": "97d264671734d01e81587c74ab718925cb802992"
+      },
+      "mp_rank_00_model_states.pt": {
+        "size": 16046580367,
+        "sha256": "70bc1741b45db5e3eae86510ad3bb1bd1aef04f10b17d8c1ff4dbe099300eb65"
+      }
+    }
+  },
+  "motus-robotics/Motus_Wan2_2_5B_pretrain": {
+    "revision": "9e5cfc3c759e94fadde17f55e2a6aa8ba28151d3",
+    "files": {
+      "LICENSE": {
+        "size": 11365,
+        "git_blob_sha1": "f6de958ea4b4a330f2776d00506376d7fe27a5b4"
+      },
+      "README.md": {
+        "size": 3458,
+        "git_blob_sha1": "6b297b5cca37ba262059858d40d26593a0f50f4d"
+      },
+      "model.safetensors": {
+        "size": 9999663008,
+        "sha256": "06a78ab3b932f8b8036fca8b57f5c215a75872e625c07ef721788658d461f47e"
+      }
+    }
+  },
+  "Qwen/Qwen3-VL-2B-Instruct": {
+    "revision": "89644892e4d85e24eaac8bacfd4f463576704203",
+    "files": {
+      "README.md": {
+        "size": 7136,
+        "git_blob_sha1": "13afcb1d2c695b57ebe4ee740db48671069566ce"
+      },
+      "chat_template.json": {
+        "size": 5502,
+        "git_blob_sha1": "e49e75bdda104c8de941eb20e0b3765184fb27bc"
+      },
+      "config.json": {
+        "size": 1505,
+        "git_blob_sha1": "0cd8c646eb55794594b14fefcd1d3acea5cc000f"
+      },
+      "generation_config.json": {
+        "size": 269,
+        "git_blob_sha1": "7bb37933d2d86e4ceaabcc6540be989658f238e9"
+      },
+      "merges.txt": {
+        "size": 1671839,
+        "git_blob_sha1": "20024bfe7c83998e9aeaf98a0cd6a2ce6306c2f0"
+      },
+      "model.safetensors": {
+        "size": 4255140312,
+        "sha256": "7de1838c87a5349b016c26a1c3f7d2bc400a3d485f95ef39a7059ffd734977a0"
+      },
+      "preprocessor_config.json": {
+        "size": 390,
+        "git_blob_sha1": "2ea84a437d448ff71b08df68fdd949d5cc4ebb64"
+      },
+      "tokenizer.json": {
+        "size": 7032403,
+        "git_blob_sha1": "c6cc1014128b19d1fc46b1d30a23e3b1d35db421"
+      },
+      "tokenizer_config.json": {
+        "size": 10868,
+        "git_blob_sha1": "d3d3763207692c78780f4bf42d4dadf49a5c8012"
+      },
+      "video_preprocessor_config.json": {
+        "size": 385,
+        "git_blob_sha1": "3ba673a5ad7d4d13f54155ecd38b2a94a6dac8fe"
+      },
+      "vocab.json": {
+        "size": 2776833,
+        "git_blob_sha1": "4783fe10ac3adce15ac8f358ef5462739852c569"
+      }
+    }
+  },
+  "Wan-AI/Wan2.2-TI2V-5B": {
+    "revision": "921dbaf3f1674a56f47e83fb80a34bac8a8f203e",
+    "files": {
+      "README.md": {
+        "size": 15935,
+        "git_blob_sha1": "40523d8b626810c1ff5293746d181fb99aca6a7a"
+      },
+      "Wan2.2_VAE.pth": {
+        "size": 2818839170,
+        "sha256": "20eb789667fa5e60e7516bf509512f6cb61f01b0aa0695eadaea930c13892b36"
+      },
+      "config.json": {
+        "size": 251,
+        "git_blob_sha1": "abb356dedbca416450700e180a6622626d789601"
+      },
+      "configuration.json": {
+        "size": 43,
+        "git_blob_sha1": "d64db5cb6ceecfb2c7f0929427dc5f48bc4b7f37"
+      },
+      "diffusion_pytorch_model-00001-of-00003.safetensors": {
+        "size": 9825014472,
+        "sha256": "720b06c4ade5e87c1246bba8ac95b664c638749cd9b102cf84d823bb44c026a1"
+      },
+      "diffusion_pytorch_model-00002-of-00003.safetensors": {
+        "size": 9995661736,
+        "sha256": "09ec5ef720d8396f6cfa51fbdcbdb2327e37722afd6e89fd38f1e7e5e782c283"
+      },
+      "diffusion_pytorch_model-00003-of-00003.safetensors": {
+        "size": 178558176,
+        "sha256": "6306f7894c345de9093ad588771c2abfaeb668a81f7a6d9a918bd26ba3568e49"
+      },
+      "diffusion_pytorch_model.safetensors.index.json": {
+        "size": 72865,
+        "git_blob_sha1": "2a1d8b9ee7cd1456f79f944ae15c87724d49110e"
+      },
+      "google/umt5-xxl/special_tokens_map.json": {
+        "size": 6623,
+        "git_blob_sha1": "14855e7052ffbb595057dfd791d293c1c940db2c"
+      },
+      "google/umt5-xxl/spiece.model": {
+        "size": 4548313,
+        "sha256": "e3909a67b780650b35cf529ac782ad2b6b26e6d1f849d3fbb6a872905f452458"
+      },
+      "google/umt5-xxl/tokenizer.json": {
+        "size": 16837417,
+        "sha256": "6e197b4d3dbd71da14b4eb255f4fa91c9c1f2068b20a2de2472967ca3d22602b"
+      },
+      "google/umt5-xxl/tokenizer_config.json": {
+        "size": 61728,
+        "git_blob_sha1": "4e1cc1cd85599ce0b47fd0a746af188fe4043ff2"
+      },
+      "models_t5_umt5-xxl-enc-bf16.pth": {
+        "size": 11361920418,
+        "sha256": "7cace0da2b446bbbbc57d031ab6cf163a3d59b366da94e5afe36745b746fd81d"
+      }
+    }
+  },
+  "sharinka0715/X-WAM-checkpoints": {
+    "revision": "bb6fd1643cfa8bdc751612a7ace0bd8062a8917a",
+    "files": {
+      "README.md": {
+        "size": 3888,
+        "git_blob_sha1": "a48f2bfdc5aa1a4a26126429cae8f27b2056564a"
+      },
+      "robotwin_sft/checkpoints/last.ckpt/checkpoint/mp_rank_00_model_states.pt": {
+        "size": 38892887211,
+        "sha256": "7d38fbd7ee7f9dcdbdee33dcdae622077279a3e9f680e76f4e0e000c4dca88f0"
+      },
+      "robotwin_sft/config.yaml": {
+        "size": 2680,
+        "git_blob_sha1": "5891b8b96dd700db85ce37ed58aefe9605367914"
+      }
+    }
+  }
+}

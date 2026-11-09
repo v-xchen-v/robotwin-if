@@ -15,7 +15,7 @@ sys.path.insert(0, str(ROOT))
 from if_benchmark.seed_contracts import contract_for_seeds, describe_seed, CURRENT_SUITE_TASKS  # noqa: E402
 
 POLICIES = dict(xvla='X-VLA', lingbot_va='LingBot-VA', lingbot_vla='LingBot-VLA',
-                vlact='VLAct', dm05='DM05', hy_vla='Hy-VLA')
+                vlact='VLAct', dm05='DM05', hy_vla='Hy-VLA', fastwam='Fast-WAM', motus='Motus', xwam='X-WAM')
 TASKS = {
     'press_lift_stapler': ('Verb Stapler', [('Press', ['press']), ('Lift', ['lift'])]),
     'pick_diverse_object': ('Noun', [('Seen', ['seen']), ('Unseen', ['unseen'])]),
