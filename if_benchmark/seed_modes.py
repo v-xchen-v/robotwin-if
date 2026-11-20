@@ -15,14 +15,24 @@ def build_seed_modes(directory):
     directory = Path(directory)
     tasks = []
     suite = yaml.safe_load((directory / 'suite.yml').read_text())
+    blocks = suite['blocks_per_task']
+    if type(blocks) is not int or blocks < 1:
+        raise ValueError('Suite blocks_per_task must be a positive integer')
     inventory = [s['task'] for s in suite['tasks']]
-    if len(inventory) != len(set(inventory)) or not set(inventory) <= (IF_SEED_CONTRACTS | ARCHIVED_SEED_CONTRACTS).keys():
+    if not inventory or len(inventory) != len(set(inventory)) or not set(inventory) <= (IF_SEED_CONTRACTS | ARCHIVED_SEED_CONTRACTS).keys():
         raise ValueError('Release contains duplicate or unsupported tasks')
-    for task in inventory:
+    for spec in suite['tasks']:
+        task = spec['task']
         manifest = load_manifest(directory / f'{task}.json')
         checked = validate_manifest(manifest)
-        if manifest['task'] != task or len(checked['block_ids']) != 20:
-            raise ValueError(f'{task}: expected the complete 20-block manifest')
+        if manifest['task'] != task or len(checked['block_ids']) != blocks:
+            raise ValueError(f'{task}: expected the complete {blocks}-block manifest')
+        expected = dict(task_config=manifest['task_config'], manifest=f'{task}.json',
+                        manifest_sha256=manifest_sha256(manifest), blocks=blocks,
+                        episodes_per_policy=len(manifest['seeds']), modes=checked['mode_denominators'])
+        for field, value in expected.items():
+            if spec.get(field) != value:
+                raise ValueError(f'{task}: suite {field} differs from manifest')
         size = contract_for(task, legacy=manifest["schema_version"] == 1).block_size
         episodes = []
         for index, seed in enumerate(manifest['seeds']):
@@ -31,12 +41,15 @@ def build_seed_modes(directory):
                                  block_offset=description.block_offset,
                                  scene_index=description.scene_index, scene_offset=description.scene_offset))
         tasks.append(dict(task=task, task_config=manifest['task_config'], manifest=f'{task}.json',
-                          manifest_sha256=manifest_sha256(manifest), blocks=20,
+                          manifest_sha256=manifest_sha256(manifest), blocks=blocks,
                           mode_counts=checked['mode_denominators'], episodes=episodes))
+    total = sum(len(t['episodes']) for t in tasks)
+    if suite.get('episodes_per_policy') != total:
+        raise ValueError('Suite episodes_per_policy differs from manifests')
     return dict(schema_version=1, release=directory.name, instruction_type='unseen',
                 block_numbering='zero-based ordinal within each task manifest; not seed // block_size',
-                task_count=len(tasks), blocks_per_task=20,
-                episodes_per_policy=sum(len(t['episodes']) for t in tasks), tasks=tasks)
+                task_count=len(tasks), blocks_per_task=blocks,
+                episodes_per_policy=total, tasks=tasks)
 
 
 def export_texts(directory):

@@ -17,12 +17,12 @@ Start the policy's model server first, following policies/<policy>/README.md.
 Policies: xvla, lingbot_va, lingbot_vla, vlact, dm05, hy_vla, fastwam, motus, xwam
 
   --task TASK          One maintained task, or all (default: all six)
-  --blocks N           First N complete blocks, 1..20 (default: 20)
+  --blocks N           First N complete blocks, up to suite capacity (default: 20)
   --sim-gpu N          Physical GPU index for the simulator (default: 0)
   --model-gpu N        Physical GPU index of the running server (default: 1)
   --server-url URL     Override the policy's localhost HTTP/WebSocket endpoint
   --robotwin-dir PATH  Installed RoboTwin checkout
-  --manifest-dir PATH  Six-task 20-block release with checked seed-modes exports
+  --manifest-dir PATH  Suite with checked seed-modes exports (default: 20-blocks)
   --python PATH        RoboTwin Python (default: SIM_PYTHON or python3)
   --dry-run            Print the plan; no GPU, server connection or output writes
   -h, --help           Show this help
@@ -63,7 +63,7 @@ case "$POLICY" in
   *) fail "--policy must name a supported policy (see --help)" ;;
 esac
 [[ -n "$OUTPUT_DIR" ]] || fail '--output-dir is required'
-[[ "$BLOCKS" =~ ^([1-9]|1[0-9]|20)$ ]] || fail '--blocks must be 1..20'
+[[ "$BLOCKS" =~ ^[1-9][0-9]*$ ]] || fail '--blocks must be a positive integer'
 [[ "$SIM_GPU" =~ ^[0-9]+$ && "$MODEL_GPU" =~ ^[0-9]+$ ]] || fail 'GPU indices must be nonnegative integers'
 SIM_GPU=$((10#$SIM_GPU))
 MODEL_GPU=$((10#$MODEL_GPU))
@@ -79,12 +79,15 @@ from if_benchmark.seed_modes import build_seed_modes, check_seed_modes
 from if_benchmark.seed_contracts import validate_active_seeds
 check_seed_modes(sys.argv[1])
 data = build_seed_modes(sys.argv[1])
+blocks = int(sys.argv[3])
+if not 1 <= blocks <= data['blocks_per_task']:
+    raise SystemExit(f"--blocks must be 1..{data['blocks_per_task']} for the selected suite")
 selected = [t for t in data['tasks'] if sys.argv[2] in ('all', t['task'])]
 if not selected:
     raise SystemExit('Unknown or retired task: ' + sys.argv[2])
 for task in selected:
     validate_active_seeds(task['task'], [e['seed'] for e in task['episodes']])
-    count = sum(e['block'] < int(sys.argv[3]) for e in task['episodes'])
+    count = sum(e['block'] < blocks for e in task['episodes'])
     print(task['task'], task['task_config'], count, sep='\t')
 PY
 )

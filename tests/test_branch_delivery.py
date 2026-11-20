@@ -10,16 +10,52 @@ import subprocess
 import sys
 import tempfile
 import unittest
+import yaml
 
 from if_benchmark.seed_contracts import IF_SEED_CONTRACTS, CURRENT_SUITE_TASKS
 from if_benchmark.seed_modes import build_seed_modes, check_seed_modes, export_texts
 
 ROOT = Path(__file__).resolve().parents[1]
 RELEASE = ROOT / 'seed-manifests/20-blocks'
+EXPANDED = ROOT / 'seed-manifests/200-blocks'
 POLICIES = ('xvla', 'lingbot_va', 'lingbot_vla', 'vlact', 'dm05', 'hy_vla', 'fastwam', 'motus', 'xwam')
 
 
 class SeedModeDeliveryTest(unittest.TestCase):
+    def test_expanded_suite_preserves_old_prefixes_and_balanced_sizes(self):
+        check_seed_modes(EXPANDED)
+        data = build_seed_modes(EXPANDED)
+        self.assertEqual((data['blocks_per_task'], data['episodes_per_policy']), (200, 4600))
+        for task in data['tasks']:
+            old = json.loads((RELEASE / f"{task['task']}.json").read_text())['seeds']
+            self.assertEqual([r['seed'] for r in task['episodes'][:len(old)]], old)
+        for blocks in (50, 100, 200):
+            selected = [r for t in data['tasks'] for r in t['episodes'] if r['block'] < blocks]
+            self.assertEqual(len(selected), 23 * blocks)
+            for task in data['tasks']:
+                self.assertEqual(Counter(r['mode'] for r in task['episodes'] if r['block'] < blocks),
+                                 dict.fromkeys(task['mode_counts'], blocks))
+
+    def test_suite_capacity_and_identity_must_match_manifests(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            directory = Path(tmp)
+            for task in CURRENT_SUITE_TASKS:
+                shutil.copyfile(EXPANDED / f'{task}.json', directory / f'{task}.json')
+            original = yaml.safe_load((EXPANDED / 'suite.yml').read_text())
+            for field, value in (('blocks_per_task', 100), ('blocks_per_task', True),
+                                 ('episodes_per_policy', 460)):
+                bad = dict(original, **{field: value})
+                (directory / 'suite.yml').write_text(yaml.safe_dump(bad))
+                with self.assertRaises(ValueError):
+                    build_seed_modes(directory)
+            for field, value in (('manifest_sha256', '0' * 64), ('task_config', 'wrong'),
+                                 ('blocks', 20), ('modes', {'press': 20, 'lift': 20})):
+                bad = json.loads(json.dumps(original))
+                bad['tasks'][0][field] = value
+                (directory / 'suite.yml').write_text(yaml.safe_dump(bad))
+                with self.assertRaisesRegex(ValueError, f'suite {field}'):
+                    build_seed_modes(directory)
+
     def test_export_matches_frozen_results_and_twenty_balanced_blocks(self):
         check_seed_modes(RELEASE)
         data = build_seed_modes(RELEASE)
@@ -169,6 +205,31 @@ print('1, 10000, 40000, 40, 20')
         self.assertIn('task output exists', run.stderr)
         self.assertEqual(sentinel.read_text(), 'old evidence')
         self.assertEqual(self.launched(), [])
+
+    def test_expanded_suite_dry_run_selects_50_100_or_200_without_launching(self):
+        for blocks in (50, 100, 200):
+            run = self.run_launcher('--manifest-dir', str(EXPANDED), '--blocks', str(blocks), '--dry-run')
+            self.assertEqual(run.returncode, 0, run.stderr)
+            for task, contract in IF_SEED_CONTRACTS.items():
+                self.assertIn(f'{task}: {blocks} blocks, {blocks * contract.block_size} episodes', run.stdout)
+        for blocks in ('0', '-1', '201', '1.5'):
+            self.assertNotEqual(self.run_launcher('--manifest-dir', str(EXPANDED),
+                                                 '--blocks', blocks, '--dry-run').returncode, 0)
+        self.assertEqual(self.launched(), [])
+        self.assertFalse(self.output.exists())
+        self.assertFalse(Path(self.env['FAKE_GPU_LOG']).exists())
+
+    def test_expanded_full_run_passes_the_exact_200_block_plan_to_all_workers(self):
+        run = self.run_launcher('--manifest-dir', str(EXPANDED), '--blocks', '200')
+        self.assertEqual(run.returncode, 0, run.stdout + run.stderr)
+        calls = self.launched()
+        self.assertEqual(len(calls), 6)
+        self.assertTrue(all(r['options']['--blocks'] == '200' for r in calls))
+        for task in CURRENT_SUITE_TASKS:
+            path = self.output / 'vlact' / task / 'results.jsonl'
+            actual = [json.loads(line)['seed'] for line in path.read_text().splitlines()]
+            expected = json.loads((EXPANDED / f'{task}.json').read_text())['seeds']
+            self.assertEqual(actual, expected)
 
     def test_zero_success_complete_tasks_continue_with_exact_seed_prefix(self):
         run = self.run_launcher('--blocks', '2')

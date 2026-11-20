@@ -23,8 +23,10 @@ Attribute 的新增部分由先前已通过的 92 blocks 和六个分片的 88 b
 生成使用任务源码提交 `777eff4a8839a50c8345326f3b58a1a3cc7505c2`，
 沿用当前 6 cm / 4 cm Size 设置和 `demo_clean_arm_select` 配置。
 完整原始记录保存在生成机器的 `/Data/robotwin-if/seed-manifests/200-blocks-20261120/`，
-含逐 seed 资格记录、分片证据、源码快照和日志。本目录提交输入清单与验证摘要：
+含逐 seed 资格记录、分片证据、源码快照和日志。本目录包含输入清单、评测入口配置与验证摘要：
 
+- `suite.yml`：六任务的配置、manifest 哈希、模式分母和每模型 4,600 回合的总计划。
+- `seed-modes.json` / `seed-modes.csv`：4,600 条逐回合 seed、mode、block 映射，供入口校验和核对。
 - `qualification.json`：最终合并验证结果，包括数量、mode 分母、旧前缀一致及新增资格证据校验。
 - `SHA256SUMS`：本目录所有文件的校验值，自身除外。
 
@@ -33,9 +35,31 @@ Attribute 的新增部分由先前已通过的 92 blocks 和六个分片的 88 b
 ```bash
 python tools/validate_if_seed_manifest.py \
   seed-manifests/200-blocks/{press_lift_stapler,pick_diverse_object,attribute_select,arm_select,stack_sequence,place_relative}.json
+python tools/export_seed_modes.py --manifest-dir seed-manifests/200-blocks --check
 (cd seed-manifests/200-blocks && sha256sum --check SHA256SUMS)
 ```
 
 上述离线检查不重跑 expert；`qualification.json` 是已完成验证的摘要，不代替原始逐 seed 证据。
-当前 `scripts/eval.sh` 的 suite 加载器固定为 20 blocks，尚未适配此扩展清单；
-不能仅替换其 `--manifest-dir` 就运行 200-block suite。
+
+评测和汇总入口已支持本套件。两者默认仍为原 20-block 计划，运行本套件时同时指定
+`--manifest-dir seed-manifests/200-blocks --blocks 200`。以下以 VLAct 为例：
+
+```bash
+# 预览完整计划，不启动模型或仿真。
+bash scripts/eval.sh --policy vlact \
+  --manifest-dir seed-manifests/200-blocks --blocks 200 \
+  --output-dir outputs/policy-eval/vlact-200blocks --dry-run
+
+# 按 policies/vlact/README.md 准备模型服务后运行。
+bash scripts/eval.sh --policy vlact --sim-gpu 0 --model-gpu 1 \
+  --manifest-dir seed-manifests/200-blocks --blocks 200 \
+  --output-dir outputs/policy-eval/vlact-200blocks
+
+# 按全部 200 blocks 汇总，沿用现有计分规则。
+python tools/summarize_formal_policy_results.py \
+  --run-dir outputs/policy-eval/vlact-200blocks \
+  --manifest-dir seed-manifests/200-blocks --blocks 200 \
+  --output outputs/report/vlact-200blocks.md
+```
+
+更多运行约束见 [评测说明](../../docs/formal-policy-evaluation.md)。

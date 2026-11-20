@@ -13,8 +13,9 @@ class CurrentReleaseTest(unittest.TestCase):
     def test_delivery_is_self_consistent_without_git_history(self):
         self.assertEqual(verify(ROOT), dict(tasks=6, policies=9, episodes=4140, blocks=1080))
 
-    def test_one_seed_set_and_one_result_set_are_exposed(self):
-        self.assertEqual([p.name for p in (ROOT / 'seed-manifests').iterdir() if p.is_dir()], ['20-blocks'])
+    def test_frozen_and_expanded_seed_sets_share_one_published_result_set(self):
+        self.assertEqual(sorted(p.name for p in (ROOT / 'seed-manifests').iterdir() if p.is_dir()),
+                         ['20-blocks', '200-blocks'])
         self.assertEqual([p.name for p in (ROOT / 'result').iterdir() if p.is_dir()], ['checkpoint-evidence'])
 
     def test_stapler_paired_scores_agree_with_episode_labels(self):

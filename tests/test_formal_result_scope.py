@@ -1,6 +1,7 @@
 """Scores use exact manifest seeds and complete blocks from the public evaluator."""
 import json
 from pathlib import Path
+import shlex
 import tempfile
 import unittest
 from if_benchmark.seed_modes import build_seed_modes
@@ -14,14 +15,14 @@ class ResultScopeTest(unittest.TestCase):
         self.base = Path(tmp.name)
         self.manifests = report.ROOT / 'seed-manifests/20-blocks'
 
-    def fixture(self):
+    def fixture(self, blocks=1):
         for task in build_seed_modes(self.manifests)['tasks']:
             name = task['task']
             directory = self.base / 'vlact' / name
             directory.mkdir(parents=True)
             rows = []
             for r in task['episodes']:
-                if r['block'] != 0:
+                if r['block'] >= blocks:
                     continue
                 success = name != 'press_lift_stapler'
                 row = dict(task=name, seed=r['seed'], mode=r['mode'], success=success,
@@ -48,6 +49,40 @@ class ResultScopeTest(unittest.TestCase):
         frozen = report.snapshot(self.base, self.manifests, 1)
         self.assertEqual(original['rows'], frozen['rows'])
         self.assertEqual(original['policies'], frozen['policies'])
+
+    def test_full_expanded_run_scores_all_200_blocks_with_existing_rules(self):
+        self.manifests = report.ROOT / 'seed-manifests/200-blocks'
+        self.fixture(blocks=200)
+        data = report.snapshot(self.base, self.manifests, 200)
+        self.assertEqual(data['summary'], dict(completed_episodes=4600, expected_episodes=4600,
+            completed_blocks=1200, expected_blocks=1200, complete_task_policy_runs=6))
+        self.assertAlmostEqual(data['policies']['vlact']['overall_pct'], 500/6)
+        for row, task in zip(data['rows'], build_seed_modes(self.manifests)['tasks']):
+            self.assertTrue(row['complete'])
+            self.assertEqual(row['included_seeds'], [r['seed'] for r in task['episodes']])
+            self.assertEqual(row['complete_block_ids'], list(range(200)))
+            self.assertEqual(row['partial_group_episodes'], 0)
+            expected_successes = 0 if row['task'] == 'press_lift_stapler' else 200
+            for mode in row['modes'].values():
+                self.assertEqual((mode['included'], mode['successes']), (200, expected_successes))
+        output = self.base / 'report with spaces.md'
+        report.generate(data, output)
+        refresh = output.read_text().split('```bash\n')[1].split('\n```')[0]
+        self.assertEqual(shlex.split(refresh), ['python', 'tools/summarize_formal_policy_results.py',
+            '--run-dir', str(self.base), '--manifest-dir', str(self.manifests),
+            '--blocks', '200', '--output', str(output)])
+        # A smaller plan must still reject extra records, never silently filter them.
+        for blocks in (50, 100):
+            with self.assertRaisesRegex(ValueError, 'unplanned seed'):
+                report.snapshot(self.base, self.manifests, blocks)
+
+    def test_plan_must_fit_the_selected_suite(self):
+        for capacity in (20, 200):
+            manifests = report.ROOT / f'seed-manifests/{capacity}-blocks'
+            for blocks in (0, capacity + 1, True):
+                with self.subTest(capacity=capacity, blocks=blocks):
+                    with self.assertRaisesRegex(ValueError, f'blocks must be 1..{capacity}'):
+                        report.snapshot(self.base, manifests, blocks)
 
     def test_partial_block_is_progress_but_never_score_or_overall(self):
         self.fixture()

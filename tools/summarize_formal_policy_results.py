@@ -7,6 +7,7 @@ import html
 import json
 from pathlib import Path
 import statistics
+import shlex
 from datetime import datetime, timezone
 import sys
 
@@ -84,10 +85,11 @@ def balanced_row(spec, source, records):
 def snapshot(base, manifest_dir=ROOT / 'seed-manifests/20-blocks', blocks=20):
     """Read exact-seed evaluator outputs; partial blocks never enter scores."""
     from if_benchmark.seed_modes import build_seed_modes, check_seed_modes
-    if not 1 <= blocks <= 20:
-        raise ValueError('blocks must be 1..20')
     check_seed_modes(manifest_dir)
     manifests = build_seed_modes(manifest_dir)
+    capacity = manifests['blocks_per_task']
+    if type(blocks) is not int or not 1 <= blocks <= capacity:
+        raise ValueError(f'blocks must be 1..{capacity}')
     if [t['task'] for t in manifests['tasks']] != list(CURRENT_SUITE_TASKS):
         raise ValueError('Expected the six maintained tasks')
     policies = [p for p in POLICIES if (base / p).is_dir()]
@@ -249,8 +251,10 @@ def generate(data, output):
            '配套 JSON 保留评分纳入的 seeds、完整 block 序号和全部 mode 计数；CSV 同时列出评分纳入数与实际已完成数。',
            '汇总时核对逐回合 JSON、manifest seed 和 mode；若存在 results.jsonl 或 provenance，还验证索引与记录 SHA-256。', '',
            '刷新命令：', '', '```bash',
-           'python tools/summarize_formal_policy_results.py --run-dir '+str(data['run_dir'])+
-           ' --blocks '+str(data.get('blocks_per_task', 20))+' --output outputs/report/results.md', '```', '']
+           shlex.join(['python', 'tools/summarize_formal_policy_results.py',
+                       '--run-dir', str(data['run_dir']),
+                       '--manifest-dir', str(data.get('manifest_dir', ROOT / 'seed-manifests/20-blocks')),
+                       '--blocks', str(data.get('blocks_per_task', 20)), '--output', str(output)]), '```', '']
     output.write_text('\n'.join(md))
     page = ('<!doctype html><html lang="zh-CN"><meta charset="utf-8">'
             '<meta name="viewport" content="width=device-width,initial-scale=1">'
@@ -280,7 +284,8 @@ def main():
     parser.add_argument('--run-dir', type=Path, required=True)
     parser.add_argument('--output', type=Path, default=Path('outputs/report/results.md'))
     parser.add_argument('--manifest-dir', type=Path, default=ROOT / 'seed-manifests/20-blocks')
-    parser.add_argument('--blocks', type=int, default=20, help='Planned blocks per task (1..20)')
+    parser.add_argument('--blocks', type=int, default=20,
+                        help='Planned blocks per task, up to suite capacity (default: 20)')
     args = parser.parse_args()
     data = snapshot(args.run_dir.resolve(), args.manifest_dir.resolve(), args.blocks)
     generate(data, args.output.resolve())

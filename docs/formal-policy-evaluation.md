@@ -1,6 +1,8 @@
 # 运行与汇总评测
 
-使用固定的 `seed-manifests/20-blocks/`，六任务每任务 20 blocks，每模型 460 回合。
+默认使用固定的 `seed-manifests/20-blocks/`，六任务每任务 20 blocks，每模型 460 回合。
+完整 200-block 评测使用 `seed-manifests/200-blocks/`，每任务 200 个完整 blocks、每个 mode 200 回合，
+每模型共 4,600 回合；前 20 blocks 沿用原清单。
 先按 [Quickstart](quickstart.md) 安装 RoboTwin、bridge 和所选 policy，再按 [policies](../policies/README.md) 启动模型服务。
 
 ```bash
@@ -14,6 +16,20 @@ bash scripts/eval.sh --policy vlact --sim-gpu 0 --model-gpu 1   --output-dir out
 bash scripts/eval.sh --policy vlact --task press_lift_stapler --blocks 1   --output-dir outputs/policy-eval/smoke
 ```
 
+一次跑完整 200 blocks 时，显式指定清单和数量（以下以 VLAct 为例）：
+
+```bash
+# 仅预览 200-block 计划。
+bash scripts/eval.sh --policy vlact \
+  --manifest-dir seed-manifests/200-blocks --blocks 200 \
+  --output-dir outputs/policy-eval/vlact-200blocks --dry-run
+
+# 模型服务准备好后，使用相同参数启动完整评测。
+bash scripts/eval.sh --policy vlact --sim-gpu 0 --model-gpu 1 \
+  --manifest-dir seed-manifests/200-blocks --blocks 200 \
+  --output-dir outputs/policy-eval/vlact-200blocks
+```
+
 输出为 `<output-dir>/<policy>/<task>/`，包含逐回合 JSON、`results.jsonl`、summary、动作和视频。
 已存在的任务输出目录会被拒绝，避免覆盖结果。Policy failure 是有效结果；基础设施错误或 oracle 失败会停止，不替换 seed。
 不同 policy 可以使用同一输出根目录，各自写入独立子目录。
@@ -22,10 +38,18 @@ bash scripts/eval.sh --policy vlact --task press_lift_stapler --blocks 1   --out
 
 ```bash
 python tools/summarize_formal_policy_results.py   --run-dir outputs/policy-eval/my-run --output outputs/report/results.md
+
+# 完整 200-block 结果使用同一份清单和计划数量。
+python tools/summarize_formal_policy_results.py \
+  --run-dir outputs/policy-eval/vlact-200blocks \
+  --manifest-dir seed-manifests/200-blocks --blocks 200 \
+  --output outputs/report/vlact-200blocks.md
 ```
 
 自动发现已运行的公开模型，输出 Markdown、HTML、JSON、CSV。
-用 `--blocks N` 指定本次计划的 blocks 数（默认 20）；任务未完成时只统计完整均衡 blocks，Overall 留空。
+用 `--blocks N` 指定本次计划的 blocks 数（默认 20，上限由 suite 决定），必须与实际运行计划一致；
+完整 200-block 运行按全部 200 blocks 计分，不从结果中筛选 50/100-block 子集。
+计分规则保持不变：任务未完成时只统计完整均衡 blocks，Overall 留空。
 每个任务内各 mode 等权，Overall 为六个任务等权平均。汇总检查 exact seeds、mode、逐回合 JSON 与索引；
 若有 provenance 文件，还检查记录 SHA-256。
 

@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-"""Export or check the six-task 20-block seed/mode JSON and CSV (CPU only)."""
+"""Export or check a suite's seed/mode JSON and CSV (CPU only)."""
 import argparse
 from pathlib import Path
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
-from if_benchmark.seed_modes import check_seed_modes, export_texts
+from if_benchmark.seed_modes import build_seed_modes, check_seed_modes, export_texts
 
 
 def main():
@@ -20,7 +20,9 @@ def main():
     else:
         for name, contents in export_texts(args.manifest_dir).items():
             (args.manifest_dir / name).write_text(contents)
-    print('OK: six tasks, 20 blocks/task, 460 exact seed/mode rows')
+    data = build_seed_modes(args.manifest_dir)
+    print(f"OK: {data['task_count']} tasks, {data['blocks_per_task']} blocks/task, "
+          f"{data['episodes_per_policy']} exact seed/mode rows")
 
 
 if __name__ == '__main__':
