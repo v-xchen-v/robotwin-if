@@ -1,0 +1,98 @@
+{
+  "complete": true,
+  "strategy": "old20_plus_new180",
+  "inherited_episodes": 460,
+  "extension_episodes": 4140,
+  "combined_episodes": 4600,
+  "tasks": [
+    {
+      "task": "press_lift_stapler",
+      "blocks": 200,
+      "episodes": 400,
+      "inherited_blocks": 20,
+      "extension_blocks": 180,
+      "mode_counts": {
+        "press": 200,
+        "lift": 200
+      },
+      "inherited_prefix_unchanged": true,
+      "extension_evidence_verified": true
+    },
+    {
+      "task": "pick_diverse_object",
+      "blocks": 200,
+      "episodes": 400,
+      "inherited_blocks": 20,
+      "extension_blocks": 180,
+      "mode_counts": {
+        "seen": 200,
+        "unseen": 200
+      },
+      "inherited_prefix_unchanged": true,
+      "extension_evidence_verified": true
+    },
+    {
+      "task": "attribute_select",
+      "blocks": 200,
+      "episodes": 1600,
+      "inherited_blocks": 20,
+      "extension_blocks": 180,
+      "mode_counts": {
+        "color:red": 200,
+        "color:blue": 200,
+        "decal:cat": 200,
+        "decal:dog": 200,
+        "shape:block": 200,
+        "shape:bar": 200,
+        "size:big": 200,
+        "size:small": 200
+      },
+      "inherited_prefix_unchanged": true,
+      "extension_evidence_verified": true
+    },
+    {
+      "task": "arm_select",
+      "blocks": 200,
+      "episodes": 400,
+      "inherited_blocks": 20,
+      "extension_blocks": 180,
+      "mode_counts": {
+        "left": 200,
+        "right": 200
+      },
+      "inherited_prefix_unchanged": true,
+      "extension_evidence_verified": true
+    },
+    {
+      "task": "stack_sequence",
+      "blocks": 200,
+      "episodes": 1200,
+      "inherited_blocks": 20,
+      "extension_blocks": 180,
+      "mode_counts": {
+        "red>green>blue": 200,
+        "red>blue>green": 200,
+        "green>red>blue": 200,
+        "green>blue>red": 200,
+        "blue>red>green": 200,
+        "blue>green>red": 200
+      },
+      "inherited_prefix_unchanged": true,
+      "extension_evidence_verified": true
+    },
+    {
+      "task": "place_relative",
+      "blocks": 200,
+      "episodes": 600,
+      "inherited_blocks": 20,
+      "extension_blocks": 180,
+      "mode_counts": {
+        "left": 200,
+        "right": 200,
+        "on_top": 200
+      },
+      "inherited_prefix_unchanged": true,
+      "extension_evidence_verified": true
+    }
+  ]
+}
