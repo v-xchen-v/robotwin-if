@@ -3,6 +3,8 @@
 默认使用固定的 `seed-manifests/20-blocks/`，六任务每任务 20 blocks，每模型 460 回合。
 完整 200-block 评测使用 `seed-manifests/200-blocks/`，每任务 200 个完整 blocks、每个 mode 200 回合，
 每模型共 4,600 回合；前 20 blocks 沿用原清单。
+也可使用 [100-block 套件](../seed-manifests/100-blocks/README.md)，它是 200-block 清单的前 100 blocks，
+每模型共 2,300 回合；评测与汇总均指定 `--manifest-dir seed-manifests/100-blocks --blocks 100`。
 先按 [Quickstart](quickstart.md) 安装 RoboTwin、bridge 和所选 policy，再按 [policies](../policies/README.md) 启动模型服务。
 
 ```bash

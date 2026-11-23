@@ -1,0 +1,117 @@
+{
+  "schema_version": 1,
+  "derived_at": "2026-11-23T03:14:09.349448+00:00",
+  "source_git_commit": "7d84ff4ed49a9501b4dc4b121ff5f08bdcbce616",
+  "source_directory": "../200-blocks",
+  "source_blocks_per_task": 200,
+  "blocks_per_task": 100,
+  "episodes_per_policy": 2300,
+  "selection": {
+    "method": "first_n_complete_blocks",
+    "start_inclusive": 0,
+    "stop_exclusive": 100,
+    "block_numbering": "zero-based ordinal within each task manifest; not seed // block_size"
+  },
+  "qualification": "Inherited from the source manifests; no new expert or policy run.",
+  "source_files_sha256": {
+    "suite.yml": "d02a2b290e1b28439cc7ec23efa50b92538b9e9887ae8c9b581b319a9ef63567",
+    "qualification.json": "0bcbc711b7a1e394a6c21a4eef096c209d36c196ba8730830710929f2c182c5d"
+  },
+  "tasks": [
+    {
+      "task": "press_lift_stapler",
+      "manifest": "press_lift_stapler.json",
+      "source_manifest_sha256": "1e512fa89eb6c8f00839255f4fcb98f4368c722d8d5f50392aabcbca1848bca9",
+      "manifest_sha256": "d2b5563e4cb66c6b1beb0900b0b1548da04565deb77785dbf6d504f5f73f17a9",
+      "blocks": 100,
+      "episodes": 200,
+      "modes": {
+        "press": 100,
+        "lift": 100
+      },
+      "exact_source_prefix": true,
+      "original_20_block_prefix_preserved": true
+    },
+    {
+      "task": "pick_diverse_object",
+      "manifest": "pick_diverse_object.json",
+      "source_manifest_sha256": "335de84b000ec3b2edded70dfc12ce07d9f9569fc920e22b3dcbd6e2a8a507e3",
+      "manifest_sha256": "bf04a0db463437247ccfef405fec95a490806ae3a0967101efad73cb4e0a8c5e",
+      "blocks": 100,
+      "episodes": 200,
+      "modes": {
+        "seen": 100,
+        "unseen": 100
+      },
+      "exact_source_prefix": true,
+      "original_20_block_prefix_preserved": true
+    },
+    {
+      "task": "attribute_select",
+      "manifest": "attribute_select.json",
+      "source_manifest_sha256": "f6def4fcfa627b218f01135a400a60578797996f433110c26aae48a1d202d674",
+      "manifest_sha256": "d4b2afe280fdbbd09189cbc376fd00c389d2d2f69a7b4d1cb7e18f92bcc3da38",
+      "blocks": 100,
+      "episodes": 800,
+      "modes": {
+        "color:red": 100,
+        "color:blue": 100,
+        "decal:cat": 100,
+        "decal:dog": 100,
+        "shape:block": 100,
+        "shape:bar": 100,
+        "size:big": 100,
+        "size:small": 100
+      },
+      "exact_source_prefix": true,
+      "original_20_block_prefix_preserved": true
+    },
+    {
+      "task": "arm_select",
+      "manifest": "arm_select.json",
+      "source_manifest_sha256": "a5874fac5979c72b8104835cf174ab7564bbbbe176b110034ed852cf393ff960",
+      "manifest_sha256": "5ffa81c6e8224c0cbe2df44741d47bb327e964c81f6d0c7cc263dfeedabe1853",
+      "blocks": 100,
+      "episodes": 200,
+      "modes": {
+        "left": 100,
+        "right": 100
+      },
+      "exact_source_prefix": true,
+      "original_20_block_prefix_preserved": true
+    },
+    {
+      "task": "stack_sequence",
+      "manifest": "stack_sequence.json",
+      "source_manifest_sha256": "08cc0c72db7f967a20eb46c61760ecb3f74d6d38a4f3bbbed62ad65e1c92dc04",
+      "manifest_sha256": "3a412d4d711f828ff8d63e05a0bfb1bb881f1cc428980dea13c1bf6c5490e1b6",
+      "blocks": 100,
+      "episodes": 600,
+      "modes": {
+        "red>green>blue": 100,
+        "red>blue>green": 100,
+        "green>red>blue": 100,
+        "green>blue>red": 100,
+        "blue>red>green": 100,
+        "blue>green>red": 100
+      },
+      "exact_source_prefix": true,
+      "original_20_block_prefix_preserved": true
+    },
+    {
+      "task": "place_relative",
+      "manifest": "place_relative.json",
+      "source_manifest_sha256": "71024fdeb437034a0abc20d008c6716867c1e44993443548568639ad47e28123",
+      "manifest_sha256": "0d6bbdbe6f707aeed8ede2afad7729019dad17c376d59056e8fa2585a41c4441",
+      "blocks": 100,
+      "episodes": 300,
+      "modes": {
+        "left": 100,
+        "right": 100,
+        "on_top": 100
+      },
+      "exact_source_prefix": true,
+      "original_20_block_prefix_preserved": true
+    }
+  ]
+}

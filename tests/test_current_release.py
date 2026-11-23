@@ -15,7 +15,7 @@ class CurrentReleaseTest(unittest.TestCase):
 
     def test_frozen_and_expanded_seed_sets_share_one_published_result_set(self):
         self.assertEqual(sorted(p.name for p in (ROOT / 'seed-manifests').iterdir() if p.is_dir()),
-                         ['20-blocks', '200-blocks'])
+                         ['100-blocks', '20-blocks', '200-blocks'])
         self.assertEqual([p.name for p in (ROOT / 'result').iterdir() if p.is_dir()], ['checkpoint-evidence'])
 
     def test_stapler_paired_scores_agree_with_episode_labels(self):

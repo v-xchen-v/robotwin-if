@@ -1,0 +1,109 @@
+schema_version: 1
+purpose: fixed_seed_evaluation
+instruction_type: unseen
+blocks_per_task: 100
+release: 100-blocks
+tasks:
+- task: press_lift_stapler
+  task_config: demo_clean
+  manifest: press_lift_stapler.json
+  manifest_sha256: d2b5563e4cb66c6b1beb0900b0b1548da04565deb77785dbf6d504f5f73f17a9
+  blocks: 100
+  episodes_per_policy: 200
+  modes:
+    press: 100
+    lift: 100
+  instructions:
+    press: Press down on the stapler.
+    lift: Lift the stapler.
+  action_limit: 250
+  yaw_limits_degrees:
+    048_stapler: 15.0
+    047_mouse: 180.0
+    057_toycar: 180.0
+  success_checker_version: press-lift-stapler-v1-native-press-contact
+  success_checker_parameters:
+    sample_seconds: 0.004
+    lift_height_m: 0.03
+    lift_seconds: 0.1
+    preclosed_seconds: 0.08
+    descent_m: 0.005
+    press_max_rise_m: 0.015
+    press_max_xy_m: 0.03
+    top_xy_m: 0.03
+    top_z_m: 0.03
+- task: pick_diverse_object
+  task_config: demo_clean
+  manifest: pick_diverse_object.json
+  manifest_sha256: bf04a0db463437247ccfef405fec95a490806ae3a0967101efad73cb4e0a8c5e
+  blocks: 100
+  episodes_per_policy: 200
+  modes:
+    seen: 100
+    unseen: 100
+  success_checker_version: null
+  success_checker_parameters: null
+- task: attribute_select
+  task_config: demo_clean
+  manifest: attribute_select.json
+  manifest_sha256: d4b2afe280fdbbd09189cbc376fd00c389d2d2f69a7b4d1cb7e18f92bcc3da38
+  blocks: 100
+  episodes_per_policy: 800
+  modes:
+    color:red: 100
+    color:blue: 100
+    decal:cat: 100
+    decal:dog: 100
+    shape:block: 100
+    shape:bar: 100
+    size:big: 100
+    size:small: 100
+  success_checker_version: target-only-lift-v2
+  success_checker_parameters:
+    lift_m: 0.05
+  size_edges_m:
+    big: 0.06
+    small: 0.04
+- task: arm_select
+  task_config: demo_clean_arm_select
+  manifest: arm_select.json
+  manifest_sha256: 5ffa81c6e8224c0cbe2df44741d47bb327e964c81f6d0c7cc263dfeedabe1853
+  blocks: 100
+  episodes_per_policy: 200
+  modes:
+    left: 100
+    right: 100
+  success_checker_version: target-arm-only-lift-v2
+  success_checker_parameters:
+    lift_m: 0.05
+    near_tcp_m: 0.2
+- task: stack_sequence
+  task_config: demo_clean
+  manifest: stack_sequence.json
+  manifest_sha256: 3a412d4d711f828ff8d63e05a0bfb1bb881f1cc428980dea13c1bf6c5490e1b6
+  blocks: 100
+  episodes_per_policy: 600
+  modes:
+    red>green>blue: 100
+    red>blue>green: 100
+    green>red>blue: 100
+    green>blue>red: 100
+    blue>red>green: 100
+    blue>green>red: 100
+  success_checker_version: null
+  success_checker_parameters: null
+- task: place_relative
+  task_config: demo_clean
+  manifest: place_relative.json
+  manifest_sha256: 0d6bbdbe6f707aeed8ede2afad7729019dad17c376d59056e8fa2585a41c4441
+  blocks: 100
+  episodes_per_policy: 300
+  modes:
+    left: 100
+    right: 100
+    on_top: 100
+  success_checker_version: null
+  success_checker_parameters: null
+episodes_per_policy: 2300
+qualification: First 100 complete blocks of ../200-blocks; expert qualification is
+  inherited. See derivation.json, README.md and ../200-blocks/qualification.json.
